@@ -241,7 +241,7 @@
         "title": "Implement RAG retrieval chain with game filtering",
         "feature": "RAG Pipeline",
         "dependencies": ["task-12"],
-        "status": "todo"
+        "status": "done"
       },
       {
         "id": "task-14",
