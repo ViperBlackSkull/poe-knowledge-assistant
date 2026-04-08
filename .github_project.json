@@ -18,7 +18,7 @@
         "title": "Create Python requirements.txt with dependencies",
         "feature": "Backend Foundation",
         "dependencies": ["task-1"],
-        "status": "todo"
+        "status": "done"
       },
       {
         "id": "task-3",
