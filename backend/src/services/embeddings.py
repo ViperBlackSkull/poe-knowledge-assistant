@@ -1,14 +1,14 @@
 """
-Local embeddings service for POE Knowledge Assistant.
-Provides text embedding functionality using sentence-transformers.
+Embeddings services for POE Knowledge Assistant.
+Provides text embedding functionality using sentence-transformers (local) or OpenAI.
 """
 import logging
 import os
-from typing import List, Optional
+from typing import List, Optional, Union
 
 from sentence_transformers import SentenceTransformer
 
-from src.config import get_settings
+from src.config import get_settings, EmbeddingProvider
 
 logger = logging.getLogger(__name__)
 
