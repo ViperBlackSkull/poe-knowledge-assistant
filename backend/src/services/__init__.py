@@ -11,7 +11,9 @@ from src.services.chroma_db import (
 )
 from src.services.embeddings import (
     LocalEmbeddings,
+    OpenAIEmbeddings,
     EmbeddingError,
+    create_embeddings,
     get_local_embeddings,
     check_embeddings_health,
 )
@@ -22,7 +24,9 @@ __all__ = [
     "get_chroma_manager",
     "check_chromadb_health",
     "LocalEmbeddings",
+    "OpenAIEmbeddings",
     "EmbeddingError",
+    "create_embeddings",
     "get_local_embeddings",
     "check_embeddings_health",
 ]

@@ -7,7 +7,13 @@ from pydantic import BaseModel
 from fastapi.middleware.cors import CORSMiddleware
 from src.config import get_settings
 from src.services.chroma_db import check_chromadb_health
-from src.services.embeddings import check_embeddings_health, LocalEmbeddings, EmbeddingError
+from src.services.embeddings import (
+    check_embeddings_health,
+    LocalEmbeddings,
+    OpenAIEmbeddings,
+    create_embeddings,
+    EmbeddingError
+)
 
 # Get settings instance
 settings = get_settings()
@@ -22,6 +28,14 @@ class EmbedTextRequest(BaseModel):
 class EmbedDocumentsRequest(BaseModel):
     """Request model for embedding multiple documents."""
     texts: list[str]
+
+
+class CreateEmbeddingsRequest(BaseModel):
+    """Request model for testing the factory function."""
+    provider: str = "local"
+    api_key: str | None = None
+    model_name: str | None = None
+    test_text: str = "This is a test query"
 
 # Create FastAPI app instance
 app = FastAPI(
@@ -186,6 +200,108 @@ async def test_embed_documents(request: EmbedDocumentsRequest):
         }
     except EmbeddingError as e:
         raise HTTPException(status_code=500, detail=str(e))
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Unexpected error: {str(e)}")
+
+
+@api_router.post("/test/embeddings/factory", tags=["Testing"])
+async def test_embeddings_factory(request: CreateEmbeddingsRequest):
+    """
+    Test endpoint for the embeddings factory function.
+
+    This endpoint tests the create_embeddings factory function which creates
+    the appropriate embeddings instance based on the provider.
+
+    Args:
+        request: Contains provider, optional api_key, optional model_name, and test_text
+
+    Returns:
+        dict: Contains information about the created embeddings instance and test results
+    """
+    try:
+        # Prepare kwargs for factory function
+        kwargs = {}
+        if request.api_key:
+            kwargs['api_key'] = request.api_key
+        if request.model_name:
+            kwargs['model_name'] = request.model_name
+
+        # Create embeddings using factory function
+        embeddings = create_embeddings(provider=request.provider, **kwargs)
+
+        # Determine the type
+        provider_type = "local" if isinstance(embeddings, LocalEmbeddings) else "openai"
+
+        # Get basic info
+        result = {
+            "success": True,
+            "provider_requested": request.provider,
+            "provider_created": provider_type,
+            "model_name": embeddings.model_name,
+            "embedding_dimension": embeddings.embedding_dimension,
+            "is_ready": embeddings.is_ready(),
+        }
+
+        # Try to generate an embedding
+        if embeddings.is_ready():
+            try:
+                embedding = embeddings.embed_query(request.test_text)
+                result["test_embedding_dimension"] = len(embedding)
+                result["test_embedding_preview"] = embedding[:5]
+                result["message"] = f"Successfully created {provider_type} embeddings and generated test embedding"
+            except Exception as e:
+                result["test_error"] = str(e)
+                result["message"] = f"Created {provider_type} embeddings but failed to generate test embedding"
+        else:
+            result["message"] = f"Created {provider_type} embeddings but service is not ready"
+
+        return result
+
+    except EmbeddingError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Unexpected error: {str(e)}")
+
+
+@api_router.post("/test/embeddings/openai", tags=["Testing"])
+async def test_openai_embeddings(request: EmbedTextRequest):
+    """
+    Test endpoint for OpenAI embeddings directly.
+
+    This endpoint tests OpenAIEmbeddings class initialization and embedding generation.
+    Note: Requires OPENAI_API_KEY environment variable or will fail.
+
+    Args:
+        request: Contains the text to embed
+
+    Returns:
+        dict: Contains information about the OpenAI embeddings instance and test results
+    """
+    try:
+        # Try to create OpenAI embeddings (will fail without API key)
+        embeddings = OpenAIEmbeddings()
+
+        result = {
+            "success": True,
+            "provider": "openai",
+            "model_name": embeddings.model_name,
+            "embedding_dimension": embeddings.embedding_dimension,
+            "is_ready": embeddings.is_ready(),
+        }
+
+        # Try to generate an embedding
+        if embeddings.is_ready():
+            embedding = embeddings.embed_query(request.text)
+            result["test_embedding_dimension"] = len(embedding)
+            result["test_embedding_preview"] = embedding[:5]
+            result["message"] = "OpenAI embeddings created and test embedding generated successfully"
+        else:
+            result["message"] = "OpenAI embeddings created but service is not ready"
+
+        return result
+
+    except EmbeddingError as e:
+        raise HTTPException(status_code=400, detail=str(e))
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Unexpected error: {str(e)}")
 

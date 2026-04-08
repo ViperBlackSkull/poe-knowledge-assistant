@@ -212,6 +212,294 @@ class LocalEmbeddings:
         return result
 
 
+class OpenAIEmbeddings:
+    """
+    OpenAI embeddings service using LangChain's OpenAI integration.
+
+    This class provides:
+    - OpenAI embedding generation using text-embedding-ada-002 or other models
+    - API key validation
+    - Batch embedding processing
+    - Error handling for API calls
+    """
+
+    def __init__(
+        self,
+        api_key: Optional[str] = None,
+        model_name: Optional[str] = None,
+    ):
+        """
+        Initialize the OpenAI embeddings service.
+
+        Args:
+            api_key: OpenAI API key. Required if provider is 'openai'.
+                    Falls back to EMBEDDING_OPENAI_API_KEY or OPENAI_API_KEY env var.
+            model_name: Name of the OpenAI embedding model to use.
+                       Defaults to 'text-embedding-ada-002'.
+
+        Raises:
+            EmbeddingError: If API key is not provided and not found in environment
+        """
+        settings = get_settings()
+
+        # Get API key from parameter, env var, or settings
+        self.api_key = api_key or os.getenv(
+            "EMBEDDING_OPENAI_API_KEY",
+            os.getenv("OPENAI_API_KEY", settings.embedding.openai_api_key)
+        )
+
+        # Validate API key is present
+        if not self.api_key:
+            raise EmbeddingError(
+                "OpenAI API key is required. Set OPENAI_API_KEY environment variable "
+                "or provide api_key parameter."
+            )
+
+        # Get model name
+        self.model_name = model_name or os.getenv(
+            "OPENAI_EMBEDDING_MODEL",
+            settings.embedding.openai_embedding_model
+        )
+
+        self._client = None
+        self._embedding_dimension: Optional[int] = None
+        self._model_error: Optional[str] = None
+
+        # Initialize the client
+        self._initialize_client()
+
+    def _initialize_client(self) -> None:
+        """Initialize the LangChain OpenAI embeddings client."""
+        try:
+            logger.info(f"Initializing OpenAI embeddings with model: {self.model_name}")
+
+            # Import here to avoid import errors if langchain-openai is not installed
+            from langchain_openai import OpenAIEmbeddings as LangChainOpenAIEmbeddings
+
+            # Create LangChain OpenAI embeddings instance
+            self._client = LangChainOpenAIEmbeddings(
+                openai_api_key=self.api_key,
+                model=self.model_name,
+            )
+
+            # Set embedding dimension based on model
+            # text-embedding-ada-002 has 1536 dimensions
+            # text-embedding-3-small has 1536 dimensions
+            # text-embedding-3-large has 3072 dimensions
+            dimension_map = {
+                "text-embedding-ada-002": 1536,
+                "text-embedding-3-small": 1536,
+                "text-embedding-3-large": 3072,
+            }
+            self._embedding_dimension = dimension_map.get(self.model_name, 1536)
+
+            logger.info(
+                f"OpenAI embeddings client initialized. "
+                f"Model: {self.model_name}, Dimension: {self._embedding_dimension}"
+            )
+
+        except ImportError as e:
+            error_msg = "langchain-openai package not installed. Install with: pip install langchain-openai"
+            logger.error(error_msg)
+            self._model_error = error_msg
+            self._client = None
+        except Exception as e:
+            error_msg = f"Failed to initialize OpenAI embeddings client: {str(e)}"
+            logger.error(error_msg)
+            self._model_error = error_msg
+            self._client = None
+
+    @property
+    def embedding_dimension(self) -> Optional[int]:
+        """Get the embedding dimension."""
+        return self._embedding_dimension
+
+    def is_ready(self) -> bool:
+        """
+        Check if the embedding service is ready for use.
+
+        Returns:
+            bool: True if client is initialized and ready, False otherwise
+        """
+        return self._client is not None
+
+    def embed_query(self, text: str) -> List[float]:
+        """
+        Generate embedding for a single query text.
+
+        Args:
+            text: The text to embed
+
+        Returns:
+            List[float]: The embedding vector
+
+        Raises:
+            EmbeddingError: If client is not initialized or embedding generation fails
+        """
+        if not self.is_ready():
+            if self._model_error:
+                raise EmbeddingError(self._model_error)
+            raise EmbeddingError("OpenAI embeddings client not initialized")
+
+        if not text or not isinstance(text, str):
+            raise EmbeddingError("Input text must be a non-empty string")
+
+        try:
+            # Use LangChain's embed_query method
+            embedding = self._client.embed_query(text)
+            return embedding
+
+        except Exception as e:
+            error_msg = f"Failed to generate OpenAI embedding: {str(e)}"
+            logger.error(error_msg)
+            raise EmbeddingError(error_msg)
+
+    def embed_documents(self, texts: List[str]) -> List[List[float]]:
+        """
+        Generate embeddings for multiple documents.
+
+        Args:
+            texts: List of texts to embed
+
+        Returns:
+            List[List[float]]: List of embedding vectors
+
+        Raises:
+            EmbeddingError: If client is not initialized or embedding generation fails
+        """
+        if not self.is_ready():
+            if self._model_error:
+                raise EmbeddingError(self._model_error)
+            raise EmbeddingError("OpenAI embeddings client not initialized")
+
+        if not texts:
+            raise EmbeddingError("Input texts list cannot be empty")
+
+        if not isinstance(texts, list):
+            raise EmbeddingError("Input must be a list of strings")
+
+        # Validate all items are strings
+        for i, text in enumerate(texts):
+            if not isinstance(text, str):
+                raise EmbeddingError(f"Item at index {i} is not a string")
+
+        try:
+            # Use LangChain's embed_documents method
+            embeddings = self._client.embed_documents(texts)
+            return embeddings
+
+        except Exception as e:
+            error_msg = f"Failed to generate OpenAI embeddings: {str(e)}"
+            logger.error(error_msg)
+            raise EmbeddingError(error_msg)
+
+    def health_check(self) -> dict:
+        """
+        Perform a health check on the embeddings service.
+
+        Returns:
+            dict with keys:
+                - status: "ready" or "error"
+                - provider: "openai"
+                - model_name: Name of the model
+                - embedding_dimension: Dimension of embeddings
+                - message: Description of the status
+        """
+        result = {
+            "status": "error",
+            "provider": "openai",
+            "model_name": self.model_name,
+            "embedding_dimension": self._embedding_dimension,
+            "message": "Client not initialized",
+        }
+
+        if self._model_error:
+            result["message"] = self._model_error
+            return result
+
+        if not self.is_ready():
+            result["message"] = "OpenAI client not initialized"
+            return result
+
+        try:
+            # Try a simple embedding to verify the API works
+            test_embedding = self._client.embed_query("test")
+
+            if test_embedding and len(test_embedding) > 0:
+                result["status"] = "ready"
+                result["message"] = f"OpenAI embedding service ready with model {self.model_name}"
+            else:
+                result["message"] = "Client initialized but embedding test failed"
+
+        except Exception as e:
+            result["message"] = f"Health check failed: {str(e)}"
+
+        return result
+
+
+def create_embeddings(
+    provider: Optional[Union[str, EmbeddingProvider]] = None,
+    **kwargs
+) -> Union[LocalEmbeddings, OpenAIEmbeddings]:
+    """
+    Factory function to create embeddings based on provider.
+
+    Args:
+        provider: Embedding provider to use ('local', 'openai', or EmbeddingProvider enum).
+                 Defaults to config setting (EMBEDDING_PROVIDER env var or 'local').
+        **kwargs: Additional arguments passed to the embeddings constructor:
+                 - For LocalEmbeddings: model_name
+                 - For OpenAIEmbeddings: api_key, model_name
+
+    Returns:
+        Union[LocalEmbeddings, OpenAIEmbeddings]: Embeddings instance based on provider
+
+    Raises:
+        EmbeddingError: If provider is invalid or initialization fails
+
+    Example:
+        >>> # Create local embeddings
+        >>> embeddings = create_embeddings(provider='local')
+
+        >>> # Create OpenAI embeddings with API key
+        >>> embeddings = create_embeddings(provider='openai', api_key='sk-...')
+
+        >>> # Use default provider from config
+        >>> embeddings = create_embeddings()
+    """
+    settings = get_settings()
+
+    # Get provider from parameter or config
+    if provider is None:
+        provider = settings.embedding.provider
+
+    # Convert string to enum if needed
+    if isinstance(provider, str):
+        try:
+            provider = EmbeddingProvider(provider.lower())
+        except ValueError:
+            valid_providers = [p.value for p in EmbeddingProvider]
+            raise EmbeddingError(
+                f"Invalid embedding provider '{provider}'. "
+                f"Must be one of: {valid_providers}"
+            )
+
+    # Create embeddings based on provider
+    if provider == EmbeddingProvider.LOCAL:
+        logger.info("Creating local embeddings service")
+        return LocalEmbeddings(**kwargs)
+    elif provider == EmbeddingProvider.OPENAI:
+        logger.info("Creating OpenAI embeddings service")
+        return OpenAIEmbeddings(**kwargs)
+    else:
+        # For other providers (ollama, lmstudio), fall back to local for now
+        logger.warning(
+            f"Embedding provider '{provider.value}' not yet implemented. "
+            f"Falling back to local embeddings."
+        )
+        return LocalEmbeddings(**kwargs)
+
+
 # Global instance for convenience
 _local_embeddings: Optional[LocalEmbeddings] = None
 
@@ -245,7 +533,9 @@ def check_embeddings_health() -> dict:
 
 __all__ = [
     "LocalEmbeddings",
+    "OpenAIEmbeddings",
     "EmbeddingError",
+    "create_embeddings",
     "get_local_embeddings",
     "check_embeddings_health",
 ]
