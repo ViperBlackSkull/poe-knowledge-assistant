@@ -249,7 +249,7 @@
         "title": "Create LLM provider factory for multiple providers",
         "feature": "RAG Pipeline",
         "dependencies": ["task-3"],
-        "status": "todo"
+        "status": "done"
       },
       {
         "id": "task-15",
