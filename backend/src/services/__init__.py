@@ -13,9 +13,9 @@ from src.services.embeddings import (
     LocalEmbeddings,
     OpenAIEmbeddings,
     EmbeddingError,
-    create_embeddings,
     get_local_embeddings,
     check_embeddings_health,
+    create_embeddings,
 )
 
 __all__ = [
@@ -26,7 +26,7 @@ __all__ = [
     "LocalEmbeddings",
     "OpenAIEmbeddings",
     "EmbeddingError",
-    "create_embeddings",
     "get_local_embeddings",
     "check_embeddings_health",
+    "create_embeddings",
 ]
