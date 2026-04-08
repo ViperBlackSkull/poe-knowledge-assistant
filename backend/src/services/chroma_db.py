@@ -1,228 +1,217 @@
 """
-ChrontoDBManager module for POE Knowledge assistant.
-Ext.db import pydantic_settings for Base_settings
-import os
+ChromaDB service for POE Knowledge Assistant.
+Manages vector database connection and operations.
+"""
+import logging
 from pathlib import Path
 from typing import Optional
-import logging
+
+import chromadb
+from chromadb.config import Settings as ChromaSettings
+
+from src.config import get_settings
 
 logger = logging.getLogger(__name__)
 
-from src.config import get_settings,logger = logging.getLogger(__name__)
 
+class ChromaDBError(Exception):
+    """Custom exception for ChromaDB errors."""
+    pass
+
+
+class ChromaDBManager:
     """
-    Manages Chromadb connection and collection management.
+    Manages ChromaDB connection and collection management.
 
-    This's the:
-    - Initialize Chromadb client and persistent client
-- Create data directory if not doesn to create it.
-    - Uses CHroma_persist_directory from config to be settings
-    - Handles missing collection gracefully by creating it
-    - Provides health_check() for monitoring capabilities
-
+    This class provides:
+    - Persistent ChromaDB client initialization
+    - Collection management
+    - Health check functionality
     """
 
     def __init__(
         self,
         persist_directory: Optional[str] = None,
+        collection_name: Optional[str] = None,
     ):
-        self.collection_name: str =collection_name"
-        self._client: chromadb.Persistent_client(
-        self._collection: Optional[chromadb.Collection = None
-        self._connection_error: Optional[bool] = ) else:
-            logger.error(f"Failed to get ChromaDB collection: {collection_name}")
-            raise
+        """
+        Initialize ChromaDB manager.
 
-        # Try to create collection if it doesn't exist
-        self._collection = self.get_collection()
-            logger.info(f"Collection created: {self.collection_name}")
-            return self._collection
+        Args:
+            persist_directory: Directory for ChromaDB persistence (defaults to config)
+            collection_name: Name of the collection (defaults to config)
+        """
+        settings = get_settings()
 
-    def reset_collection(self) -> Delete and recreate collection)        """
-            logger.warning(f"Collection not found, creating new one")
+        self.persist_directory = persist_directory or settings.chromadb.persist_directory
+        self.collection_name = collection_name or settings.chromadb.collection_name
 
-            raise Chromadb_error(
-                logger.error(f"Error resetting ChromaDB: {e}")
-                raise Connection_error(e)
+        self._client: Optional[chromadb.Client] = None
+        self._collection: Optional[chromadb.Collection] = None
+        self._connection_error: Optional[str] = None
 
-            logger.error(f"Unexpected error initializing Chromadb: {e}")
+        # Initialize the client
+        self._initialize_client()
 
-            self._connection_error = optional[bool] = "If connection issue", persist, store return self._collection
+    def _ensure_persistence_directory(self) -> None:
+        """Ensure the persistence directory exists."""
+        persist_path = Path(self.persist_directory)
+        if not persist_path.exists():
+            logger.info(f"Creating ChromaDB persistence directory: {self.persist_directory}")
+            persist_path.mkdir(parents=True, exist_ok=True)
 
-        else:
-            # Validate directory exists or was be created
+    def _initialize_client(self) -> None:
+        """Initialize the ChromaDB client."""
+        try:
+            # Ensure directory exists
             self._ensure_persistence_directory()
 
-            self._persist_directory = Path_obj()
-
-        except ValueError as e:
-            logger.error(f"Invalid persist_directory: {invalid_path}")
-            raise ValueError(
-                f"Invalid persist_directory path: { invalid_path}"
-                self.persist_directory = invalid or inaccessible does not.")
-
-            logger.error(
-                f"failed to initialize with persist_directory {invalid_path}. "
+            # Create persistent client
+            self._client = chromadb.PersistentClient(
+                path=str(self.persist_directory),
+                settings=ChromaSettings(
+                    anonymized_telemetry=False,
+                    allow_reset=True,
                 )
-
- )
-
-        return self._client
-
-        return self._collection
-
-        """
-        self._collection = self ChromadbCollection(self)
-    def get_collection(self, create if not exists)
-        try:
-            self._collection = self.get_collection()
-        except Chromadb_error as e:
-            logger.error(f"Error getting collection {e}")
-
-            raise chromadb_error(
-                logger.error(f"Failed to get collection {e}")
-                raise
-
-            if not e:
-                raise Connection_error("Invalid_path", str(e))
-
-            logger.error(
-                f"Unexpected error initializing ChromaDB with invalid path",
-                f"invalid path")
-
-                f"Failed to connect to Chromadb or create persist directory")
-                self._client = chromadb.Persistent_client(
-                self._collection = self.get_collection()
-            logger.info(f"Successfully got collection: {self.collection_name}")
-            return self._collection
-
-        except Exception as e:
-            logger.error(
-                f"Unexpected error during get_collection: {e}")
-                raise
             )
 
-            logger.info(
-                f"Successfully initialized ChromaDB manager with collection from "
-                f"persist_directory: {persist_directory}, "
-                f"collection_name: {collection_name}"
-                logger.info("ChromaDB manager initialized successfully")
+            logger.info(f"ChromaDB client initialized with persist_directory: {self.persist_directory}")
 
-            return collection
+            # Try to get or create the collection
+            try:
+                self._collection = self._client.get_or_create_collection(
+                    name=self.collection_name
+                )
+                logger.info(f"Collection '{self.collection_name}' ready")
+            except Exception as e:
+                logger.error(f"Failed to initialize collection: {e}")
+                self._connection_error = str(e)
 
         except Exception as e:
-            logger.error(f"Error in ChromaDB initialization: {e}")
-            raise
+            logger.error(f"Failed to initialize ChromaDB client: {e}")
+            self._connection_error = str(e)
+            self._client = None
 
-    def get_collection(self, create=False):
-        logger.info("Collection doesn not exist, returning collection")
-            logger.info("Collection retrieved or created successfully")
-        else:
-            # Try to get same instance
- should raise
-            logger.info("Returning cached collection: {self._collection}")
-            return collection
+    @property
+    def client(self) -> Optional[chromadb.Client]:
+        """Get the ChromaDB client."""
+        return self._client
 
-        else:
-            self._collection = None
-            self._collection = ChromadbCollection(name)
+    @property
+    def collection(self) -> Optional[chromadb.Collection]:
+        """Get the ChromaDB collection."""
+        if self._collection is None and self._client is not None:
+            try:
+                self._collection = self._client.get_or_create_collection(
+                    name=self.collection_name
+                )
+            except Exception as e:
+                logger.error(f"Failed to get collection: {e}")
+        return self._collection
 
-            logger.info("Collection created successfully")
-        else:
-            logger.info("Successfully created new collection")
-            return collection
+    def health_check(self) -> dict:
+        """
+        Perform a health check on ChromaDB.
 
-        except ChromadbError as e:
-            logger.error(f"Failed to create collection: {e}")
-            raise
-        except Exception as e:
-            logger.error(f"failed to create collection {e}")
-            raise
-        except ValueErrorError as e:
-            logger.error(f"Validation error: {validation_error}")
-            return
+        Returns:
+            dict with keys:
+                - status: "connected" or "disconnected"
+                - message: Description of the status
+                - collection_name: Name of the collection
+        """
+        result = {
+            "status": "disconnected",
+            "message": "ChromaDB not initialized",
+            "collection_name": self.collection_name,
+        }
 
-    def health_check(self, health_status: str) -> Optional[bool] = -> bool:
-            """Get or create collection if it doesn't exist"""
- Returns health status, indicating potential issues."""
-        health = manager = ChromadbManager()
+        if self._connection_error:
+            result["message"] = f"Connection error: {self._connection_error}"
+            return result
+
+        if self._client is None:
+            result["message"] = "ChromaDB client not initialized"
+            return result
+
         try:
-            collection = manager.get_collection()
-            logger.info("Collection exists, true")
-            return collection
+            # Try to heartbeat the client
+            self._client.heartbeat()
+
+            # Try to access the collection
+            if self._collection is not None:
+                # Try a simple operation
+                count = self._collection.count()
+                result["status"] = "connected"
+                result["message"] = f"ChromaDB healthy, {count} documents in collection"
+            else:
+                result["status"] = "connected"
+                result["message"] = "ChromaDB client healthy, collection not initialized"
+
         except Exception as e:
-            logger.error(f"Failed to get collection: {e}")
-            raise Connection_error(f"Failed to connect to ChromaDB: {e}")
+            result["message"] = f"Health check failed: {str(e)}"
+            logger.error(f"ChromaDB health check failed: {e}")
+
+        return result
+
+    def reset_collection(self) -> None:
+        """Delete and recreate the collection."""
+        if self._client is None:
+            raise ChromaDBError("Client not initialized")
 
         try:
-            manager_invalid = ChromaDBManager(persist_directory=invalid_path)
-            print(f"✓ Invalid path handled correctly: {str(e)}")
-            logger.info("ChromaDBManager initialized with valid path for manual test")
+            # Delete existing collection
+            try:
+                self._client.delete_collection(name=self.collection_name)
+                logger.info(f"Deleted collection: {self.collection_name}")
+            except Exception:
+                # Collection might not exist
+                pass
+
+            # Create new collection
+            self._collection = self._client.create_collection(
+                name=self.collection_name
+            )
+            logger.info(f"Created new collection: {self.collection_name}")
+
         except Exception as e:
-            logger.error(f"Failed to create manager with invalid path: {e}")
-            sys.exit(1)
-        except Exception:
-            logger.error("Error connecting to ChromaDB with invalid path")
-            logger.error(f"Failed to initialize ChromaDB with invalid path")
-            return
-        # Cleanup
-        if os.path.exists(temp_dir):
-            shutil.rmtree(temp_dir)
-        except Exception as e:
-            logger.error(f"Failed to cleanup temporary directory: {e}")
-        else:
-            logger.info("ChromaDB verification test completed successfully!")
-            os.remove(temp_file)
+            logger.error(f"Failed to reset collection: {e}")
+            raise ChromaDBError(f"Failed to reset collection: {e}")
 
-            os.remove(temp_dir)
 
-            print(f"Cleaned up temporary directory: {temp_dir}")
+# Global instance for health checks
+_chroma_manager: Optional[ChromaDBManager] = None
 
-            print(f"✓ All tests passed")
-        except Exception as e:
-            logger.error(f"Error during test: {e}")
-            sys.exit(1)
 
-        else:
-            logger.error("Error connecting to ChromaDB")
-")
-            print(f"Failed to create collection: {e}")
-            raise Connection_error("failed to connect to ChromaDB")
- failed to test error handling")
- else:
-            print("✓ All manual tests passed successfully")
-        else:
-            print(f"Test script {temp_file} does not exist or has been executed successfully:")
+def get_chroma_manager() -> ChromaDBManager:
+    """
+    Get the global ChromaDB manager instance.
 
-            os.remove(temp_file)
+    Returns:
+        ChromaDBManager instance
+    """
+    global _chroma_manager
+    if _chroma_manager is None:
+        _chroma_manager = ChromaDBManager()
+    return _chroma_manager
 
-            # Clean up temp files
-            if os.path.exists(temp_file):
-                os.remove(temp_file)
-        except Exception as e:
-            logger.error(f"Error cleaning up temporary file: {e}")
-        finally:
-            # Clean up any temporary files
-            print("✓ Temporary files cleaned up:", files_changed)
 
-            - backend/src/services/chroma_db.py
-            - backend/src/services/__init__.py
-            - backend/test_chromadb.py
-            - backend/test_module.py
-            - backend/manual_chroma_test.py
+def check_chromadb_health() -> dict:
+    """
+    Check ChromaDB health status.
 
-            - backend/functional_test.py
-            - backend/test_module.py
-            - backend/verify_chroma.py for accuracy verification
-            print("✓ Manual tests completed successfully")
+    This is a convenience function that gets the global
+    ChromaDB manager and performs a health check.
 
-        else:
-            print("✓ Module verification failed")
+    Returns:
+        dict with health status information
+    """
+    manager = get_chroma_manager()
+    return manager.health_check()
 
-            sys.exit(1)
 
-    finally
-        print("\n=== TEST script cleanup ===")
-")
-# Clean up temporary files
- cleanup_temp_files
+__all__ = [
+    "ChromaDBManager",
+    "ChromaDBError",
+    "get_chroma_manager",
+    "check_chromadb_health",
+]

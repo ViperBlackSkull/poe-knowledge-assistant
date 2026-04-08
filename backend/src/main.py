@@ -4,6 +4,7 @@ FastAPI application entry point for POE Knowledge Assistant.
 from fastapi import FastAPI, APIRouter
 from fastapi.middleware.cors import CORSMiddleware
 from src.config import get_settings
+from src.services.chroma_db import check_chromadb_health
 
 # Get settings instance
 settings = get_settings()
@@ -42,8 +43,31 @@ async def root():
 
 @api_router.get("/health", tags=["Health"])
 async def health_check():
-    """Health check endpoint."""
-    return {"status": "healthy"}
+    """
+    Health check endpoint.
+
+    Returns:
+        dict: Health status including:
+            - status: Overall health status ("healthy" or "degraded")
+            - chromadb_status: ChromaDB connection status ("connected" or "disconnected")
+            - version: Application version
+            - chromadb_message: Detailed ChromaDB status message
+    """
+    # Check ChromaDB health
+    chromadb_health = check_chromadb_health()
+    chromadb_status = chromadb_health.get("status", "disconnected")
+    chromadb_message = chromadb_health.get("message", "Unknown status")
+
+    # Determine overall status
+    # System is "healthy" if ChromaDB is connected, "degraded" otherwise
+    overall_status = "healthy" if chromadb_status == "connected" else "degraded"
+
+    return {
+        "status": overall_status,
+        "chromadb_status": chromadb_status,
+        "version": settings.app_version,
+        "chromadb_message": chromadb_message,
+    }
 
 
 @api_router.get("/config", tags=["Configuration"])
