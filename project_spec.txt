@@ -1,0 +1,1119 @@
+# Project Specification
+
+## Project Goal
+# Path of Exile Knowledge Assistant
+
+A chat application with RAG-powered access to poedb.tw data for Path of Exile 1 and 2.
+
+## Tech Stack
+
+- **Backend:** Python FastAPI with LangChain for RAG pipeline
+- **Vector DB:** ChromaDB (local, no external dependencies)
+- **Frontend:** React with TypeScript, Tailwind CSS
+- **Embeddings:** Local by default (sentence-transformers, Ollama, or LM Studio), OpenAI optional
+- **LLM:** Configurable provider support (OpenAI, Anthropic, or local via Ollama)
+- **Data Source:** poedb.tw (scraped and indexed on demand)
+
+## Core Concept
+
+```
+User Query → API /chat → RAG Query (filtered by game version) → LLM Response with Citations
+```
+
+The application maintains a pre-indexed knowledge base from poedb.tw that can be refreshed on demand via an admin endpoint.
+
+## Features (7 total)
+
+### 1. Chat Interface
+
+- Clean, minimal chat ui with message history
+- PoE1/PoE2 game version selector (dropdown)
+- Markdown rendering for formatted responses
+- Source citations displayed when RAG data is is used
+- Typing indicator during response generation
+- Clear conversation button
+
+### 2. Item Display Cards
+
+When the AI references items ( uniques, skills, etc.), display them as visual item cards similar to poedb.tw:
+
+- **Item Image/screenshot:** Show the actual item appearance from poedb.tw
+- **Item stats panel:** Stylized display matching in-game item tooltip
+  - Item name with appropriate color (unique = gold, rare = yellow, etc.)
+  - Base type and level requirements
+  - All stats and modifiers
+  - Flavor text (if applicable)
+- **Interactive:** Click to expand full details or open poedb.tw link
+- **Embedded in chat:** Cards appear inline within assistant responses
+- **Multiple items:** Grid layout when multiple items are referenced
+
+### 3. Build Context
+- Set current build/ascendancy for the AI provides consistent recommendations
+- Stored per conversation (persists in localStorage)
+- AI uses this context when suggesting items and skills
+- Display current build context in header
+
+- Clear/change build button to reset
+
+### 4. RAG pipeline with game filtering
+
+When the AI references items (uniques, skills, etc.), display them as visual item cards similar to poedb.tw:
+
+- **Item Image/Screenshot:** Show the actual item appearance from poedb.tw
+- **Item Stats Panel:** Stylized display matching in-game item tooltip
+  - Item name with appropriate color (unique = gold, rare = yellow, etc.)
+  - Base type and level requirements
+  - All stats and modifiers
+  - Flavor text (if applicable)
+- **Interactive:** Click to expand full details or open poedb.tw link
+- **Embedded in Chat:** Cards appear inline within assistant responses
+- **Multiple Items:** Grid layout when multiple items are referenced
+
+### 3. RAG Pipeline with Game Filtering
+
+- Single ChromaDB collection with game metadata on each document
+- Metadata filter applied to queries based on selected game version
+- LangChain-based retrieval chain
+- Top-k results retrieval (configurable, default 3)
+- Source document citations included in response metadata
+
+### 4. Knowledge Base Scraper
+
+- Admin endpoint: `POST /api/admin/scrape` to trigger scraping
+- Scrapes poedb.tw for PoE1 and PoE2 content
+- Captures item images/screenshots for visual display
+- Indexes content into ChromaDB with game metadata and image URLs
+- Progress reporting via API response (includes pages scraped, documents indexed)
+- Configurable scrape depth (shallow vs deep)
+
+### 5. Build Context
+- Set current build/ascendancy for the AI provides consistent recommendations
+- Stored per conversation (persists in localStorage)
+- AI uses this context when suggesting items and skills
+- Display current build context in header
+- Clear/change build button to reset
+
+### 6. Data Freshness
+- Show last scrape date in header (e.g., "Data updated:  hours ago")
+- Include scrape date in response metadata
+- Warn if data is stale (optional: highlight if > 30 days old)
+
+### 7. Configuration Panel
+
+- LLM provider selection (OpenAI, Anthropic, Ollama, LM Studio)
+- Embedding provider selection (Local default, Ollama, LM Studio, OpenAI optional)
+- API key configuration (for LLM and optional OpenAI embeddings)
+- Base URL configuration (Ollama: localhost:11434, LM Studio: http://192.168.1.253:1234)
+- Game version toggle persistence in localStorage
+
+## Game Version Filtering
+
+The key feature is filtering RAG queries by game version:
+
+```python
+# ChromaDB query with metadata filter
+results = vectorstore.similarity_search(
+    query=user_query,
+    k=3,
+    filter={"game": selected_game}  # "poe1" or "poe2"
+)
+```
+
+Each document in ChromaDB includes:
+- `content`: The text content
+- `metadata`: {"game": "poe1" | "poe2", "source_url": "...", "title": "..."}
+- `embedding`: Vector representation
+
+## Data Flow
+
+1. User selects game version (PoE1 or PoE2)
+2. User optionally sets build context (class/ascendancy)
+3. User submits query
+4. Backend performs RAG search filtered by selected game (and optionally build context)
+5. Retrieved context + query sent to LLM
+6. LLM generates response with item cards and citations
+7. Response streamed back to frontend
+
+## Database Schema
+
+### ChromaDB Collection: `poe_knowledge`
+
+```python
+{
+    "ids": ["doc_id_1", "doc_id_2", ...],
+    "embeddings": [[0.1, 0.2, ...], ...],
+    "documents": ["content of doc 1", "content of doc 2", ...],
+    "metadatas": [
+        {
+            "game": "poe1",
+            "type": "unique",  # unique, gem, passive, ascendancy, etc.
+            "source_url": "https://poedb.tw/us/...",
+            "title": "Staff of the First Sin",
+            "image_url": "https://web.poecdn.com/...",  # Item screenshot/image
+            "base_type": "Staff",
+            "rarity": "unique",  # For color coding
+            "requirements": "Level: 60, Str: 113, Int: 113",
+            "stats": ["+150% Physical Damage", "+50 to Intelligence"],
+            "flavor_text": "The first sin was curiosity..."
+        },
+        ...
+    ]
+}
+```
+
+### SQLite: `conversations` (optional, for history)
+
+```sql
+CREATE TABLE conversations (
+    id TEXT PRIMARY KEY,
+    game_version TEXT,
+    created_at TIMESTAMP,
+    title TEXT
+);
+
+CREATE TABLE messages (
+    id TEXT PRIMARY KEY,
+    conversation_id TEXT,
+    role TEXT,  -- 'user' or 'assistant'
+    content TEXT,
+    citations TEXT,  -- JSON array of sources used
+    created_at TIMESTAMP
+);
+```
+
+## API Endpoints
+
+```
+POST /api/chat                 - Send chat message (with game version and build context)
+GET  /api/chat/stream          - SSE streaming response
+POST /api/admin/scrape         - Trigger knowledge base scraping
+GET  /api/admin/scrape/status  - Get scraping status/progress
+GET  /api/config               - Get current configuration
+PUT  /api/config               - Update configuration
+GET  /api/health               - Health check endpoint
+GET  /api/freshness            - Get last scrape timestamp
+```
+
+### Chat Endpoint
+
+```python
+# POST /api/chat
+{
+    "message": "What are the best leveling uniques for a spell caster?",
+    "game": "poe1",  # or "poe2"
+    "build_context": "Witch/Necromancer",  # Optional: class/ascendancy for tailored recommendations
+    "conversation_id": "optional-uuid"
+}
+
+# Response (streaming)
+{
+    "type": "token",
+    "content": "Based on",
+    "done": false
+}
+{
+    "type": "token",
+    "content": " the",
+    "done": false
+}
+{
+    "type": "item",
+    "item": {
+        "title": "Staff of the First Sin",
+        "type": "unique",
+        "image_url": "https://web.poecdn.com/...",
+        "source_url": "https://poedb.tw/us/Staff_of_the_First_Sin",
+        "base_type": "Staff",
+        "requirements": "Level: 60, Str: 113, Int: 113",
+        "stats": ["+150% Physical Damage", "+50 to Intelligence"],
+        "flavor_text": "The first sin was curiosity..."
+    },
+    "done": false
+}
+{
+    "type": "done",
+    "citations": [
+        {"title": "Staff of the First Sin", "url": "https://poedb.tw/us/Staff_of_the_First_Sin"}
+    ],
+    "done": true
+}
+```
+
+### Scraper Endpoint
+
+```python
+# POST /api/admin/scrape
+{
+    "game": "poe1",  # or "poe2", or null for both
+    "depth": "shallow"  # or "deep"
+}
+
+# Response
+{
+    "status": "started",
+    "message": "Scraping poedb.tw for PoE1 content..."
+}
+```
+
+## Scraper Implementation
+
+### Target URLs
+
+The scraper will focus on key poedb.tw sections:
+
+- **Items/Uniques:** `/us/Unique/` - All unique items
+- **Skills/Gems:** `/us/Gem/` - All skill gems
+- **Passive Skills:** `/us/Passive_Skill/` - Tree nodes and passive skills
+- **Ascendancy:** `/us/Ascendancy/` - Ascendancy classes
+- **Items (Base):** `/us/Item/` - Base item types
+- **Modifiers:** `/us/Modifier/` - Map and item modifiers
+
+### Scraper Strategy
+
+1. Start with category index pages
+2. Extract links to individual item/skill pages
+3. Scrape each page for:
+   - Name/title
+   - Description/stats
+   - Item screenshot/image URL (from poedb.tw or poecdn.com)
+   - Base type, requirements, modifiers
+   - Flavor text
+   - Related items/skills
+4. Store in ChromaDB with game metadata and image URLs
+
+### Rate Limiting
+
+- Respect robots.txt and rate limits
+- Add delays between requests (1-2 seconds)
+- Configurable concurrency
+
+## UI Layout
+
+### Main Chat View
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│ ╔═══════════════════════════════════════════════════════════════╗ │
+│ ║  🔮 PoE Knowledge Assistant  [PoE1 ▼]  [⚙️]           ║ │
+│ ║  Build: Witch/Necromancer              Data: 2 hours ago   ║ │  <- Build + freshness
+│ ╚═══════════════════════════════════════════════════════════════╝ │
+│                                                                     │
+│  ┌─────────────────────────────────────────────────────────────┐   │
+│  │ ░░░ Subtle fog/particle background ░░░                      │   │
+│  │                                                             │   │
+│  │  ┌─────────────────────────────────────────────────────┐   │   │
+│  │  │ You: What are good leveling uniques for a witch?     │   │   │
+│  │  └─────────────────────────────────────────────────────┘   │   │
+│  │                                                             │   │
+│  │  ┌─────────────────────────────────────────────────────┐   │   │
+│  │  │ Based on the current meta, for spellcasters...       │   │   │
+│  │  │                                                     │   │   │
+│  │  │ ┌─────────────────────────────────────────────────┐ │   │   │
+│  │  │ │        ╔═══════════════════════════════════╗    │ │   │   │
+│  │  │ │        ║     [ITEM SCREENSHOT]            ║    │ │   │   │  <- Item card
+│  │  │ │        ║     From poedb.tw               ║    │ │   │   │
+│  │  │ │        ╚═══════════════════════════════════╝    │ │   │   │
+│  │  │ │  ─────────────────────────────────────────────  │ │   │   │
+│  │  │ │  Staff of the First Sin                       │ │   │   │  <- Gold text (unique)
+│  │  │ │  Staff                                        │ │   │   │  <- White text
+│  │  │ │  ─────────────────────────────────────────────  │ │   │   │
+│  │  │ │  Physical Damage: 52-98                       │ │   │   │
+│  │  │ │  Critical Strike Chance: 6.50%                │ │   │   │
+│  │  │ │  Attacks per Second: 1.30                     │ │   │   │
+│  │  │ │  ─────────────────────────────────────────────  │ │   │   │
+│  │  │ │  Requirements:                                │ │   │   │
+│  │  │ │  Level: 60, Str: 113, Int: 113                │ │   │   │
+│  │  │ │  ─────────────────────────────────────────────  │ │   │   │
+│  │  │ │  +150% increased Physical Damage               │ │   │   │  <- Blue modifiers
+│  │  │ │  +50 to Intelligence                           │ │   │   │
+│  │  │ │  ...                                          │ │   │   │
+│  │  │ │  ─────────────────────────────────────────────  │ │   │   │
+│  │  │ │  "The first sin was curiosity..."              │ │   │   │  <- Italic flavor text
+│  │  │ │  ─────────────────────────────────────────────  │ │   │   │
+│  │  │ │  📎 View on poedb.tw                          │ │   │   │
+│  │  │ └─────────────────────────────────────────────────┘ │   │   │
+│  │  └─────────────────────────────────────────────────────┘   │   │
+│  │                                                             │   │
+│  └─────────────────────────────────────────────────────────────┘   │
+│                                                                     │
+│  ┌─────────────────────────────────────────────────────────────┐   │
+│  │ [Type your question about Wraeclast...]          [Send] ⚔   │   │  <- Input with gold border
+│  └─────────────────────────────────────────────────────────────┘   │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+### Settings Panel (Slide-in from right)
+
+```
+┌─────────────────────────────────────┐
+│ ╔═════════════════════════════════╗ │
+│ ║  ⚙️ Configuration          [X]  ║ │  <- Gold border header
+│ ╚═════════════════════════════════╝ │
+├─────────────────────────────────────┤
+│                                     │
+│  ▼ LLM Provider                     │
+│  ┌─────────────────────────────┐   │
+│  │ OpenAI              ▼       │   │  <- Dark dropdown
+│  └─────────────────────────────┘   │
+│                                     │
+│  ▼ API Key                          │
+│  ┌─────────────────────────────┐   │
+│  │ ••••••••••••••••••••        │   │
+│  └─────────────────────────────┘   │
+│                                     │
+│  ▼ Embedding Provider               │
+│  ┌─────────────────────────────┐   │
+│  │ Local               ▼       │   │
+│  └─────────────────────────────┘   │
+│                                     │
+│  ▼ Embedding Model                  │
+│  ┌─────────────────────────────┐   │
+│  │ all-MiniLM-L6-v2            │   │
+│  └─────────────────────────────┘   │
+│                                     │
+│  ▼ LM Studio URL                    │
+│  ┌─────────────────────────────┐   │
+│  │ http://192.168.1.253:1234   │   │
+│  └─────────────────────────────┘   │
+│                                     │
+│  ┌─────────────────────────────┐   │
+│  │    [ Save Configuration ]   │   │  <- Gold border button
+│  └─────────────────────────────┘   │
+└─────────────────────────────────────┘
+```
+
+## Design Guidelines
+
+The interface should authentically match Path of Exile's dark, gritty, mature aesthetic:
+
+- **Theme:** Dark mode exclusively - no light mode option
+- **Primary Color:** Blood red/crimson (#7b1a1a, #8b0000)
+- **Accent Color:** Gold/amber (#c8aa6e, #d4a84b) for highlights, links, and interactive elements
+- **Secondary Accent:** Ethereal blue (#4a90d9, #5b9bd5) for magical/skill-related content
+- **Background:** Near-black with subtle texture (#0c0c0e to #1a1a1d), subtle gradient overlays
+- **Text:** Off-white/cream (#e8e0d5, #d4c4a8) for readability on dark backgrounds
+- **Typography:** Clean but slightly stylized - Fontin for headers (or similar fantasy serif), clean sans-serif for body
+- **Cards/panels:** Dark with subtle glow borders, gold or red accent borders on hover
+- **Borders:** Subtle beveled/gold trim effect on important elements
+- **Icons:** Stylized to match PoE UI elements (skill gems, portals, orbs)
+- **Visual Effects:** Subtle particle effects, fog/mist in backgrounds, glowing runes
+- **Animations:** Smooth, atmospheric - nothing bouncy or playful
+- **Overall Feel:** Mature, dark fantasy, Think Wraeclast - grim but functional
+
+### UI Element Styling
+
+- **Buttons:** Dark with gold border, red glow on hover
+- **Input fields:** Dark recessed look, gold border on focus
+- **Dropdowns:** Dark with gold accent, PoE-style arrow icons
+- **Citations:** Stylized like item tooltips with gold borders
+- **Loading states:** Subtle glow pulse, not spinners
+- **Scrollbars:** Thin, dark with gold accent
+
+## Implementation Steps
+
+### Step 1: Backend Foundation
+
+- Set up FastAPI project structure
+- Create configuration management (env vars + settings)
+- Set up ChromaDB connection and collection
+- Create Pydantic models for API
+
+### Step 2: RAG Pipeline
+
+- Implement local embeddings (sentence-transformers with all-MiniLM-L6-v2 or similar)
+- Create LangChain RAG chain with game filtering
+- Implement similarity search with metadata filter
+- Add citation extraction from retrieved documents
+
+### Step 3: Scraper Implementation
+
+- Create poedb.tw scraper with BeautifulSoup
+- Implement rate limiting and error handling
+- Create indexing function to store in ChromaDB
+- Add admin API endpoint to trigger scraping
+
+### Step 4: Chat API
+
+- Implement chat endpoint with game version parameter
+- Create streaming response with SSE
+- Add conversation management (optional SQLite)
+- Include citations in response
+
+### Step 5: Frontend Foundation
+
+- Set up React + Vite + TypeScript project
+- Create Tailwind configuration with PoE theme
+- Set up API client with streaming support
+- Create basic layout components
+
+### Step 6: Chat Interface
+
+- Build message list component with scrolling
+- Create message bubble components (user/assistant)
+- Implement item card component with:
+  - Item image display
+  - PoE-style tooltip layout
+  - Rarity-based color coding
+  - Modifier formatting
+  - Expandable details
+- Add typing indicator animation
+
+### Step 7: Game Selector and Controls
+
+- Create PoE1/PoE2 dropdown selector
+- Add settings panel (slide-in)
+- Implement configuration form
+- Add clear conversation button
+
+### Step 8: Build Context and Data Freshness
+
+- Create build context selector (class/ascendancy dropdown)
+- Store build context in localStorage per conversation
+- Pass build context to RAG queries for tailored recommendations
+- Add data freshness indicator in header
+- Display last scrape timestamp with relative time
+
+### Step 9: Polish and Testing
+
+- Add loading states and error handling
+- Implement responsive design
+- Test RAG pipeline with sample queries
+- Test scraper functionality
+- Final UI polish and animations
+
+## Success Criteria
+
+### Functionality
+
+- Chat responses use RAG to answer PoE questions accurately
+- Game version filtering works correctly (PoE1 vs PoE2)
+- Build context influences recommendations appropriately
+- Scraper successfully indexes poedb.tw content including images
+- Item cards display with screenshots and PoE-style formatting
+- Citations display correctly with source links
+- Streaming responses work smoothly
+- Data freshness indicator shows last scrape time
+
+### User Experience
+
+- Clean, intuitive chat interface
+- Game selector is easy to find and use
+- Build context selector helps focus recommendations
+- Citations are clear and clickable
+- Settings panel is accessible and functional
+- Responsive on mobile devices
+
+### Technical Quality
+
+- RAG queries return relevant results with game filtering
+- ChromaDB stores and retrieves documents efficiently
+- Scraper respects rate limits and handles errors
+- Configuration is flexible and persistent
+- Code is clean and maintainable
+
+### Design Polish
+
+- Dark theme matches PoE aesthetic
+- Smooth animations and transitions
+- Clear typography and spacing
+- Consistent design language throughout
+- Professional appearance
+
+## Configuration Options
+
+```python
+# Environment Variables
+LLM_PROVIDER=openai|anthropic|ollama|lmstudio
+OPENAI_API_KEY=sk-...
+ANTHROPIC_API_KEY=sk-...
+OLLAMA_BASE_URL=http://localhost:11434
+LMSTUDIO_BASE_URL=http://192.168.1.253:1234
+EMBEDDING_PROVIDER=local|ollama|lmstudio|openai  # Default: local
+EMBEDDING_MODEL=all-MiniLM-L6-v2  # Local default, or model name for Ollama/LMStudio
+CHROMA_PERSIST_DIR=./chroma_data
+```
+
+## Example Queries
+
+Useful for testing the system:
+
+- "What are good leveling uniques for a spellcaster?"
+- "Best gems for a freezing pulse build?"
+- "What's the difference between PoE1 and PoE2 passives?"
+
+## Data Freshness
+
+- Show when knowledge base was last updated
+- Display last scrape timestamp with relative time
+
+- Warn if data is stale (optional: highlight if > 30 days old)
+
+## Configuration Options
+
+- The scraper should be run initially to populate the knowledge base
+- Game version is stored per document, allowing flexible filtering
+- Citations help users verify information and explore sources
+- The minimal scope keeps the app focused and maintainable
+
+## Planning Instructions
+The planner agent should:
+1. Infer appropriate tech stack based on the project goal
+2. Break down the goal into specific features
+3. Create fine-grained tasks (10-30 minutes each)
+4. Identify dependencies between tasks
+5. Generate a complete task breakdown
+
+---
+This specification was auto-generated from: # Path of Exile Knowledge Assistant
+
+A chat application with RAG-powered access to poedb.tw data for Path of Exile 1 and 2.
+
+## Tech Stack
+
+- **Backend:** Python FastAPI with LangChain for RAG pipeline
+- **Vector DB:** ChromaDB (local, no external dependencies)
+- **Frontend:** React with TypeScript, Tailwind CSS
+- **Embeddings:** Local by default (sentence-transformers, Ollama, or LM Studio), OpenAI optional
+- **LLM:** Configurable provider support (OpenAI, Anthropic, or local via Ollama)
+- **Data Source:** poedb.tw (scraped and indexed on demand)
+
+## Core Concept
+
+```
+User Query → API /chat → RAG Query (filtered by game version) → LLM Response with Citations
+```
+
+The application maintains a pre-indexed knowledge base from poedb.tw that can be refreshed on demand via an admin endpoint.
+
+## Features (7 total)
+
+### 1. Chat Interface
+
+- Clean, minimal chat ui with message history
+- PoE1/PoE2 game version selector (dropdown)
+- Markdown rendering for formatted responses
+- Source citations displayed when RAG data is is used
+- Typing indicator during response generation
+- Clear conversation button
+
+### 2. Item Display Cards
+
+When the AI references items ( uniques, skills, etc.), display them as visual item cards similar to poedb.tw:
+
+- **Item Image/screenshot:** Show the actual item appearance from poedb.tw
+- **Item stats panel:** Stylized display matching in-game item tooltip
+  - Item name with appropriate color (unique = gold, rare = yellow, etc.)
+  - Base type and level requirements
+  - All stats and modifiers
+  - Flavor text (if applicable)
+- **Interactive:** Click to expand full details or open poedb.tw link
+- **Embedded in chat:** Cards appear inline within assistant responses
+- **Multiple items:** Grid layout when multiple items are referenced
+
+### 3. Build Context
+- Set current build/ascendancy for the AI provides consistent recommendations
+- Stored per conversation (persists in localStorage)
+- AI uses this context when suggesting items and skills
+- Display current build context in header
+
+- Clear/change build button to reset
+
+### 4. RAG pipeline with game filtering
+
+When the AI references items (uniques, skills, etc.), display them as visual item cards similar to poedb.tw:
+
+- **Item Image/Screenshot:** Show the actual item appearance from poedb.tw
+- **Item Stats Panel:** Stylized display matching in-game item tooltip
+  - Item name with appropriate color (unique = gold, rare = yellow, etc.)
+  - Base type and level requirements
+  - All stats and modifiers
+  - Flavor text (if applicable)
+- **Interactive:** Click to expand full details or open poedb.tw link
+- **Embedded in Chat:** Cards appear inline within assistant responses
+- **Multiple Items:** Grid layout when multiple items are referenced
+
+### 3. RAG Pipeline with Game Filtering
+
+- Single ChromaDB collection with game metadata on each document
+- Metadata filter applied to queries based on selected game version
+- LangChain-based retrieval chain
+- Top-k results retrieval (configurable, default 3)
+- Source document citations included in response metadata
+
+### 4. Knowledge Base Scraper
+
+- Admin endpoint: `POST /api/admin/scrape` to trigger scraping
+- Scrapes poedb.tw for PoE1 and PoE2 content
+- Captures item images/screenshots for visual display
+- Indexes content into ChromaDB with game metadata and image URLs
+- Progress reporting via API response (includes pages scraped, documents indexed)
+- Configurable scrape depth (shallow vs deep)
+
+### 5. Build Context
+- Set current build/ascendancy for the AI provides consistent recommendations
+- Stored per conversation (persists in localStorage)
+- AI uses this context when suggesting items and skills
+- Display current build context in header
+- Clear/change build button to reset
+
+### 6. Data Freshness
+- Show last scrape date in header (e.g., "Data updated:  hours ago")
+- Include scrape date in response metadata
+- Warn if data is stale (optional: highlight if > 30 days old)
+
+### 7. Configuration Panel
+
+- LLM provider selection (OpenAI, Anthropic, Ollama, LM Studio)
+- Embedding provider selection (Local default, Ollama, LM Studio, OpenAI optional)
+- API key configuration (for LLM and optional OpenAI embeddings)
+- Base URL configuration (Ollama: localhost:11434, LM Studio: http://192.168.1.253:1234)
+- Game version toggle persistence in localStorage
+
+## Game Version Filtering
+
+The key feature is filtering RAG queries by game version:
+
+```python
+# ChromaDB query with metadata filter
+results = vectorstore.similarity_search(
+    query=user_query,
+    k=3,
+    filter={"game": selected_game}  # "poe1" or "poe2"
+)
+```
+
+Each document in ChromaDB includes:
+- `content`: The text content
+- `metadata`: {"game": "poe1" | "poe2", "source_url": "...", "title": "..."}
+- `embedding`: Vector representation
+
+## Data Flow
+
+1. User selects game version (PoE1 or PoE2)
+2. User optionally sets build context (class/ascendancy)
+3. User submits query
+4. Backend performs RAG search filtered by selected game (and optionally build context)
+5. Retrieved context + query sent to LLM
+6. LLM generates response with item cards and citations
+7. Response streamed back to frontend
+
+## Database Schema
+
+### ChromaDB Collection: `poe_knowledge`
+
+```python
+{
+    "ids": ["doc_id_1", "doc_id_2", ...],
+    "embeddings": [[0.1, 0.2, ...], ...],
+    "documents": ["content of doc 1", "content of doc 2", ...],
+    "metadatas": [
+        {
+            "game": "poe1",
+            "type": "unique",  # unique, gem, passive, ascendancy, etc.
+            "source_url": "https://poedb.tw/us/...",
+            "title": "Staff of the First Sin",
+            "image_url": "https://web.poecdn.com/...",  # Item screenshot/image
+            "base_type": "Staff",
+            "rarity": "unique",  # For color coding
+            "requirements": "Level: 60, Str: 113, Int: 113",
+            "stats": ["+150% Physical Damage", "+50 to Intelligence"],
+            "flavor_text": "The first sin was curiosity..."
+        },
+        ...
+    ]
+}
+```
+
+### SQLite: `conversations` (optional, for history)
+
+```sql
+CREATE TABLE conversations (
+    id TEXT PRIMARY KEY,
+    game_version TEXT,
+    created_at TIMESTAMP,
+    title TEXT
+);
+
+CREATE TABLE messages (
+    id TEXT PRIMARY KEY,
+    conversation_id TEXT,
+    role TEXT,  -- 'user' or 'assistant'
+    content TEXT,
+    citations TEXT,  -- JSON array of sources used
+    created_at TIMESTAMP
+);
+```
+
+## API Endpoints
+
+```
+POST /api/chat                 - Send chat message (with game version and build context)
+GET  /api/chat/stream          - SSE streaming response
+POST /api/admin/scrape         - Trigger knowledge base scraping
+GET  /api/admin/scrape/status  - Get scraping status/progress
+GET  /api/config               - Get current configuration
+PUT  /api/config               - Update configuration
+GET  /api/health               - Health check endpoint
+GET  /api/freshness            - Get last scrape timestamp
+```
+
+### Chat Endpoint
+
+```python
+# POST /api/chat
+{
+    "message": "What are the best leveling uniques for a spell caster?",
+    "game": "poe1",  # or "poe2"
+    "build_context": "Witch/Necromancer",  # Optional: class/ascendancy for tailored recommendations
+    "conversation_id": "optional-uuid"
+}
+
+# Response (streaming)
+{
+    "type": "token",
+    "content": "Based on",
+    "done": false
+}
+{
+    "type": "token",
+    "content": " the",
+    "done": false
+}
+{
+    "type": "item",
+    "item": {
+        "title": "Staff of the First Sin",
+        "type": "unique",
+        "image_url": "https://web.poecdn.com/...",
+        "source_url": "https://poedb.tw/us/Staff_of_the_First_Sin",
+        "base_type": "Staff",
+        "requirements": "Level: 60, Str: 113, Int: 113",
+        "stats": ["+150% Physical Damage", "+50 to Intelligence"],
+        "flavor_text": "The first sin was curiosity..."
+    },
+    "done": false
+}
+{
+    "type": "done",
+    "citations": [
+        {"title": "Staff of the First Sin", "url": "https://poedb.tw/us/Staff_of_the_First_Sin"}
+    ],
+    "done": true
+}
+```
+
+### Scraper Endpoint
+
+```python
+# POST /api/admin/scrape
+{
+    "game": "poe1",  # or "poe2", or null for both
+    "depth": "shallow"  # or "deep"
+}
+
+# Response
+{
+    "status": "started",
+    "message": "Scraping poedb.tw for PoE1 content..."
+}
+```
+
+## Scraper Implementation
+
+### Target URLs
+
+The scraper will focus on key poedb.tw sections:
+
+- **Items/Uniques:** `/us/Unique/` - All unique items
+- **Skills/Gems:** `/us/Gem/` - All skill gems
+- **Passive Skills:** `/us/Passive_Skill/` - Tree nodes and passive skills
+- **Ascendancy:** `/us/Ascendancy/` - Ascendancy classes
+- **Items (Base):** `/us/Item/` - Base item types
+- **Modifiers:** `/us/Modifier/` - Map and item modifiers
+
+### Scraper Strategy
+
+1. Start with category index pages
+2. Extract links to individual item/skill pages
+3. Scrape each page for:
+   - Name/title
+   - Description/stats
+   - Item screenshot/image URL (from poedb.tw or poecdn.com)
+   - Base type, requirements, modifiers
+   - Flavor text
+   - Related items/skills
+4. Store in ChromaDB with game metadata and image URLs
+
+### Rate Limiting
+
+- Respect robots.txt and rate limits
+- Add delays between requests (1-2 seconds)
+- Configurable concurrency
+
+## UI Layout
+
+### Main Chat View
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│ ╔═══════════════════════════════════════════════════════════════╗ │
+│ ║  🔮 PoE Knowledge Assistant  [PoE1 ▼]  [⚙️]           ║ │
+│ ║  Build: Witch/Necromancer              Data: 2 hours ago   ║ │  <- Build + freshness
+│ ╚═══════════════════════════════════════════════════════════════╝ │
+│                                                                     │
+│  ┌─────────────────────────────────────────────────────────────┐   │
+│  │ ░░░ Subtle fog/particle background ░░░                      │   │
+│  │                                                             │   │
+│  │  ┌─────────────────────────────────────────────────────┐   │   │
+│  │  │ You: What are good leveling uniques for a witch?     │   │   │
+│  │  └─────────────────────────────────────────────────────┘   │   │
+│  │                                                             │   │
+│  │  ┌─────────────────────────────────────────────────────┐   │   │
+│  │  │ Based on the current meta, for spellcasters...       │   │   │
+│  │  │                                                     │   │   │
+│  │  │ ┌─────────────────────────────────────────────────┐ │   │   │
+│  │  │ │        ╔═══════════════════════════════════╗    │ │   │   │
+│  │  │ │        ║     [ITEM SCREENSHOT]            ║    │ │   │   │  <- Item card
+│  │  │ │        ║     From poedb.tw               ║    │ │   │   │
+│  │  │ │        ╚═══════════════════════════════════╝    │ │   │   │
+│  │  │ │  ─────────────────────────────────────────────  │ │   │   │
+│  │  │ │  Staff of the First Sin                       │ │   │   │  <- Gold text (unique)
+│  │  │ │  Staff                                        │ │   │   │  <- White text
+│  │  │ │  ─────────────────────────────────────────────  │ │   │   │
+│  │  │ │  Physical Damage: 52-98                       │ │   │   │
+│  │  │ │  Critical Strike Chance: 6.50%                │ │   │   │
+│  │  │ │  Attacks per Second: 1.30                     │ │   │   │
+│  │  │ │  ─────────────────────────────────────────────  │ │   │   │
+│  │  │ │  Requirements:                                │ │   │   │
+│  │  │ │  Level: 60, Str: 113, Int: 113                │ │   │   │
+│  │  │ │  ─────────────────────────────────────────────  │ │   │   │
+│  │  │ │  +150% increased Physical Damage               │ │   │   │  <- Blue modifiers
+│  │  │ │  +50 to Intelligence                           │ │   │   │
+│  │  │ │  ...                                          │ │   │   │
+│  │  │ │  ─────────────────────────────────────────────  │ │   │   │
+│  │  │ │  "The first sin was curiosity..."              │ │   │   │  <- Italic flavor text
+│  │  │ │  ─────────────────────────────────────────────  │ │   │   │
+│  │  │ │  📎 View on poedb.tw                          │ │   │   │
+│  │  │ └─────────────────────────────────────────────────┘ │   │   │
+│  │  └─────────────────────────────────────────────────────┘   │   │
+│  │                                                             │   │
+│  └─────────────────────────────────────────────────────────────┘   │
+│                                                                     │
+│  ┌─────────────────────────────────────────────────────────────┐   │
+│  │ [Type your question about Wraeclast...]          [Send] ⚔   │   │  <- Input with gold border
+│  └─────────────────────────────────────────────────────────────┘   │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+### Settings Panel (Slide-in from right)
+
+```
+┌─────────────────────────────────────┐
+│ ╔═════════════════════════════════╗ │
+│ ║  ⚙️ Configuration          [X]  ║ │  <- Gold border header
+│ ╚═════════════════════════════════╝ │
+├─────────────────────────────────────┤
+│                                     │
+│  ▼ LLM Provider                     │
+│  ┌─────────────────────────────┐   │
+│  │ OpenAI              ▼       │   │  <- Dark dropdown
+│  └─────────────────────────────┘   │
+│                                     │
+│  ▼ API Key                          │
+│  ┌─────────────────────────────┐   │
+│  │ ••••••••••••••••••••        │   │
+│  └─────────────────────────────┘   │
+│                                     │
+│  ▼ Embedding Provider               │
+│  ┌─────────────────────────────┐   │
+│  │ Local               ▼       │   │
+│  └─────────────────────────────┘   │
+│                                     │
+│  ▼ Embedding Model                  │
+│  ┌─────────────────────────────┐   │
+│  │ all-MiniLM-L6-v2            │   │
+│  └─────────────────────────────┘   │
+│                                     │
+│  ▼ LM Studio URL                    │
+│  ┌─────────────────────────────┐   │
+│  │ http://192.168.1.253:1234   │   │
+│  └─────────────────────────────┘   │
+│                                     │
+│  ┌─────────────────────────────┐   │
+│  │    [ Save Configuration ]   │   │  <- Gold border button
+│  └─────────────────────────────┘   │
+└─────────────────────────────────────┘
+```
+
+## Design Guidelines
+
+The interface should authentically match Path of Exile's dark, gritty, mature aesthetic:
+
+- **Theme:** Dark mode exclusively - no light mode option
+- **Primary Color:** Blood red/crimson (#7b1a1a, #8b0000)
+- **Accent Color:** Gold/amber (#c8aa6e, #d4a84b) for highlights, links, and interactive elements
+- **Secondary Accent:** Ethereal blue (#4a90d9, #5b9bd5) for magical/skill-related content
+- **Background:** Near-black with subtle texture (#0c0c0e to #1a1a1d), subtle gradient overlays
+- **Text:** Off-white/cream (#e8e0d5, #d4c4a8) for readability on dark backgrounds
+- **Typography:** Clean but slightly stylized - Fontin for headers (or similar fantasy serif), clean sans-serif for body
+- **Cards/panels:** Dark with subtle glow borders, gold or red accent borders on hover
+- **Borders:** Subtle beveled/gold trim effect on important elements
+- **Icons:** Stylized to match PoE UI elements (skill gems, portals, orbs)
+- **Visual Effects:** Subtle particle effects, fog/mist in backgrounds, glowing runes
+- **Animations:** Smooth, atmospheric - nothing bouncy or playful
+- **Overall Feel:** Mature, dark fantasy, Think Wraeclast - grim but functional
+
+### UI Element Styling
+
+- **Buttons:** Dark with gold border, red glow on hover
+- **Input fields:** Dark recessed look, gold border on focus
+- **Dropdowns:** Dark with gold accent, PoE-style arrow icons
+- **Citations:** Stylized like item tooltips with gold borders
+- **Loading states:** Subtle glow pulse, not spinners
+- **Scrollbars:** Thin, dark with gold accent
+
+## Implementation Steps
+
+### Step 1: Backend Foundation
+
+- Set up FastAPI project structure
+- Create configuration management (env vars + settings)
+- Set up ChromaDB connection and collection
+- Create Pydantic models for API
+
+### Step 2: RAG Pipeline
+
+- Implement local embeddings (sentence-transformers with all-MiniLM-L6-v2 or similar)
+- Create LangChain RAG chain with game filtering
+- Implement similarity search with metadata filter
+- Add citation extraction from retrieved documents
+
+### Step 3: Scraper Implementation
+
+- Create poedb.tw scraper with BeautifulSoup
+- Implement rate limiting and error handling
+- Create indexing function to store in ChromaDB
+- Add admin API endpoint to trigger scraping
+
+### Step 4: Chat API
+
+- Implement chat endpoint with game version parameter
+- Create streaming response with SSE
+- Add conversation management (optional SQLite)
+- Include citations in response
+
+### Step 5: Frontend Foundation
+
+- Set up React + Vite + TypeScript project
+- Create Tailwind configuration with PoE theme
+- Set up API client with streaming support
+- Create basic layout components
+
+### Step 6: Chat Interface
+
+- Build message list component with scrolling
+- Create message bubble components (user/assistant)
+- Implement item card component with:
+  - Item image display
+  - PoE-style tooltip layout
+  - Rarity-based color coding
+  - Modifier formatting
+  - Expandable details
+- Add typing indicator animation
+
+### Step 7: Game Selector and Controls
+
+- Create PoE1/PoE2 dropdown selector
+- Add settings panel (slide-in)
+- Implement configuration form
+- Add clear conversation button
+
+### Step 8: Build Context and Data Freshness
+
+- Create build context selector (class/ascendancy dropdown)
+- Store build context in localStorage per conversation
+- Pass build context to RAG queries for tailored recommendations
+- Add data freshness indicator in header
+- Display last scrape timestamp with relative time
+
+### Step 9: Polish and Testing
+
+- Add loading states and error handling
+- Implement responsive design
+- Test RAG pipeline with sample queries
+- Test scraper functionality
+- Final UI polish and animations
+
+## Success Criteria
+
+### Functionality
+
+- Chat responses use RAG to answer PoE questions accurately
+- Game version filtering works correctly (PoE1 vs PoE2)
+- Build context influences recommendations appropriately
+- Scraper successfully indexes poedb.tw content including images
+- Item cards display with screenshots and PoE-style formatting
+- Citations display correctly with source links
+- Streaming responses work smoothly
+- Data freshness indicator shows last scrape time
+
+### User Experience
+
+- Clean, intuitive chat interface
+- Game selector is easy to find and use
+- Build context selector helps focus recommendations
+- Citations are clear and clickable
+- Settings panel is accessible and functional
+- Responsive on mobile devices
+
+### Technical Quality
+
+- RAG queries return relevant results with game filtering
+- ChromaDB stores and retrieves documents efficiently
+- Scraper respects rate limits and handles errors
+- Configuration is flexible and persistent
+- Code is clean and maintainable
+
+### Design Polish
+
+- Dark theme matches PoE aesthetic
+- Smooth animations and transitions
+- Clear typography and spacing
+- Consistent design language throughout
+- Professional appearance
+
+## Configuration Options
+
+```python
+# Environment Variables
+LLM_PROVIDER=openai|anthropic|ollama|lmstudio
+OPENAI_API_KEY=sk-...
+ANTHROPIC_API_KEY=sk-...
+OLLAMA_BASE_URL=http://localhost:11434
+LMSTUDIO_BASE_URL=http://192.168.1.253:1234
+EMBEDDING_PROVIDER=local|ollama|lmstudio|openai  # Default: local
+EMBEDDING_MODEL=all-MiniLM-L6-v2  # Local default, or model name for Ollama/LMStudio
+CHROMA_PERSIST_DIR=./chroma_data
+```
+
+## Example Queries
+
+Useful for testing the system:
+
+- "What are good leveling uniques for a spellcaster?"
+- "Best gems for a freezing pulse build?"
+- "What's the difference between PoE1 and PoE2 passives?"
+
+## Data Freshness
+
+- Show when knowledge base was last updated
+- Display last scrape timestamp with relative time
+
+- Warn if data is stale (optional: highlight if > 30 days old)
+
+## Configuration Options
+
+- The scraper should be run initially to populate the knowledge base
+- Game version is stored per document, allowing flexible filtering
+- Citations help users verify information and explore sources
+- The minimal scope keeps the app focused and maintainable

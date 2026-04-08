@@ -1,0 +1,40 @@
+- generic [ref=e3]:
+  - generic:
+    - img
+  - generic [ref=e4]:
+    - generic [ref=e7]:
+      - generic [ref=e8]:
+        - heading "Necromancer API 0.1.0 OAS 3.1" [level=2] [ref=e9]:
+          - text: Necromancer API
+          - generic [ref=e10]:
+            - generic [ref=e12]: 0.1.0
+            - generic [ref=e14]: OAS 3.1
+        - link "/openapi.json" [ref=e15] [cursor=pointer]:
+          - /url: /openapi.json
+          - generic [ref=e16]: /openapi.json
+      - paragraph [ref=e19]: Multi-Agent Orchestrator Backend
+    - generic [ref=e24]:
+      - heading "default Collapse operation" [level=3] [ref=e25] [cursor=pointer]:
+        - link "default" [ref=e26]:
+          - /url: "#/default"
+        - button "Collapse operation" [expanded] [ref=e27]:
+          - img [ref=e28]
+      - generic [ref=e31]:
+        - generic [ref=e34] [cursor=pointer]:
+          - button "get /" [ref=e35]:
+            - generic [ref=e36]: GET
+            - link / [ref=e38]:
+              - /url: "#/default/root__get"
+            - generic [ref=e39]: Root
+          - generic "Copy to clipboard"
+          - button "get /" [ref=e42]:
+            - img [ref=e43]
+        - generic [ref=e47] [cursor=pointer]:
+          - button "get /health" [ref=e48]:
+            - generic [ref=e49]: GET
+            - link "/health" [ref=e51]:
+              - /url: "#/default/health_health_get"
+            - generic [ref=e52]: Health
+          - generic "Copy to clipboard"
+          - button "get /health" [ref=e55]:
+            - img [ref=e56]

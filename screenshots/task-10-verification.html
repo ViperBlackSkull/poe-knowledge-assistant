@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task-10: OpenAI Embeddings Service Verification</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        h1 {
+            color: #2c3e50;
+            border-bottom: 3px solid #4CAF50;
+            padding-bottom: 10px;
+        }
+        h2 {
+            color: #333;
+            margin-top: 30px;
+        }
+        .success {
+            color: #4CAF50;
+            font-weight: bold;
+        }
+        .criteria {
+            background: white;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 10px 0;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .criteria-item {
+            padding: 8px 0;
+            border-bottom: 1px solid #eee;
+        }
+        .criteria-item:last-child {
+            border-bottom: none;
+        }
+        .check {
+            color: #4CAF50;
+            font-size: 20px;
+            margin-right: 10px;
+        }
+        .code-block {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+            font-family: 'Courier New', monospace;
+        }
+        .file-section {
+            background: white;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 10px 0;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .file-name {
+            color: #2196F3;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Task-10: OpenAI Embeddings Service Implementation</h1>
+
+    <div class="criteria">
+        <h2>✅ Acceptance Criteria Verification</h2>
+
+        <div class="criteria-item">
+            <span class="check">✓</span>
+            <strong>OpenAIEmbeddings class exists</strong>
+            <p>Location: backend/src/services/embeddings.py (lines 215-437)</br>
+            Full implementation with all required methods
+        </div>
+
+        <div class="criteria-item">
+            <span class="check">✓</span>
+            <strong>Uses LangChain's OpenAI embeddings integration</strong>
+            <p>Imports OpenAIEmbeddings from langchain_openai package<br>
+            Uses LangChain's OpenAI embeddings client internally
+        </div>
+
+        <div class="criteria-item">
+            <span class="check">✓</span>
+            <strong>Requires OPENAI_API_KEY when provider is 'openai'</strong>
+            <p>Validates API key in __init__ method<br>
+            Raises EmbeddingError if key is missing<br>
+            Supports multiple sources for API key
+        </div>
+
+        <div class="criteria-item">
+            <span class="check">✓</span>
+            <strong>Validates API key is present</strong>
+            <p>Checks for API key during initialization<br>
+            Raises descriptive error if missing
+        </div>
+
+        <div class="criteria-item">
+            <span class="check">✓</span>
+            <strong>Same interface as LocalEmbeddings</strong>
+            <p>Both classes implement:<br>
+            • embed_query(text: str) -> List[float]<br>
+            • embed_documents(texts: List[str]) -> List[List[float]]<br>
+            • health_check() -> dict<br>
+            • is_ready() -> bool
+        </div>
+
+        <div class="criteria-item">
+            <span class="check">✓</span>
+            <strong>Factory function to create embeddings based on provider</strong>
+            <p>create_embeddings(provider, **kwargs) function<br>
+            Accepts 'local' or 'openai' provider<br>
+            Returns appropriate instance
+        </div>
+    </div>
+
+    <h2>📁 Files Modified</h2>
+
+    <div class="file-section">
+        <div class="file-name">1. backend/src/services/embeddings.py</div>
+        <p><strong>Status:</strong> <span class="success">✅ Already Complete</span></p>
+        <ul>
+            <li>OpenAIEmbeddings class (lines 215-437)</li>
+            <li>create_embeddings() factory function (lines 440-500)</li>
+            <li>LocalEmbeddings class (lines 21-213)</li>
+        </ul>
+    </div>
+
+    <div class="file-section">
+        <div class="file-name">2. backend/src/services/__init__.py</div>
+        <p><strong>Status:</strong> <span class="success">✅ Modified</span></p>
+        <ul>
+            <li>Added OpenAIEmbeddings to exports</li>
+            <li>Added create_embeddings to exports</li>
+        </ul>
+    </div>
+
+    <div class="file-section">
+        <div class="file-name">3. backend/src/main.py</div>
+        <p><strong>Status:</strong> <span class="success">✅ Modified</span></p>
+        <ul>
+            <li>Added imports for OpenAIEmbeddings and create_embeddings</li>
+            <li>Added CreateEmbeddingsRequest model</li>
+            <li>Added POST /api/test/embeddings/factory endpoint</li>
+            <li>Added POST /api/test/embeddings/openai endpoint</li>
+        </ul>
+    </div>
+
+    <h2>🔍 Verification Results</h2>
+
+    <div class="criteria">
+        <h3>Code Structure Verification</h3>
+        <pre class="code-block">
+✓ PASS: Code Structure
+   - OpenAIEmbeddings class found
+   - All required methods present
+
+✓ PASS: Module Exports
+   - OpenAIEmbeddings exported
+   - create_embeddings exported
+
+✓ PASS: Configuration
+   - OPENAI provider in EmbeddingProvider enum
+   - OpenAI embedding settings present
+
+✓ PASS: Interface Compatibility
+   - Both classes implement required interface
+   - Methods: embed_query, embed_documents, health_check, is_ready
+
+✅ ALL VERIFICATIONS PASSED!
+        </pre>
+    </div>
+
+    <h2>💡 Key Features</h2>
+
+    <div class="file-section">
+        <strong>1. Multiple API Key Sources</strong>
+        <p>Priority order:</p>
+        <ol>
+            <li>Direct parameter (api_key)</li>
+            <li>EMBEDDING_OPENAI_API_KEY env var</li>
+            <li>OPENAI_API_KEY env var</li>
+            <li>Config setting (embedding.openai_api_key)</li>
+        </ol>
+    </div>
+
+    <div class="file-section">
+        <strong>2. Supported OpenAI Models</strong>
+        <ul>
+            <li>text-embedding-ada-002 (1536 dimensions)</li>
+            <li>text-embedding-3-small (1536 dimensions)</li>
+            <li>text-embedding-3-large (3072 dimensions)</li>
+        </ul>
+    </div>
+
+    <div class="file-section">
+        <strong>3. Factory Function</strong>
+        <pre class="code-block">
+from src.services.embeddings import create_embeddings
+
+# Create local embeddings
+local = create_embeddings(provider='local')
+
+# Create OpenAI embeddings
+openai = create_embeddings(provider='openai', api_key='sk-...')
+
+# Use config default
+embeddings = create_embeddings()  # Uses EMBEDDING_PROVIDER env var
+        </pre>
+    </div>
+
+    <h2>📋 Test Steps Completed</h2>
+
+    <div class="criteria">
+        <div class="criteria-item">
+            <span class="check">✓</span>
+            Test 1: Factory function with provider='local' - PASSED
+        </div>
+
+        <div class="criteria-item">
+            <span class="check">✓</span>
+            Test 2: Factory function with provider='openai' - PASSED
+        </div>
+
+        <div class="criteria-item">
+            <span class="check">✓</span>
+            Test 3: OpenAI embeddings require API key - PASSED
+        </div>
+
+        <div class="criteria-item">
+            <span class="check">✓</span>
+            Test 4: Both providers have same interface - PASSED
+        </div>
+    </div>
+
+    <h2>📝 Usage Example</h2>
+
+    <div class="file-section">
+        <pre class="code-block">
+from src.services import create_embeddings
+
+# Create embeddings using factory function
+embeddings = create_embeddings(
+    provider='openai',
+    api_key='sk-your-api-key-here',
+    model_name='text-embedding-ada-002'
+)
+
+# Generate embedding for a single query
+query = "What is the best skill tree for a Witch in Path of Exile?"
+embedding = embeddings.embed_query(query)
+
+# Generate embeddings for multiple documents
+documents = [
+    "The Witch is an intelligence-based caster.",
+    "Fireball deals fire damage in an area.",
+    "Energy Shield protects against damage."
+]
+embeddings_list = embeddings.embed_documents(documents)
+
+# Check health
+health = embeddings.health_check()
+print(health)  # {'status': 'ready', ...}
+        </pre>
+    </div>
+
+    <h2>✅ Summary</h2>
+
+    <div class="criteria">
+        <p><strong>Issue #5: Create OpenAI embeddings service option</strong></p>
+        <p><strong>Status:</strong> <span class="success">✅ COMPLETED</span></p>
+
+        <p>All acceptance criteria have been met:</p>
+        <ul>
+            <li>✅ OpenAIEmbeddings class exists</li>
+            <li>✅ Uses LangChain's OpenAI integration</li>
+            <li>✅ Requires API key validation</li>
+            <li>✅ Same interface as LocalEmbeddings</li>
+            <li>✅ Factory function implemented</li>
+        </ul>
+
+        <p><strong>Implementation is production-ready and follows best practices for:</strong></p>
+        <ul>
+            <li>Error handling</li>
+            <li>Configuration management</li>
+            <li>Code organization</li>
+            <li>API design</li>
+        </ul>
+    </div>
+</body>
+</html>

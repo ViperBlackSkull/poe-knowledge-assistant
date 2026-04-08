@@ -1,0 +1,150 @@
+- generic [ref=e3]:
+  - generic:
+    - img
+  - generic [ref=e4]:
+    - generic [ref=e7]:
+      - generic [ref=e8]:
+        - heading "Necromancer API 0.1.0 OAS 3.1" [level=2] [ref=e9]:
+          - text: Necromancer API
+          - generic [ref=e10]:
+            - generic [ref=e12]: 0.1.0
+            - generic [ref=e14]: OAS 3.1
+        - link "/openapi.json" [ref=e15] [cursor=pointer]:
+          - /url: /openapi.json
+          - generic [ref=e16]: /openapi.json
+      - paragraph [ref=e19]: Multi-Agent Orchestrator Backend
+    - generic [ref=e24]:
+      - heading "default Collapse operation" [level=3] [ref=e25] [cursor=pointer]:
+        - link "default" [ref=e26]:
+          - /url: "#/default"
+        - button "Collapse operation" [expanded] [ref=e27]:
+          - img [ref=e28]
+      - generic [ref=e31]:
+        - generic [ref=e33]:
+          - generic [ref=e34] [cursor=pointer]:
+            - button "get /" [expanded] [ref=e35]:
+              - generic [ref=e36]: GET
+              - link / [ref=e38]:
+                - /url: "#/default/root__get"
+              - generic [ref=e39]: Root
+            - generic "Copy to clipboard"
+            - button "get /" [expanded] [ref=e42]:
+              - img [ref=e60]
+          - generic [ref=e63]:
+            - paragraph [ref=e67]: Root endpoint
+            - generic [ref=e68]:
+              - generic [ref=e69]:
+                - heading "Parameters" [level=4] [ref=e72] [cursor=pointer]
+                - button "Cancel" [ref=e113] [cursor=pointer]
+              - paragraph [ref=e77]: No parameters
+            - generic [ref=e78]:
+              - button "Execute" [ref=e114] [cursor=pointer]
+              - button "Clear" [ref=e115] [cursor=pointer]
+            - generic [ref=e79]:
+              - heading "Responses" [level=4] [ref=e81]
+              - generic [ref=e82]:
+                - generic [ref=e116]:
+                  - generic [ref=e117]:
+                    - generic [ref=e118]:
+                      - heading "Curl" [level=4] [ref=e119]
+                      - button [ref=e121] [cursor=pointer]
+                      - code [ref=e124]: "curl -X 'GET' \\ 'http://localhost:8000/' \\ -H 'accept: application/json'"
+                    - generic [ref=e126]:
+                      - heading "Request URL" [level=4] [ref=e127]
+                      - generic [ref=e128]: http://localhost:8000/
+                    - heading "Server response" [level=4] [ref=e129]
+                    - table [ref=e130]:
+                      - rowgroup [ref=e131]:
+                        - row "Code Details" [ref=e132]:
+                          - cell "Code" [ref=e133]
+                          - cell "Details" [ref=e134]
+                      - rowgroup [ref=e135]:
+                        - 'row "200 Response body Download { \"message\": \"Necromancer API\", \"version\": \"0.1.0\" } Response headers content-length: 47 content-type: application/json date: Wed,08 Apr 2026 00:52:23 GMT server: uvicorn" [ref=e136]':
+                          - cell "200" [ref=e137]
+                          - 'cell "Response body Download { \"message\": \"Necromancer API\", \"version\": \"0.1.0\" } Response headers content-length: 47 content-type: application/json date: Wed,08 Apr 2026 00:52:23 GMT server: uvicorn" [ref=e138]':
+                            - generic [ref=e139]:
+                              - heading "Response body" [level=5] [ref=e140]
+                              - generic [ref=e141]:
+                                - button [ref=e143] [cursor=pointer]
+                                - button "Download" [ref=e144] [cursor=pointer]
+                                - code [ref=e146]: "{ \"message\": \"Necromancer API\", \"version\": \"0.1.0\" }"
+                            - generic [ref=e147]:
+                              - heading "Response headers" [level=5] [ref=e148]
+                              - generic [ref=e149]:
+                                - generic [ref=e150]: "content-length: 47"
+                                - generic [ref=e151]: "content-type: application/json"
+                                - generic [ref=e152]: "date: Wed,08 Apr 2026 00:52:23 GMT"
+                                - generic [ref=e153]: "server: uvicorn"
+                  - heading "Responses" [level=4] [ref=e154]
+                - region [ref=e83]:
+                  - rowgroup [ref=e84]:
+                    - row "Code Description Links" [ref=e85]:
+                      - cell "Code" [ref=e86]
+                      - cell "Description" [ref=e87]
+                      - cell "Links" [ref=e88]
+                  - rowgroup [ref=e89]:
+                    - row "200 Successful Response Media type application/json Controls Accept header. Example Value No links" [ref=e90]:
+                      - cell "200" [ref=e91]
+                      - cell "Successful Response Media type application/json Controls Accept header. Example Value" [ref=e92]:
+                        - paragraph [ref=e95]: Successful Response
+                        - generic [ref=e97]:
+                          - generic [ref=e98]: Media type
+                          - combobox "Media Type" [ref=e100]:
+                            - option "application/json" [selected]
+                          - generic [ref=e101]:
+                            - text: Controls
+                            - code [ref=e102]: Accept
+                            - text: header.
+                        - generic [ref=e103]:
+                          - tablist [ref=e104]:
+                            - tab "Example Value" [selected] [ref=e105] [cursor=pointer]
+                            - tab "Schema" [ref=e106] [cursor=pointer]
+                          - tabpanel "Example Value" [ref=e107]:
+                            - code [ref=e111]: "\"string\""
+                      - cell "No links" [ref=e112]
+        - generic [ref=e46]:
+          - generic [ref=e47] [cursor=pointer]:
+            - button "get /health" [expanded] [active] [ref=e48]:
+              - generic [ref=e49]: GET
+              - link "/health" [ref=e51]:
+                - /url: "#/default/health_health_get"
+              - generic [ref=e52]: Health
+            - generic "Copy to clipboard" [ref=e155]:
+              - img [ref=e156]
+            - button "get /health" [expanded] [ref=e55]:
+              - img [ref=e157]
+          - generic [ref=e160]:
+            - paragraph [ref=e164]: Health check endpoint
+            - generic [ref=e165]:
+              - generic [ref=e166]:
+                - heading "Parameters" [level=4] [ref=e169] [cursor=pointer]
+                - button "Try it out" [ref=e171] [cursor=pointer]
+              - paragraph [ref=e174]: No parameters
+            - generic [ref=e176]:
+              - heading "Responses" [level=4] [ref=e178]
+              - region [ref=e180]:
+                - rowgroup [ref=e181]:
+                  - row "Code Description Links" [ref=e182]:
+                    - cell "Code" [ref=e183]
+                    - cell "Description" [ref=e184]
+                    - cell "Links" [ref=e185]
+                - rowgroup [ref=e186]:
+                  - row "200 Successful Response Media type application/json Controls Accept header. Example Value No links" [ref=e187]:
+                    - cell "200" [ref=e188]
+                    - cell "Successful Response Media type application/json Controls Accept header. Example Value" [ref=e189]:
+                      - paragraph [ref=e192]: Successful Response
+                      - generic [ref=e194]:
+                        - generic [ref=e195]: Media type
+                        - combobox "Media Type" [ref=e197]:
+                          - option "application/json" [selected]
+                        - generic [ref=e198]:
+                          - text: Controls
+                          - code [ref=e199]: Accept
+                          - text: header.
+                      - generic [ref=e200]:
+                        - tablist [ref=e201]:
+                          - tab "Example Value" [selected] [ref=e202] [cursor=pointer]
+                          - tab "Schema" [ref=e203] [cursor=pointer]
+                        - tabpanel "Example Value" [ref=e204]:
+                          - code [ref=e208]: "\"string\""
+                    - cell "No links" [ref=e209]

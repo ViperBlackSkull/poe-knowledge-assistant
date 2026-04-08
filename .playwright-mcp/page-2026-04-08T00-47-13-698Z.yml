@@ -1,0 +1,51 @@
+- generic [ref=e2]:
+  - heading "requirements.txt" [level=1] [ref=e3]
+  - generic [ref=e4]: POE Knowledge Assistant - Python Dependencies
+  - generic [ref=e5]:
+    - generic [ref=e6]:
+      - generic [ref=e7]: "45"
+      - generic [ref=e8]: Total Packages
+    - generic [ref=e9]:
+      - generic [ref=e10]: 100%
+      - generic [ref=e11]: Version Pinned
+    - generic [ref=e12]:
+      - generic [ref=e13]: "0"
+      - generic [ref=e14]: Wildcards
+  - heading "File Preview (First 60 lines):" [level=2] [ref=e15]
+  - generic [ref=e16]: "# =========================================== # POE Knowledge Assistant - Python Dependencies # =========================================== # ------------------------------------------- # Core Web Framework # ------------------------------------------- # FastAPI framework for building REST APIs fastapi==0.109.0 # ASGI server for running FastAPI applications uvicorn[standard]==0.27.0 # Pydantic for data validation and settings management pydantic==2.5.3 pydantic-settings==2.1.0 # Multipart form data support python-multipart==0.0.6 # ------------------------------------------- # Database # ------------------------------------------- # SQLAlchemy ORM for database operations sqlalchemy==2.0.25 # Database migrations alembic==1.13.1 # Async PostgreSQL support (for future production use) asyncpg==0.29.0 # PostgreSQL adapter psycopg2-binary==2.9.9 # ------------------------------------------- # HTTP Client Libraries # ------------------------------------------- # Modern HTTP client for API requests httpx==0.26.0 # Async HTTP client aiohttp==3.9.1 # Requests for simple HTTP operations requests==2.31.0 # ------------------------------------------- # Vector Database - ChromaDB # ------------------------------------------- # ChromaDB for local vector storage chromadb==0.4.22 # Dependencies for ChromaDB embeddings onnxruntime==1.16.3 tokenizers==0.15.0 # ... and more (45 packages total)"
+  - generic [ref=e18]: ✓ All Validation Checks Passed
+  - heading "Categories Included:" [level=2] [ref=e19]
+  - list [ref=e20]:
+    - listitem [ref=e21]:
+      - strong [ref=e22]: Core Web Framework
+      - text: "- FastAPI, Uvicorn, Pydantic"
+    - listitem [ref=e23]:
+      - strong [ref=e24]: Database
+      - text: "- SQLAlchemy, Alembic, PostgreSQL drivers"
+    - listitem [ref=e25]:
+      - strong [ref=e26]: HTTP Clients
+      - text: "- httpx, aiohttp, requests"
+    - listitem [ref=e27]:
+      - strong [ref=e28]: Vector Database
+      - text: "- ChromaDB with dependencies"
+    - listitem [ref=e29]:
+      - strong [ref=e30]: LLM Libraries
+      - text: "- OpenAI, Anthropic, LangChain"
+    - listitem [ref=e31]:
+      - strong [ref=e32]: Embeddings
+      - text: "- sentence-transformers, huggingface-hub"
+    - listitem [ref=e33]:
+      - strong [ref=e34]: Data Processing
+      - text: "- NumPy, Pandas"
+    - listitem [ref=e35]:
+      - strong [ref=e36]: Web Scraping
+      - text: "- BeautifulSoup, lxml"
+    - listitem [ref=e37]:
+      - strong [ref=e38]: Security
+      - text: "- JWT, bcrypt"
+    - listitem [ref=e39]:
+      - strong [ref=e40]: Development
+      - text: "- pytest, black, mypy, flake8"
+    - listitem [ref=e41]:
+      - strong [ref=e42]: Production
+      - text: "- Gunicorn"

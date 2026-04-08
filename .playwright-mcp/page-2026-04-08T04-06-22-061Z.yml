@@ -1,0 +1,326 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - 'heading "✅ Task-9: Local Embeddings Service - VERIFIED" [level=1] [ref=e3]'
+    - paragraph [ref=e4]: All acceptance criteria met - Implementation complete
+  - generic [ref=e5]: 📁 backend/src/services/embeddings.py (7545 bytes)
+  - generic [ref=e6]:
+    - generic [ref=e7]:
+      - generic [ref=e8]: "1"
+      - text: "\"\"\""
+    - generic [ref=e9]:
+      - generic [ref=e10]: "2"
+      - text: Local embeddings service for POE Knowledge Assistant.
+    - generic [ref=e11]:
+      - generic [ref=e12]: "3"
+      - text: Provides text embedding functionality using sentence-transformers.
+    - generic [ref=e13]:
+      - generic [ref=e14]: "4"
+      - text: "\"\"\""
+    - generic [ref=e15]:
+      - generic [ref=e16]: "5"
+      - text: import logging
+    - generic [ref=e17]:
+      - generic [ref=e18]: "6"
+      - text: import os
+    - generic [ref=e19]:
+      - generic [ref=e20]: "7"
+      - text: from typing import List, Optional
+    - generic [ref=e22]: "8"
+    - generic [ref=e23]:
+      - generic [ref=e24]: "9"
+      - text: from sentence_transformers import SentenceTransformer ✓ sentence-transformers
+    - generic [ref=e26]: "10"
+    - generic [ref=e27]:
+      - generic [ref=e28]: "11"
+      - text: from src.config import get_settings ✓ config integration
+    - generic [ref=e30]: "12"
+    - generic [ref=e31]:
+      - generic [ref=e32]: "13"
+      - text: logger = logging.getLogger(__name__)
+    - generic [ref=e34]: "14"
+    - generic [ref=e36]: "15"
+    - generic [ref=e37]:
+      - generic [ref=e38]: "16"
+      - text: "class EmbeddingError(Exception): ✓ custom exception"
+    - generic [ref=e39]:
+      - generic [ref=e40]: "17"
+      - text: "\"\"\"Custom exception for embedding errors.\"\"\""
+    - generic [ref=e41]:
+      - generic [ref=e42]: "18"
+      - text: pass
+    - generic [ref=e44]: "19"
+    - generic [ref=e46]: "20"
+    - generic [ref=e47]:
+      - generic [ref=e48]: "21"
+      - text: "class LocalEmbeddings: ✓ main class"
+    - generic [ref=e49]:
+      - generic [ref=e50]: "22"
+      - text: "\"\"\""
+    - generic [ref=e51]:
+      - generic [ref=e52]: "23"
+      - text: Local embeddings service using sentence-transformers.
+    - generic [ref=e53]:
+      - generic [ref=e54]: "24"
+      - text: "\"\"\""
+    - generic [ref=e56]: "25"
+    - generic [ref=e57]:
+      - generic [ref=e58]: "32"
+      - text: "def __init__(self, model_name: Optional[str] = None):"
+    - generic [ref=e59]:
+      - generic [ref=e60]: "43"
+      - text: settings = get_settings()
+    - generic [ref=e62]: "44"
+    - generic [ref=e63]:
+      - generic [ref=e64]: "45"
+      - text: "# Use provided model name or get from config"
+    - generic [ref=e65]:
+      - generic [ref=e66]: "46"
+      - text: self.model_name = model_name or os.getenv(
+    - generic [ref=e67]:
+      - generic [ref=e68]: "47"
+      - text: "\"EMBEDDING_MODEL\", ✓ env var support"
+    - generic [ref=e69]:
+      - generic [ref=e70]: "48"
+      - text: settings.embedding.model
+    - generic [ref=e71]:
+      - generic [ref=e72]: "49"
+      - text: )
+    - generic [ref=e74]: "50"
+    - generic [ref=e75]:
+      - generic [ref=e76]: "58"
+      - text: "def _initialize_model(self) -> None:"
+    - generic [ref=e77]:
+      - generic [ref=e78]: "59"
+      - text: "\"\"\"Initialize the sentence-transformer model.\"\"\""
+    - generic [ref=e79]:
+      - generic [ref=e80]: "60"
+      - text: "try: ✓ error handling"
+    - generic [ref=e81]:
+      - generic [ref=e82]: "61"
+      - text: "logger.info(f\"Loading model: {self.model_name}\")"
+    - generic [ref=e83]:
+      - generic [ref=e84]: "62"
+      - text: self._model = SentenceTransformer(self.model_name)
+    - generic [ref=e85]:
+      - generic [ref=e86]: "63"
+      - text: self._embedding_dimension = self._model.get_sentence_embedding_dimension()
+    - generic [ref=e87]:
+      - generic [ref=e88]: "64"
+      - text: "except Exception as e:"
+    - generic [ref=e89]:
+      - generic [ref=e90]: "65"
+      - text: "error_msg = f\"Failed to load model: {str(e)}\""
+    - generic [ref=e91]:
+      - generic [ref=e92]: "66"
+      - text: logger.error(error_msg)
+    - generic [ref=e93]:
+      - generic [ref=e94]: "67"
+      - text: self._model_error = error_msg
+    - generic [ref=e95]:
+      - generic [ref=e96]: "68"
+      - text: self._model = None
+    - generic [ref=e98]: "69"
+    - generic [ref=e99]:
+      - generic [ref=e100]: "99"
+      - text: "def embed_query(self, text: str) -> List[float]: ✓ method implemented"
+    - generic [ref=e101]:
+      - generic [ref=e102]: "100"
+      - text: "\"\"\"Generate embedding for a single query text.\"\"\""
+    - generic [ref=e103]:
+      - generic [ref=e104]: "112"
+      - text: "if not self.is_ready():"
+    - generic [ref=e105]:
+      - generic [ref=e106]: "113"
+      - text: "if self._model_error:"
+    - generic [ref=e107]:
+      - generic [ref=e108]: "114"
+      - text: raise EmbeddingError(self._model_error)
+    - generic [ref=e109]:
+      - generic [ref=e110]: "115"
+      - text: raise EmbeddingError("Model not initialized")
+    - generic [ref=e112]: "116"
+    - generic [ref=e113]:
+      - generic [ref=e114]: "117"
+      - text: "if not text or not isinstance(text, str): ✓ input validation"
+    - generic [ref=e115]:
+      - generic [ref=e116]: "118"
+      - text: raise EmbeddingError("Input must be non-empty string")
+    - generic [ref=e118]: "119"
+    - generic [ref=e119]:
+      - generic [ref=e120]: "120"
+      - text: "try:"
+    - generic [ref=e121]:
+      - generic [ref=e122]: "121"
+      - text: embedding = self._model.encode(text, convert_to_numpy=True)
+    - generic [ref=e123]:
+      - generic [ref=e124]: "122"
+      - text: return embedding.tolist() ✓ returns List[float]
+    - generic [ref=e125]:
+      - generic [ref=e126]: "123"
+      - text: "except Exception as e:"
+    - generic [ref=e127]:
+      - generic [ref=e128]: "124"
+      - text: "raise EmbeddingError(f\"Failed: {str(e)}\")"
+    - generic [ref=e130]: "125"
+    - generic [ref=e131]:
+      - generic [ref=e132]: "132"
+      - text: "def embed_documents(self, texts: List[str]) -> List[List[float]]: ✓ method implemented"
+    - generic [ref=e133]:
+      - generic [ref=e134]: "133"
+      - text: "\"\"\"Generate embeddings for multiple documents.\"\"\""
+    - generic [ref=e135]:
+      - generic [ref=e136]: "145"
+      - text: "if not self.is_ready():"
+    - generic [ref=e137]:
+      - generic [ref=e138]: "146"
+      - text: raise EmbeddingError("Model not initialized")
+    - generic [ref=e140]: "147"
+    - generic [ref=e141]:
+      - generic [ref=e142]: "148"
+      - text: "if not texts: ✓ empty list check"
+    - generic [ref=e143]:
+      - generic [ref=e144]: "149"
+      - text: raise EmbeddingError("Input list cannot be empty")
+    - generic [ref=e146]: "150"
+    - generic [ref=e147]:
+      - generic [ref=e148]: "151"
+      - text: "if not isinstance(texts, list): ✓ type check"
+    - generic [ref=e149]: 152 raise EmbeddingError("Input must be a list")
+    - generic [ref=e151]: "153"
+    - generic [ref=e152]:
+      - generic [ref=e153]: "157"
+      - text: "for i, text in enumerate(texts): ✓ item validation"
+    - generic [ref=e154]:
+      - generic [ref=e155]: "158"
+      - text: "if not isinstance(text, str):"
+    - generic [ref=e156]:
+      - generic [ref=e157]: "159"
+      - text: "raise EmbeddingError(f\"Item {i} is not a string\")"
+    - generic [ref=e159]: "160"
+    - generic [ref=e160]:
+      - generic [ref=e161]: "161"
+      - text: "try:"
+    - generic [ref=e162]:
+      - generic [ref=e163]: "162"
+      - text: embeddings = self._model.encode(texts, convert_to_numpy=True)
+    - generic [ref=e164]:
+      - generic [ref=e165]: "163"
+      - text: return embeddings.tolist() ✓ returns List[List[float]]
+    - generic [ref=e166]:
+      - generic [ref=e167]: "164"
+      - text: "except Exception as e:"
+    - generic [ref=e168]:
+      - generic [ref=e169]: "165"
+      - text: "raise EmbeddingError(f\"Failed: {str(e)}\")"
+  - generic [ref=e170]: 📁 backend/src/config.py (EmbeddingSettings)
+  - generic [ref=e171]:
+    - generic [ref=e172]:
+      - generic [ref=e173]: "169"
+      - text: "class EmbeddingSettings(BaseSettings):"
+    - generic [ref=e174]:
+      - generic [ref=e175]: "170"
+      - text: "\"\"\"Embedding provider configuration.\"\"\""
+    - generic [ref=e177]: "171"
+    - generic [ref=e178]:
+      - generic [ref=e179]: "181"
+      - text: "model: str = Field("
+    - generic [ref=e180]:
+      - generic [ref=e181]: "182"
+      - text: default="all-MiniLM-L6-v2", ✓ default model
+    - generic [ref=e182]:
+      - generic [ref=e183]: "183"
+      - text: description="Embedding model name"
+    - generic [ref=e184]:
+      - generic [ref=e185]: "184"
+      - text: )
+  - generic [ref=e186]: 📁 backend/src/main.py (API Integration)
+  - generic [ref=e187]:
+    - generic [ref=e188]:
+      - generic [ref=e189]: "10"
+      - text: from src.services.embeddings import check_embeddings_health, LocalEmbeddings, EmbeddingError
+    - generic [ref=e191]: "11"
+    - generic [ref=e192]:
+      - generic [ref=e193]: "137"
+      - text: "@api_router.post(\"/test/embeddings/query\", tags=[\"Testing\"])"
+    - generic [ref=e194]:
+      - generic [ref=e195]: "138"
+      - text: "async def test_embed_query(request: EmbedTextRequest):"
+    - generic [ref=e196]:
+      - generic [ref=e197]: "139"
+      - text: "\"\"\"Test endpoint for embedding a single query.\"\"\""
+    - generic [ref=e198]:
+      - generic [ref=e199]: "140"
+      - text: "try:"
+    - generic [ref=e200]:
+      - generic [ref=e201]: "141"
+      - text: embeddings = LocalEmbeddings()
+    - generic [ref=e202]:
+      - generic [ref=e203]: "142"
+      - text: embedding = embeddings.embed_query(request.text)
+    - generic [ref=e204]:
+      - generic [ref=e205]: "143"
+      - text: "return {"
+    - generic [ref=e206]:
+      - generic [ref=e207]: "144"
+      - text: "\"success\": True,"
+    - generic [ref=e208]:
+      - generic [ref=e209]: "145"
+      - text: "\"embedding_dimension\": len(embedding),"
+    - generic [ref=e210]:
+      - generic [ref=e211]: "146"
+      - text: "\"message\": \"Embedding generated successfully\""
+    - generic [ref=e212]:
+      - generic [ref=e213]: "147"
+      - text: "}"
+    - generic [ref=e214]:
+      - generic [ref=e215]: "148"
+      - text: "except EmbeddingError as e:"
+    - generic [ref=e216]:
+      - generic [ref=e217]: "149"
+      - text: raise HTTPException(status_code=500, detail=str(e))
+    - generic [ref=e219]: "150"
+    - generic [ref=e220]:
+      - generic [ref=e221]: "165"
+      - text: "@api_router.post(\"/test/embeddings/documents\", tags=[\"Testing\"])"
+    - generic [ref=e222]:
+      - generic [ref=e223]: "166"
+      - text: "async def test_embed_documents(request: EmbedDocumentsRequest):"
+    - generic [ref=e224]:
+      - generic [ref=e225]: "167"
+      - text: "\"\"\"Test endpoint for embedding multiple documents.\"\"\""
+    - generic [ref=e226]:
+      - generic [ref=e227]: "168"
+      - text: "try:"
+    - generic [ref=e228]:
+      - generic [ref=e229]: "169"
+      - text: embeddings = LocalEmbeddings()
+    - generic [ref=e230]:
+      - generic [ref=e231]: "170"
+      - text: embeddings_list = embeddings.embed_documents(request.texts)
+    - generic [ref=e232]:
+      - generic [ref=e233]: "171"
+      - text: "return {"
+    - generic [ref=e234]:
+      - generic [ref=e235]: "172"
+      - text: "\"success\": True,"
+    - generic [ref=e236]: "173 \"document_count\": len(embeddings_list),"
+    - generic [ref=e237]:
+      - generic [ref=e238]: "174"
+      - text: "\"message\": \"Embeddings generated successfully\""
+    - generic [ref=e239]:
+      - generic [ref=e240]: "175"
+      - text: "}"
+    - generic [ref=e241]:
+      - generic [ref=e242]: "176"
+      - text: "except EmbeddingError as e:"
+    - generic [ref=e243]:
+      - generic [ref=e244]: "177"
+      - text: raise HTTPException(status_code=500, detail=str(e))
+  - generic [ref=e245]:
+    - heading "✅ VERIFICATION COMPLETE" [level=1] [ref=e246]
+    - paragraph [ref=e247]: All 8 acceptance criteria successfully met
+    - paragraph [ref=e248]:
+      - text: "File: backend/src/services/embeddings.py (7545 bytes)"
+      - text: "Test: backend/test_embeddings_structure.py (PASSED)"
+      - text: "Date: 2026-04-08"
+      - text: "Task: task-9"

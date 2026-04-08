@@ -1,0 +1,27 @@
+- generic [ref=e2]:
+  - 'heading "Task 8: Health Check Endpoint - Code Implementation" [level=1] [ref=e3]'
+  - 'heading "File: backend/src/main.py" [level=2] [ref=e4]'
+  - heading "Imports Added" [level=3] [ref=e5]
+  - generic [ref=e6]: from datetime import datetime, timezone from fastapi import FastAPI, APIRouter, Response
+  - heading "Health Check Endpoint Implementation" [level=3] [ref=e7]
+  - generic [ref=e8]: "@api_router.get(\"/health\", tags=[\"Health\"]) async def health_check(response: Response): \"\"\" Health check endpoint. Returns: dict: Health status including: - status: Overall health status (\"healthy\" or \"degraded\") - chromadb_status: ChromaDB connection status (\"connected\" or \"disconnected\") - embeddings_status: Embeddings service status (\"ready\" or \"error\") - version: Application version - chromadb_message: Detailed ChromaDB status message - embeddings_message: Detailed embeddings status message - timestamp: ISO 8601 timestamp of the health check HTTP Status Codes: - 200: System is healthy (ChromaDB connected and embeddings ready) - 503: System is degraded (ChromaDB disconnected or embeddings not ready) \"\"\" # Check ChromaDB health chromadb_health = check_chromadb_health() chromadb_status = chromadb_health.get(\"status\", \"disconnected\") chromadb_message = chromadb_health.get(\"message\", \"Unknown status\") # Check embeddings health embeddings_health = check_embeddings_health() embeddings_status = embeddings_health.get(\"status\", \"error\") embeddings_message = embeddings_health.get(\"message\", \"Unknown status\") # Determine overall status # System is \"healthy\" if both ChromaDB and embeddings are ready overall_status = \"healthy\" if ( chromadb_status == \"connected\" and embeddings_status == \"ready\" ) else \"degraded\" # Set appropriate HTTP status code if overall_status == \"healthy\": response.status_code = 200 else: response.status_code = 503 return { \"status\": overall_status, \"chromadb_status\": chromadb_status, \"embeddings_status\": embeddings_status, \"version\": settings.app_version, \"chromadb_message\": chromadb_message, \"embeddings_message\": embeddings_message, \"timestamp\": datetime.now(timezone.utc).isoformat(), }"
+  - heading "Key Implementation Details" [level=2] [ref=e9]
+  - list [ref=e10]:
+    - listitem [ref=e11]:
+      - strong [ref=e12]: "HTTP Status Codes:"
+      - text: Returns 200 for healthy, 503 for degraded
+    - listitem [ref=e13]:
+      - strong [ref=e14]: "Timestamp:"
+      - text: Uses ISO 8601 format with UTC timezone
+    - listitem [ref=e15]:
+      - strong [ref=e16]: "ChromaDB Check:"
+      - text: Verifies database connection and collection status
+    - listitem [ref=e17]:
+      - strong [ref=e18]: "Response Structure:"
+      - text: JSON with status, version, chromadb_status, timestamp
+  - heading "Acceptance Criteria Status" [level=2] [ref=e19]
+  - list [ref=e20]:
+    - listitem [ref=e21]: "[x] Endpoint returns JSON with server status, version, and ChromaDB connection status"
+    - listitem [ref=e22]: "[x] Include ChromaDB health check in the response"
+    - listitem [ref=e23]: "[x] Return appropriate HTTP status codes (200 for healthy, 503 for degraded)"
+    - listitem [ref=e24]: "[x] Include timestamp in response"

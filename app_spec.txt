@@ -1,0 +1,3210 @@
+# Project Specification: EscapeTogether
+
+## Project Goal
+A beautiful, immersive cooperative escape room game designed for couples. Two players work together to solve puzzles that require genuine communication, trust, and teamwork. Inspired by "Keep Talking and Nobody Explodes" and "We Were Here" series, but with a romantic, intimate atmosphere.
+
+---
+
+## Visual Direction
+
+### Aesthetic Pillars
+| Pillar | Description |
+|--------|-------------|
+| **Romantic** | Warm lighting, soft edges, intimate spaces |
+| **Mysterious** | Shadows, secrets, things half-seen |
+| **Hand-crafted** | Artisan objects, personal touches, love letters |
+| **Timeless** | Not dated to any era, dreamlike quality |
+
+### Art Style
+```
+Color Palette:
+┌─────────────────────────────────────────────────────┐
+│  Primary    │ Deep Navy (#1a1a2e) to Soft Black    │
+│  Secondary  │ Dusty Rose (#c9a9a6), Antique Gold   │
+│  Accent     │ Warm Amber (#f4a460), Soft Teal      │
+│  Glow       │ Candlelight Orange, Moonlight Blue   │
+└─────────────────────────────────────────────────────┘
+
+Visual Language:
+- Painted, illustrative backgrounds (not photorealistic)
+- Objects have subtle inner glow when interactive
+- Particle effects: dust motes, candle flames, falling leaves
+- Lighting: pools of warm light, dramatic shadows
+- UI: Minimal, elegant typography, fades when not needed
+```
+
+### Room Atmospheres
+
+**The Attic**
+```
+Time: Golden hour light through dusty windows
+Sounds: Creaking wood, distant birds, wind chimes
+Mood: Nostalgic, warm, filled with memories
+Colors: Amber, sepia, cream, aged paper
+```
+
+**The Clock Tower**
+```
+Time: Night, moonlight through clock face
+Sounds: Ticking clocks, wind, distant bells
+Mood: Mysterious, romantic, slightly magical
+Colors: Deep blue, silver, gold accents
+```
+
+**The Garden Conservatory**
+```
+Time: Dawn, soft diffused light
+Sounds: Rain on glass, plants growing, water features
+Mood: Serene, hopeful, alive
+Colors: Soft greens, rose pink, morning gold
+```
+
+---
+
+## Core Mechanics
+
+### Player Roles (Per-Puzzle Asymmetry)
+
+**Design Principle:** Each puzzle assigns temporary roles to ensure genuine communication:
+- **Explorer** - Can click, drag, and manipulate objects in the room
+- **Analyst** - Has access to manuals, diagrams, codes, and reference materials
+- **Roles swap between puzzles** - After Puzzle 1 completes, roles flip for Puzzle 2
+
+**Why This Works:**
+- Neither player can solve alone (Explorer has no info, Analyst has no control)
+- Fair gameplay (both players get equal time in each role)
+- Natural conversation loop (Analyst describes → Explorer acts → Both verify)
+
+**UI Display:** Current role shown at bottom of screen: "YOUR ROLE: [Explorer] Can INTERACT with objects"
+
+### Asymmetric Information
+Each player sees things the other cannot. The core loop is: **See → Describe → Understand → Act Together**
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                     PLAYER A SCREEN                             │
+│  ┌───────────────────────────────────────────────────────────┐  │
+│  │                                                           │  │
+│  │    [Room View - Can INTERACT with objects]                │  │
+│  │                                                           │  │
+│  │    Sees: A locked chest with 4 symbol dials               │  │
+│  │          Symbols: ★ ◆ ● ▲                                │  │
+│  │                                                           │  │
+│  │    Cannot see: The instruction plate (faded)              │  │
+│  │                                                           │  │
+│  └───────────────────────────────────────────────────────────┘  │
+└─────────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────────┐
+│                     PLAYER B SCREEN                             │
+│  ┌───────────────────────────────────────────────────────────┐  │
+│  │                                                           │  │
+│  │    [Room View - Can EXAMINE with magnifying glass]        │  │
+│  │                                                           │  │
+│  │    Sees: The faded instruction plate reveals:             │  │
+│  │          "The star guides the way,                        │  │
+│  │           The diamond holds value,                        │  │
+│  │           The circle is whole,                            │  │
+│  │           The triangle points up."                        │  │
+│  │                                                           │  │
+│  │    Cannot interact with: The chest dials                  │  │
+│  │                                                           │  │
+│  └───────────────────────────────────────────────────────────┘  │
+└─────────────────────────────────────────────────────────────────┘
+
+TOGETHER: B reads riddle → A interprets order → A enters code
+SOLUTION: ★ (first), ◆ (second), ● (third), ▲ (fourth)
+```
+
+### Communication Tools
+
+| Tool | How It Works | When To Use |
+|------|--------------|-------------|
+| **Voice Chat** | Real-time audio | Always available |
+| **Ping System** | Click to highlight object for partner | "Look at this!" |
+| **Shared Cursor** | See where partner is pointing | Guiding attention |
+| **Photo Mode** | Take snapshot, share instantly | "This is what I see" |
+| **Drawing** | Sketch on shared canvas | Diagrams, symbols |
+
+### Synchronized Actions
+Some puzzles require simultaneous input from both players:
+
+### Hint System
+
+**How Hints Work:**
+- Each room starts with **3 hints available**
+- Hints are **player-initiated** (not time-based or automatic)
+- Either player can request a hint; both see the result
+- Using a hint does not prevent completing the room
+
+**Hint Progression (Tiered Reveal):**
+```
+┌────────────────────────────────────────────────────────────┐
+│  HINT REQUEST: Puzzle #3 - The Music Box                │
+├────────────────────────────────────────────────────────────┤
+│                                                            │
+│  TIER 1 (Nudge): "Have you tried matching the gear       │
+│                sizes to the diagram?"                     │
+│                                                            │
+│  TIER 2 (Partial): "The small gear goes on the left      │
+│                spindle. The large gear connects to..."    │
+│                                                            │
+│  TIER 3 (Near-spoiler): "Place small-left, medium-      │
+│                center, large-right. Then turn clockwise." │
+│                                                            │
+└────────────────────────────────────────────────────────────┘
+```
+
+**Hint triggers displayed as:** "Need a hint? [Request Hint]" button in puzzle panel
+**Hint delivery:** Toast notification + added to "Notes" panel for reference
+
+### Win/Lose Conditions
+
+**Victory:**
+- Complete all puzzles in a room → Advance to next room
+- Complete all 3 rooms → "Together We Found It" victory screen
+- Show total time, hints used, and celebration animation
+
+**No Lose State:**
+- No time limits, no fail states
+- Players can take as long as needed
+- Wrong answers give feedback but no penalties
+- Encourages experimentation and reduces anxiety
+
+**Room Completion:**
+- When final puzzle in room is solved, show **Emotional Beat** story moment
+- 10-second animated sequence revealing the room's narrative payoff
+- "Continue to Next Room" button appears after story completes
+
+### Photo Sharing System
+
+**How Photo Mode Works:**
+1. Player clicks camera icon in toolbar
+2. Screen flash animation (shutter sound)
+3. Photo appears in **Shared Photos Panel** (both players see it)
+4. Either player can add drawing annotations (sketch arrows, circle items)
+5. Photos persist for the session (cleared on room completion)
+
+**Photo Limits:**
+- Maximum **10 photos** per room
+- Each photo includes timestamp and which player took it
+- Photos display as thumbnails; click to expand
+
+**Annotation Tools:**
+- Red pen (freehand drawing)
+- Yellow highlighter
+- Erase button
+- Clear all button
+
+**Use Cases:**
+- "Look at this weird symbol I found"
+- "I think these go together" (with drawn arrows)
+- Reference document for multi-step puzzles
+
+### Inventory System
+
+**Inventory Rules:**
+- Each player has **separate inventory** (items are not shared)
+- Inventory capacity: **12 items** max per player
+- Items are **puzzle-specific** (cannot be carried between rooms)
+- Some items are **role-locked** (only current Explorer can pick up/use)
+
+**Item Interaction:**
+- Click item in inventory → Show details + "Use" button (if applicable)
+- Some items combine: Drag item A onto item B → Creates new item C
+- Items disappear from inventory when used in puzzle
+
+**Item Display:**
+```
+┌────────────────────────────────────────────────────────────┐
+│  YOUR INVENTORY (4/12)                                    │
+│  ┌─────┐ ┌─────┐ ┌─────┐ ┌─────┐ ┌─────┐              │
+│  │ 🔑  │ │ 📄  │ │ 🕯️  │ │ 🗝️  │ │ [+] │              │
+│  │Rusty│ │Torn │ │Candle│ │Gold │ │Empty│              │
+│  │ Key │ │Note │ │     │ │ Key │ │Slot │              │
+│  └─────┘ └─────┘ └─────┘ └─────┘ └─────┘              │
+└────────────────────────────────────────────────────────────┘
+
+PARTNER'S INVENTORY (3/12): [⚗️] [📖] [🔍] [...]
+```
+
+**Item Trading:**
+- Players **cannot directly trade** items
+- If both players need an item, it spawns duplicates (one per player)
+- This reinforces cooperation: "I have the key, you tell me where it goes"
+
+### Mobile & Touch Support
+
+**Responsive Design:**
+- Game scales from 320px (mobile) to 4K (desktop)
+- UI elements resize appropriately for touch targets (minimum 44x44px)
+
+**Touch-Specific Adjustments:**
+```
+┌─────────────────────────────────┬─────────────────────────────┐
+│  DESKTOP                      │  MOBILE                     │
+├───────────────────────────────┼─────────────────────────────┤
+│  Click to interact            │  Tap to interact             │
+│  Hover for hints              │  Long-press for hints       │
+│  Keyboard shortcuts (1-9)     │  On-screen number pad        │
+│  Drag & drop items            │  Tap-select, tap-place      │
+│  Right-click context menu     │  Long-press context menu    │
+└───────────────────────────────┴─────────────────────────────┘
+```
+
+**Mobile UI Adjustments:**
+- Inventory becomes **full-screen drawer** (swipe up from bottom)
+- Chat panel slides up over screen (tap to minimize)
+- Photo mode expands to full screen
+- Pinch-to-zoom on room view (for detailed object inspection)
+
+**Performance on Mobile:**
+- Particle effects auto-reduce on low-end devices
+- Option to disable animations in settings
+- Progressive image loading for room backgrounds
+
+---
+
+### Communication System
+
+**Assumption: Couples use external voice chat (Discord, Zoom, in-person)**
+
+The game does NOT include built-in text or voice chat. Players communicate through their preferred channel.
+
+**In-Game Communication Tools:**
+```
+┌────────────────────────────────────────────────────────────┐
+│                                                            │
+│   YOUR TOOLS FOR NON-VERBAL COORDINATION:           │
+│                                                            │
+│    🖱️  Ping Object    → Partner sees glow        │
+│    📷 Take Photo       → Share to album           │
+│    ✏️  Draw Marker     → Annotate shared view      │
+│                                                            │
+└────────────────────────────────────────────────────────────┘
+```
+
+| Tool | How It Works | Use Case |
+|------|---------------|-----------|
+| **Ping** | Click object → Partner sees soft glow highlight | "Look at this!" |
+| **Photo** | Take snapshot → Both see in shared album | Reference for complex puzzles |
+| **Draw** | Place colored markers on screen | "Circle this area", "Mark these 3 items" |
+
+**Why No Built-in Chat:**
+- Most couples already use Discord/Zoom/FaceTime
+- Reduces implementation complexity
+- Avoids privacy concerns (no chat transcripts stored)
+- Allows focus on puzzle gameplay instead of communication UI
+
+---
+
+### Game Session & Progress
+
+**Session Length:**
+- Total playtime: ~90 minutes (20 + 30 + 40 per room)
+- **Pause functionality available** - Game state preserved when either player disconnects
+- Players can leave and reconnect anytime (session persists for 24 hours)
+- After 24 hours: room expires, progress is lost
+
+**Pause/Resume Behavior:**
+```
+┌────────────────────────────────────────────────────────────┐
+│                                                            │
+│                     ⏸️  GAME PAUSED                      │
+│                                                            │
+│        Either player can rejoin using room code: XM4K    │
+│                                                            │
+│           [Copy Room Code] [Return to Menu]            │
+│                                                            │
+└────────────────────────────────────────────────────────────┘
+```
+- Either player can pause by clicking "Pause Game" in settings
+- Both players see pause screen when reconnecting
+- Room code displayed prominently for easy reconnection
+- Timer stops during pause
+- Unpause requires both players to be connected
+
+**Save Behavior:**
+- Auto-save every 30 seconds to localStorage
+- Manual save: Click "Save Game" in settings menu
+- Saves store: current room, puzzle progress, inventories, elapsed time
+- **Saves persist across browser sessions** (localStorage)
+- 3 save slots available (Slot 1, Slot 2, Slot 3)
+
+**Room Transitions:**
+```
+┌────────────────────────────────────────────────────────────┐
+│                                                            │
+│                    🎉 ROOM COMPLETE!                       │
+│                                                            │
+│              Grandmother's WWII secret revealed...               │
+│                                                            │
+│                   [Continue to Clock Tower →]                │
+│                                                            │
+└────────────────────────────────────────────────────────────────┘
+```
+- After final puzzle solved: Show 10-second emotional beat animation
+- Display "Continue to Next Room" button
+- Both players must click Continue (prevents one player advancing alone)
+- Brief loading screen (2-3 seconds) while next room assets load
+
+---
+
+### Puzzle Implementation Notes
+
+**Puzzle Solutions:**
+- **Static solutions** (not randomized) for consistent storytelling
+- Each puzzle has one correct answer/method
+- Puzzle data stored in TypeScript objects (no database required)
+- Solutions hardcoded in puzzle definitions
+
+**Puzzle State Structure:**
+```typescript
+interface PuzzleState {
+  puzzleId: string;
+  solved: boolean;
+  attempts: number;
+  currentPhase?: number;  // For multi-step puzzles
+  data: Record<string, unknown>;  // Puzzle-specific state
+}
+
+// Example: Trunk Lock puzzle
+trunkLockState: {
+  puzzleId: "trunk_lock",
+  solved: false,
+  attempts: 0,
+  data: {
+    dial1: "★",
+    dial2: "◆",
+    dial3: "●",
+    dial4: "▲"
+  }
+}
+```
+
+**Hint Storage:**
+- Hints stored in puzzle definitions (3 tiers per puzzle)
+- Display logic: Check attempts count → show appropriate hint tier
+- Example hint tiers:
+  - Tier 1 (after 2 failed attempts): Nudge
+  - Tier 2 (after 4 failed attempts): Partial solution
+  - Tier 3 (after 6 failed attempts): Near-spoiler
+
+**Puzzle Validation:**
+- Server validates puzzle solutions (authoritative)
+- Client submits: `{ puzzleId, solution }`
+- Server responds: `{ correct: boolean, message }`
+- Wrong answers: Feedback message + increment attempt counter
+
+---
+
+### Atmosphere & Immersion (Bringing Couples Closer)
+
+**Design Philosophy:**
+Every atmospheric element should serve **three purposes**: immersion, storytelling, and sparking conversation between partners. The goal is moments where players say "look at this!" to each other—not "I solved a puzzle."
+
+**Sensory Details by Room:**
+
+**The Attic - Warm, Nostalgic, Cozy:**
+```
+SMELL: Cedar, old paper, faint vanilla
+SOUND: Creaking floorboards, distant birds, wind chimes
+TOUCH: Dust on everything, brittle paper, worn wood
+SIGHT: Golden hour light through grime windows
+
+AMBIENT DETAILS:
+  Dust motes dance in light beams (real-time particle)
+  Lace doily on trunk has small hole (moth-eaten)
+  Old photographs have bent corners, handwriting on back
+  Music box plays when anyone walks near (trigger proximity)
+  Trunk lock is COLD metal (visually frosted)
+```
+
+**The Clock Tower - Romantic, Mysterious, Intimate:**
+```
+SMELL: Cold metal, old oil, rain from outside
+SOUND: Ticking clocks (different rhythms), distant bells
+TOUCH: Smooth brass, cold stone, gear vibrations
+SIGHT: Moonlight through clock face, blue shadows
+
+AMBIENT DETAILS:
+  Gear shadows move slowly across walls (real-time)
+  Pendulum swings rhythmically (syncs with music beat)
+  Warm candle flickers when both players near same spot
+  Lovers' initials carved into clock mechanism (discovery)
+  Bells toll gently when puzzle solved (celebry)
+```
+
+**The Garden Conservatory - Hopeful, Alive, Growing:**
+```
+SMELL: Rain, wet earth, floral perfume
+SOUND: Rain on glass, water trickling, birds chirping
+TOUCH: Damp leaves, smooth stone, warm glass
+SIGHT: Dawn light filtering through rain, green glow
+
+AMBIENT DETAILS:
+  Fireflies appear in dark corners (evening cycle)
+  Plants grow visibly when watered (animation reward)
+  Butterfly lands on reachable plants (rare, delightful)
+  Condensation breathes on glass (player proximity)
+  Wedding bands have tarnish pattern (age, story)
+```
+
+**Object Stories - Each Item Has History:**
+
+| Object | Story Detail | Why It Matters |
+|--------|-------------|------------------|
+| Grandmother's trunk | Scratch marks on bottom from being dragged across attic floor for 60 years | Someone loved this thing |
+| Music box | Ballerina's dress is faded from sunlight through window | Played daily, missing someone |
+| Lovers' letters | Some have tear stains, some have wax seals (mood variation) | Real emotions, not storybook |
+| Clock gears | One gear has initials carved: "E + R" (Elizabeth & Robert) | He made this for her |
+| Hybrid flowers | Each has copper tag with cross-reference date | They created this together |
+
+**Shared Discovery Moments:**
+
+When a player finds something special, BOTH get a notification - creating shared "look at this!" conversation moments.
+
+**Tactile Feedback:**
+
+| Action | Visual | Audio | Feeling |
+|--------|---------|-------|---------|
+| Click dial | Dial rotates with satisfying CLICK | Real rotary dial sound |
+| Lift dusty object | Small puff of dust particles | Soft "poof" |
+| Open old book | Pages creak, spine stiffness | Paper rustle |
+| Place heavy object | Screen slight shake on drop | Metallic clunk |
+
+**Dynamic Lighting:**
+
+As players solve puzzles, the room literally warms up - more golden light, softer shadows. Progress rewards with beauty.
+
+**Couple Connection:**
+
+| Moment | Reinforcement |
+|---------|---------------|
+| Both stand near same object | Warm glow merges both auras |
+| Solve together | Celebry is LARGER for two players |
+| One helps other | Helper gets "supporter" glow |
+| Room complete | Photo of BOTH players together |
+
+---
+
+### Accessibility Features
+
+**Visual Accessibility:**
+- Colorblind mode: Toggle pattern/shape overlays on color-coded elements
+- High contrast mode: Increased border visibility, reduced glow effects
+- Text size: Small / Medium / Large options
+- Dyslexia-friendly font option (OpenDyslexic)
+
+**Audio Accessibility:**
+- Visual subtitles for all audio clues (music box melodies, bell sequences)
+- Visual indicator for partner's voice activity (audio level meter)
+- Separate volume controls: Music / SFX / Voice / Ambient
+
+**Motor Accessibility:**
+- Keyboard-only navigation: Tab through interactive elements
+- Single-switch mode: All puzzles playable with one button/switch
+- Extended timing: Toggle to remove timing constraints on coordination puzzles
+
+**Screen Reader Support:**
+- ARIA labels on all interactive elements
+- Alt text descriptions for room views and puzzle objects
+- Semantic HTML structure throughout
+- Live region announcements for state changes
+
+---
+
+### Content & Audience
+
+**Target Audience:**
+- Couples and close friends (ages 14+)
+- Experience level: Beginner to intermediate puzzle solvers
+- Play style: Cooperative, communication-focused, no time pressure
+
+**Content Rating:**
+- E for Everyone (ESRB) / PEGI 7+
+- No violence, horror, or objectionable content
+- Themes: Love, family history, connection, hope
+- Emotional moments: Bittersweet nostalgia, romantic longing (mild)
+
+**Language:**
+- Launch: English only
+- Text-based puzzles use English words/phrases
+- Future: Localization support (Spanish, French, German, Japanese)
+
+**Content Warnings:**
+- None required (family-friendly content)
+- Mild emotional themes (grandmother's past, historical war reference)
+
+---
+
+### Error Handling & Edge Cases
+
+**WebSocket Failures:**
+```
+┌────────────────────────────────────────────────────────────┐
+│                                                            │
+│              ⚠️  CONNECTION LOST                          │
+│                                                            │
+│        Attempting to reconnect... (3/5)                       │
+│                                                            │
+│           [Cancel] [Return to Menu]                            │
+│                                                            │
+└────────────────────────────────────────────────────────────────┘
+```
+- Automatic reconnection with exponential backoff (1s, 2s, 4s, 8s, 16s)
+- After 5 failed attempts: Show "Return to Menu" option
+- During reconnect: Show last known game state (read-only)
+
+**Server-Side Errors:**
+- Room not found: "Room has expired. Create a new room?"
+- Room full: "Room already has 2 players"
+- Invalid state: Client requests full resync
+
+**Browser Compatibility:**
+```
+Minimum Requirements:
+├────────────────────────────────────────────────────────┐
+│  Chrome/Edge: 90+ (Aug 2021)                     │
+│  Firefox: 88+ (Dec 2020)                           │
+│  Safari: 15+ (Sept 2021)                            │
+│  Mobile Safari: 15+ (iOS 15+)                         │
+│  Chrome Mobile: 90+ (Android 2021+)                   │
+│                                                        │
+│  Required Features:                                      │
+│  - WebSocket support                                     │
+│  - WebGL 2.0 (for PixiJS)                            │
+│  - ES2020 JavaScript                                   │
+│  - localStorage                                         │
+└────────────────────────────────────────────────────────────┘
+```
+- Feature detection on load
+- Unsupported browsers: Friendly message with links to update/download
+- Progressive enhancement: Core gameplay works without WebRTC (voice chat optional)
+
+---
+
+### Analytics (Privacy-First)
+
+**Tracked Metrics:**
+- Room completion rate (percentage)
+- Average time per room
+- Hint usage frequency
+- Error rates (disconnects, failures)
+
+**NOT Tracked:**
+- No personally identifiable information (names, emails)
+- No audio/video recordings
+- No chat transcripts
+- No IP addresses stored
+
+**Implementation:**
+- Optional: "Allow anonymous analytics" checkbox on first visit
+- Local analytics first (localStorage)
+- Aggregate reports via beacon API (no third-party scripts)
+
+---
+
+THE LEVER PUZZLE:
+
+THE LEVER PUZZLE:
+┌────────────────────────────────────────────┐
+│                                            │
+│   Player A holds ──┐    ┌── Player B holds │
+│                    ▼    ▼                  │
+│                    [====]                  │
+│                     GATE                   │
+│                                            │
+│  "Hold your lever while I turn the key!"  │
+│                                            │
+└────────────────────────────────────────────┘
+
+TIMING PUZZLE:
+┌────────────────────────────────────────────┐
+│                                            │
+│    A: ●○○○○  "Press on 3... 2... 1..."    │
+│    B: ○○●○○  "NOW!"                        │
+│                                            │
+│    Must press within 0.5s of each other   │
+│                                            │
+└────────────────────────────────────────────┘
+```
+
+---
+
+## Puzzle Design Principles (Research-Based)
+
+Based on research of successful cooperative games (Keep Talking and Nobody Explodes, We Were Here series):
+
+**Core Requirements for Every Puzzle:**
+1. **Genuine Information Asymmetry** - Each player sees different, non-deducible information
+2. **Forced Communication** - Neither player can solve alone; collaboration is required
+3. **Clear Objectives** - Both players understand what needs to be accomplished
+4. **Fair Role Distribution** - Roles swap per puzzle for equal contribution
+
+**Red Flags to Avoid:**
+- ❌ Puzzles solvable by one player alone
+- ❌ "How was I supposed to know that?" moments (obscure outside knowledge)
+- ❌ The "Quarterbacking" problem (one player dominates, other is passive)
+- ❌ Unclear objectives or inconsistent logic
+
+**Difficulty Progression Pattern:**
+- **Warm-up** (Puzzles 1-2): Teach communication mechanics simply
+- **Core** (Puzzles 3-5): Increase interdependence and complexity
+- **Challenge** (Puzzles 6-7): Combine multiple learned skills
+- **Finale** (Final puzzle): Epic culmination requiring all cooperative abilities
+
+---
+
+## AI Puzzle Customizer
+
+### Overview
+An intelligent system that personalizes the escape room experience for each couple, adapting puzzles to their relationship dynamics, communication style, and skill level. The AI analyzes gameplay patterns and adjusts content in real-time to create meaningful, challenging-but-fair experiences that strengthen a couple's bond.
+
+### Customization Pillars
+
+| Pillar | Description |
+|--------|-------------|
+| **Personal** | Puzzles contain couple's own memories, inside jokes, and special moments |
+| **Adaptive** | Difficulty adjusts in real-time based on performance and stress levels |
+| **Guiding** | Hints and nudges tailored to how the couple communicates |
+| **Celebratory** | Victory moments reference their unique relationship journey |
+
+### Onboarding Flow
+
+Before creating a room, couples complete a brief profiling session:
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                     COUPLE PROFILING                            │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                 │
+│  STEP 1: Names & Milestone                                     │
+│  ┌─────────────────────────────────────────────────────────┐  │
+│  │  Player A Name:  [_________________]                     │  │
+│  │  Player B Name:  [_________________]                     │  │
+│  │                                                         │  │
+│  │  Relationship Milestone:                                 │  │
+│  │  ○ First Date    ○ Engaged    ○ Married               │  │
+│  │  ○ Anniversary   ○ Just Because  ○ Other               │  │
+│  └─────────────────────────────────────────────────────────┘  │
+│                                                                 │
+│  STEP 2: Memory Upload (Optional but Recommended)            │
+│  ┌─────────────────────────────────────────────────────────┐  │
+│  │  📷 Upload 3-5 photos to embed in puzzles                │  │
+│  │     [Drag & Drop or Click to Browse]                    │  │
+│  │                                                         │  │
+│  │  ✨ These photos will appear in:                        │  │
+│  │    • Torn Photographs puzzle (Attic)                     │  │
+│  │    • Portrait Gallery variations                        │  │
+│  │    • Victory screen montages                            │  │
+│  └─────────────────────────────────────────────────────────┘  │
+│                                                                 │
+│  STEP 3: Play Style Quiz (3 Questions)                       │
+│  ┌─────────────────────────────────────────────────────────┐  │
+│  │  1. When solving problems together, you usually:        │  │
+│  │     ○ One leads, one follows                             │  │
+│  │     ○ Both explore independently then share findings    │  │
+│  │     ○ Talk through every step together                   │  │
+│  │                                                         │  │
+│  │  2. Preferred challenge level:                          │  │
+│  │     ○ Relaxed & Story-focused                           │  │
+│  │     ○ Balanced (puzzles + story equally)               │  │
+│  │     ○ Challenge-seeking (we love hard puzzles!)         │  │
+│  │                                                         │  │
+│  │  3. How do you prefer hints?                            │  │
+│  │     ○ Give them early, keep us moving                   │  │
+│  │     ○ Only when we're clearly stuck                    │  │
+│  │     ○ Never, we want to figure it out ourselves         │  │
+│  └─────────────────────────────────────────────────────────┘  │
+│                                                                 │
+│  STEP 4: AI Generates Your Experience                       │
+│  ┌─────────────────────────────────────────────────────────┐  │
+│  │                                                         │  │
+│  │    🎭 Analyzing responses...                             │  │
+│  │    🔧 Calibrating puzzle parameters...                   │  │
+│  │    ✨ Generating personalized elements...                │  │
+│  │                                                         │  │
+│  │    Your Experience Preview:                             │  │
+│  │    ┌─────────────────────────────────────────┐          │  │
+│  │    │ Challenge Level:  Balanced ⚖️            │          │  │
+│  │    │ Puzzle Focus:     Communication-heavy  │          │  │
+│  │    │ Hint Style:      Guided, not spoiling  │          │  │
+│  │    │ Special Feature: Your photos in Room 1 │          │  │
+│  │    └─────────────────────────────────────────┘          │  │
+│  │                                                         │  │
+│  │    [Looks Great! Create Room →]                         │  │
+│  │                                                         │  │
+│  └─────────────────────────────────────────────────────────┘  │
+│                                                                 │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+### Couple Profile Schema
+
+```typescript
+interface CoupleProfile {
+  // Basic Info
+  names: {
+    player_a: string;
+    player_b: string;
+  };
+  milestone: "first_date" | "engaged" | "married" | "anniversary" | "just_because" | "other";
+
+  // Uploaded Media
+  uploaded_photos: {
+    id: string;
+    url: string;
+    caption?: string;
+    timestamp: number;
+  }[];
+
+  // Play Style (from quiz)
+  play_style: {
+    collaboration: "one_leads" | "independent_explore" | "talk_through";
+    challenge_preference: "relaxed" | "balanced" | "challenge_seeking";
+    hint_preference: "early" | "when_stuck" | "never";
+  };
+
+  // AI-Derived Insights (learned during gameplay)
+  learned_behaviors: {
+    problem_solving_approach: {
+      player_a: "visual" | "logical" | "intuitive" | "mixed";
+      player_b: "visual" | "logical" | "intuitive" | "mixed";
+    };
+    stress_tolerance: "low" | "medium" | "high";
+    communication_pattern: "competitive" | "collaborative" | "playful";
+    dominance_balance: number; // 0 = A dominates, 1 = B dominates, 0.5 = equal
+  };
+
+  // Progress Tracking
+  session_history: {
+    date: number;
+    rooms_completed: number;
+    total_time: number;
+    hints_used: number;
+    difficulty_tier: number; // 1-5
+  }[];
+}
+```
+
+### Dynamic Difficulty System
+
+The AI continuously monitors gameplay and adjusts parameters:
+
+```typescript
+interface AIDifficultyTuner {
+  // Real-time Metrics
+  current_metrics: {
+    time_on_current_puzzle: number;
+    frustration_indicators: {
+      rapid_failures: number;         // Quick repeated wrong answers
+      hint_requests: number;
+      inactivity_duration: number;
+      negative_language_detected: boolean; // Text analysis
+    };
+    flow_indicators: {
+      steady_progress: boolean;
+      successful_coordination: number;
+      positive_chat_ratio: number;
+    };
+  };
+
+  // Adjustment Parameters
+  tunable_parameters: {
+    time_limits: {
+      extended: boolean;
+      multiplier: number; // 1.0 = normal, 1.5 = +50% time
+    };
+    hint_threshold: {
+      base_trigger: string;    // e.g., "time_elapsed > 120s"
+      adjusted_trigger: string; // e.g., "time_elapsed > 90s" (more generous)
+    };
+    clue_subtlety: number;      // 0-100, lower = more obvious
+    coordination_tolerance: number; // Timing windows (ms)
+    information_asymmetry: number; // How obscure B's info is vs A's
+  };
+
+  // Adjustment Rules
+  adjustment_triggers: {
+    make_easier: {
+      time_stuck: number;           // Seconds with no progress
+      frustration_score: number;    // Combined negative indicators
+      failed_attempts: number;
+    };
+    make_harder: {
+      rapid_solution: number;       // Solved under X seconds
+      zero_hints_used: boolean;
+      perfect_coordination: number;  // N perfectly-timed actions
+    };
+  };
+}
+```
+
+**Example Adjustments:**
+
+```
+SCENARIO: Couple stuck on "The Trunk Lock" for 4 minutes
+┌─────────────────────────────────────────────────────────────┐
+│  AI DETECTS:                                               │
+│  • 4+ minutes on same puzzle                              │
+│  • 3 failed dial attempts                                 │
+│  • Both players inactive for 30s                          │
+├─────────────────────────────────────────────────────────────┤
+│  AI ADJUSTS:                                               │
+│  • Dial numbers glow faintly when close to correct value   │
+│  • Time requirement reduced: 3s → 2s                     │
+│  • B's view shows: "One dial is correct" (gentle nudge)  │
+└─────────────────────────────────────────────────────────────┘
+
+SCENARIO: Couple solved "Music Box" in 45 seconds (target: 3min)
+┌─────────────────────────────────────────────────────────────┐
+│  AI DETECTS:                                               │
+│  • Solved 75% faster than baseline                        │
+│  • Zero hints used                                        │
+│  • Perfect gear placement on first try                   │
+├─────────────────────────────────────────────────────────────┤
+│  AI ADJUSTS:                                               │
+│  • Next puzzle: Hide 1 gear from initial view            │
+│  • Increase gear similarity by 20% (harder to distinguish)│
+│  • Remove outline guides (rely on description only)      │
+└─────────────────────────────────────────────────────────────┘
+```
+
+### Personalized Content Generation
+
+The AI generates unique puzzle elements based on couple's profile:
+
+```typescript
+interface PersonalizedContentGenerator {
+  // Substitutes generic content with couple-specific
+  content_substitutions: {
+    photo_puzzles: {
+      source: "uploaded_photos[]";
+      integration_points: [
+        "torn_photographs_puzzle",    // Room 1, Puzzle 1
+        "portrait_gallery_variants",  // Room 1 alternatives
+        "victory_montage"             // End-screen celebration
+      ];
+    };
+    cipher_messages: {
+      default_word: "ROSALIND";
+      personalized_options: [
+        "FOREVER",              // Anniversary theme
+        "ADVENTURE",            // Relationship journey
+        "TOGETHER",             // Simple, powerful
+        couple_anniversary_word, // AI-generated from milestone
+      ];
+    };
+    love_letter_names: {
+      default: ["MARIE", "JAMES"];
+      personalized: [profile.names.player_a.toUpperCase().slice(0, 5)];
+    };
+    music_melodies: {
+      default: "generic_waltz";
+      personalized: "user_uploaded_song" | "era_appropriate_variation";
+    };
+  };
+
+  // Story Integration
+  story_integration: {
+    attic_letters: {
+      sender: profile.names.player_a;    // "Love, [Name]"
+      recipient: profile.names.player_b;
+      date_reference: couple_milestone_date;
+      personal_details: [
+        "where they met",
+        "shared memory from profile",
+        "inside joke if provided"
+      ];
+    };
+  };
+}
+```
+
+**Examples of Personalization:**
+
+```
+GENERIC vs PERSONALIZED
+
+┌─ TORN PHOTOGRAPHS PUZZLE ─────────────────────────────────┐
+│                                                           │
+│  GENERIC:                                                 │
+│  • Random vintage portraits                                │
+│  • Frame labels: "Portrait #1", "Portrait #2"           │
+│  • Completed message: "Grandmother's Secret Revealed"    │
+│                                                           │
+│  PERSONALIZED:                                           │
+│  • Their actual photos: first date, engagement, wedding  │
+│  • Frame labels: "Paris 2019", "The Proposal", "Our Day" │
+│  • Completed message: "Sarah & Michael's Story Begins"   │
+│                                                           │
+└───────────────────────────────────────────────────────────┘
+
+┌─ LOVE LETTER CIPHER PUZZLE ──────────────────────────────┐
+│                                                           │
+│  GENERIC:                                                 │
+│  • Letter signature: "Forever Yours, Grandmother"        │
+│  • Cipher word: "ROSALIND"                                │
+│                                                           │
+│  PERSONALIZED:                                           │
+│  • Signature: "With all my love, Alex"                   │
+│  • Cipher word: "ADVENTURE" (their anniversary theme)    │
+│  • Letter text mentions: "That cafe in Barcelona..."     │
+│                                                           │
+└───────────────────────────────────────────────────────────┘
+```
+
+### Adaptive Hint System
+
+Hints evolve from gentle nudges to clear guidance based on couple's progress:
+
+```typescript
+interface AdaptiveHintSystem {
+  hint_strategy: {
+    progression: "gradual" | "contextual" | "personalized";
+    tiers: {
+      tier_1: {
+        trigger: "time_elapsed > baseline * 0.5";
+        style: "encouraging + directional";
+        examples: [
+          "You're doing great! Have you tried examining the {object}?",
+          "Remember: Player A can interact, Player B can examine!",
+        ];
+      };
+      tier_2: {
+        trigger: "time_elapsed > baseline OR failed_attempts >= 2";
+        style: "mechanic-focused";
+        examples: [
+          "Player B: Describe what you see on page 3 of the manual.",
+          "The symbols on the chest match the riddle's keywords.",
+        ];
+      };
+      tier_3: {
+        trigger: "frustration_detected OR time_elapsed > baseline * 1.5";
+        style: "near-spoiler but preserves aha moment";
+        examples: [
+          "Try setting the dials to: 4 - 7 - 2 - 9",
+          "The order is: Star first, then Diamond, then Circle.",
+        ];
+      };
+    };
+  };
+
+  personalized_hints: {
+    use_names: boolean;  // "Sarah, try..." vs "Player A, try..."
+    reference_strengths: boolean;  // "You're great at visual puzzles!"
+    celebrate_success: boolean;  // "Amazing teamwork on that one!"
+  };
+}
+```
+
+**Hint Examples by Couple Type:**
+
+```
+COMPETITIVE COUPLE (detected from chat pattern):
+Tier 1: "Both of you have important pieces. Share what you see!"
+Tier 2: "Player A: Player B holds the key you need. Ask them!"
+Tier 3: "Player A describe your dial values. Player B, check your notes."
+
+SHY/UNCERTAIN COUPLE (slow progress, many hints):
+Tier 1: "You're both doing wonderfully! Take your time."
+Tier 2: "There's no wrong answer here. Just try something together!"
+Tier 3: "Don't worry! Here's exactly what to do: [step-by-step]"
+
+CHALLENGE-SEEKING COUPLE (fast solver, zero hints):
+Tier 1: "You two are on fire! But wait... did you notice the detail?"
+Tier 2: "The obvious solution is a trap. Look closer."
+Tier 3: "Still stuck? The answer requires both of you to see different things."
+```
+
+### Communication Coach (Subtle Guidance)
+
+The AI gently encourages better teamwork without being intrusive:
+
+```typescript
+interface CommunicationCoach {
+  monitoring: {
+    patterns_analyzed: {
+      interrupt_frequency: number;    // One player cuts off other frequently
+      participation_balance: number;  // 0-1, ideal = 0.5
+      negative_language: boolean;     // Frustration, blame detected
+      silence_duration: number;      // Too long without communication
+    };
+  };
+
+  interventions: {
+    subtle_guidance: {
+      encouraging_balance: {
+        trigger: "participation_balance < 0.3";
+        action: "highlight_object_for_passive_player";
+        message: "Player B, you have something important on your screen!";
+      };
+      defusing_tension: {
+        trigger: "negative_language_detected";
+        action: "send_system_message";
+        message: "Remember: This puzzle requires both of you. You're a team!";
+      };
+      prompting_collaboration: {
+        trigger: "silence_duration > 90s";
+        action: "suggest_action";
+        message: "Try describing what you each see. Compare notes!";
+      };
+    };
+    celebrations: {
+      trigger: "puzzle_solved_with_coordination";
+      message: "Beautiful teamwork! You two make an amazing team!";
+    };
+  };
+}
+```
+
+### Debug Mode: AI Challenge Visualization
+
+A debug interface that exposes the AI's real-time decision-making process, allowing developers to observe how the system creates and adapts challenges for couples.
+
+```
+┌─────────────────────────────────────────────────────────────────────────┐
+│                      AI DEBUG MONITOR                                │
+├─────────────────────────────────────────────────────────────────────────┤
+│                                                                         │
+│  ┌─────────────────────────────────────────────────────────────────┐  │
+│  │  REAL-TIME CHALLENGE CREATION                                     │  │
+│  ├─────────────────────────────────────────────────────────────────┤  │
+│  │                                                                  │  │
+│  │  CURRENT PUZZLE: The Trunk Lock (Room 1)                          │  │
+│  │  ───────────────────────────────────────────────────────────────  │  │
+│  │                                                                  │  │
+│  │  AI PROCESSING STREAM:                                            │  │
+│  │  ┌──────────────────────────────────────────────────────────┐    │  │
+│  │  │ > ANALYZING GAME STATE...                                   │    │  │
+│  │  │   • Time elapsed: 3m 24s                                   │    │  │
+│  │  │   • Failed attempts: 3                                      │    │  │
+│  │  │   • Inactivity period: 18s                                  │    │  │
+│  │  │   • Frustration score: 0.72/1.0                             │    │  │
+│  │  │                                                              │    │  │
+│  │  │ > CALLING z.ai API...                                        │    │  │
+│  │  │   • Endpoint: https://api.z.ai/api/paas/v4/chat/completions│    │  │
+│  │  │   • Model: glm-4.7                                         │    │  │
+│  │  │   • Request ID: req_ab3f7c2d                               │    │  │
+│  │  │                                                              │    │  │
+│  │  │ > AI RESPONSE RECEIVED (2.3s)                               │    │  │
+│  │  │   • Detected: Frustration building                          │    │  │
+│  │  │   • Decision: DIFFICULTY REDUCTION                         │    │  │
+│  │  │   • Confidence: 94%                                         │    │  │
+│  │  │                                                              │    │  │
+│  │  │ > APPLYING ADJUSTMENTS...                                   │    │  │
+│  │  │   ✓ Dial glow effect added                                  │    │  │
+│  │  │   ✓ Time requirement: 3s → 2s                               │    │  │
+│  │  │   ✓ Hint queuing: "One dial correct"                        │    │  │
+│  │  │                                                              │    │  │
+│  │  │ > GENERATING NEXT CHALLENGE PREVIEW...                       │    │  │
+│  │  │   • Next: Music Box Puzzle                                   │    │  │
+│  │  │   • Difficulty: Normal → Reduced (0.7x)                    │    │  │
+│  │  │   • Personalization: Using "first_date" memory              │    │  │
+│  │  │                                                              │    │  │
+│  │  └──────────────────────────────────────────────────────────┘    │  │
+│  │                                                                  │  │
+│  └─────────────────────────────────────────────────────────────────┘  │
+│                                                                         │
+│  ┌─────────────────────────────────────────────────────────────────┐  │
+│  │  COUPLE PROFILE INSIGHTS                                         │  │
+│  ├─────────────────────────────────────────────────────────────────┤  │
+│  │                                                                  │  │
+│  │  NAMES: Sarah (A) │ Michael (B)                                  │  │
+│  │  MILESTONE: First Date (Paris, 2019)                             │  │
+│  │  ───────────────────────────────────────────────────────────────  │  │
+│  │                                                                  │  │
+│  │  LEARNED BEHAVIORS:                                              │  │
+│  │  • Problem Solving: Sarah (Visual) │ Michael (Logical)          │  │
+│  │  • Stress Tolerance: Medium                                     │  │
+│  │  • Communication: Collaborative                                  │  │
+│  │  • Dominance: 0.52 (slightly B-leading)                         │  │
+│  │                                                                  │  │
+│  │  SESSION HISTORY:                                                │  │
+│  │  • Rooms completed: 2                                            │  │
+│  │  • Total hints used: 5                                           │  │
+│  │  • Current difficulty tier: 2                                    │  │
+│  │                                                                  │  │
+│  └─────────────────────────────────────────────────────────────────┘  │
+│                                                                         │
+│  ┌─────────────────────────────────────────────────────────────────┐  │
+│  │  z.ai API LOG                                                   │  │
+│  ├─────────────────────────────────────────────────────────────────┤  │
+│  │                                                                  │  │
+│  │  [10:23:41] POST /api/paas/v4/chat/completions                 │  │
+│  │  [10:23:41] Status: 200 OK                                      │  │
+│  │  [10:23:41] Tokens: 147 in / 89 out                             │  │
+│  │  [10:23:41] Model: glm-4.7                                      │  │
+│  │  [10:23:41] Latency: 2341ms                                     │  │
+│  │                                                                  │  │
+│  │  LAST PROMPT SNIPPET:                                           │  │
+│  │  "Given couple profile (frustration: 0.72, stuck_duration: 18s, │  │
+│  │   failed_attempts: 3), recommend difficulty adjustment with       │  │
+│  │   confidence score."                                             │  │
+│  │                                                                  │  │
+│  │  LAST RESPONSE SNIPPET:                                         │  │
+│  │  {"adjustment": "reduce_difficulty", "params": {...},           │  │
+│  │   "confidence": 0.94, "reasoning": "..."}                      │  │
+│  │                                                                  │  │
+│  └─────────────────────────────────────────────────────────────────┘  │
+│                                                                         │
+│  [◉ RESET]  [📋 EXPORT LOGS]  [▶ PAUSE]  [⚙ SETTINGS]              │
+│                                                                         │
+└─────────────────────────────────────────────────────────────────────────┘
+```
+
+**Access Methods:**
+
+```typescript
+// Option 1: In-Game Debug Toggle (for development)
+interface DebugToggle {
+  position: "top-right" | "bottom-right";
+  visibility: "admin_only" | "query_param_debug=true";
+  hotkey: "Ctrl+Shift+D";
+}
+
+// Option 2: Separate Debug Monitor Panel
+interface DebugMonitorURL {
+  route: "/debug/ai-monitor";
+  authentication: "admin_token" | "local_dev_only";
+  real_time_updates: true; // WebSocket connection
+}
+
+// Option 3: Browser Extension / Sidecar
+interface DebugSidecar {
+  type: "browser_extension" | "separate_window";
+  connection: "websocket_to_game_server";
+  independant_visibility: true; // Can view without affecting player screens
+}
+```
+
+**Debug Panel Features:**
+
+| Feature | Description |
+|---------|-------------|
+| **Live AI Stream** | Watch z.ai prompts/responses in real-time as challenges are created |
+| **Game State Inspector** | See exactly what data the AI receives (couple profile, metrics) |
+| **Adjustment Preview** | Preview difficulty changes before they're applied to live game |
+| **Confidence Meter** | Visual indicator of AI's confidence in each decision |
+| **Manual Override** | Test custom adjustments by manually triggering AI functions |
+| **Timeline Scrubbing** | Replay AI decisions from session history |
+| **Token/Cost Tracking** | Monitor API usage for glm-4.6/4.7 calls |
+
+**z.ai API Integration Details:**
+
+```typescript
+// Zhipu AI Service Configuration
+interface ZAIServiceConfig {
+  base_url: "https://api.z.ai/api/paas/v4/chat/completions";
+  models: {
+    primary: "glm-4.7";      // Best for complex reasoning
+    fallback: "glm-4.6";    // Faster, lower cost
+  };
+  auth: {
+    method: "Bearer Token";
+    env_var: "ZAI_API_KEY";
+  };
+  request_format: "openai_compatible"; // Z.ai follows OpenAI format
+}
+
+// Example API Call
+const zaiResponse = await fetch("https://api.z.ai/api/paas/v4/chat/completions", {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json",
+    "Authorization": `Bearer ${process.env.ZAI_API_KEY}`
+  },
+  body: JSON.stringify({
+    model: "glm-4.7",
+    messages: [
+      {
+        role: "system",
+        content: "You are an AI game master for EscapeTogether, analyzing couple gameplay..."
+      },
+      {
+        role: "user",
+        content: `Given this game state: ${JSON.stringify(gameState)}, recommend difficulty adjustments.`
+      }
+    ],
+    temperature: 0.7,
+    max_tokens: 500
+  })
+});
+```
+
+---
+
+### AI Service Architecture
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                    AI CUSTOMIZER SERVICE                       │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                 │
+│  ┌─────────────────────────────────────────────────────────┐  │
+│  │              PROFILE BUILDER                              │  │
+│  │  • Process onboarding quiz responses                    │  │
+│  │  • Store uploaded media to secure storage                │  │
+│  │  • Generate initial difficulty calibration               │  │
+│  │  • Create personalized puzzle templates               │  │
+│  └─────────────────────┬───────────────────────────────────┘  │
+│                       │                                       │
+│  ┌────────────────────▼───────────────────────────────────┐  │
+│  │              REAL-TIME TUNER                             │  │
+│  │  • Monitor gameplay metrics every 10s                  │  │
+│  │  • Detect frustration, flow, stuck states             │  │
+│  │  • Adjust difficulty parameters                        │  │
+│  │  • Trigger hint progression                           │  │
+│  │  • Apply small nudges (not spoilers)                  │  │
+│  └─────────────────────┬───────────────────────────────────┘  │
+│                       │                                       │
+│  ┌────────────────────▼───────────────────────────────────┐  │
+│  │            CONTENT GENERATOR                             │  │
+│  │  • Substitute generic assets with personalized          │  │
+│  │  • Generate cipher words from couple data             │  │
+│  │  • Create story variations                            │  │
+│  │  • Build victory montages                            │  │
+│  └─────────────────────┬───────────────────────────────────┘  │
+│                       │                                       │
+│  ┌────────────────────▼───────────────────────────────────┐  │
+│  │            HINT ORCHESTRATOR                            │  │
+│  │  • Generate contextual hints based on state          │  │
+│  │  • Personalize hint language to couple profile        │  │
+│  │  • Balance helpfulness vs preserving aha moment       │  │
+│  └─────────────────────┬───────────────────────────────────┘  │
+│                       │                                       │
+│  ┌────────────────────▼───────────────────────────────────┐  │
+│  │         COMMUNICATION COACH                            │  │
+│  │  • Analyze chat for patterns (privacy-preserving)    │  │
+│  │  • Detect imbalance, tension, silence                │  │
+│  │  • Generate subtle encouragement messages             │  │
+│  │  • Celebrate teamwork successes                      │  │
+│  └─────────────────────┬───────────────────────────────────┘  │
+│                       │                                       │
+└───────────────────────┼───────────────────────────────────────┘
+                        │
+                        ▼
+              ┌─────────────────────┐
+              │    LLM API          │
+              │  z.ai (Zhipu AI)    │
+              │  glm-4.6 / glm-4.7  │
+              └─────────────────────┘
+```
+
+**API Endpoints:**
+
+```typescript
+// AI Customizer Service API
+POST /api/ai/profile/create       // Create new couple profile
+POST /api/ai/profile/update      // Update profile with session data
+POST /api/ai/gamestate/analyze  // Called every 10s during gameplay
+POST /api/ai/hint/generate      // Get personalized hint
+POST /api/ai/content/generate    // Generate personalized content
+POST /api/ai/difficulty/adjust  // Apply difficulty changes
+POST /api/ai/communication/coach // Get coaching message
+```
+
+---
+
+## Puzzle Categories
+
+### 1. DESCRIPTION PUZZLES
+*One player describes, other interprets*
+
+**The Portrait Gallery**
+```
+Setup: Player A faces a wall of 9 portraits with names.
+       Player B has a family tree document.
+
+Player A: "I see portraits of... Victoria, Edmund, Rose..."
+Player B: "According to this family tree, Victoria is Edmund's mother"
+Player A: "But Victoria looks so young!"
+Player B: "The note says 'Mothers wear pearls'"
+Player A: "Victoria has pearls! And Rose has... a locket"
+Player B: "The clue says 'Lockets belong to daughters'"
+
+Solution: Arrange portraits by family role → Reveals hidden compartment
+```
+
+**The Sound Lock**
+```
+Setup: Player A hears a melody played on music box.
+       Player B sees sheet music with notes.
+
+Player A: "I hear: da-da-DUM, da-da-DUM, DA-da-da"
+Player B: "Let me look... that could be measures 3, 4, and 7"
+Player A: "It repeats three times"
+Player B: "Measures 3, 4, 7... the notes are E, G, B"
+Player A: "E-G-B... those are the letters on this lock!"
+
+Solution: Enter E-G-B into letter lock
+```
+
+### 2. INSTRUCTION PUZZLES
+*One player has manual, other executes*
+
+**The Alchemist's Bench**
+```
+Setup: Player A has ingredients and a cauldron.
+       Player B has the recipe book (torn, stained).
+
+Player B (Recipe Book):
+┌─────────────────────────────────────┐
+│  PHILOSOPHER'S DREAM ELIXIR         │
+│                                     │
+│  First, crush the moon petals...    │
+│  [TEXT IS STAINED AND UNREADABLE]   │
+│  ...then add three drops of...      │
+│  [PAGE IS TORN HERE]                │
+│  ...stir widdershins until...       │
+│                                     │
+│  NOTE: Rose water neutralizes!      │
+└─────────────────────────────────────┘
+
+Player A (Ingredients):
+┌─────────────────────────────────────┐
+│  🌸 Moon Petals                     │
+│  💧 Starlight Water                 │
+│  🌹 Rose Water                      │
+│  🌿 Silver Sage                     │
+│  💜 Midnight Orchid                 │
+│                                     │
+│  [CAULDRON - Empty]                 │
+│  [STIR: Clockwise/Counter]          │
+└─────────────────────────────────────┘
+
+Challenge: Recipe is incomplete, players must experiment together
+           B describes what they CAN read, A experiments
+           Wrong combinations create visual/audio feedback
+```
+
+**The Radio Room**
+```
+Setup: Player A operates an old radio with frequency dial.
+       Player B has a logbook of coordinates and times.
+
+Player B: "The log shows transmission at frequency 720, 10pm"
+Player A: "I'm at 720... I hear static... wait, voices!"
+Player B: "Try adjusting the fine-tuning knob"
+Player A: "Got it! It's saying 'The lighthouse shines at midnight'"
+Player B: "Midnight... that's 00:00. Let me check other entries..."
+
+Solution: Find all broadcast times → Convert to frequencies → Decode message
+```
+
+### 3. COORDINATION PUZZLES
+*Both players must act together*
+
+**The Shadow Puppet Theater**
+```
+Setup: Both players control different light sources.
+       A shadow on the wall forms a message when lit correctly.
+
+┌─────────────────────────────────────────────────────────────┐
+│                                                             │
+│   Player A: Candle 1 (left)    Player B: Candle 2 (right)  │
+│                                                             │
+│           ◯                        ◯                       │
+│            ╲                      ╱                        │
+│             ╲                    ╱                         │
+│              ╲                  ╱                          │
+│               ╲                ╱                           │
+│                ▼              ▼                            │
+│               ┌──────────────────┐                         │
+│               │  🔑  (shadow)    │  ← Correct alignment    │
+│               └──────────────────┘    reveals key shape    │
+│                                                             │
+└─────────────────────────────────────────────────────────────┘
+
+Challenge: Both must adjust their candles simultaneously
+           Shadows only align when distances match
+           Different alignments reveal different symbols
+```
+
+**The Reflecting Pool**
+```
+Setup: A pool of water with floating lily pads.
+       Each player can move different pads.
+
+┌─────────────────────────────────────────────────────────────┐
+│                                                             │
+│         Player A moves: ● ● ●                              │
+│                                                             │
+│                    ~~~~~~                                  │
+│                   ~ POOL ~                                  │
+│                    ~~~~~~                                  │
+│                                                             │
+│         Player B moves: ○ ○ ○                              │
+│                                                             │
+│   GOAL: Create a path of pads that reflects moonlight      │
+│         across the pool to illuminate the exit door        │
+│                                                             │
+└─────────────────────────────────────────────────────────────┘
+
+Challenge: Pads A moves affect B's positions (water ripples)
+           Must communicate intentions before moving
+           Trial and error creates waves that scramble positions
+```
+
+### 4. PERSPECTIVE PUZZLES
+*Same space, different views*
+
+**The Mosaic Floor**
+```
+Setup: Both players look at the same mosaic floor from different angles.
+
+Player A sees (standing North):
+┌─────────────────────┐
+│  🔴  🔵  🔴  🔵     │
+│  🔵  🔴  🔵  🔴     │
+│  🔴  🔵  🔴  🔵     │
+│  🔵  🔴  🔵  🔴     │
+└─────────────────────┘
+
+Player B sees (standing South - it's mirrored!):
+┌─────────────────────┐
+│  🔴  🔵  🔴  🔵     │
+│  🔵  🔴  🔵  🔴     │
+│  🔴  🔵  🔴  🔵     │
+│  🔵  🔴  🔵  🔴     │
+└─────────────────────┘
+
+Challenge: When A says "press the red tile in row 2, column 3"
+           B must translate: "My row 2 column 3 is BLUE"
+           They must agree on a coordinate system together
+```
+
+**The Whispering Walls**
+```
+Setup: Players are in adjacent rooms, can only communicate through
+       a small gap in the wall. Messages are whispered.
+
+Player A Room: Has the key, needs the lock code
+Player B Room: Has the code, needs to describe lock mechanism
+
+Mechanic: Typed messages appear character-by-character on the other side
+          Takes 2 seconds per character (simulates whispering)
+          Creates tension and forces brevity
+
+Player A: "I found a key with..." (waits for message to whisper across)
+Player B: "What shape?" (waits)
+Player A: "Star shape, 5 points"
+Player B: "The lock needs star key, turn right 3 times"
+```
+
+### 5. MEMORY PUZZLES
+*Information appears and disappears*
+
+**The Ghost Letters**
+```
+Setup: Letters appear briefly on each player's screen, then fade.
+
+Round 1:
+  Player A sees: "R _ S _" (for 3 seconds)
+  Player B sees: "_ O _ E" (for 3 seconds)
+
+Together: "ROSE"
+
+Each round gets harder:
+- More letters
+- Shorter display time
+- Some red herrings
+- Letters from multiple words
+
+Final: Build a complete phrase that opens the exit
+```
+
+**The Echoing Bells**
+```
+Setup: A sequence of bells plays. Each player hears different notes.
+
+Player A hears: ♪ ♪ ♫ (high notes)
+Player B hears: ♬ ♩ ♬ (low notes)
+
+Together they must recreate the FULL sequence on a bell rack:
+♪ ♬ ♪ ♩ ♫ ♬
+
+Challenge:
+- Each bell can only be rung by one player
+- Must coordinate who rings which bell when
+- Rhythm matters - must be in sync
+```
+
+---
+
+## The Three Rooms
+
+### Room 1: Grandmother's Attic
+**Theme:** Love Letters & Lost Memories
+
+**Story:**
+Your grandmother left you her old house. In the attic, you discover a locked trunk. Inside are decades of love letters between your grandparents - but they're encoded, scattered, and hidden. Piece together their love story to discover the family secret they kept for 60 years.
+
+**Puzzles (5 total, ~20 min):**
+
+| # | Name | Type | Description |
+|---|------|------|-------------|
+| 1 | Torn Photographs | Description | A sees photo pieces, B sees frame outlines. Match together. |
+| 2 | The Music Box | Instruction | A has broken music box, B has assembly diagram. Repair together. |
+| 3 | Love Letter Cipher | Perspective | Letters in invisible ink. A has light, B has the letters. Read together. |
+| 4 | The Trunk Lock | Coordination | Four dials, each player controls two. Must set simultaneously. |
+| 5 | The Secret Message | Memory | Grandparents' initials hidden in objects. Collect all, spell the name. |
+
+**Emotional Beat:** When solved, players discover grandmother's secret: she was a codebreaker in WWII. The trunk contains her medal and a final letter.
+
+**Visual Style:**
+- Dust motes in shafts of golden light
+- Old photographs, lace doilies, hat boxes
+- Warm wood tones, faded wallpaper
+- Music box with twirling ballerina
+
+---
+
+### Room 2: The Clock Tower
+**Theme:** Time & Connection Across Distance
+
+**Story:**
+A century ago, two lovers were separated - one trapped in the clock tower, one outside. They communicated through the clock's mechanisms, leaving messages in the gears. Restore the clock and discover their story.
+
+**Puzzles (6 total, ~30 min):**
+
+| # | Name | Type | Description |
+|---|------|------|-------------|
+| 1 | The Pendulum | Coordination | A controls swing speed, B controls direction. Guide ball to goal. |
+| 2 | Gear Alignment | Description | A sees mechanism from front, B from back. Align gears by description. |
+| 3 | Bell Codes | Instruction | B has telegraph codebook, A operates the telegraph. Send message. |
+| 4 | Clock Face | Perspective | Same clock, different times shown. Reconcile to find the "true time." |
+| 5 | The Windup Key | Coordination | Two keys must turn at same speed, same direction. |
+| 6 | Midnight Chime | Memory | Bell sequence plays. Recreate together on the hour. |
+
+**Emotional Beat:** The clock chimes midnight. A projection shows the lovers' reunion. The clock opens to reveal a hidden engagement ring.
+
+**Visual Style:**
+- Massive clockwork mechanisms, brass and copper
+- Moonlight through the clock face
+- Floating gears and cogs
+- Ticking ambient sound, echoes
+
+---
+
+### Room 3: The Garden Conservatory
+**Theme:** Growth & New Beginnings
+
+**Story:**
+An overgrown Victorian conservatory. Two botanists fell in love here, creating a secret garden of hybrid flowers. Each flower is a message. Bloom the garden to find their final creation - a flower named for their love.
+
+**Puzzles (7 total, ~40 min):**
+
+| # | Name | Type | Description |
+|---|------|------|-------------|
+| 1 | Seed Packets | Description | A has seeds (images), B has planting guide. Match correctly. |
+| 2 | Water Flow | Coordination | Two valves control water flow. Balance pressure for each plant. |
+| 3 | Light Spectrum | Instruction | A controls prisms, B has light requirements chart. |
+| 4 | Hybridization | Memory | Cross-pollination sequence. Remember parent plants. |
+| 5 | The Trellis | Perspective | Vines grow differently for each player. Communicate paths. |
+| 6 | Bloom Timing | Coordination | Touch flowers in sequence. Must alternate between players. |
+| 7 | The Final Bloom | All types | Grand puzzle combining all mechanics. Grow the love flower. |
+
+**Emotional Beat:** The final bloom opens to reveal a hidden compartment with their wedding bands and a pressed flower from their first date.
+
+**Visual Style:**
+- Lush greens, soft morning light
+- Dewdrops on leaves
+- Butterflies, fireflies at dusk
+- Rain on glass roof
+- Alive, breathing, growing
+
+---
+
+## UI/UX Design
+
+### Layout
+```
+┌────────────────────────────────────────────────────────────────┐
+│                                                                │
+│  [Room Name]              ◐ 23:45            💡 Hints: 2/3    │
+│                                                                │
+├────────────────────────────────────────────────────┬───────────┤
+│                                                    │           │
+│                                                    │  CHAT     │
+│                                                    │           │
+│                ROOM VIEW                           │  ┌─────┐  │
+│                                                    │  │ 💬  │  │
+│     (Beautiful illustrated environment)            │  └─────┘  │
+│                                                    │           │
+│     [Objects glow softly when interactive]         │  Partner: │
+│     [Partner's cursor visible as soft light]       │  "I see  │
+│                                                    │  a key!" │
+│                                                    │           │
+│                                                    │ ─────────│
+├────────────────────────────────────────────────────┤           │
+│                                                    │  TOOLS   │
+│   YOUR ROLE: [Explorer] Can INTERACT with objects  │           │
+│   PARTNER: [Analyst] Has information/guides        │  📷 🖌️ 🔍│
+│   (Roles swap per puzzle for fairness)             │           │
+│   [Interact]  [Examine]  [Inventory]               │           │
+│                                                    │           │
+├────────────────────────────────────────────────────┴───────────┤
+│                                                                │
+│   INVENTORY:  [🔑] [📄] [🕯️] [  ] [  ] [  ]                   │
+│   Partner has: [⚗️] [📖]                                       │
+│                                                                │
+└────────────────────────────────────────────────────────────────┘
+```
+
+### Interaction Feedback
+
+| Action | Visual | Audio |
+|--------|--------|-------|
+| Object highlight | Soft golden glow | Gentle chime |
+| Partner highlights | Shared glow on your screen | Soft ping |
+| Puzzle progress | Petals/sparkles float up | Rising tone |
+| Puzzle solved | Golden burst, screen glow | Triumphant chord |
+| Room complete | Confetti, warm light wash | Celebration music |
+| Wrong answer | Subtle shake, dim | Low thunk |
+| Receive message | Chat panel glows | Soft notification |
+| Photo shared | Slide-in animation | Camera shutter |
+
+### Communication UI
+
+**Ping System:**
+```
+1. Player clicks on object
+2. Soft light appears on partner's screen
+3. Partner's cursor drawn toward ping
+4. Optional voice: "Look at this!"
+```
+
+**Photo Sharing:**
+```
+1. Player clicks camera tool
+2. Flash animation
+3. Photo appears in shared album
+4. Both can annotate with drawings
+```
+
+---
+
+## Technical Implementation
+
+### Technology Stack
+
+| Layer | Technology | Rationale |
+|-------|-------------|-----------|
+| **Frontend Framework** | SvelteKit | Fast, lightweight, ideal for 60fps target |
+| **Rendering Engine** | HTML5 Canvas + PixiJS | WebGL acceleration for particles/glows, 2D illustrated aesthetic |
+| **Styling** | Tailwind CSS | Rapid UI development, consistent design system |
+| **Real-time Communication** | Socket.IO | Reliable WebSockets with automatic reconnection and fallbacks |
+| **Backend** | Node.js + Express | Simple state management, shares TypeScript types with frontend |
+| **AI Service** | z.ai (Zhipu AI) glm-4.6/4.7 + Custom Orchestrator | Couple profiling, difficulty tuning, personalized content. API: https://api.z.ai/api/paas/v4/chat/completions |
+| **Language** | TypeScript | Type safety across client/server boundary |
+| **Deployment** | Vercel (frontend) + Railway/Render (backend) | Easy hosting, separates concerns |
+
+### Network Architecture (Jackbox-Style Room Codes)
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                         FLOW DIAGRAM                            │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                 │
+│   PLAYER A                         PLAYER B                     │
+│      │                                │                         │
+│      ▼                                ▼                         │
+│  ┌─────────┐                    ┌─────────┐                     │
+│  │ Landing │                    │ Landing │                     │
+│  │  Page   │                    │  Page   │                     │
+│  └────┬────┘                    └────┬────┘                     │
+│       │                              │                          │
+│       │  [Create Room]               │  [Join Room]             │
+│       ▼                              │                          │
+│  ┌─────────┐                         │                          │
+│  │ Generate│                         │                          │
+│  │  4-char │                         │                          │
+│  │   CODE  │   "XM4K"                │                          │
+│  └────┬────┘                         │                          │
+│       │                              │                          │
+│       │  Share code (Discord/zoom)   │                          │
+│       ├─────────────────────────────►│                          │
+│       │                              │                          │
+│       │                         Enter "XM4K"                    │
+│       │                              ▼                          │
+│       │                         ┌─────────┐                     │
+│       │                         │ Request │                     │
+│       │                         │  Join   │                     │
+│       │                         └────┬────┘                     │
+│       │                              │                          │
+│       │                              ▼                          │
+│  ┌─────────────────────────────────────────┐                   │
+│  │              GAME SERVER                │                   │
+│  │  ┌─────────────────────────────────┐   │                   │
+│  │  │   room: "XM4K"                  │   │                   │
+│  │  │   players: [A] → [A, B]        │   │                   │
+│  │  │   status: waiting → ready      │   │                   │
+│  │  │   created_at: timestamp         │   │                   │
+│  │  └─────────────────────────────────┘   │                   │
+│  │                                         │                   │
+│  │  WebSocket connection to both players   │                   │
+│  └─────────────────────────────────────────┘                   │
+│                                                                 │
+│   GAME STATE synchronized via WebSocket                        │
+│   Server is authoritative (single source of truth)             │
+│                                                                 │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+**Room Code System:**
+```javascript
+// Room code format: 4-character alphanumeric (easy to share)
+// Examples: XM4K, QR7P, AB2Z, 99XY
+// Excludes: 0/O, 1/I/l (confusing characters)
+const CODE_CHARSET = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+const CODE_LENGTH = 4;
+// Total combinations: 32^4 = 1,048,576 unique codes
+// Code expires: 24 hours after creation
+```
+
+**Server Responsibilities:**
+```javascript
+{
+  "room_management": {
+    "create": {
+      "input": {"player_name": "string"},
+      "output": {"room_code": "XM4K", "player_id": "A", "ws_endpoint": "wss://..."}
+    },
+    "join": {
+      "input": {"room_code": "XM4K", "player_name": "string"},
+      "output": {"player_id": "B", "ws_endpoint": "wss://..."},
+      "errors": {
+        "NOT_FOUND": "Room not found or expired",
+        "FULL": "Room already has 2 players"
+      }
+    },
+    "reconnect": {
+      "input": {"room_code": "XM4K", "player_id": "A"},
+      "output": {"game_state": "...", "resume": true}
+    }
+  },
+  "websocket_events": {
+    "client → server": [
+      "player_action",      // {puzzle, action, data}
+      "ping",               // {target_object, from_player}
+      "chat_message",       // {text, from_player}
+      "photo_taken",        // {photo_data, from_player}
+      "request_hint"
+    ],
+    "server → client": [
+      "state_update",       // Full or partial game state
+      "player_joined",      // New player connected
+      "player_reconnected", // Player dropped and came back
+      "puzzle_solved",      // Puzzle completion event
+      "room_complete",      // All puzzles in room done
+      "hint_granted"
+    ]
+  }
+}
+```
+
+**WebSocket Message Format:**
+```json
+{
+  "type": "state_update",
+  "timestamp": 1736899200000,
+  "room": "XM4K",
+  "payload": {
+    "puzzles": {
+      "torn_photos": {
+        "solved": true,
+        "revealed": "grandmother_young_photo"
+      }
+    }
+  },
+  "version": 42
+}
+```
+
+**Reconnection Handling:**
+```javascript
+// Client detects disconnect (heartbeat missed)
+// 1. Show reconnecting overlay
+// 2. Attempt reconnect with room_code + player_id
+// 3. Server resends current full state
+// 4. Client resumes from received state
+// 5. Partner sees "Player X reconnected" toast
+```
+
+**Permanent Disconnection:**
+- If Player A disconnects permanently, **Player B must wait for reconnection or restart**
+- No "hot-join" replacement players (game is designed for the couple/team)
+- Players can reconnect within **5 minutes** before room expires
+- On reconnect: Resume exactly where left off (inventory, puzzle progress, etc.)
+
+**Graceful Degradation During Disconnect:**
+- Disconnected player sees: "Connection lost. Attempting to reconnect..." overlay
+- Connected player sees: "Partner disconnected. Waiting for them to return..." banner
+- Both can see chat history (for context when returning)
+- Puzzle state is preserved on server during disconnect
+
+### Room Progression & Replay
+
+**Progression is Linear:**
+- Room 1 (Attic) → Room 2 (Clock Tower) → Room 3 (Garden)
+- Must complete all puzzles in current room before advancing
+- Cannot skip rooms or puzzles
+
+**Replay Options:**
+- Players can **replay completed rooms** from main menu
+- Replay starts fresh (no inventory carryover)
+- Each replay can have different role assignments (fair for repeated plays)
+
+**Save Slot Behavior:**
+- Each save slot stores: current room, puzzle progress, inventories, elapsed time
+- Loading a save resumes exactly where left off
+- Cannot load a save to skip ahead (must unlock rooms first)
+
+**New Game:**
+- "Start Fresh" from main menu → Generates new room code, clears all progress
+- Both players must rejoin (saves are per-room-code)
+
+### State Management
+```json
+{
+  "room_code": "XM4K",
+  "current_room": "attic",
+  "phase": "exploration", // exploration | puzzle_active | room_complete | game_complete
+  "elapsed_seconds": 845,
+  "hints_remaining": 2,
+  "created_at": 1736899200000,
+  "couple_profile": {
+    "names": {"player_a": "Alex", "player_b": "Jordan"},
+    "milestone": "married",
+    "uploaded_photos": [
+      {"id": "p1", "url": "https://cdn.../photo1.jpg", "caption": "Paris 2019"},
+      {"id": "p2", "url": "https://cdn.../photo2.jpg", "caption": "The Proposal"}
+    ],
+    "play_style": {
+      "collaboration": "talk_through",
+      "challenge_preference": "balanced",
+      "hint_preference": "when_stuck"
+    },
+    "learned_behaviors": {
+      "problem_solving_approach": {"player_a": "visual", "player_b": "logical"},
+      "stress_tolerance": "medium",
+      "communication_pattern": "collaborative",
+      "dominance_balance": 0.52
+    }
+  },
+  "ai_customizations": {
+    "active": true,
+    "difficulty_tier": 3,
+    "puzzle_parameters": {
+      "torn_photos": {"source": "uploaded", "photo_ids": ["p1", "p2"]},
+      "love_letter_cipher": {"cipher_word": "ADVENTURE", "signature": "Love, Alex"},
+      "trunk_lock": {"time_requirement": 2500, "dials_glow": true}
+    },
+    "hint_strategy": {
+      "trigger": "when_stuck",
+      "personalized": true,
+      "use_names": true
+    },
+    "last_adjustment": {
+      "timestamp": 1736899280000,
+      "reason": "Making easier - stuck 4 minutes",
+      "changes": ["time_requirement: 3000→2500", "enable_dials_glow"]
+    }
+  },
+  "players": {
+    "A": {
+      "player_id": "A",
+      "name": "Player A",
+      "role": "explorer",
+      "connected": true,
+      "last_heartbeat": 1736899350000,
+      "inventory": ["rusty_key", "photo_fragment_2"],
+      "camera_photos": ["photo_001.png"],
+      "current_focus": "music_box",
+      "cursor_position": {"x": 320, "y": 240}
+    },
+    "B": {
+      "player_id": "B",
+      "name": "Player B",
+      "role": "analyst",
+      "connected": true,
+      "last_heartbeat": 1736899355000,
+      "inventory": ["diagram_page_1", "magnifying_glass"],
+      "notes": ["Music box needs 3 gears"],
+      "current_focus": "trunk_lock",
+      "cursor_position": {"x": 480, "y": 180}
+    }
+  },
+  "puzzles": {
+    "torn_photos": {"solved": true, "revealed": "grandmother_young_photo"},
+    "music_box": {"solved": false, "gears_placed": 1, "gears_needed": 3},
+    "love_letter_cipher": {"solved": false, "letters_found": 2, "letters_total": 5},
+    "trunk_lock": {"locked": true},
+    "secret_message": {"locked": true}
+  },
+  "shared_state": {
+    "active_ping": {"target": "music_box", "from_player": "B", "expires_at": 1736899360000},
+    "shared_photos": ["photo_001.png"],
+    "chat_messages": [
+      {"from": "B", "text": "I see a key!", "timestamp": 1736899340000}
+    ]
+  },
+  "version": 42
+}
+```
+
+### Puzzle State Schemas
+
+**NOTE:** Voice chat removed - players use Discord/external system. Text chat remains for non-verbal coordination.
+
+---
+
+#### ROOM 1: GRANDMOTHER'S ATTIC
+
+**Puzzle 1: Torn Photographs** (Description)
+```typescript
+{
+  // Player A sees: 9 scattered photo pieces (drag & drop)
+  // Player B sees: 9 empty frame outlines with corner clues
+  // Goal: Match all pieces to correct frames
+
+  torn_photos: {
+    solved: boolean,
+    pieces_placed: number,  // 0-9
+    total_pieces: 9,
+    placements: {
+      [piece_id: string]: {
+        frame_id: string | null,  // null = not placed yet
+        correct: boolean,
+        locked: boolean  // locked after 3 seconds in correct spot
+      }
+    },
+    hints_used: number,
+    time_first_interaction: number | null,
+    time_solved: number | null
+  }
+}
+
+// Validation
+const isComplete = (state: TornPhotosState): boolean => {
+  return state.placements.every(p => p.correct && p.locked);
+};
+
+// Hints
+const hints = [
+  { trigger: "time_elapsed > 120s", reveal: "Highlight a correct piece" },
+  { trigger: "time_elapsed > 240s", reveal: "Show outline of where 2 pieces go" },
+  { trigger: "incorrect_placements > 5", reveal: "Shake incorrect pieces" }
+];
+```
+
+**Puzzle 2: The Music Box** (Instruction)
+```typescript
+{
+  // Player A sees: Broken music box with 3 gear slots (left, center, right)
+  //               5 loose gears of different sizes scattered nearby
+  // Player B sees: Assembly diagram showing which gears go where
+  // Goal: Place the correct 3 gears in the correct positions
+
+  // A GEARS (5 total, 3 correct):
+  // - small_gear (8 teeth, brass)
+  // - medium_gear (12 teeth, copper)
+  // - large_gear (16 teeth, iron)
+  // - tiny_gear (6 teeth, brass) - distractor
+  // - huge_gear (20 teeth, iron) - distractor
+
+  // B DIAGRAM shows:
+  // ┌─────────────────────────────────┐
+  // │  MUSIC BOX ASSEMBLY              │
+  // │  ────────────────────────────   │
+  // │                                 │
+  // │  LEFT SLOT:   Small gear (8t)   │
+  // │               "Must be brass"    │
+  // │                                 │
+  // │  CENTER:     Large gear (16t)   │
+  // │               "Connects to both" │
+  // │                                 │
+  // │  RIGHT:      Medium gear (12t)  │
+  // │               "Goes to winder"   │
+  // │                                 │
+  // │  NOTE: "Only brass or copper on │
+  // │        outside - iron inside"   │
+  // └─────────────────────────────────┘
+
+  music_box: {
+    solved: boolean,
+    gears_placed: number,
+    total_gears_needed: 3,
+    slots: {
+      left: {
+        gear_id: string | null,
+        correct_gear: "small_gear",  // 8 teeth, brass
+        correct: boolean,
+        locked: boolean
+      },
+      center: {
+        gear_id: string | null,
+        correct_gear: "large_gear",  // 16 teeth, iron
+        correct: boolean,
+        locked: boolean
+      },
+      right: {
+        gear_id: string | null,
+        correct_gear: "medium_gear",  // 12 teeth, copper
+        correct: boolean,
+        locked: boolean
+      }
+    },
+    // All gears A can see (5 total)
+    available_gears: [
+      { id: "small_gear", teeth: 8, material: "brass", size: "small" },
+      { id: "medium_gear", teeth: 12, material: "copper", size: "medium" },
+      { id: "large_gear", teeth: 16, material: "iron", size: "large" },
+      { id: "tiny_gear", teeth: 6, material: "brass", size: "tiny" },    // distractor
+      { id: "huge_gear", teeth: 20, material: "iron", size: "huge" }     // distractor
+    ],
+    test_attempts: number,  // how many times A tried to wind it
+    hints_used: number,
+    time_solved: number | null
+  }
+}
+
+// How players solve:
+// 1. A describes: "I see 5 gears - small brass, medium copper, large iron, tiny brass, huge iron"
+// 2. B reads diagram: "Left slot needs small brass gear"
+// 3. A identifies: "That's the 8-tooth brass one!"
+// 4. B: "Center needs large iron gear"
+// 5. A: "That's the 16-tooth iron!"
+// 6. B: "Right needs medium copper gear"
+// 7. A: "That's the 12-tooth copper!"
+// 8. A places them in order: left → center → right
+
+// A can see gear properties:
+// - Tooth count (visual)
+// - Material (color: brass=yellow, copper=orange, iron=gray)
+// - Relative size
+
+// B's diagram provides:
+// - Required tooth count for each slot
+// - Required material for each slot
+// - Placement order hint (left → center → right)
+
+// Validation
+const isComplete = (state: MusicBoxState): boolean => {
+  return state.slots.every(s => s.correct && s.locked);
+};
+
+// Hints
+const hints = [
+  { trigger: "test_attempts > 2 with <3 gears", reveal: "B's diagram highlights: 'Count the teeth!'" },
+  { trigger: "wrong_gear_placed > 2", reveal: "Gears shake when hovered over wrong slot" },
+  { trigger: "wrong_gear_placed > 4", reveal: "Correct gear for current slot glows" },
+  { trigger: "time_elapsed > 180s", reveal: "Show tooth count on each gear when hovered" }
+];
+```
+
+**Puzzle 3: Love Letter Cipher** (Perspective)
+```typescript
+{
+  // Player A sees: Candle (toggle on/off), paper with invisible ink
+  // Player B sees: UV light source, paper with blank spaces
+  // Goal: A shines light on letters, B reads them, together spell message
+
+  love_letter_cipher: {
+    solved: boolean,
+    letters_revealed: number,
+    total_letters: 8,
+    revealed_letters: {
+      [position: number]: {
+        letter: string | null,
+        discovered_by: "A" | "B" | null
+      }
+    },
+    candle_lit: boolean,
+    uv_light_active: boolean,
+    both_active_at_once: boolean,  // required to see letters
+    message: "ROSALIND",  // the secret word
+    hints_used: number
+  }
+}
+
+// Validation
+const isComplete = (state: LoveLetterCipherState): boolean => {
+  return state.revealed_letters.every(l => l.letter !== null);
+};
+
+// Hints
+const hints = [
+  { trigger: "time_elapsed > 60s", reveal: "Paper glows when both lights are on" },
+  { trigger: "time_elapsed > 120s", reveal: "Count of remaining letters shown" },
+  { trigger: "letters_revealed >= 4", reveal: "First letter revealed automatically" }
+];
+```
+
+**Puzzle 4: The Trunk Lock** (Coordination)
+```typescript
+{
+  // Player A controls: Dials 1 & 3 (left side)
+  // Player B controls: Dials 2 & 4 (right side)
+  // Goal: All 4 dials must be set correctly SIMULTANEOUSLY
+
+  trunk_lock: {
+    solved: boolean,
+    dials: {
+      1: { value: number, correct: 4, controlled_by: "A" },
+      2: { value: number, correct: 7, controlled_by: "B" },
+      3: { value: number, correct: 2, controlled_by: "A" },
+      4: { value: number, correct: 9, controlled_by: "B" }
+    },
+    all_correct_duration: number,  // ms all have been correct
+    required_duration: 3000,  // must hold for 3 seconds
+    unlock_started: number | null,  // timestamp when all first became correct
+    hints_used: number,
+    attempts: number  // how many times they hit all correct then lost it
+  }
+}
+
+// Validation
+const isComplete = (state: TrunkLockState): boolean => {
+  const allCorrect = Object.values(state.dials).every(d => d.value === d.correct);
+  return allCorrect && state.all_correct_duration >= state.required_duration;
+};
+
+// Hints
+const hints = [
+  { trigger: "attempts >= 1", reveal: "Show which dials are correct (green checkmark)" },
+  { trigger: "attempts >= 3", reveal: "Arrow direction for each dial (up/down)" },
+  { trigger: "time_elapsed > 180s", reveal: "Reveal one correct dial value" }
+];
+```
+
+**Puzzle 5: The Secret Message** (Description + Memory)
+```typescript
+{
+  // 10 objects in the room contain hidden letters (one letter per object)
+  // Player A sees: Objects with glow when near them (must be close to see letter)
+  // Player B sees: A "Grandparents' Favorites" list with hints about which objects
+  // Goal: Find all 10 letters and spell "MARIE + JAMES"
+
+  // ROOM LAYOUT - Letter locations (example):
+  // Letter M: Embossed on the old MUSIC box (A interacts, B has hint: "They loved waltzes")
+  // Letter A: Carved on the top left corner of the PHOTO FRAME (A sees, B: "First dance, 1947")
+  // Letter R: Written on the back of the ROSARY beads (A: must flip item, B: "Sunday morning ritual")
+  // Letter I: Painted on the INKWELL (A: sees when examining, B: "Grandpa wrote love letters")
+  // Letter E: Engraved on the inside of the empty jewelry BOX (A: must open, B: "Where she kept her ring")
+  // Letter J: Initial on the JOURNAL (A: sees cover, B: "Her diary, locked for 60 years")
+  // Letter A: Initial on the APRON hanging nearby (A: sees, B: "She baked every Sunday")
+  // Letter M: Painted on the small MIRROR (A: sees reflection, B: "Her vanity, her pride")
+  // Letter E: Woven into the doily under the trunk (A: must lift trunk edge, B: "Handmade with love")
+  // Letter S: Scratched on the bottom of the SPECTACLES case (A: must flip, B: "How she read his letters")
+
+  // Both players see all 10 objects, but:
+  // - A must be CLOSE to an object to see its letter (proximity trigger)
+  // - B must MATCH A's description to the favorites list (knowledge)
+
+  secret_message: {
+    solved: boolean,
+    discovered_letters: {
+      [object_id: string]: {
+        letter: string,
+        discovered_by: "A" | "B" | null,  // null = not yet found
+        position: {x, y}  // where in room
+      }
+    },
+    // Objects in room (example - actual layout set by level design)
+    objects: [
+      { id: "music_box", letter: "M", position: {x: 200, y: 150}, hint: "They loved waltzes" },
+      { id: "photo_frame", letter: "A", position: {x: 400, y: 100}, hint: "First dance, 1947" },
+      { id: "rosary", letter: "R", position: {x: 600, y: 200}, hint: "Sunday morning ritual" },
+      { id: "inkwell", letter: "I", position: {x: 300, y: 350}, hint: "Grandpa wrote love letters" },
+      { id: "jewelry_box", letter: "E", position: {x: 500, y: 400}, hint: "Where she kept her ring" },
+      { id: "journal", letter: "J", position: {x: 150, y: 250}, hint: "Her diary, locked for 60 years" },
+      { id: "apron", letter: "A", position: {x: 650, y: 150}, hint: "She baked every Sunday" },
+      { id: "mirror", letter: "M", position: {x: 350, y: 450}, hint: "Her vanity, her pride" },
+      { id: "doily", letter: "E", position: {x: 550, y: 300}, hint: "Handmade with love" },
+      { id: "spectacles_case", letter: "S", position: {x: 250, y: 180}, hint: "How she read his letters" }
+    ],
+    // B sees: "Grandparents' Favorites" list
+    b_favorites_list: [
+      "They loved waltzes",
+      "First dance, 1947",
+      "Sunday morning ritual",
+      "Grandpa wrote love letters",
+      "Where she kept her ring",
+      "Her diary, locked for 60 years",
+      "She baked every Sunday",
+      "Her vanity, her pride",
+      "Handmade with love",
+      "How she read his letters"
+    ],
+    // Players assemble letters in order
+    player_input: {
+      A: string,  // Player A's name guess
+      B: string   // Player B's name guess
+    },
+    correct_solution: {
+      A: "MARIE",
+      B: "JAMES",
+      combined: "MARIE+JAMES"
+    },
+    letters_found: number,  // 0-10
+    hints_used: number,
+    time_solved: number | null
+  }
+}
+
+// How A discovers a letter:
+// - A moves cursor near object (< 50 pixels)
+// - Object glows when in proximity range
+// - A clicks to examine → letter is revealed
+// - Both players see the letter appear in their "Found Letters" panel
+
+// How B helps:
+// - B sees the favorites list with hints
+// - A describes: "I see something near the window, it plays music"
+// - B matches: "That's the music box! They loved waltzes - that's M!"
+// - Both now know that object = M
+
+// Validation
+const isComplete = (state: SecretMessageState): boolean => {
+  const combined = (state.player_input.A + "+" + state.player_input.B).toUpperCase();
+  return combined === state.correct_solution.combined && state.letters_found >= 8;
+  // Must find at least 8 letters to make names guessable
+};
+
+// Hints
+const hints = [
+  { trigger: "letters_found == 0 && time_elapsed > 60s", reveal: "One object pulses with golden glow" },
+  { trigger: "letters_found >= 3", reveal: "Letters auto-sort into two groups" },
+  { trigger: "letters_found >= 5", reveal: "Unscramble hint: 'Her first, then his'" },
+  { trigger: "wrong_submission >= 1", reveal: "First letter of each name: M _ _ _ _ + J _ _ _ _" },
+  { trigger: "time_elapsed > 240s", reveal: "Length of each name (5, 5)" }
+];
+```
+
+---
+
+#### ROOM 2: THE CLOCK TOWER
+
+**Puzzle 1: The Pendulum** (Coordination)
+```typescript
+{
+  // Player A controls: Swing speed (slider: slow ↔ fast)
+  // Player B controls: Swing direction (button: left/right)
+  // Goal: Guide ball through maze to goal
+
+  pendulum: {
+    solved: boolean,
+    ball_position: { x: number, y: number },
+    goal_position: { x: number, y: number },
+    swing_speed: number,  // 0-100, controlled by A
+    swing_direction: "left" | "right",  // controlled by B
+    obstacles: [
+      { id: string, position: {x, y}, width: number, height: number }
+    ],
+    collisions: number,
+    time_elapsed: number,
+    in_goal_duration: number,
+    required_goal_time: 2000,  // must stay in goal for 2s
+    hints_used: number
+  }
+}
+
+// Validation
+const isComplete = (state: PendulumState): boolean => {
+  const dist = distance(state.ball_position, state.goal_position);
+  return dist < 20 && state.in_goal_duration >= state.required_goal_time;
+};
+```
+
+**Puzzle 2: Gear Alignment** (Description)
+```typescript
+{
+  // Player A sees: Mechanism from front (gear teeth visible)
+  // Player B sees: Mechanism from back (alignment marks)
+  // Goal: Rotate gears until all marks align
+
+  gear_alignment: {
+    solved: boolean,
+    gears: {
+      [gear_id: string]: {
+        rotation: number,  // 0-360
+        target: number,    // what A should see
+        mark_position: number,  // what B sees (different perspective)
+        size: number
+      }
+    },
+    connected_gears: [  // gear pairs that move together
+      { gear1: string, gear2: string, ratio: number }
+    ],
+    all_aligned_duration: number,
+    required_duration: 2000,
+    hints_used: number
+  }
+}
+
+// Hints
+const hints = [
+  { trigger: "time_elapsed > 90s", reveal: "Show which gear B should describe first" },
+  { trigger: "misaligned_rotations > 10", reveal: "Visual connector line between linked gears" },
+  { trigger: "time_elapsed > 180s", reveal: "One gear snaps to correct position" }
+];
+```
+
+**Puzzle 3: Bell Codes** (Instruction)
+```typescript
+{
+  // Player A operates: Telegraph key (tap morse code)
+  // Player B has: Codebook with letter codes and message target
+  // Goal: Transmit "LOVE ETERNAL" correctly
+
+  // TIMING SPECIFICATION:
+  // SHORT tap (dot): Press < 250ms
+  // LONG tap (dash): Press > 400ms
+  // Gap between taps in same letter: < 500ms
+  // Gap between letters: > 700ms
+  // Gap between words (space): > 1500ms
+
+  // A's interface: Single telegraph key button
+  // A's screen: Shows current word being built, visual feedback on tap duration
+  // B's codebook: Shows the complete CHAR_CODES mapping and target message
+
+  bell_codes: {
+    solved: boolean,
+    target_message: "LOVE ETERNAL",
+    transmitted: string,
+    current_word_index: number,
+    current_char_index: number,
+    taps: number[],  // recent tap timestamps (for morse detection)
+    current_letter_taps: number[],  // taps for current letter (reset after gap)
+    detected_char: string | null,
+    completed_words: string[],
+    current_word: string,  // word being built
+    errors: number,
+    hints_used: number,
+    // Timing thresholds (ms)
+    timing: {
+      short_max: 250,
+      long_min: 400,
+      letter_gap: 500,
+      word_gap: 1500
+    }
+  }
+}
+
+// Complete character code mapping (simplified morse for game)
+// Format: [tap_durations] where 1 = short, 3 = long
+const CHAR_CODES: Record<string, number[]> = {
+  "L": [1, 3, 1, 1],    // short-long-short-short
+  "O": [3, 3, 3],       // long-long-long
+  "V": [1, 1, 1, 3],    // short-short-short-long
+  "E": [1],             // short
+  "T": [3],             // long
+  "R": [1, 3, 1],       // short-long-short
+  "N": [3, 1],          // long-short
+  "A": [1, 3],          // short-long
+  " ": [0]              // word space (special marker)
+};
+
+// B's codebook displays:
+// ┌─────────────────────────────────────┐
+// │  TELEGRAPH CODEBOOK                 │
+// │  ──────────────────────────────     │
+// │  Target Message: "LOVE ETERNAL"     │
+// │                                     │
+// │  CODES:                             │
+// │  A: · − (short-long)               │
+// │  E: · (short)                      │
+// │  L: · − · · (short-long-short-short)│
+// │  N: − · (long-short)               │
+// │  O: − − − (long-long-long)         │
+// │  R: · − · (short-long-short)       │
+// │  T: − (long)                       │
+// │  V: · · · − (short-short-short-long)│
+// │                                     │
+// │  TIMING:                            │
+// │  Short tap: Quick click             │
+// │  Long tap: Hold briefly             │
+// │  Letter space: Pause between letters│
+// │  Word space: Longer pause           │
+// └─────────────────────────────────────┘
+
+// Validation
+const isComplete = (state: BellCodesState): boolean => {
+  return state.transmitted.trim() === state.target_message;
+};
+
+// How A transmits:
+// 1. A presses key (record press duration)
+// 2. On release, categorize as short (<250ms) or long (>400ms)
+// 3. Add to current_letter_taps array
+// 4. If >500ms passes with no tap, decode current_letter_taps → letter
+// 5. Add letter to current_word
+// 6. If >1500ms passes, add space and start new word
+// 7. B sees A's transmission building in real-time
+
+// Hints
+const hints = [
+  { trigger: "errors >= 1", reveal: "Show tap duration visualization (short vs long)" },
+  { trigger: "errors >= 2", reveal: "Current letter code displayed on A's screen" },
+  { trigger: "errors >= 3", reveal: "Next letter in codebook highlighted" },
+  { trigger: "time_elapsed > 180s", reveal: "Visual timing guide for gaps" }
+];
+```
+
+**Puzzle 4: Clock Face** (Perspective)
+```typescript
+{
+  // Both see the SAME clock face from opposite sides
+  // Player A sees: 3:15 (hour hand at 3, minute hand at 3)
+  // Player B sees: 8:45 (hour hand at 9, minute hand at 9)
+  // These are MIRROR REFLECTIONS - if you flip 3:15, you get 8:45
+  // Truth: Add the times → 3:15 + 8:45 = 12:00 (Midnight)
+  // Goal: Both enter the "true time" (12:00 or 00:00)
+
+  // Why this works:
+  // - On a 12-hour clock, 3:15 mirrored becomes 8:45
+  // - 3 + 9 = 12 (the hour hands are opposite: 3 and 9)
+  // - 15 + 45 = 60 (the minute hands are opposite: 15 and 45)
+  // - When you add mirror times, you get 12:00
+
+  // Visual hint for players:
+  // - A sees: Clock with hands at 3 o'clock position
+  // - B sees: Same clock but hands appear at 9 o'clock position (reflected)
+  // - Players must describe what they see and realize it's a reflection
+
+  clock_face: {
+    solved: boolean,
+    true_time: { hour: 12, minute: 0 },  // or { hour: 0, minute: 0 }
+    player_a_sees: { hour: 3, minute: 15 },
+    player_b_sees: { hour: 9, minute: 45 },
+    player_a_entered: { hour: number | null, minute: number | null },
+    player_b_entered: { hour: number | null, minute: number | null },
+    hints_used: number,
+    attempts: number,
+    // Alternative accepted answers
+    accepted_answers: [
+      { hour: 12, minute: 0 },
+      { hour: 0, minute: 0 },
+      { hour: 24, minute: 0 }
+    ]
+  }
+}
+
+// How players solve:
+// 1. A: "I see the hour hand at 3, minute hand at 3"
+// 2. B: "I see hour hand at 9, minute hand at 9"
+// 3. They compare: "3 and 9 are opposites!"
+// 4. They realize: "It's a reflection! The clock is between us!"
+// 5. They calculate: "3 hours + 9 hours = 12 hours"
+// 6. Answer: "Midnight! 12:00 or 00:00!"
+
+// Validation
+const isComplete = (state: ClockFaceState): boolean => {
+  const a_correct = state.accepted_answers.some(
+    ans => ans.hour === state.player_a_entered.hour && ans.minute === state.player_a_entered.minute
+  );
+  const b_correct = state.accepted_answers.some(
+    ans => ans.hour === state.player_b_entered.hour && ans.minute === state.player_b_entered.minute
+  );
+  return a_correct && b_correct;
+};
+
+// Hints
+const hints = [
+  { trigger: "attempts >= 1", reveal: "Visual guide shows A and B on opposite sides of clock" },
+  { trigger: "attempts >= 2", reveal: "Text hint: 'What do you get when you add opposites?'" },
+  { trigger: "time_elapsed > 90s", reveal: "Show both times side-by-side: 3:15 | 8:45" },
+  { trigger: "time_elapsed > 150s", reveal: "Math hint: '3 + 9 = ?'" }
+];
+```
+
+**Puzzle 5: The Windup Key** (Coordination)
+```typescript
+{
+  // Player A controls: Left key
+  // Player B controls: Right key
+  // Goal: Both turn keys at SAME speed, SAME direction for 5 seconds
+
+  windup_key: {
+    solved: boolean,
+    keys: {
+      A: { turning: boolean, speed: number, direction: "cw" | "ccw" },
+      B: { turning: boolean, speed: number, direction: "cw" | "ccw" }
+    },
+    synchronized_duration: number,
+    required_duration: 5000,
+    tolerance: {
+      speed: 15,  // % difference allowed
+      direction_match: true
+    },
+    progress: number,  // 0-100%
+    hints_used: number
+  }
+}
+
+// Hints
+const hints = [
+  { trigger: "speed_difference > tolerance", reveal: "Visual speed indicator bars" },
+  { trigger: "direction_mismatch", reveal: "Both keys flash red with arrow to fix" },
+  { trigger: "progress > 50% then lost", reveal: "Keep going! You were close!" }
+];
+```
+
+**Puzzle 6: Midnight Chime** (Memory + Coordination)
+```typescript
+{
+  // Bell sequence plays, each player hears DIFFERENT notes
+  // Must recreate full sequence on bell rack together
+  // REDUCED DIFFICULTY: 6 notes total (was 9), 3 playthroughs before input required
+
+  // How it works:
+  // 1. Sequence plays (with visual notes appearing on screen for reference)
+  // 2. Players get 3 playthroughs to memorize before input phase
+  // 3. Visual notes appear on screen in sync with audio (learning aid)
+  // 4. During input phase, visual guide remains (shows position, not which bell)
+
+  // SEQUENCE: 6 notes in A-B-A-B-A-B pattern
+  // - Note 1: A plays high1
+  // - Note 2: B plays low1
+  // - Note 3: A plays high2
+  // - Note 4: B plays low2
+  // - Note 5: A plays high1
+  // - Note 6: B plays low1
+  // Pattern: A(high1) → B(low1) → A(high2) → B(low2) → A(high1) → B(low1)
+
+  midnight_chime: {
+    solved: boolean,
+    sequence: [
+      { player: "A", bell: "high1" },
+      { player: "B", bell: "low1" },
+      { player: "A", bell: "high2" },
+      { player: "B", bell: "low2" },
+      { player: "A", bell: "high1" },
+      { player: "B", bell: "low1" }
+    ],
+    player_bells: {
+      A: ["high1", "high2", "high3"],  // A has 3 high bells
+      B: ["low1", "low2", "low3"]      // B has 3 low bells
+    },
+    player_input: string[],  // sequence of bell IDs played so far
+    correct_count: number,
+    total_notes: 6,  // Reduced from 9
+    playthrough_count: number,  // How many times sequence played (0-3)
+    max_playthroughs: 3,  // Allow 3 listens before requiring input
+    listening_phase: boolean,  // true = sequence playing
+    playing_phase: boolean,    // true = player input phase
+    attempts: number,
+    hints_used: number,
+    // Visual aids
+    visual_notes_visible: boolean,  // Notes appear on screen during playthroughs
+    input_position_highlight: number  // Which position in sequence player is at
+  }
+}
+
+// How players solve:
+// PLAYTHROUGH 1: Sequence plays with both audio and visual notes on screen
+//   - A sees: "YOUR TURN: Position 1" (bell icon high1)
+//   - B sees: "YOUR TURN: Position 2" (bell icon low1)
+//   - etc.
+
+// PLAYTHROUGH 2: Sequence plays again (players can start memorizing)
+//   - Visual notes still show, helping associate sound with bell
+
+// PLAYTHROUGH 3: Final playthrough (players should have pattern)
+//   - Players can optionally skip to input phase
+
+// INPUT PHASE:
+//   - Visual guide shows positions 1-6 with question marks
+//   - Current position highlighted
+//   - Players take turns clicking their bells
+//   - Correct bell: Checkmark, plays sound, advances to next position
+//   - Wrong bell: Shake sound, same position retry
+
+// Hints
+const hints = [
+  { trigger: "playthrough_count < 3", reveal: "Players can request extra playthrough" },
+  { trigger: "wrong_note >= 2 in one attempt", reveal: "Show next 2 notes in sequence" },
+  { trigger: "attempts >= 2", reveal: "Pattern hint: 'It repeats at the end!'" },
+  { trigger: "attempts >= 3", reveal: "First 3 notes displayed as reminder" }
+];
+```
+
+---
+
+#### ROOM 3: THE GARDEN CONSERVATORY
+
+**Puzzle 1: Seed Packets** (Description)
+```typescript
+{
+  // Player A sees: Seed packet images (visual descriptions)
+  // Player B sees: Planting guide (text requirements)
+  // Goal: Match each seed to its correct planting spot
+
+  seed_packets: {
+    solved: boolean,
+    seeds: {
+      [seed_id: string]: {
+        visual_description: string,  // what A sees
+        requirements: string,        // what B reads
+        planted: boolean,
+        correct: boolean,
+        spot_id: string | null
+      }
+    },
+    planting_spots: {
+      [spot_id: string]: {
+        conditions: string,  // "full sun", "shade", "moist soil"
+        occupied_by: string | null
+      }
+    },
+    hints_used: number,
+    incorrect_placements: number
+  }
+}
+
+// Hints
+const hints = [
+  { trigger: "incorrect_placements >= 2", reveal: "Shake incorrect seed packet" },
+  { trigger: "time_elapsed > 90s", reveal: "Highlight one correct match" },
+  { trigger: "time_elapsed > 180s", reveal: "Show all condition keywords" }
+];
+```
+
+**Puzzle 2: Water Flow** (Coordination)
+```typescript
+{
+  // Player A controls: Hot water valve
+  // Player B controls: Cold water valve
+  // Goal: Balance temperature for each of 4 plants
+
+  water_flow: {
+    solved: boolean,
+    plants: {
+      [plant_id: string]: {
+        name: string,
+        target_temp: number,  // each plant needs different temp
+        current_temp: number,
+        healthy: boolean
+      }
+    },
+    valves: {
+      A: { level: number, temp_contribution: 40 },  // hot
+      B: { level: number, temp_contribution: 10 }   // cold
+    },
+    all_healthy_duration: number,
+    required_duration: 5000,
+    hints_used: number
+  }
+}
+
+// Hints
+const hints = [
+  { trigger: "plant overheat >= 2", reveal: "Temperature gauge appears" },
+  { trigger: "plant frozen >= 2", reveal: "Valve level indicators" },
+  { trigger: "time_elapsed > 120s", reveal: "Ideal valve position for one plant" }
+];
+```
+
+**Puzzle 3: Light Spectrum** (Instruction)
+```typescript
+{
+  // Player A controls: Prism rotators (3 prisms)
+  // Player B has: Light requirements chart for each flower
+  // Goal: Direct correct color light to each flower
+
+  light_spectrum: {
+    solved: boolean,
+    prisms: {
+      [prism_id: string]: {
+        rotation: number,  // 0-360 degrees
+        output_color: string,  // calculated based on rotation
+        target_flower: string
+      }
+    },
+    flowers: {
+      [flower_id: string]: {
+        required_color: string,
+        receiving_color: string,
+        receiving_amount: number,  // 0-100%
+        satisfied: boolean
+      }
+    },
+    color_rules: {
+      "red": { angle: [0, 60] },
+      "yellow": { angle: [60, 120] },
+      "blue": { angle: [120, 180] },
+      "white": { angle: [180, 240] }
+    },
+    hints_used: number
+  }
+}
+
+// Hints
+const hints = [
+  { trigger: "time_elapsed > 60s", reveal: "Color output preview on prisms" },
+  { trigger: "wrong_color >= 3", reveal: "Show current color being received" },
+  { trigger: "time_elapsed > 150s", reveal: "Angle range hints on prisms" }
+];
+```
+
+**Puzzle 4: Hybridization** (Memory)
+```typescript
+{
+  // Cross-pollination sequence shown briefly
+  // Players must remember which parent plants create which offspring
+  // Goal: Complete 3 successful crosses
+
+  hybridization: {
+    solved: boolean,
+    rounds_completed: number,
+    total_rounds: 3,
+    current_round: {
+      parent_a: string,  // shown briefly
+      parent_b: string,  // shown briefly
+      offspring: string,  // shown briefly
+      display_time: 4000
+    },
+    player_selections: {
+      cross_1: { parent_a: string | null, parent_b: string | null },
+      cross_2: { parent_a: string | null, parent_b: string | null },
+      cross_3: { parent_a: string | null, parent_b: string | null }
+    },
+    correct_crosses: number,
+    hints_used: number
+  }
+}
+
+// Hints
+const hints = [
+  { trigger: "wrong_cross >= 1", reveal: "Parent plant images shown again briefly" },
+  { trigger: "round 2", reveal: "Previous round parents remain visible in corner" },
+  { trigger: "wrong_cross >= 2", reveal: "One parent highlighted for each cross" }
+];
+```
+
+**Puzzle 5: The Trellis** (Perspective)
+```typescript
+{
+  // Vines grow differently for each player (different camera angles)
+  // Player A sees: Front of trellis
+  // Player B sees: Side of trellis (depth info)
+  // Goal: Guide vines to grow through all trellis openings
+
+  trellis: {
+    solved: boolean,
+    vines: {
+      [vine_id: string]: {
+        growth_points: [{x, y, z}],  // 3D positions
+        player_a_view: [{x, y}],     // projected 2D
+        player_b_view: [{x, y}],     // projected 2D (side)
+        target_openings: string[],
+        completed: boolean
+      }
+    },
+    trellis_openings: {
+      [opening_id: string]: {
+        position: {x, y, z},
+        passed: boolean
+      }
+    },
+    growth_stage: number,  // 0-100%
+    hints_used: number
+  }
+}
+
+// Hints
+const hints = [
+  { trigger: "vine_miss >= 2", reveal: "Ghost guide shows correct path" },
+  { trigger: "time_elapsed > 90s", reveal: "Depth indicators on B's view" },
+  { trigger: "time_elapsed > 180s", reveal: "Auto-grow one vine correctly" }
+];
+```
+
+**Puzzle 6: Bloom Timing** (Coordination)
+```typescript
+{
+  // Touch flowers in correct sequence
+  // Players MUST alternate turns
+  // Sequence: 8 flowers, A-B-A-B-A-B-A-B pattern
+
+  bloom_timing: {
+    solved: boolean,
+    sequence: ["A", "B", "A", "B", "A", "B", "A", "B"],
+    player_input: string[],  // "A" or "B" in order touched
+    current_index: number,
+    flowers: {
+      [flower_id: string]: {
+        player: "A" | "B" | null,  // who should touch it
+        touched: boolean,
+        correct: boolean,
+        bloomed: boolean
+      }
+    },
+    alternation_violations: number,
+    hints_used: number
+  }
+}
+
+// Hints
+const hints = [
+  { trigger: "alternation_violation >= 1", reveal: "Player icons appear on flowers" },
+  { trigger: "wrong_flower >= 3", reveal: "Next 2 flowers in sequence highlighted" },
+  { trigger: "correct_count >= 4", reveal: "Pattern revealed: 'alternate turns!'" }
+];
+```
+
+**Puzzle 7: The Final Bloom** (All Types - Grand Finale)
+```typescript
+{
+  // Grand finale combining all puzzle types learned throughout the game
+  // Multi-stage puzzle unlocking the final secret - the wedding bands
+
+  // SETUP: A magnificent rose bud sits in the center of the conservatory
+  //        Each stage transforms it toward full bloom
+
+  final_bloom: {
+    solved: boolean,
+    stage: "water" | "light" | "pollinate" | "bloom" | "complete",
+
+    // ===== STAGE 1: WATER (Coordination) =====
+    // Both players must add water to reach 80% moisture simultaneously
+    // - Player A controls: Warm water tap
+    // - Player B controls: Cool water tap
+    // - Challenge: Balance to hit exactly 80%, not too high or low
+    water_stage: {
+      active: boolean,
+      complete: boolean,
+      current_moisture: number,  // 0-100
+      target_moisture: 80,
+      tolerance: 5,  // 75-85 is acceptable
+      // Each tap adds 10% per second when held
+      player_a_adding: boolean,  // warm water
+      player_b_adding: boolean,  // cool water
+      // Moisture naturally decreases by 2% per second (evaporation)
+      // Requires coordinated: one adds while other holds steady
+      time_in_target: number,  // ms spent in target range
+      required_time: 3000,  // must hold for 3 seconds
+      // Visual: Water droplets animation, moisture meter with target zone
+      moisture_history: number[]  // last 10 seconds of readings
+    },
+
+    // ===== STAGE 2: LIGHT (Perspective) =====
+    // Both players see the same large prism from different angles
+    // - Player A sees: Front of prism, light entering from left
+    // - Player B sees: Side of prism, color spectrum projection
+    // - Goal: Both rotate their prism controls to focus a rainbow on the rose
+    light_stage: {
+      active: boolean,
+      complete: boolean,
+      // A controls: Horizontal rotation (0-180 degrees)
+      player_a_rotation: number,
+      a_target: { min: 75, max: 105 },  // sweet spot around 90
+      // B controls: Vertical rotation (0-180 degrees)
+      player_b_rotation: number,
+      b_target: { min: 45, max: 75 },   // sweet spot around 60
+      // When both aligned, rainbow focuses on rose
+      rainbow_intensity: number,  // 0-100, based on how close both are
+      required_intensity: 90,
+      time_at_intensity: number,
+      required_time: 2000,
+      // Visual: Rainbow appears, gets brighter as alignment improves
+      // B sees color spectrum projected on wall
+      // A sees light beam hitting prism
+      alignment_difference_a: number,  // distance from target
+      alignment_difference_b: number
+    },
+
+    // ===== STAGE 3: POLLINATE (Instruction + Memory) =====
+    // 5 flowers appear around the central rose
+    // - Player A sees: The flowers (visual)
+    // - Player B has: A pollination guide with flower order
+    // - Goal: Touch flowers in correct sequence to pollinate
+    pollinate_stage: {
+      active: boolean,
+      complete: boolean,
+      // 5 flowers arranged in pentagon around center
+      flowers: [
+        { id: "red_rose", color: "red", position: { x: 100, y: 200 }, sequence_order: 1 },
+        { id: "yellow_daisy", color: "yellow", position: { x: 300, y: 100 }, sequence_order: 2 },
+        { id: "blue Iris", color: "blue", position: { x: 500, y: 200 }, sequence_order: 3 },
+        { id: "white_lily", color: "white", position: { x: 400, y: 400 }, sequence_order: 4 },
+        { id: "pink_carnation", color: "pink", position: { x: 200, y: 400 }, sequence_order: 5 }
+      ],
+      // B's pollination guide:
+      b_guide_text: "POLLENATION SEQUENCE\nStart with the sunrise flower (red)\nThen follow morning light (yellow)\nAt noon, face the sky (blue)\nAfternoon brings peace (white)\nEvening closes with love (pink)",
+      // Players must alternate touching flowers
+      current_sequence_position: number,  // 1-5
+      player_turn: "A" | "B",  // whose turn to touch next
+      flowers_polinated: number,
+      target_count: 5,
+      correct_touches: number,
+      wrong_touches: number,
+      // Visual: Touched flowers glow golden if correct, fade if wrong
+      pollinated_flowers: string[]  // IDs of correctly pollinated flowers
+    },
+
+    // ===== STAGE 4: BLOOM (The Final Reveal) =====
+    // After water, light, and pollination complete:
+    // - The central rose bud blooms in slow animation (5 seconds)
+    // - Petals unfurl, golden light emanates
+    // - A hidden compartment opens in the pot base
+    // - Players see: Two wedding rings and a pressed flower
+    // - Final message: "Together we bloom, forever we grow"
+    bloom_stage: {
+      active: boolean,
+      complete: boolean,
+      bloom_progress: number,  // 0-100, animation progress
+      animation_duration: 5000,  // 5 second bloom animation
+      compartment_open: boolean,
+      final_message_shown: boolean,
+      // What players see during bloom:
+      visual_effects: {
+        petal_unfurl: boolean,  // petals animate opening
+        golden_glow: boolean,   // warm light emanates
+        sparkles: boolean,      // particle effects
+        compartment_slide: boolean  // hidden drawer opens
+      },
+      // Final message displayed after bloom:
+      final_message: {
+        title: "Together We Bloom",
+        subtitle: "Forever We Grow",
+        text: "In this garden of love, two hearts became one. Just as these rings once united Elizabeth and Robert, may they forever remind you of the love you share.",
+        items_found: ["Two wedding bands", "Pressed rose from first date", "Love letter dated June 15, 1947"]
+      }
+    },
+
+    // Overall progress tracking
+    overall_progress: number,  // 0-100% (25% per stage)
+    current_stage_index: number,  // 1-4
+    stages_completed: string[],  // ["water", "light", "pollinate", "bloom"]
+    hints_used: number,
+    time_started: number,
+    time_solved: number | null,
+    total_time: number  // seconds
+  }
+}
+
+// ===== STAGE TRANSITIONS =====
+// 1. Start: Rose bud is closed, dry, in shadow
+// 2. After water_stage: Bud glistens with moisture
+// 3. After light_stage: Rainbow illuminates the bud
+// 4. After pollinate_stage: Bud begins to swell, color deepens
+// 5. After bloom_stage: Full bloom, compartment opens, victory!
+
+// ===== VALIDATION =====
+const isComplete = (state: FinalBloomState): boolean => {
+  return state.stages_completed.length === 4 &&
+         state.bloom_stage.complete &&
+         state.overall_progress === 100;
+};
+
+// ===== HINTS (Per Stage) =====
+const stage_hints = {
+  water: [
+    { trigger: "time_elapsed > 60s", reveal: "Water level indicator appears" },
+    { trigger: "imbalance > 20", reveal: "Arrow points to player who needs to add more" },
+    { trigger: "overshoot >= 2", reveal: "Target zone (75-85%) highlighted on meter" }
+  ],
+  light: [
+    { trigger: "time_elapsed > 60s", reveal: "Prism angle guides show degrees" },
+    { trigger: "misaligned > 30s", reveal: "Arrows show rotation direction for each player" },
+    { trigger: "rainbow_intensity > 60", reveal: "You're close! Make small adjustments" }
+  ],
+  pollinate: [
+    { trigger: "wrong_touch >= 1", reveal: "Current player's turn highlighted" },
+    { trigger: "wrong_touch >= 2", reveal: "Next correct flower glows softly" },
+    { trigger: "wrong_touch >= 3", reveal: "B's guide highlights next flower name" }
+  ],
+  bloom: [
+    { trigger: "animation_complete", reveal: "Glowing arrow points to compartment" }
+  ]
+};
+
+// ===== WIN CELEBRATION =====
+// When puzzle complete:
+// 1. Camera zooms into the open compartment
+// 2. Shows rings and pressed flower in detail
+// 3. Final message scrolls with romantic background
+// 4. Both players see: "Together We Found It" victory screen
+// 5. Shows: Total time, hints used, "Thank you for playing"
+// 6. End credits with developer names
+```
+
+---
+
+### Communication Tools (Implementation Spec)
+
+**Text Chat:**
+```typescript
+interface ChatMessage {
+  id: string;
+  from_player: "A" | "B";
+  text: string;
+  timestamp: number;
+  type: "chat" | "system";  // system for "Player B reconnected"
+}
+
+// Client sends: { type: "chat", text: "Hello!" }
+// Server broadcasts to both players
+// Messages stored in shared_state.chat_messages (max 50, oldest removed)
+```
+
+**Ping System:**
+```typescript
+interface Ping {
+  target_object: string;  // e.g., "music_box", "trunk_lock"
+  from_player: "A" | "B";
+  created_at: number;
+  expires_at: number;  // ping fades after 5 seconds
+}
+
+// Client sends: { type: "ping", target: "music_box" }
+// Server: { type: "ping_active", target: "music_box", from: "A" }
+// Both clients show: Soft glow on music_box, "A is looking at this" tooltip
+```
+
+**Photo Sharing:**
+```typescript
+interface Photo {
+  id: string;
+  data_url: string;  // base64 encoded image (limit: 100KB max)
+  from_player: "A" | "B";
+  timestamp: number;
+  annotations: Annotation[];  // drawings added by either player
+}
+
+// Both players can annotate with drawing tool
+// Annotations synced separately to avoid resending image
+```
+
+**Shared Cursor:**
+```typescript
+interface CursorPosition {
+  player: "A" | "B";
+  x: number;  // 0-1920 (normalized to screen width)
+  y: number;  // 0-1080
+  last_updated: number;
+}
+
+// Sent via WebSocket every 100ms while player is active
+// If no update for 2s, cursor fades out
+```
+
+---
+
+### Save System
+- Auto-save every 30 seconds
+- Manual save anytime
+- Three save slots
+- **Local storage only** (browser localStorage)
+- No account/authentication required - players just enter name + room code
+- Future: Cloud sync for couples (v2 feature)
+
+---
+
+## Audio Design
+
+### Music
+| Room | Track | Mood |
+|------|-------|------|
+| Menu | `waltz_of_memories.mp3` | Nostalgic, inviting |
+| Attic | `grandmothers_attic.mp3` | Warm, slightly melancholy |
+| Clock Tower | `midnight_mechanisms.mp3` | Mysterious, romantic |
+| Conservatory | `garden_at_dawn.mp3` | Hopeful, alive |
+| Victory | `together_we_found_it.mp3` | Celebratory, emotional |
+
+### Ambient Sounds
+| Room | Sounds |
+|------|--------|
+| Attic | Wind outside, creaking wood, distant birds, clock ticking |
+| Clock Tower | Gear clicks, bell tolls, wind through tower, echoes |
+| Conservatory | Rain on glass, water features, birds, rustling leaves |
+
+### Interaction Sounds
+- Object pickup: Soft rustle
+- Puzzle complete: Satisfying "click" + rising tone
+- Message received: Gentle notification
+- Photo taken: Soft shutter
+- Wrong answer: Low hum, subtle shake sound
+
+---
+
+## Development Priority
+
+### Phase 1: Core (Week 1)
+1. Basic room rendering with painted background
+2. Object interaction system
+3. Two-player connection (local first)
+4. Chat system
+5. Ping/cursor sharing
+
+### Phase 2: Mechanics (Week 2)
+6. Inventory system
+7. Asymmetric information display
+8. Puzzle state machine
+9. Save/load system
+
+### Phase 3: Content (Week 3)
+10. Room 1: The Attic - all 5 puzzles
+11. Room 2: The Clock Tower - all 6 puzzles
+12. Room 3: The Garden Conservatory - all 7 puzzles
+
+### Phase 4: Polish (Week 4)
+13. All audio implementation
+14. Visual effects (particles, glows)
+15. UI polish and animations
+16. Playtesting and balance
+
+### Phase 5: AI Customizer (Week 5)
+17. Couple onboarding flow (profile creation)
+18. Photo upload and storage integration
+19. Play style quiz and preference capture
+20. AI customizer service architecture
+21. Real-time difficulty tuning system
+22. Personalized content generation
+23. Adaptive hint system
+24. Communication coach integration
+25. AI-powered end-to-end testing
+
+---
+
+## Success Criteria
+
+### Must Have
+- [ ] All 3 rooms fully playable
+- [ ] All puzzles require genuine communication
+- [ ] No puzzle solvable by single player alone
+- [ ] Local multiplayer working
+- [ ] Chat and ping systems functional
+- [ ] Save/load working
+- [ ] Beautiful, cohesive visual style
+- [ ] Emotional story moments land
+- [ ] 60fps performance
+- [ ] Works on Chrome, Firefox, Safari, mobile
+- [ ] AI onboarding flow captures couple profile
+- [ ] Personalized content appears in puzzles
+- [ ] Difficulty adjusts in real-time based on performance
+
+### Quality Bar
+- [ ] Players report feeling closer to partner after playing
+- [ ] Communication feels natural, not forced
+- [ ] Puzzles are challenging but fair
+- [ ] Atmosphere is romantic and immersive
+- [ ] Story moments create genuine emotion
+- [ ] AI customizations feel meaningful, not generic
+- [ ] Difficulty adjustments enhance experience without being obvious
+- [ ] Personalized content creates "this was made for us" feeling
+
+---
+
+## Inspirations
+
+- **Keep Talking and Nobody Explodes** - Asymmetric instruction puzzles
+- **We Were Here series** - Two-player communication focus
+- **The Room series** - Beautiful tactile puzzle design
+- **Monument Valley** - Gorgeous art direction
+- **Gorogoa** - Perspective and layered storytelling
+- **Firewatch** - Emotional narrative, beautiful environment art
