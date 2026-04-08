@@ -5,7 +5,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from src.config import get_settings
 
- app = FastAPI(
+app = FastAPI(
     title="POE Knowledge Assistant API",
     description="Backend API for POE Knowledge Assistant",
     version="1.0.0"
