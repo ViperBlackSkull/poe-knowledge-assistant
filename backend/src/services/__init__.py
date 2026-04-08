@@ -17,6 +17,13 @@ from src.services.embeddings import (
     check_embeddings_health,
     create_embeddings,
 )
+from src.services.vector_store import (
+    VectorStore,
+    VectorStoreError,
+    get_embeddings,
+    get_vector_store,
+    check_vector_store_health,
+)
 
 __all__ = [
     "ChromaDBManager",
@@ -29,4 +36,9 @@ __all__ = [
     "get_local_embeddings",
     "check_embeddings_health",
     "create_embeddings",
+    "VectorStore",
+    "VectorStoreError",
+    "get_embeddings",
+    "get_vector_store",
+    "check_vector_store_health",
 ]
