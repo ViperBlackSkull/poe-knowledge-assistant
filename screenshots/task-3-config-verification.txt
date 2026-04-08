@@ -1,0 +1,29 @@
+============================================================
+Configuration Module Verification
+============================================================
+App Name: POE Knowledge Assistant
+App Version: 1.0.0
+Environment: Environment.DEVELOPMENT
+
+LLM Provider: LLMProvider.OPENAI
+LLM Model (OpenAI): gpt-4
+
+Embedding Provider: EmbeddingProvider.LOCAL
+Embedding Model: all-MiniLM-L6-v2
+
+Database URL: sqlite:///./data/poe_knowledge.db
+ChromaDB Persist Dir: ./data/chroma
+
+Server Host: 0.0.0.0
+Server Port: 8000
+
+Log Level: INFO
+
+RAG Top K: 3
+RAG Chunk Size: 1000
+
+CORS Origins: ['http://localhost:3000', 'http://localhost:5173']
+
+============================================================
+Configuration loaded successfully!
+============================================================
