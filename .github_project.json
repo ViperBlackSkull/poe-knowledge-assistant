@@ -185,7 +185,7 @@
         "title": "Create ChromaDB connection manager module",
         "feature": "Backend Foundation",
         "dependencies": ["task-3"],
-        "status": "todo"
+        "status": "done"
       },
       {
         "id": "task-7",
@@ -193,7 +193,7 @@
         "title": "Create FastAPI application instance and main router",
         "feature": "Backend Foundation",
         "dependencies": ["task-1", "task-5"],
-        "status": "todo"
+        "status": "done"
       },
       {
         "id": "task-8",
@@ -201,7 +201,7 @@
         "title": "Create health check endpoint",
         "feature": "Backend Foundation",
         "dependencies": ["task-7"],
-        "status": "todo"
+        "status": "done"
       },
       {
         "id": "task-9",
