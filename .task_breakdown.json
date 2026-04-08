@@ -16,7 +16,8 @@
         "Verify backend/ directory exists",
         "Check all required subdirectories are present",
         "Confirm __init__.py files exist in Python packages"
-      ]
+      ],
+      "status": "done"
     },
     {
       "id": "task-2",
@@ -42,7 +43,8 @@
         "Review requirements.txt",
         "Verify all dependencies are listed with appropriate versions",
         "No duplicate entries"
-      ]
+      ],
+      "status": "done"
     },
     {
       "id": "task-3",
@@ -62,7 +64,8 @@
         "Verify default values load correctly",
         "Test environment variable override",
         "Check validation for invalid provider values"
-      ]
+      ],
+      "status": "done"
     },
     {
       "id": "task-4",
@@ -81,7 +84,8 @@
         "Open .env.example",
         "Verify all variables from config/env.py are documented",
         "Check comments are clear and helpful"
-      ]
+      ],
+      "status": "done"
     },
     {
       "id": "task-5",
@@ -103,7 +107,8 @@
         "Test ChatRequest validation with valid data",
         "Test ChatRequest validation with invalid data",
         "Verify model JSON schema generation"
-      ]
+      ],
+      "status": "done"
     },
     {
       "id": "task-6",
@@ -1576,6 +1581,7 @@
   ],
   "metadata": {
     "total_tasks": 68,
-    "feature_count": 7
+    "feature_count": 7,
+    "completed_tasks": 5
   }
 }
