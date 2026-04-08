@@ -1,0 +1,253 @@
+================================================================================
+EMBEDDINGS FACTORY FUNCTION - VERIFICATION REPORT
+Task ID: task-11
+Issue Number: 6
+Title: Create embeddings factory function
+================================================================================
+
+VERIFICATION DATE: 2026-04-08
+
+================================================================================
+ACCEPTANCE CRITERIA VERIFICATION
+================================================================================
+
+[✓] 1. Create create_embeddings() function that takes provider and optional settings
+    LOCATION: backend/src/services/embeddings.py (lines 440-501)
+    STATUS: IMPLEMENTED
+
+[✓] 2. Support both LocalEmbeddings and OpenAIEmbeddings services
+    LOCAL: Lines 22-213 (LocalEmbeddings class)
+    OPENAI: Lines 215-437 (OpenAIEmbeddings class)
+    FACTORY: Lines 488-500 (creates appropriate instance based on provider)
+    STATUS: IMPLEMENTED
+
+[✓] 3. Handle invalid provider configurations gracefully
+    LOCATION: Lines 477-485
+    CODE:
+        try:
+            provider = EmbeddingProvider(provider.lower())
+        except ValueError:
+            valid_providers = [p.value for p in EmbeddingProvider]
+            raise EmbeddingError(
+                f"Invalid embedding provider '{provider}'. "
+                f"Must be one of: {valid_providers}"
+            )
+    STATUS: IMPLEMENTED - Raises EmbeddingError with helpful message
+
+[✓] 4. Return appropriate service instances based on provider
+    LOCATION: Lines 487-500
+    LOGIC:
+        - provider == EmbeddingProvider.LOCAL → LocalEmbeddings(**kwargs)
+        - provider == EmbeddingProvider.OPENAI → OpenAIEmbeddings(**kwargs)
+        - other providers → falls back to LocalEmbeddings with warning
+    STATUS: IMPLEMENTED
+
+[✓] 5. Include service validation and health checks
+    LocalEmbeddings:
+        - is_ready() method (lines 90-97)
+        - health_check() method (lines 173-212)
+    OpenAIEmbeddings:
+        - is_ready() method (lines 317-324)
+        - health_check() method (lines 396-437)
+    STATUS: IMPLEMENTED
+
+[✓] 6. Support dynamic configuration updates
+    - Accepts provider as parameter (string or enum)
+    - Accepts **kwargs for provider-specific options
+    - LocalEmbeddings: model_name
+    - OpenAIEmbeddings: api_key, model_name
+    - Falls back to config defaults when parameters not provided
+    STATUS: IMPLEMENTED
+
+================================================================================
+CODE ANALYSIS
+================================================================================
+
+FACTORY FUNCTION SIGNATURE:
+--------------------------
+def create_embeddings(
+    provider: Optional[Union[str, EmbeddingProvider]] = None,
+    **kwargs
+) -> Union[LocalEmbeddings, OpenAIEmbeddings]:
+
+PARAMETERS:
+- provider: Can be string ('local', 'openai') or EmbeddingProvider enum
+- **kwargs: Provider-specific configuration
+  - LocalEmbeddings: model_name
+  - OpenAIEmbeddings: api_key, model_name
+
+RETURNS:
+- LocalEmbeddings instance (for local provider)
+- OpenAIEmbeddings instance (for openai provider)
+
+RAISES:
+- EmbeddingError: If provider is invalid or initialization fails
+
+EXAMPLES FROM DOCSTRING:
+-----------------------
+>>> # Create local embeddings
+>>> embeddings = create_embeddings(provider='local')
+
+>>> # Create OpenAI embeddings with API key
+>>> embeddings = create_embeddings(provider='openai', api_key='sk-...')
+
+>>> # Use default provider from config
+>>> embeddings = create_embeddings()
+
+================================================================================
+TEST SCENARIOS
+================================================================================
+
+TEST 1: Local Embeddings Factory
+---------------------------------
+Request:
+    embeddings = create_embeddings(provider='local')
+
+Expected Result:
+    - Returns LocalEmbeddings instance
+    - Model: 'all-MiniLM-L6-v2' (default)
+    - Dimension: 384
+    - is_ready(): True (model loaded)
+    - health_check(): status='ready'
+
+Code Path:
+    Line 488: if provider == EmbeddingProvider.LOCAL:
+    Line 490:     return LocalEmbeddings(**kwargs)
+
+TEST 2: OpenAI Embeddings Factory
+----------------------------------
+Request:
+    embeddings = create_embeddings(provider='openai', api_key='sk-test')
+
+Expected Result:
+    - Returns OpenAIEmbeddings instance
+    - Model: 'text-embedding-ada-002' (default)
+    - Dimension: 1536
+    - is_ready(): True (client initialized)
+    - API key validated and stored
+
+Code Path:
+    Line 491: elif provider == EmbeddingProvider.OPENAI:
+    Line 493:     return OpenAIEmbeddings(**kwargs)
+
+TEST 3: Invalid Provider Error Handling
+---------------------------------------
+Request:
+    embeddings = create_embeddings(provider='invalid_provider')
+
+Expected Result:
+    - Raises EmbeddingError
+    - Error message: "Invalid embedding provider 'invalid_provider'. Must be one of: ['local', 'ollama', 'lmstudio', 'openai']"
+
+Code Path:
+    Line 477: provider = EmbeddingProvider(provider.lower())
+    Line 478: try:
+    Line 479:     provider = EmbeddingProvider(provider.lower())
+    Line 480: except ValueError:
+    Line 481-485: raise EmbeddingError(...)
+
+TEST 4: Service Health Validation
+---------------------------------
+Request:
+    embeddings = create_embeddings(provider='local')
+    health = embeddings.health_check()
+
+Expected Result:
+    - Returns dict with keys:
+      - status: 'ready' or 'error'
+      - model_name: str
+      - embedding_dimension: int
+      - message: str
+
+Code Path:
+    LocalEmbeddings.health_check() (lines 173-212)
+    - Checks if model is loaded
+    - Performs test embedding
+    - Returns comprehensive health info
+
+TEST 5: Configuration Updates
+-----------------------------
+Request:
+    embeddings = create_embeddings(
+        provider='openai',
+        api_key='sk-new-key',
+        model_name='text-embedding-3-small'
+    )
+
+Expected Result:
+    - Returns OpenAIEmbeddings instance
+    - Model: 'text-embedding-3-small'
+    - Dimension: 1536
+    - Uses provided API key
+
+Code Path:
+    Line 493: return OpenAIEmbeddings(**kwargs)
+    OpenAIEmbeddings.__init__() receives kwargs
+    Line 226-229: api_key parameter
+    Line 259-262: model_name parameter
+
+================================================================================
+INTEGRATION WITH EXISTING CODE
+================================================================================
+
+EXPORTS (backend/src/services/__init__.py):
+-------------------------------------------
+from src.services.embeddings import (
+    LocalEmbeddings,
+    OpenAIEmbeddings,
+    EmbeddingError,
+    get_local_embeddings,
+    check_embeddings_health,
+    create_embeddings,  # ← Factory function exported
+)
+
+USAGE IN main.py (API endpoint):
+-------------------------------
+Line 14: from src.services.embeddings import (
+Line 15:     check_embeddings_health,
+Line 16:     LocalEmbeddings,
+Line 17:     OpenAIEmbeddings,
+Line 18:     create_embeddings,  # ← Imported for use in test endpoint
+Line 19:     EmbeddingError
+Line 20: )
+
+Lines 207-263: Test endpoint for factory function
+    @api_router.post("/test/embeddings/factory", tags=["Testing"])
+    async def test_embeddings_factory(request: CreateEmbeddingsRequest):
+        # Creates embeddings using factory function
+        embeddings = create_embeddings(provider=request.provider, **kwargs)
+
+================================================================================
+DEPENDENCIES
+================================================================================
+
+Required imports in embeddings.py:
+- import logging (line 5)
+- import os (line 6)
+- from typing import List, Optional, Union (line 7)
+- from sentence_transformers import SentenceTransformer (line 9)
+- from src.config import get_settings, EmbeddingProvider (line 11)
+
+For OpenAIEmbeddings:
+- from langchain_openai import OpenAIEmbeddings as LangChainOpenAIEmbeddings (line 277)
+
+================================================================================
+VERIFICATION RESULT
+================================================================================
+
+Status: ✓ ALL ACCEPTANCE CRITERIA MET
+
+The create_embeddings() factory function is fully implemented with:
+1. ✓ Provider parameter support (string or enum)
+2. ✓ LocalEmbeddings and OpenAIEmbeddings support
+3. ✓ Invalid provider error handling with EmbeddingError
+4. ✓ Correct service instance creation based on provider
+5. ✓ Service validation via is_ready() and health_check() methods
+6. ✓ Dynamic configuration via **kwargs
+
+Files Changed:
+- backend/src/services/embeddings.py (factory function exists, lines 440-501)
+- backend/src/services/__init__.py (fixed to export create_embeddings)
+- backend/src/main.py (test endpoint for factory function exists)
+
+================================================================================

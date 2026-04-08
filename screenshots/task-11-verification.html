@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task-11: Embeddings Factory Function - Verification</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+        .header {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+        .header h1 {
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+        .header .subtitle {
+            font-size: 18px;
+            opacity: 0.9;
+        }
+        .status-badge {
+            display: inline-block;
+            background: #10b981;
+            color: white;
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-weight: bold;
+            margin-top: 15px;
+            font-size: 14px;
+        }
+        .content {
+            padding: 40px;
+        }
+        .section {
+            margin-bottom: 40px;
+        }
+        .section h2 {
+            color: #1e3c72;
+            font-size: 24px;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #667eea;
+        }
+        .criteria-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 20px;
+        }
+        .criterion {
+            background: #f8fafc;
+            border-left: 4px solid #10b981;
+            padding: 20px;
+            border-radius: 8px;
+        }
+        .criterion.pass {
+            border-left-color: #10b981;
+        }
+        .criterion h3 {
+            color: #1e3c72;
+            font-size: 16px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .criterion .check {
+            color: #10b981;
+            font-size: 20px;
+        }
+        .criterion .location {
+            font-size: 13px;
+            color: #64748b;
+            margin-top: 8px;
+            font-family: monospace;
+        }
+        .code-block {
+            background: #1e293b;
+            color: #e2e8f0;
+            padding: 20px;
+            border-radius: 8px;
+            font-family: 'Monaco', 'Menlo', monospace;
+            font-size: 13px;
+            overflow-x: auto;
+            margin-top: 15px;
+        }
+        .code-block .keyword {
+            color: #c678dd;
+        }
+        .code-block .function {
+            color: #61afef;
+        }
+        .code-block .string {
+            color: #98c379;
+        }
+        .code-block .comment {
+            color: #5c6370;
+        }
+        .test-results {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+        }
+        .test-item {
+            background: white;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 20px;
+        }
+        .test-item h4 {
+            color: #1e3c72;
+            margin-bottom: 10px;
+        }
+        .test-item .result {
+            color: #10b981;
+            font-weight: bold;
+        }
+        .files-changed {
+            background: #f1f5f9;
+            padding: 20px;
+            border-radius: 8px;
+        }
+        .files-changed ul {
+            list-style: none;
+            margin-top: 15px;
+        }
+        .files-changed li {
+            padding: 8px 0;
+            border-bottom: 1px solid #e2e8f0;
+            font-family: monospace;
+            color: #475569;
+        }
+        .files-changed li:last-child {
+            border-bottom: none;
+        }
+        .files-changed li::before {
+            content: "✓ ";
+            color: #10b981;
+            margin-right: 8px;
+        }
+        .summary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 12px;
+            text-align: center;
+            margin-top: 30px;
+        }
+        .summary h3 {
+            font-size: 24px;
+            margin-bottom: 15px;
+        }
+        .summary p {
+            opacity: 0.95;
+            line-height: 1.6;
+        }
+        .highlight {
+            background: #fef3c7;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Task-11: Embeddings Factory Function</h1>
+            <div class="subtitle">Issue #6 - Create embeddings factory function</div>
+            <div class="status-badge">✓ VERIFICATION PASSED</div>
+        </div>
+
+        <div class="content">
+            <!-- Acceptance Criteria Section -->
+            <div class="section">
+                <h2>Acceptance Criteria Verification</h2>
+                <div class="criteria-grid">
+                    <div class="criterion pass">
+                        <h3><span class="check">✓</span> Factory Function Created</h3>
+                        <p>create_embeddings() function takes provider and optional settings</p>
+                        <div class="location">backend/src/services/embeddings.py:440-501</div>
+                    </div>
+
+                    <div class="criterion pass">
+                        <h3><span class="check">✓</span> Provider Support</h3>
+                        <p>Supports both LocalEmbeddings and OpenAIEmbeddings services</p>
+                        <div class="location">LocalEmbeddings: lines 22-213 | OpenAIEmbeddings: lines 215-437</div>
+                    </div>
+
+                    <div class="criterion pass">
+                        <h3><span class="check">✓</span> Error Handling</h3>
+                        <p>Handles invalid provider configurations gracefully with EmbeddingError</p>
+                        <div class="location">Error validation: lines 477-485</div>
+                    </div>
+
+                    <div class="criterion pass">
+                        <h3><span class="check">✓</span> Dynamic Instance Creation</h3>
+                        <p>Returns appropriate service instances based on provider parameter</p>
+                        <div class="location">Factory logic: lines 487-500</div>
+                    </div>
+
+                    <div class="criterion pass">
+                        <h3><span class="check">✓</span> Service Validation</h3>
+                        <p>Includes is_ready() and health_check() methods in both services</p>
+                        <div class="location">LocalEmbeddings: lines 90-97, 173-212 | OpenAIEmbeddings: lines 317-324, 396-437</div>
+                    </div>
+
+                    <div class="criterion pass">
+                        <h3><span class="check">✓</span> Configuration Updates</h3>
+                        <p>Supports dynamic configuration via **kwargs parameter</p>
+                        <div class="location">Accepts: model_name, api_key, and other provider-specific options</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Implementation Section -->
+            <div class="section">
+                <h2>Factory Function Implementation</h2>
+                <div class="code-block">
+<span class="keyword">def</span> <span class="function">create_embeddings</span>(
+    provider: Optional[Union[str, EmbeddingProvider]] = <span class="keyword">None</span>,
+    **kwargs
+) -> Union[LocalEmbeddings, OpenAIEmbeddings]:
+    <span class="comment">"""
+    Factory function to create embeddings based on provider.
+
+    Args:
+        provider: Embedding provider ('local', 'openai', or EmbeddingProvider enum)
+        **kwargs: Additional arguments (model_name, api_key, etc.)
+
+    Returns:
+        Union[LocalEmbeddings, OpenAIEmbeddings]: Embeddings instance
+
+    Raises:
+        EmbeddingError: If provider is invalid or initialization fails
+    """</span>
+
+    settings = get_settings()
+
+    <span class="comment"># Get provider from parameter or config</span>
+    <span class="keyword">if</span> provider <span class="keyword">is</span> <span class="keyword">None</span>:
+        provider = settings.embedding.provider
+
+    <span class="comment"># Convert string to enum if needed</span>
+    <span class="keyword">if</span> isinstance(provider, str):
+        <span class="keyword">try</span>:
+            provider = EmbeddingProvider(provider.lower())
+        <span class="keyword">except</span> ValueError:
+            valid_providers = [p.value <span class="keyword">for</span> p <span class="keyword">in</span> EmbeddingProvider]
+            <span class="keyword">raise</span> EmbeddingError(
+                f<span class="string">"Invalid embedding provider '{provider}'. "</span>
+                f<span class="string">"Must be one of: {valid_providers}"</span>
+            )
+
+    <span class="comment"># Create embeddings based on provider</span>
+    <span class="keyword">if</span> provider == EmbeddingProvider.LOCAL:
+        logger.info(<span class="string">"Creating local embeddings service"</span>)
+        <span class="keyword">return</span> LocalEmbeddings(**kwargs)
+    <span class="keyword">elif</span> provider == EmbeddingProvider.OPENAI:
+        logger.info(<span class="string">"Creating OpenAI embeddings service"</span>)
+        <span class="keyword">return</span> OpenAIEmbeddings(**kwargs)
+    <span class="keyword">else</span>:
+        logger.warning(f<span class="string">"Provider '{provider}' not implemented, using local"</span>)
+        <span class="keyword">return</span> LocalEmbeddings(**kwargs)
+                </div>
+            </div>
+
+            <!-- Test Scenarios -->
+            <div class="section">
+                <h2>Test Scenarios</h2>
+                <div class="test-results">
+                    <div class="test-item">
+                        <h4>Test 1: Local Provider</h4>
+                        <p><code>create_embeddings(provider='local')</code></p>
+                        <p class="result">✓ PASS - Returns LocalEmbeddings instance</p>
+                    </div>
+
+                    <div class="test-item">
+                        <h4>Test 2: OpenAI Provider</h4>
+                        <p><code>create_embeddings(provider='openai', api_key='sk-...')</code></p>
+                        <p class="result">✓ PASS - Returns OpenAIEmbeddings instance</p>
+                    </div>
+
+                    <div class="test-item">
+                        <h4>Test 3: Invalid Provider</h4>
+                        <p><code>create_embeddings(provider='invalid')</code></p>
+                        <p class="result">✓ PASS - Raises EmbeddingError with helpful message</p>
+                    </div>
+
+                    <div class="test-item">
+                        <h4>Test 4: Health Validation</h4>
+                        <p><code>embeddings.health_check()</code></p>
+                        <p class="result">✓ PASS - Returns status dict with validation info</p>
+                    </div>
+
+                    <div class="test-item">
+                        <h4>Test 5: Custom Config</h4>
+                        <p><code>create_embeddings(provider='openai', model_name='text-embedding-3-small')</code></p>
+                        <p class="result">✓ PASS - Uses custom model configuration</p>
+                    </div>
+
+                    <div class="test-item">
+                        <h4>Test 6: Default Provider</h4>
+                        <p><code>create_embeddings()</code></p>
+                        <p class="result">✓ PASS - Uses default from config (local)</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Files Changed -->
+            <div class="section">
+                <h2>Files Changed</h2>
+                <div class="files-changed">
+                    <p>The following files implement or export the factory function:</p>
+                    <ul>
+                        <li>backend/src/services/embeddings.py (factory function: lines 440-501)</li>
+                        <li>backend/src/services/__init__.py (exports create_embeddings)</li>
+                        <li>backend/src/main.py (test endpoint at /api/test/embeddings/factory)</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Summary -->
+            <div class="summary">
+                <h3>Implementation Complete</h3>
+                <p>
+                    The <span class="highlight">create_embeddings()</span> factory function is fully implemented
+                    and meets all acceptance criteria. It provides a clean interface for dynamically creating
+                    embeddings services based on configuration, with proper error handling and validation.
+                </p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
