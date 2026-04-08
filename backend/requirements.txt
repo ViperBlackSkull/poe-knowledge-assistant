@@ -1,27 +1,187 @@
-# FastAPI and dependencies
+# ===========================================
+# POE Knowledge Assistant - Python Dependencies
+# ===========================================
+
+# -------------------------------------------
+# Core Web Framework
+# -------------------------------------------
+# FastAPI framework for building REST APIs
 fastapi==0.109.0
+
+# ASGI server for running FastAPI applications
 uvicorn[standard]==0.27.0
-python-multipart==0.0.6
 
-# Database
-sqlalchemy==2.0.25
-alembic==1.13.1
-
-# Environment and configuration
-python-dotenv==1.0.0
+# Pydantic for data validation and settings management
+pydantic==2.5.3
 pydantic-settings==2.1.0
 
-# HTTP client
+# Multipart form data support
+python-multipart==0.0.6
+
+# -------------------------------------------
+# Database
+# -------------------------------------------
+# SQLAlchemy ORM for database operations
+sqlalchemy==2.0.25
+
+# Database migrations
+alembic==1.13.1
+
+# Async PostgreSQL support (for future production use)
+asyncpg==0.29.0
+
+# PostgreSQL adapter
+psycopg2-binary==2.9.9
+
+# -------------------------------------------
+# HTTP Client Libraries
+# -------------------------------------------
+# Modern HTTP client for API requests
 httpx==0.26.0
+
+# Async HTTP client
 aiohttp==3.9.1
 
-# Vector database
+# Requests for simple HTTP operations
+requests==2.31.0
+
+# -------------------------------------------
+# Vector Database - ChromaDB
+# -------------------------------------------
+# ChromaDB for local vector storage
 chromadb==0.4.22
 
-# AI/ML
+# Dependencies for ChromaDB embeddings
+onnxruntime==1.16.3
+tokenizers==0.15.0
+
+# -------------------------------------------
+# LLM Client Libraries
+# -------------------------------------------
+# OpenAI API client
 openai==1.10.0
+
+# Token counting for OpenAI models
 tiktoken==0.5.2
 
+# Anthropic Claude API client
+anthropic==0.18.0
+
+# LangChain core framework
+langchain==0.1.0
+langchain-core==0.1.10
+
+# LangChain community integrations
+langchain-community==0.0.12
+
+# LangChain OpenAI integration
+langchain-openai==0.0.2
+
+# LangChain Anthropic integration
+langchain-anthropic==0.1.1
+
+# -------------------------------------------
+# Embeddings
+# -------------------------------------------
+# Sentence transformers for local embeddings
+sentence-transformers==2.2.2
+
+# HuggingFace hub for model downloads
+huggingface-hub==0.20.3
+
+# -------------------------------------------
+# Data Processing Libraries
+# -------------------------------------------
+# NumPy for numerical operations
+numpy==1.26.3
+
+# Pandas for data manipulation
+pandas==2.2.0
+
+# -------------------------------------------
+# Web Scraping
+# -------------------------------------------
+# BeautifulSoup for HTML parsing
+beautifulsoup4==4.12.3
+
+# lxml parser for BeautifulSoup
+lxml==5.1.0
+
+# -------------------------------------------
+# Async Support
+# -------------------------------------------
+# Async file I/O support
+aiofiles==23.2.1
+
+# -------------------------------------------
 # Utilities
+# -------------------------------------------
+# Python dotenv for environment variables
+python-dotenv==1.0.0
+
+# Type checking support
+typing-extensions==4.9.0
+
+# -------------------------------------------
+# Security
+# -------------------------------------------
+# JWT token support (for future authentication)
 python-jose[cryptography]==3.3.0
+
+# Password hashing
 passlib[bcrypt]==1.7.4
+
+# -------------------------------------------
+# Logging and Monitoring
+# -------------------------------------------
+# Structured logging
+structlog==24.1.0
+
+# -------------------------------------------
+# Development Dependencies
+# -------------------------------------------
+# Testing framework
+pytest==7.4.4
+pytest-asyncio==0.23.3
+
+# Test coverage
+pytest-cov==4.1.0
+
+# HTTP mocking for tests
+pytest-httpx==0.28.1
+
+# Code formatting
+black==24.1.1
+
+# Import sorting
+isort==5.13.2
+
+# Linting
+flake8==7.0.0
+
+# Type checking
+mypy==1.8.0
+
+# Pre-commit hooks
+pre-commit==3.6.0
+
+# -------------------------------------------
+# Production Dependencies
+# -------------------------------------------
+# Gunicorn for production WSGI server
+gunicorn==21.2.0
+
+# -------------------------------------------
+# Optional: Ollama Support
+# -------------------------------------------
+# Note: Ollama runs as a separate service
+# Uncomment if using Ollama Python SDK
+# ollama==0.1.6
+
+# -------------------------------------------
+# Notes on Version Selection:
+# -------------------------------------------
+# - All versions are pinned (no wildcards) for reproducibility
+# - Versions chosen for compatibility and stability
+# - Test thoroughly before upgrading any dependency
+# - Development dependencies are included but can be separated if needed
