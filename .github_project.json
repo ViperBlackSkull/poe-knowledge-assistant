@@ -1,7 +1,7 @@
 {
   "repo": "ViperBlackSkull/poe-knowledge-assistant",
   "issues": [],
-  "current_index": 1,
+  "current_index": 4,
   "task_graph": {
     "tasks": [
       {
@@ -26,7 +26,7 @@
         "title": "Create environment configuration module",
         "feature": "Backend Foundation",
         "dependencies": ["task-1"],
-        "status": "todo"
+        "status": "done"
       },
       {
         "id": "task-4",
@@ -34,7 +34,7 @@
         "title": "Create .env.example file with all configuration options",
         "feature": "Backend Foundation",
         "dependencies": ["task-3"],
-        "status": "todo"
+        "status": "done"
       },
       {
         "id": "task-5",
