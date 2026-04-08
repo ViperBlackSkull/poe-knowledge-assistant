@@ -1,0 +1,581 @@
+{
+  "repo": null,
+  "issues": [],
+  "current_index": 0,
+  "task_graph": {
+    "tasks": [
+      {
+        "id": "task-1",
+        "github_issue_number": null,
+        "title": "Create FastAPI project directory structure",
+        "feature": "Backend Foundation",
+        "dependencies": [],
+        "status": "todo"
+      },
+      {
+        "id": "task-2",
+        "github_issue_number": null,
+        "title": "Create Python requirements.txt with dependencies",
+        "feature": "Backend Foundation",
+        "dependencies": ["task-1"],
+        "status": "todo"
+      },
+      {
+        "id": "task-3",
+        "github_issue_number": null,
+        "title": "Create environment configuration module",
+        "feature": "Backend Foundation",
+        "dependencies": ["task-1"],
+        "status": "todo"
+      },
+      {
+        "id": "task-4",
+        "github_issue_number": null,
+        "title": "Create .env.example file with all configuration options",
+        "feature": "Backend Foundation",
+        "dependencies": ["task-3"],
+        "status": "todo"
+      },
+      {
+        "id": "task-5",
+        "github_issue_number": null,
+        "title": "Create Pydantic models for API requests/responses",
+        "feature": "Backend Foundation",
+        "dependencies": ["task-1"],
+        "status": "todo"
+      },
+      {
+        "id": "task-6",
+        "github_issue_number": null,
+        "title": "Create ChromaDB connection manager module",
+        "feature": "Backend Foundation",
+        "dependencies": ["task-3"],
+        "status": "todo"
+      },
+      {
+        "id": "task-7",
+        "github_issue_number": null,
+        "title": "Create FastAPI application instance and main router",
+        "feature": "Backend Foundation",
+        "dependencies": ["task-1", "task-5"],
+        "status": "todo"
+      },
+      {
+        "id": "task-8",
+        "github_issue_number": null,
+        "title": "Create health check endpoint",
+        "feature": "Backend Foundation",
+        "dependencies": ["task-7"],
+        "status": "todo"
+      },
+      {
+        "id": "task-9",
+        "github_issue_number": null,
+        "title": "Create local embeddings service using sentence-transformers",
+        "feature": "RAG Pipeline",
+        "dependencies": ["task-2", "task-3"],
+        "status": "todo"
+      },
+      {
+        "id": "task-10",
+        "github_issue_number": null,
+        "title": "Create OpenAI embeddings service option",
+        "feature": "RAG Pipeline",
+        "dependencies": ["task-3", "task-9"],
+        "status": "todo"
+      },
+      {
+        "id": "task-11",
+        "github_issue_number": null,
+        "title": "Create embeddings factory function",
+        "feature": "RAG Pipeline",
+        "dependencies": ["task-9", "task-10"],
+        "status": "todo"
+      },
+      {
+        "id": "task-12",
+        "github_issue_number": null,
+        "title": "Create vector store wrapper for ChromaDB with LangChain",
+        "feature": "RAG Pipeline",
+        "dependencies": ["task-6", "task-11"],
+        "status": "todo"
+      },
+      {
+        "id": "task-13",
+        "github_issue_number": null,
+        "title": "Implement RAG retrieval chain with game filtering",
+        "feature": "RAG Pipeline",
+        "dependencies": ["task-12"],
+        "status": "todo"
+      },
+      {
+        "id": "task-14",
+        "github_issue_number": null,
+        "title": "Create LLM provider factory for multiple providers",
+        "feature": "RAG Pipeline",
+        "dependencies": ["task-3"],
+        "status": "todo"
+      },
+      {
+        "id": "task-15",
+        "github_issue_number": null,
+        "title": "Implement streaming response generator with SSE",
+        "feature": "RAG Pipeline",
+        "dependencies": ["task-13", "task-14"],
+        "status": "todo"
+      },
+      {
+        "id": "task-16",
+        "github_issue_number": null,
+        "title": "Create poedb.tw scraper base module",
+        "feature": "Knowledge Base Scraper",
+        "dependencies": ["task-2"],
+        "status": "todo"
+      },
+      {
+        "id": "task-17",
+        "github_issue_number": null,
+        "title": "Implement category page scraper for poedb.tw",
+        "feature": "Knowledge Base Scraper",
+        "dependencies": ["task-16"],
+        "status": "todo"
+      },
+      {
+        "id": "task-18",
+        "github_issue_number": null,
+        "title": "Implement item detail page scraper",
+        "feature": "Knowledge Base Scraper",
+        "dependencies": ["task-16"],
+        "status": "todo"
+      },
+      {
+        "id": "task-19",
+        "github_issue_number": null,
+        "title": "Implement game version detection in scraper",
+        "feature": "Knowledge Base Scraper",
+        "dependencies": ["task-18"],
+        "status": "todo"
+      },
+      {
+        "id": "task-20",
+        "github_issue_number": null,
+        "title": "Create ChromaDB indexer for scraped data",
+        "feature": "Knowledge Base Scraper",
+        "dependencies": ["task-6", "task-18", "task-19"],
+        "status": "todo"
+      },
+      {
+        "id": "task-21",
+        "github_issue_number": null,
+        "title": "Create scraping job manager",
+        "feature": "Knowledge Base Scraper",
+        "dependencies": ["task-17", "task-20"],
+        "status": "todo"
+      },
+      {
+        "id": "task-22",
+        "github_issue_number": null,
+        "title": "Create scrape trigger endpoint POST /api/admin/scrape",
+        "feature": "Knowledge Base Scraper",
+        "dependencies": ["task-21"],
+        "status": "todo"
+      },
+      {
+        "id": "task-23",
+        "github_issue_number": null,
+        "title": "Create scrape status endpoint GET /api/admin/scrape/status",
+        "feature": "Knowledge Base Scraper",
+        "dependencies": ["task-22"],
+        "status": "todo"
+      },
+      {
+        "id": "task-24",
+        "github_issue_number": null,
+        "title": "Create last scrape timestamp storage",
+        "feature": "Data Freshness",
+        "dependencies": ["task-21"],
+        "status": "todo"
+      },
+      {
+        "id": "task-25",
+        "github_issue_number": null,
+        "title": "Create data freshness endpoint GET /api/freshness",
+        "feature": "Data Freshness",
+        "dependencies": ["task-24"],
+        "status": "todo"
+      },
+      {
+        "id": "task-26",
+        "github_issue_number": null,
+        "title": "Create chat endpoint POST /api/chat",
+        "feature": "Chat API",
+        "dependencies": ["task-13", "task-14", "task-15"],
+        "status": "todo"
+      },
+      {
+        "id": "task-27",
+        "github_issue_number": null,
+        "title": "Implement conversation history management",
+        "feature": "Chat API",
+        "dependencies": ["task-26"],
+        "status": "todo"
+      },
+      {
+        "id": "task-28",
+        "github_issue_number": null,
+        "title": "Create config endpoint GET /api/config",
+        "feature": "Configuration Panel",
+        "dependencies": ["task-3"],
+        "status": "todo"
+      },
+      {
+        "id": "task-29",
+        "github_issue_number": null,
+        "title": "Create config update endpoint PUT /api/config",
+        "feature": "Configuration Panel",
+        "dependencies": ["task-28"],
+        "status": "todo"
+      },
+      {
+        "id": "task-30",
+        "github_issue_number": null,
+        "title": "Create React + Vite + TypeScript project structure",
+        "feature": "Frontend Foundation",
+        "dependencies": [],
+        "status": "todo"
+      },
+      {
+        "id": "task-31",
+        "github_issue_number": null,
+        "title": "Install and configure Tailwind CSS with PoE theme",
+        "feature": "Frontend Foundation",
+        "dependencies": ["task-30"],
+        "status": "todo"
+      },
+      {
+        "id": "task-32",
+        "github_issue_number": null,
+        "title": "Create TypeScript types for API contracts",
+        "feature": "Frontend Foundation",
+        "dependencies": ["task-30"],
+        "status": "todo"
+      },
+      {
+        "id": "task-33",
+        "github_issue_number": null,
+        "title": "Create API client with axios and streaming support",
+        "feature": "Frontend Foundation",
+        "dependencies": ["task-32"],
+        "status": "todo"
+      },
+      {
+        "id": "task-34",
+        "github_issue_number": null,
+        "title": "Create main layout component with header",
+        "feature": "Chat Interface",
+        "dependencies": ["task-31"],
+        "status": "todo"
+      },
+      {
+        "id": "task-35",
+        "github_issue_number": null,
+        "title": "Create chat message list component",
+        "feature": "Chat Interface",
+        "dependencies": ["task-34"],
+        "status": "todo"
+      },
+      {
+        "id": "task-36",
+        "github_issue_number": null,
+        "title": "Create chat input component",
+        "feature": "Chat Interface",
+        "dependencies": ["task-34"],
+        "status": "todo"
+      },
+      {
+        "id": "task-37",
+        "github_issue_number": null,
+        "title": "Create typing indicator component",
+        "feature": "Chat Interface",
+        "dependencies": ["task-34"],
+        "status": "todo"
+      },
+      {
+        "id": "task-38",
+        "github_issue_number": null,
+        "title": "Create markdown renderer component",
+        "feature": "Chat Interface",
+        "dependencies": ["task-34"],
+        "status": "todo"
+      },
+      {
+        "id": "task-39",
+        "github_issue_number": null,
+        "title": "Create item card component with PoE styling",
+        "feature": "Item Display Cards",
+        "dependencies": ["task-34"],
+        "status": "todo"
+      },
+      {
+        "id": "task-40",
+        "github_issue_number": null,
+        "title": "Create item card grid layout",
+        "feature": "Item Display Cards",
+        "dependencies": ["task-39"],
+        "status": "todo"
+      },
+      {
+        "id": "task-41",
+        "github_issue_number": null,
+        "title": "Create citation component",
+        "feature": "Chat Interface",
+        "dependencies": ["task-34"],
+        "status": "todo"
+      },
+      {
+        "id": "task-42",
+        "github_issue_number": null,
+        "title": "Create game version selector dropdown",
+        "feature": "Chat Interface",
+        "dependencies": ["task-34"],
+        "status": "todo"
+      },
+      {
+        "id": "task-43",
+        "github_issue_number": null,
+        "title": "Create clear conversation button",
+        "feature": "Chat Interface",
+        "dependencies": ["task-34"],
+        "status": "todo"
+      },
+      {
+        "id": "task-44",
+        "github_issue_number": null,
+        "title": "Create settings panel slide-in component",
+        "feature": "Configuration Panel",
+        "dependencies": ["task-34"],
+        "status": "todo"
+      },
+      {
+        "id": "task-45",
+        "github_issue_number": null,
+        "title": "Create LLM provider selector in settings",
+        "feature": "Configuration Panel",
+        "dependencies": ["task-44"],
+        "status": "todo"
+      },
+      {
+        "id": "task-46",
+        "github_issue_number": null,
+        "title": "Create API key input components",
+        "feature": "Configuration Panel",
+        "dependencies": ["task-44"],
+        "status": "todo"
+      },
+      {
+        "id": "task-47",
+        "github_issue_number": null,
+        "title": "Create embedding provider selector in settings",
+        "feature": "Configuration Panel",
+        "dependencies": ["task-44"],
+        "status": "todo"
+      },
+      {
+        "id": "task-48",
+        "github_issue_number": null,
+        "title": "Implement settings save functionality",
+        "feature": "Configuration Panel",
+        "dependencies": ["task-45", "task-46", "task-47"],
+        "status": "todo"
+      },
+      {
+        "id": "task-49",
+        "github_issue_number": null,
+        "title": "Create build context selector component",
+        "feature": "Build Context",
+        "dependencies": ["task-34"],
+        "status": "todo"
+      },
+      {
+        "id": "task-50",
+        "github_issue_number": null,
+        "title": "Create build context display in header",
+        "feature": "Build Context",
+        "dependencies": ["task-49"],
+        "status": "todo"
+      },
+      {
+        "id": "task-51",
+        "github_issue_number": null,
+        "title": "Integrate build context with chat API",
+        "feature": "Build Context",
+        "dependencies": ["task-50"],
+        "status": "todo"
+      },
+      {
+        "id": "task-52",
+        "github_issue_number": null,
+        "title": "Create data freshness indicator component",
+        "feature": "Data Freshness",
+        "dependencies": ["task-34"],
+        "status": "todo"
+      },
+      {
+        "id": "task-53",
+        "github_issue_number": null,
+        "title": "Create chat state management hook",
+        "feature": "Chat Interface",
+        "dependencies": ["task-32"],
+        "status": "todo"
+      },
+      {
+        "id": "task-54",
+        "github_issue_number": null,
+        "title": "Create configuration state management hook",
+        "feature": "Configuration Panel",
+        "dependencies": ["task-32"],
+        "status": "todo"
+      },
+      {
+        "id": "task-55",
+        "github_issue_number": null,
+        "title": "Integrate all components in App.tsx",
+        "feature": "Chat Interface",
+        "dependencies": ["task-34", "task-35", "task-36", "task-53"],
+        "status": "todo"
+      },
+      {
+        "id": "task-56",
+        "github_issue_number": null,
+        "title": "Add loading states to all async operations",
+        "feature": "Frontend Polish",
+        "dependencies": ["task-55"],
+        "status": "todo"
+      },
+      {
+        "id": "task-57",
+        "github_issue_number": null,
+        "title": "Add error handling and user feedback",
+        "feature": "Frontend Polish",
+        "dependencies": ["task-55"],
+        "status": "todo"
+      },
+      {
+        "id": "task-58",
+        "github_issue_number": null,
+        "title": "Implement responsive design for mobile",
+        "feature": "Frontend Polish",
+        "dependencies": ["task-55"],
+        "status": "todo"
+      },
+      {
+        "id": "task-59",
+        "github_issue_number": null,
+        "title": "Add PoE visual effects and animations",
+        "feature": "Frontend Polish",
+        "dependencies": ["task-58"],
+        "status": "todo"
+      },
+      {
+        "id": "task-60",
+        "github_issue_number": null,
+        "title": "Create end-to-end chat flow test",
+        "feature": "Testing",
+        "dependencies": ["task-26", "task-55"],
+        "status": "todo"
+      },
+      {
+        "id": "task-61",
+        "github_issue_number": null,
+        "title": "Create RAG pipeline integration test",
+        "feature": "Testing",
+        "dependencies": ["task-13", "task-26"],
+        "status": "todo"
+      },
+      {
+        "id": "task-62",
+        "github_issue_number": null,
+        "title": "Create scraper integration test",
+        "feature": "Testing",
+        "dependencies": ["task-23"],
+        "status": "todo"
+      },
+      {
+        "id": "task-63",
+        "github_issue_number": null,
+        "title": "Create configuration management test",
+        "feature": "Testing",
+        "dependencies": ["task-29", "task-48"],
+        "status": "todo"
+      },
+      {
+        "id": "task-64",
+        "github_issue_number": null,
+        "title": "Create frontend component tests",
+        "feature": "Testing",
+        "dependencies": ["task-55"],
+        "status": "todo"
+      },
+      {
+        "id": "task-65",
+        "github_issue_number": null,
+        "title": "Create deployment documentation",
+        "feature": "Documentation",
+        "dependencies": ["task-8", "task-30"],
+        "status": "todo"
+      },
+      {
+        "id": "task-66",
+        "github_issue_number": null,
+        "title": "Create API documentation",
+        "feature": "Documentation",
+        "dependencies": ["task-29"],
+        "status": "todo"
+      },
+      {
+        "id": "task-67",
+        "github_issue_number": null,
+        "title": "Perform end-to-end system testing",
+        "feature": "Testing",
+        "dependencies": ["task-60", "task-61", "task-62", "task-63", "task-64"],
+        "status": "todo"
+      },
+      {
+        "id": "task-68",
+        "github_issue_number": null,
+        "title": "Performance optimization and load testing",
+        "feature": "Polish",
+        "dependencies": ["task-67"],
+        "status": "todo"
+      }
+    ],
+    "execution_order": [
+      "task-1", "task-30",
+      "task-2", "task-31", "task-32",
+      "task-3", "task-33",
+      "task-4", "task-5", "task-6", "task-7",
+      "task-8", "task-34",
+      "task-9", "task-10", "task-11",
+      "task-12", "task-13",
+      "task-14", "task-15",
+      "task-16", "task-17", "task-18", "task-19",
+      "task-20", "task-21",
+      "task-22", "task-23",
+      "task-24", "task-25",
+      "task-26", "task-27",
+      "task-28", "task-29",
+      "task-35", "task-36", "task-37", "task-38",
+      "task-39", "task-40",
+      "task-41", "task-42", "task-43",
+      "task-44", "task-45", "task-46", "task-47", "task-48",
+      "task-49", "task-50", "task-51",
+      "task-52",
+      "task-53", "task-54",
+      "task-55",
+      "task-56", "task-57", "task-58", "task-59",
+      "task-60", "task-61", "task-62", "task-63", "task-64",
+      "task-65", "task-66",
+      "task-67", "task-68"
+    ]
+  }
+}

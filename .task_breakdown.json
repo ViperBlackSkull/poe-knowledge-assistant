@@ -1,0 +1,1581 @@
+{
+  "tasks": [
+    {
+      "id": "task-1",
+      "title": "Create FastAPI project directory structure",
+      "feature": "Backend Foundation",
+      "dependencies": [],
+      "description": "Set up the basic project directory structure for the FastAPI backend with appropriate folders for models, routes, services, and config",
+      "acceptance_criteria": [
+        "Backend directory exists with proper structure",
+        "Folders: api/, models/, services/, config/, utils/",
+        "Empty __init__.py files in each Python package folder",
+        "README.md in backend root explaining the structure"
+      ],
+      "test_steps": [
+        "Verify backend/ directory exists",
+        "Check all required subdirectories are present",
+        "Confirm __init__.py files exist in Python packages"
+      ]
+    },
+    {
+      "id": "task-2",
+      "title": "Create Python requirements.txt with dependencies",
+      "feature": "Backend Foundation",
+      "dependencies": ["task-1"],
+      "description": "Create requirements.txt with FastAPI, LangChain, ChromaDB, sentence-transformers, BeautifulSoup, uvicorn, pydantic, python-dotenv",
+      "acceptance_criteria": [
+        "requirements.txt file exists in backend/",
+        "FastAPI>=0.104.0 is listed",
+        "langchain>=0.1.0 is listed",
+        "chromadb>=0.4.0 is listed",
+        "sentence-transformers>=2.2.0 is listed",
+        "beautifulsoup4>=4.12.0 is listed",
+        "uvicorn>=0.24.0 is listed",
+        "pydantic>=2.0.0 is listed",
+        "python-dotenv>=1.0.0 is listed",
+        "aiofiles>=23.0.0 is listed",
+        "httpx>=0.25.0 is listed",
+        "All versions are pinned appropriately"
+      ],
+      "test_steps": [
+        "Review requirements.txt",
+        "Verify all dependencies are listed with appropriate versions",
+        "No duplicate entries"
+      ]
+    },
+    {
+      "id": "task-3",
+      "title": "Create environment configuration module",
+      "feature": "Backend Foundation",
+      "dependencies": ["task-1"],
+      "description": "Create config/env.py module to load environment variables for LLM provider, API keys, embedding settings, and ChromaDB path",
+      "acceptance_criteria": [
+        "config/env.py module exists",
+        "Uses pydantic-settings for validation",
+        "Environment variables defined: LLM_PROVIDER, OPENAI_API_KEY, ANTHROPIC_API_KEY, OLLAMA_BASE_URL, LMSTUDIO_BASE_URL, EMBEDDING_PROVIDER, EMBEDDING_MODEL, CHROMA_PERSIST_DIR",
+        "Default values for all variables",
+        "Validation logic for provider selection"
+      ],
+      "test_steps": [
+        "Import config module",
+        "Verify default values load correctly",
+        "Test environment variable override",
+        "Check validation for invalid provider values"
+      ]
+    },
+    {
+      "id": "task-4",
+      "title": "Create .env.example file with all configuration options",
+      "feature": "Backend Foundation",
+      "dependencies": ["task-3"],
+      "description": "Create .env.example file documenting all available environment variables with descriptions and default values",
+      "acceptance_criteria": [
+        ".env.example file exists in backend/",
+        "All environment variables are documented",
+        "Each variable has a comment explaining its purpose",
+        "Default values are shown as comments",
+        "Instructions for use are included"
+      ],
+      "test_steps": [
+        "Open .env.example",
+        "Verify all variables from config/env.py are documented",
+        "Check comments are clear and helpful"
+      ]
+    },
+    {
+      "id": "task-5",
+      "title": "Create Pydantic models for API requests/responses",
+      "feature": "Backend Foundation",
+      "dependencies": ["task-1"],
+      "description": "Create models/schemas.py with ChatRequest, ChatResponse, ScrapeRequest, ConfigRequest, and related models",
+      "acceptance_criteria": [
+        "models/schemas.py exists",
+        "ChatRequest model with fields: message, game, build_context, conversation_id",
+        "ChatResponse model with streaming fields",
+        "ScrapeRequest model with game and depth fields",
+        "ConfigRequest model for configuration updates",
+        "All models use Pydantic v2 syntax",
+        "Appropriate field validators exist"
+      ],
+      "test_steps": [
+        "Import all models from models.schemas",
+        "Test ChatRequest validation with valid data",
+        "Test ChatRequest validation with invalid data",
+        "Verify model JSON schema generation"
+      ]
+    },
+    {
+      "id": "task-6",
+      "title": "Create ChromaDB connection manager module",
+      "feature": "Backend Foundation",
+      "dependencies": ["task-3"],
+      "description": "Create services/chroma_db.py to manage ChromaDB connection and collection initialization with proper error handling",
+      "acceptance_criteria": [
+        "services/chroma_db.py exists",
+        "ChromaDBManager class with get_collection() method",
+        "Collection name is 'poe_knowledge'",
+        "Handles missing collection gracefully",
+        "Creates collection if it doesn't exist",
+        "Uses CHROMA_PERSIST_DIR from config",
+        "Proper error handling for connection issues"
+      ],
+      "test_steps": [
+        "Instantiate ChromaDBManager",
+        "Call get_collection()",
+        "Verify collection is created or retrieved",
+        "Test error handling with invalid path"
+      ]
+    },
+    {
+      "id": "task-7",
+      "title": "Create FastAPI application instance and main router",
+      "feature": "Backend Foundation",
+      "dependencies": ["task-1", "task-5"],
+      "description": "Create main.py with FastAPI app instance, CORS middleware, and basic route setup",
+      "acceptance_criteria": [
+        "main.py exists in backend/",
+        "FastAPI app instance is created",
+        "CORS middleware is configured for frontend origin",
+        "CORS allows credentials",
+        "App title and description are set",
+        "Base router is set up",
+        "Uvicorn run configuration in if __name__ == '__main__'"
+      ],
+      "test_steps": [
+        "Run uvicorn main:app",
+        "Verify server starts without errors",
+        "Check CORS headers in response",
+        "Access FastAPI docs at /docs"
+      ]
+    },
+    {
+      "id": "task-8",
+      "title": "Create health check endpoint",
+      "feature": "Backend Foundation",
+      "dependencies": ["task-7"],
+      "description": "Implement GET /api/health endpoint that returns service status and ChromaDB connection status",
+      "acceptance_criteria": [
+        "GET /api/health endpoint exists",
+        "Returns JSON with status field",
+        "Includes chromadb_status field",
+        "Returns 200 status code when healthy",
+        "Returns appropriate status when ChromaDB is unavailable"
+      ],
+      "test_steps": [
+        "Start the server",
+        "curl GET /api/health",
+        "Verify response contains status and chromadb_status",
+        "Test with ChromaDB unavailable"
+      ]
+    },
+    {
+      "id": "task-9",
+      "title": "Create local embeddings service using sentence-transformers",
+      "feature": "RAG Pipeline",
+      "dependencies": ["task-2", "task-3"],
+      "description": "Create services/embeddings.py with LocalEmbeddings class using sentence-transformers all-MiniLM-L6-v2 model",
+      "acceptance_criteria": [
+        "services/embeddings.py exists",
+        "LocalEmbeddings class implements embedding interface",
+        "Uses sentence-transformers library",
+        "Model defaults to all-MiniLM-L6-v2",
+        "Model can be configured via EMBEDDING_MODEL env var",
+        "Implements embed_documents() and embed_query() methods",
+        "Handles model loading errors gracefully"
+      ],
+      "test_steps": [
+        "Instantiate LocalEmbeddings",
+        "Test embed_query() with sample text",
+        "Verify output is list of floats",
+        "Test embed_documents() with multiple texts",
+        "Check error handling for invalid input"
+      ]
+    },
+    {
+      "id": "task-10",
+      "title": "Create OpenAI embeddings service option",
+      "feature": "RAG Pipeline",
+      "dependencies": ["task-3", "task-9"],
+      "description": "Extend services/embeddings.py to support OpenAI embeddings when EMBEDDING_PROVIDER is set to 'openai'",
+      "acceptance_criteria": [
+        "OpenAIEmbeddings class exists",
+        "Uses LangChain's OpenAI embeddings integration",
+        "Requires OPENAI_API_KEY when provider is 'openai'",
+        "Validates API key is present",
+        "Same interface as LocalEmbeddings",
+        "Factory function to create embeddings based on provider"
+      ],
+      "test_steps": [
+        "Test factory function with provider='local'",
+        "Test factory function with provider='openai'",
+        "Verify OpenAI embeddings require API key",
+        "Test embedding generation with both providers"
+      ]
+    },
+    {
+      "id": "task-11",
+      "title": "Create embeddings factory function",
+      "feature": "RAG Pipeline",
+      "dependencies": ["task-9", "task-10"],
+      "description": "Create get_embeddings() factory function that returns appropriate embeddings instance based on EMBEDDING_PROVIDER setting",
+      "acceptance_criteria": [
+        "get_embeddings() function exists",
+        "Returns LocalEmbeddings for 'local' provider",
+        "Returns OpenAIEmbeddings for 'openai' provider",
+        "Returns appropriate embeddings for 'ollama' and 'lmstudio'",
+        "Validates provider value",
+        "Raises clear error for invalid provider"
+      ],
+      "test_steps": [
+        "Test get_embeddings() for each provider",
+        "Verify correct embeddings type returned",
+        "Test with invalid provider value",
+        "Check error messages are clear"
+      ]
+    },
+    {
+      "id": "task-12",
+      "title": "Create vector store wrapper for ChromaDB with LangChain",
+      "feature": "RAG Pipeline",
+      "dependencies": ["task-6", "task-11"],
+      "description": "Create services/vector_store.py that wraps ChromaDB with LangChain's Chroma vector store interface",
+      "acceptance_criteria": [
+        "services/vector_store.py exists",
+        "VectorStore class wraps LangChain Chroma",
+        "Initializes with embeddings from get_embeddings()",
+        "Uses ChromaDBManager for collection",
+        "Provides similarity_search() method",
+        "Supports metadata filtering by game version"
+      ],
+      "test_steps": [
+        "Instantiate VectorStore",
+        "Test similarity_search() with sample query",
+        "Test metadata filter with game='poe1'",
+        "Test metadata filter with game='poe2'",
+        "Verify results include expected metadata"
+      ]
+    },
+    {
+      "id": "task-13",
+      "title": "Implement RAG retrieval chain with game filtering",
+      "feature": "RAG Pipeline",
+      "dependencies": ["task-12"],
+      "description": "Create services/rag_chain.py with LangChain retrieval chain that filters by game version and returns top-k results",
+      "acceptance_criteria": [
+        "services/rag_chain.py exists",
+        "RAGChain class with retrieve() method",
+        "Accepts query, game version, and optional build context",
+        "Filters ChromaDB results by game metadata",
+        "Returns top-k results (default 3, configurable)",
+        "Extracts and returns citations from source documents",
+        "Includes build context in retrieval if provided"
+      ],
+      "test_steps": [
+        "Create RAGChain instance",
+        "Test retrieve() with game='poe1'",
+        "Test retrieve() with game='poe2'",
+        "Test retrieve() with build_context",
+        "Verify citations are extracted correctly",
+        "Check top-k parameter works"
+      ]
+    },
+    {
+      "id": "task-14",
+      "title": "Create LLM provider factory for multiple providers",
+      "feature": "RAG Pipeline",
+      "dependencies": ["task-3"],
+      "description": "Create services/llm.py with factory function to create LLM instances for OpenAI, Anthropic, Ollama, or LM Studio",
+      "acceptance_criteria": [
+        "services/llm.py exists",
+        "get_llm() factory function exists",
+        "Supports 'openai' provider with GPT models",
+        "Supports 'anthropic' provider with Claude models",
+        "Supports 'ollama' provider with configurable base URL",
+        "Supports 'lmstudio' provider with configurable base URL",
+        "Validates required API keys for each provider",
+        "Uses appropriate LangChain LLM classes"
+      ],
+      "test_steps": [
+        "Test get_llm() for each provider",
+        "Verify API key validation for OpenAI",
+        "Verify API key validation for Anthropic",
+        "Test Ollama connection",
+        "Test LM Studio connection",
+        "Check error handling for missing keys"
+      ]
+    },
+    {
+      "id": "task-15",
+      "title": "Implement streaming response generator with SSE",
+      "feature": "RAG Pipeline",
+      "dependencies": ["task-13", "task-14"],
+      "description": "Create services/streamer.py to generate Server-Sent Events stream for chat responses with tokens and item cards",
+      "acceptance_criteria": [
+        "services/streamer.py exists",
+        "ChatStreamer class with stream() method",
+        "Yields SSE formatted events",
+        "Emits 'token' events for text chunks",
+        "Emits 'item' events when items are referenced",
+        "Emits 'done' event with citations",
+        "Handles LLM streaming response",
+        "Parses and formats item data"
+      ],
+      "test_steps": [
+        "Create ChatStreamer instance",
+        "Test stream() method with mock LLM response",
+        "Verify SSE format is correct",
+        "Check token events are emitted",
+        "Check done event includes citations"
+      ]
+    },
+    {
+      "id": "task-16",
+      "title": "Create poedb.tw scraper base module",
+      "feature": "Knowledge Base Scraper",
+      "dependencies": ["task-2"],
+      "description": "Create services/scraper.py with base scraper class for poedb.tw using BeautifulSoup with rate limiting",
+      "acceptance_criteria": [
+        "services/scraper.py exists",
+        "PoeDBScraper class exists",
+        "Uses requests and BeautifulSoup",
+        "Implements rate limiting (1-2 second delays)",
+        "Has configurable delay parameter",
+        "Handles HTTP errors gracefully",
+        "Has user-agent header set",
+        "Can fetch individual pages"
+      ],
+      "test_steps": [
+        "Instantiate PoeDBScraper",
+        "Test fetching a sample poedb.tw page",
+        "Verify rate limiting is working",
+        "Test error handling for 404",
+        "Test error handling for rate limiting"
+      ]
+    },
+    {
+      "id": "task-17",
+      "title": "Implement category page scraper for poedb.tw",
+      "feature": "Knowledge Base Scraper",
+      "dependencies": ["task-16"],
+      "description": "Add method to scrape category index pages (Unique, Gem, Passive_Skill, etc.) and extract item/skill links",
+      "acceptance_criteria": [
+        "scrape_category() method exists",
+        "Accepts category name and URL",
+        "Extracts all item/skill links from category page",
+        "Returns list of URLs with metadata",
+        "Handles pagination if present",
+        "Filters out non-item links",
+        "Returns structured data with titles and URLs"
+      ],
+      "test_steps": [
+        "Test scraping Unique category",
+        "Verify links are extracted",
+        "Check pagination handling",
+        "Verify metadata is captured",
+        "Test with multiple categories"
+      ]
+    },
+    {
+      "id": "task-18",
+      "title": "Implement item detail page scraper",
+      "feature": "Knowledge Base Scraper",
+      "dependencies": ["task-16"],
+      "description": "Add method to scrape individual item pages and extract name, stats, image URL, base type, requirements, modifiers, and flavor text",
+      "acceptance_criteria": [
+        "scrape_item() method exists",
+        "Accepts item URL",
+        "Extracts item name/title",
+        "Extracts item stats and modifiers",
+        "Extracts image URL from poecdn.com or poedb.tw",
+        "Extracts base type",
+        "Extracts level requirements",
+        "Extracts flavor text if present",
+        "Extracts rarity for color coding",
+        "Returns structured dictionary matching ChromaDB schema"
+      ],
+      "test_steps": [
+        "Test scraping a unique item page",
+        "Verify all fields are extracted",
+        "Check image URL is captured",
+        "Verify stats are parsed correctly",
+        "Test with different item types"
+      ]
+    },
+    {
+      "id": "task-19",
+      "title": "Implement game version detection in scraper",
+      "feature": "Knowledge Base Scraper",
+      "dependencies": ["task-18"],
+      "description": "Add logic to detect and tag items as PoE1 or PoE2 based on URL patterns or page content",
+      "acceptance_criteria": [
+        "detect_game_version() method exists",
+        "Detects PoE1 vs PoE2 from URL structure",
+        "Validates game version from page content if needed",
+        "Returns 'poe1' or 'poe2'",
+        "Handles edge cases gracefully"
+      ],
+      "test_steps": [
+        "Test with PoE1 URLs",
+        "Test with PoE2 URLs",
+        "Verify correct detection",
+        "Test edge cases"
+      ]
+    },
+    {
+      "id": "task-20",
+      "title": "Create ChromaDB indexer for scraped data",
+      "feature": "Knowledge Base Scraper",
+      "dependencies": ["task-6", "task-18", "task-19"],
+      "description": "Create indexer function to transform scraped item data into ChromaDB documents with proper metadata structure",
+      "acceptance_criteria": [
+        "index_items() function exists",
+        "Accepts list of scraped item dictionaries",
+        "Transforms data into ChromaDB format",
+        "Creates embeddings for item descriptions",
+        "Adds all required metadata fields",
+        "Handles batch indexing",
+        "Returns count of indexed documents",
+        "Handles duplicate items gracefully"
+      ],
+      "test_steps": [
+        "Test indexing sample items",
+        "Verify ChromaDB collection is populated",
+        "Check metadata structure",
+        "Test batch indexing",
+        "Verify duplicate handling"
+      ]
+    },
+    {
+      "id": "task-21",
+      "title": "Create scraping job manager",
+      "feature": "Knowledge Base Scraper",
+      "dependencies": ["task-17", "task-20"],
+      "description": "Create job manager to track scraping progress, handle concurrent scraping, and report status",
+      "acceptance_criteria": [
+        "ScrapeJobManager class exists",
+        "Tracks job status (pending, running, completed, failed)",
+        "Stores pages scraped count",
+        "Stores documents indexed count",
+        "Provides status endpoint data",
+        "Handles job cancellation",
+        "Persists job state to file or database"
+      ],
+      "test_steps": [
+        "Create a scrape job",
+        "Monitor job status",
+        "Verify counts are updated",
+        "Test job cancellation",
+        "Check status persistence"
+      ]
+    },
+    {
+      "id": "task-22",
+      "title": "Create scrape trigger endpoint POST /api/admin/scrape",
+      "feature": "Knowledge Base Scraper",
+      "dependencies": ["task-21"],
+      "description": "Implement admin endpoint to trigger scraping with optional game filter and depth parameter",
+      "acceptance_criteria": [
+        "POST /api/admin/scrape endpoint exists",
+        "Accepts JSON with game and depth fields",
+        "Returns job ID in response",
+        "Returns status message",
+        "Starts scraping job asynchronously",
+        "Validates game parameter (poe1, poe2, or null for both)",
+        "Validates depth parameter (shallow or deep)"
+      ],
+      "test_steps": [
+        "POST to /api/admin/scrape with game='poe1'",
+        "Verify job ID is returned",
+        "Check status is 'started'",
+        "Test with game=null for both games",
+        "Test invalid game parameter"
+      ]
+    },
+    {
+      "id": "task-23",
+      "title": "Create scrape status endpoint GET /api/admin/scrape/status",
+      "feature": "Knowledge Base Scraper",
+      "dependencies": ["task-22"],
+      "description": "Implement endpoint to get current scraping status including progress and counts",
+      "acceptance_criteria": [
+        "GET /api/admin/scrape/status endpoint exists",
+        "Accepts job_id query parameter",
+        "Returns job status",
+        "Returns pages scraped count",
+        "Returns documents indexed count",
+        "Returns current category being scraped",
+        "Returns error message if failed",
+        "Returns 404 for invalid job ID"
+      ],
+      "test_steps": [
+        "Start a scrape job",
+        "Query status endpoint",
+        "Verify counts increment",
+        "Check status updates",
+        "Test with invalid job ID"
+      ]
+    },
+    {
+      "id": "task-24",
+      "title": "Create last scrape timestamp storage",
+      "feature": "Data Freshness",
+      "dependencies": ["task-21"],
+      "description": "Create mechanism to store and retrieve last scrape timestamp for data freshness display",
+      "acceptance_criteria": [
+        "Last scrape timestamp is persisted",
+        "Stored in separate file or database",
+        "Updated on successful scrape completion",
+        "Includes timestamp for each game version",
+        "Can be retrieved via API"
+      ],
+      "test_steps": [
+        "Complete a scrape job",
+        "Verify timestamp is saved",
+        "Check timestamp persists across restarts",
+        "Verify separate timestamps for PoE1 and PoE2"
+      ]
+    },
+    {
+      "id": "task-25",
+      "title": "Create data freshness endpoint GET /api/freshness",
+      "feature": "Data Freshness",
+      "dependencies": ["task-24"],
+      "description": "Implement endpoint to return last scrape timestamps with relative time calculations",
+      "acceptance_criteria": [
+        "GET /api/freshness endpoint exists",
+        "Returns last scrape timestamp",
+        "Returns relative time (e.g., '2 hours ago')",
+        "Returns separate timestamps for PoE1 and PoE2",
+        "Includes staleness warning if > 30 days",
+        "Handles case when no scrape has occurred"
+      ],
+      "test_steps": [
+        "Call GET /api/freshness",
+        "Verify timestamp is returned",
+        "Check relative time format",
+        "Test with recent scrape",
+        "Test with old scrape (>30 days)",
+        "Test with no scrape data"
+      ]
+    },
+    {
+      "id": "task-26",
+      "title": "Create chat endpoint POST /api/chat",
+      "feature": "Chat API",
+      "dependencies": ["task-13", "task-14", "task-15"],
+      "description": "Implement chat endpoint that accepts message, game version, and optional build context, returns streaming response",
+      "acceptance_criteria": [
+        "POST /api/chat endpoint exists",
+        "Accepts ChatRequest model",
+        "Validates message is not empty",
+        "Validates game is 'poe1' or 'poe2'",
+        "Returns Server-Sent Events stream",
+        "Includes conversation_id in response",
+        "Passes build context to RAG chain",
+        "Handles errors gracefully"
+      ],
+      "test_steps": [
+        "POST valid chat request",
+        "Verify streaming response starts",
+        "Check token events are received",
+        "Test with empty message (should fail)",
+        "Test with invalid game (should fail)",
+        "Test with build_context"
+      ]
+    },
+    {
+      "id": "task-27",
+      "title": "Implement conversation history management",
+      "feature": "Chat API",
+      "dependencies": ["task-26"],
+      "description": "Add SQLite-based conversation history storage with messages table",
+      "acceptance_criteria": [
+        "SQLite database created for conversations",
+        "conversations table exists",
+        "messages table exists",
+        "New conversation created on first message",
+        "Messages stored with conversation_id",
+        "Citations stored as JSON",
+        "Conversation can be retrieved by ID"
+      ],
+      "test_steps": [
+        "Send first message",
+        "Verify conversation is created",
+        "Send follow-up message",
+        "Verify message is stored",
+        "Retrieve conversation history",
+        "Check citations are stored"
+      ]
+    },
+    {
+      "id": "task-28",
+      "title": "Create config endpoint GET /api/config",
+      "feature": "Configuration Panel",
+      "dependencies": ["task-3"],
+      "description": "Implement endpoint to return current configuration (LLM provider, embedding provider, base URLs)",
+      "acceptance_criteria": [
+        "GET /api/config endpoint exists",
+        "Returns current LLM provider",
+        "Returns current embedding provider",
+        "Returns base URLs for Ollama and LM Studio",
+        "Does not return API keys",
+        "Returns valid JSON"
+      ],
+      "test_steps": [
+        "Call GET /api/config",
+        "Verify all config fields are present",
+        "Check API keys are not exposed",
+        "Test with different configurations"
+      ]
+    },
+    {
+      "id": "task-29",
+      "title": "Create config update endpoint PUT /api/config",
+      "feature": "Configuration Panel",
+      "dependencies": ["task-28"],
+      "description": "Implement endpoint to update configuration (LLM provider, embedding provider, API keys, base URLs)",
+      "acceptance_criteria": [
+        "PUT /api/config endpoint exists",
+        "Accepts ConfigRequest model",
+        "Updates LLM provider",
+        "Updates embedding provider",
+        "Updates API keys",
+        "Updates base URLs",
+        "Validates provider values",
+        "Validates URLs format",
+        "Persists changes to environment or storage"
+      ],
+      "test_steps": [
+        "PUT new LLM provider",
+        "Verify config is updated",
+        "PUT new base URL",
+        "Test invalid provider (should fail)",
+        "Test invalid URL (should fail)"
+      ]
+    },
+    {
+      "id": "task-30",
+      "title": "Create React + Vite + TypeScript project structure",
+      "feature": "Frontend Foundation",
+      "dependencies": [],
+      "description": "Set up frontend project with Vite, React, TypeScript, and basic folder structure",
+      "acceptance_criteria": [
+        "frontend/ directory exists",
+        "package.json with React, Vite, TypeScript dependencies",
+        "tsconfig.json with appropriate settings",
+        "vite.config.ts configured",
+        "Folders: src/components, src/services, src/hooks, src/types, src/utils",
+        "Index.html and main.tsx entry points",
+        "App.tsx root component"
+      ],
+      "test_steps": [
+        "Run npm install",
+        "Run npm run dev",
+        "Verify app loads in browser",
+        "Check TypeScript compilation",
+        "Verify folder structure"
+      ]
+    },
+    {
+      "id": "task-31",
+      "title": "Install and configure Tailwind CSS with PoE theme",
+      "feature": "Frontend Foundation",
+      "dependencies": ["task-30"],
+      "description": "Install Tailwind CSS and configure with PoE color palette (dark, gold, red, blue)",
+      "acceptance_criteria": [
+        "Tailwind CSS installed",
+        "tailwind.config.js exists",
+        "Custom colors defined: blood-red (#7b1a1a), gold (#c8aa6e), ethereal-blue (#4a90d9)",
+        "Background colors: near-black (#0c0c0e), dark-gray (#1a1a1d)",
+        "Text colors: off-white (#e8e0d5), cream (#d4c4a8)",
+        "Dark mode configuration",
+        "Custom fonts configured"
+      ],
+      "test_steps": [
+        "Check tailwind.config.js",
+        "Verify custom colors are defined",
+        "Test utility classes in App component",
+        "Check dark mode is default"
+      ]
+    },
+    {
+      "id": "task-32",
+      "title": "Create TypeScript types for API contracts",
+      "feature": "Frontend Foundation",
+      "dependencies": ["task-30"],
+      "description": "Create types/index.ts with interfaces matching backend API models",
+      "acceptance_criteria": [
+        "types/index.ts exists",
+        "ChatRequest interface defined",
+        "ChatMessage interface defined",
+        "ItemType enum defined",
+        "ItemCard interface with all fields",
+        "Citation interface defined",
+        "Config interface defined",
+        "ScrapeRequest interface defined",
+        "ScrapeStatus interface defined",
+        "GameVersion type ('poe1' | 'poe2')"
+      ],
+      "test_steps": [
+        "Import types from types/index.ts",
+        "Verify all interfaces match backend models",
+        "Check TypeScript compilation",
+        "Test type usage in components"
+      ]
+    },
+    {
+      "id": "task-33",
+      "title": "Create API client with axios and streaming support",
+      "feature": "Frontend Foundation",
+      "dependencies": ["task-32"],
+      "description": "Create services/api.ts with axios instance and streaming chat function",
+      "acceptance_criteria": [
+        "services/api.ts exists",
+        "Axios instance with base URL configured",
+        "chat() function with SSE streaming",
+        "getConfig() function",
+        "updateConfig() function",
+        "getFreshness() function",
+        "triggerScrape() function (admin)",
+        "getScrapeStatus() function (admin)",
+        "Proper TypeScript types",
+        "Error handling"
+      ],
+      "test_steps": [
+        "Import API client",
+        "Test getConfig()",
+        "Test getFreshness()",
+        "Test chat() streaming",
+        "Verify error handling"
+      ]
+    },
+    {
+      "id": "task-34",
+      "title": "Create main layout component with header",
+      "feature": "Chat Interface",
+      "dependencies": ["task-31"],
+      "description": "Create Layout component with header showing app title, game selector, settings button, build context, and freshness indicator",
+      "acceptance_criteria": [
+        "components/Layout.tsx exists",
+        "Header with app title and icon",
+        "Game version dropdown (PoE1/PoE2)",
+        "Settings gear icon button",
+        "Build context display in header",
+        "Data freshness indicator",
+        "PoE-styled header with gold borders",
+        "Responsive design"
+      ],
+      "test_steps": [
+        "Render Layout component",
+        "Verify header displays correctly",
+        "Check game selector is visible",
+        "Check settings button is visible",
+        "Verify PoE styling"
+      ]
+    },
+    {
+      "id": "task-35",
+      "title": "Create chat message list component",
+      "feature": "Chat Interface",
+      "dependencies": ["task-34"],
+      "description": "Create MessageList component to display chat history with scrolling and auto-scroll to bottom",
+      "acceptance_criteria": [
+        "components/MessageList.tsx exists",
+        "Displays list of messages",
+        "User messages styled differently from assistant",
+        "Auto-scrolls to bottom on new message",
+        "Supports manual scrolling",
+        "Loading/skeleton state",
+        "Empty state message",
+        "Dark PoE-themed styling"
+      ],
+      "test_steps": [
+        "Render MessageList with messages",
+        "Verify user/assistant styling differs",
+        "Test auto-scroll behavior",
+        "Test empty state",
+        "Test loading state"
+      ]
+    },
+    {
+      "id": "task-36",
+      "title": "Create chat input component",
+      "feature": "Chat Interface",
+      "dependencies": ["task-34"],
+      "description": "Create ChatInput component with textarea, send button, and keyboard shortcuts",
+      "acceptance_criteria": [
+        "components/ChatInput.tsx exists",
+        "Textarea with auto-resize",
+        "Send button with icon",
+        "Enter to send, Shift+Enter for newline",
+        "Input validation (not empty)",
+        "Disabled state while loading",
+        "Focus management",
+        "Gold border on focus",
+        "Dark recessed styling"
+      ],
+      "test_steps": [
+        "Render ChatInput component",
+        "Test Enter key sends message",
+        "Test Shift+Enter adds newline",
+        "Test empty input validation",
+        "Test disabled state",
+        "Check focus management"
+      ]
+    },
+    {
+      "id": "task-37",
+      "title": "Create typing indicator component",
+      "feature": "Chat Interface",
+      "dependencies": ["task-34"],
+      "description": "Create TypingIndicator component with subtle glow animation for AI response generation",
+      "acceptance_criteria": [
+        "components/TypingIndicator.tsx exists",
+        "Animated dots or glow effect",
+        "Subtle, non-distracting animation",
+        "PoE-themed styling",
+        "Smooth fade in/out"
+      ],
+      "test_steps": [
+        "Render TypingIndicator",
+        "Verify animation plays",
+        "Check styling matches theme",
+        "Test fade transitions"
+      ]
+    },
+    {
+      "id": "task-38",
+      "title": "Create markdown renderer component",
+      "feature": "Chat Interface",
+      "dependencies": ["task-34"],
+      "description": "Create MarkdownRenderer component to format assistant responses with markdown",
+      "acceptance_criteria": [
+        "components/MarkdownRenderer.tsx exists",
+        "Renders markdown to HTML",
+        "Supports bold, italic, code blocks",
+        "Supports lists and links",
+        "Sanitizes HTML for security",
+        "PoE-themed styling for code blocks",
+        "Custom link styling"
+      ],
+      "test_steps": [
+        "Test with various markdown",
+        "Verify code blocks render",
+        "Verify lists render",
+        "Check HTML sanitization",
+        "Test link styling"
+      ]
+    },
+    {
+      "id": "task-39",
+      "title": "Create item card component with PoE styling",
+      "feature": "Item Display Cards",
+      "dependencies": ["task-34"],
+      "description": "Create ItemCard component with item image, stats panel, and rarity-based color coding",
+      "acceptance_criteria": [
+        "components/ItemCard.tsx exists",
+        "Displays item image from URL",
+        "Gold border for unique items",
+        "Yellow border for rare items",
+        "White text for item name",
+        "Colored text based on rarity",
+        "Stats panel with modifiers",
+        "Flavor text in italics",
+        "Requirements section",
+        "Expandable details",
+        "Link to poedb.tw"
+      ],
+      "test_steps": [
+        "Render ItemCard with unique item",
+        "Verify gold border",
+        "Test with rare item",
+        "Verify expand/collapse",
+        "Check poedb.tw link",
+        "Test image loading"
+      ]
+    },
+    {
+      "id": "task-40",
+      "title": "Create item card grid layout",
+      "feature": "Item Display Cards",
+      "dependencies": ["task-39"],
+      "description": "Create ItemCardGrid component to display multiple items in responsive grid",
+      "acceptance_criteria": [
+        "components/ItemCardGrid.tsx exists",
+        "Responsive grid layout",
+        "1 column on mobile",
+        "2 columns on tablet",
+        "3 columns on desktop",
+        "Gap between cards",
+        "Handles empty state"
+      ],
+      "test_steps": [
+        "Render grid with multiple items",
+        "Test responsive breakpoints",
+        "Check gap spacing",
+        "Test empty state"
+      ]
+    },
+    {
+      "id": "task-41",
+      "title": "Create citation component",
+      "feature": "Chat Interface",
+      "dependencies": ["task-34"],
+      "description": "Create Citation component to display source links with PoE tooltip styling",
+      "acceptance_criteria": [
+        "components/Citation.tsx exists",
+        "Displays citation title",
+        "Links to source URL",
+        "PoE tooltip styling",
+        "Gold border",
+        "Hover effects",
+        "External link icon"
+      ],
+      "test_steps": [
+        "Render Citation component",
+        "Verify link works",
+        "Check tooltip styling",
+        "Test hover effects"
+      ]
+    },
+    {
+      "id": "task-42",
+      "title": "Create game version selector dropdown",
+      "feature": "Chat Interface",
+      "dependencies": ["task-34"],
+      "description": "Create GameSelector component for PoE1/PoE2 selection with localStorage persistence",
+      "acceptance_criteria": [
+        "components/GameSelector.tsx exists",
+        "Dropdown with PoE1 and PoE2 options",
+        "Persists selection to localStorage",
+        "Loads from localStorage on mount",
+        "Emits change event",
+        "PoE-styled dropdown",
+        "Gold accent"
+      ],
+      "test_steps": [
+        "Render GameSelector",
+        "Select PoE1, verify localStorage",
+        "Reload, verify selection persists",
+        "Test change event",
+        "Check styling"
+      ]
+    },
+    {
+      "id": "task-43",
+      "title": "Create clear conversation button",
+      "feature": "Chat Interface",
+      "dependencies": ["task-34"],
+      "description": "Create ClearConversation button with confirmation and localStorage cleanup",
+      "acceptance_criteria": [
+        "components/ClearConversation.tsx exists",
+        "Button with trash icon",
+        "Shows confirmation dialog",
+        "Clears conversation state",
+        "Clears localStorage if needed",
+        "PoE-styled button",
+        "Red glow on hover"
+      ],
+      "test_steps": [
+        "Click button, verify confirmation",
+        "Confirm, verify conversation cleared",
+        "Test cancel behavior",
+        "Check styling"
+      ]
+    },
+    {
+      "id": "task-44",
+      "title": "Create settings panel slide-in component",
+      "feature": "Configuration Panel",
+      "dependencies": ["task-34"],
+      "description": "Create SettingsPanel component that slides in from right with configuration form",
+      "acceptance_criteria": [
+        "components/SettingsPanel.tsx exists",
+        "Slide-in animation from right",
+        "Close button (X) in header",
+        "Gold border header",
+        "Form with all config options",
+        "LLM provider dropdown",
+        "Embedding provider dropdown",
+        "API key inputs (password type)",
+        "Base URL inputs",
+        "Save button",
+        "Backdrop overlay"
+      ],
+      "test_steps": [
+        "Open settings panel",
+        "Verify slide animation",
+        "Test close button",
+        "Test backdrop click to close",
+        "Check form fields"
+      ]
+    },
+    {
+      "id": "task-45",
+      "title": "Create LLM provider selector in settings",
+      "feature": "Configuration Panel",
+      "dependencies": ["task-44"],
+      "description": "Add LLMProviderSelector component with OpenAI, Anthropic, Ollama, LM Studio options",
+      "acceptance_criteria": [
+        "LLMProviderSelector component exists",
+        "Dropdown with 4 provider options",
+        "Shows current selection",
+        "Conditional fields for API keys",
+        "Conditional fields for base URLs",
+        "PoE-styled dropdown"
+      ],
+      "test_steps": [
+        "Select each provider",
+        "Verify conditional fields appear",
+        "Test OpenAI (shows API key)",
+        "Test Ollama (shows base URL)",
+        "Check styling"
+      ]
+    },
+    {
+      "id": "task-46",
+      "title": "Create API key input components",
+      "feature": "Configuration Panel",
+      "dependencies": ["task-44"],
+      "description": "Create ApiKeyInput components for OpenAI and Anthropic with password masking",
+      "acceptance_criteria": [
+        "ApiKeyInput component exists",
+        "Password type input",
+        "Show/hide toggle button",
+        "Placeholder text",
+        "Validation for key format",
+        "PoE-styled input"
+      ],
+      "test_steps": [
+        "Type API key, verify masking",
+        "Test show/hide toggle",
+        "Test validation",
+        "Check styling"
+      ]
+    },
+    {
+      "id": "task-47",
+      "title": "Create embedding provider selector in settings",
+      "feature": "Configuration Panel",
+      "dependencies": ["task-44"],
+      "description": "Add EmbeddingProviderSelector with Local, Ollama, LM Studio, OpenAI options",
+      "acceptance_criteria": [
+        "EmbeddingProviderSelector component exists",
+        "Dropdown with 4 options",
+        "Local is default",
+        "Shows model selection for local",
+        "Shows conditional fields for other providers"
+      ],
+      "test_steps": [
+        "Select each provider",
+        "Verify conditional fields",
+        "Test model selection",
+        "Check default value"
+      ]
+    },
+    {
+      "id": "task-48",
+      "title": "Implement settings save functionality",
+      "feature": "Configuration Panel",
+      "dependencies": ["task-45", "task-46", "task-47"],
+      "description": "Add save handler to settings form that calls API and persists to localStorage",
+      "acceptance_criteria": [
+        "Save button triggers API call",
+        "Settings persisted to localStorage",
+        "Success message displayed",
+        "Error handling for API failures",
+        "Form validation before save",
+        "Loading state during save"
+      ],
+      "test_steps": [
+        "Change settings, click save",
+        "Verify API call is made",
+        "Check localStorage is updated",
+        "Test with invalid input",
+        "Test API error handling"
+      ]
+    },
+    {
+      "id": "task-49",
+      "title": "Create build context selector component",
+      "feature": "Build Context",
+      "dependencies": ["task-34"],
+      "description": "Create BuildContextSelector for class/ascendancy selection with localStorage persistence",
+      "acceptance_criteria": [
+        "components/BuildContextSelector.tsx exists",
+        "Class dropdown (Marauder, Witch, etc.)",
+        "Ascendancy dropdown (filtered by class)",
+        "Persists to localStorage",
+        "Displays in header when set",
+        "Clear/change button",
+        "Passes to chat API"
+      ],
+      "test_steps": [
+        "Select class, verify ascendancies",
+        "Select ascendancy, verify localStorage",
+        "Reload, verify persistence",
+        "Test clear button",
+        "Check header display"
+      ]
+    },
+    {
+      "id": "task-50",
+      "title": "Create build context display in header",
+      "feature": "Build Context",
+      "dependencies": ["task-49"],
+      "description": "Add build context display to header showing current class/ascendancy selection",
+      "acceptance_criteria": [
+        "Build context shown in header",
+        "Format: 'Build: Class/Ascendancy'",
+        "Hidden if not set",
+        "Click to open selector",
+        "PoE-styled text"
+      ],
+      "test_steps": [
+        "Set build context",
+        "Verify display in header",
+        "Test click opens selector",
+        "Clear context, verify hidden"
+      ]
+    },
+    {
+      "id": "task-51",
+      "title": "Integrate build context with chat API",
+      "feature": "Build Context",
+      "dependencies": ["task-50"],
+      "description": "Pass build context from localStorage to chat API requests",
+      "acceptance_criteria": [
+        "Build context included in chat requests",
+        "Format: 'Class/Ascendancy'",
+        "Only sent if set",
+        "Retrieved from localStorage",
+        "Tested with actual API"
+      ],
+      "test_steps": [
+        "Set build context",
+        "Send chat message",
+        "Verify context in request payload",
+        "Clear context, send message",
+        "Verify context not in request"
+      ]
+    },
+    {
+      "id": "task-52",
+      "title": "Create data freshness indicator component",
+      "feature": "Data Freshness",
+      "dependencies": ["task-34"],
+      "description": "Create FreshnessIndicator component showing last scrape time with relative time",
+      "acceptance_criteria": [
+        "components/FreshnessIndicator.tsx exists",
+        "Displays 'Data updated: X ago'",
+        "Fetches from /api/freshness",
+        "Updates every minute",
+        "Shows warning if > 30 days",
+        "Red/gold color for stale data",
+        "Normal color for fresh data"
+      ],
+      "test_steps": [
+        "Render FreshnessIndicator",
+        "Verify time is displayed",
+        "Test with fresh data",
+        "Test with stale data (>30 days)",
+        "Check auto-update"
+      ]
+    },
+    {
+      "id": "task-53",
+      "title": "Create chat state management hook",
+      "feature": "Chat Interface",
+      "dependencies": ["task-32"],
+      "description": "Create useChat hook for managing chat messages, loading state, and streaming",
+      "acceptance_criteria": [
+        "hooks/useChat.ts exists",
+        "Manages messages state",
+        "Manages loading state",
+        "Handles streaming responses",
+        "sendMessage function",
+        "clearMessages function",
+        "Integrates with API client",
+        "Handles errors"
+      ],
+      "test_steps": [
+        "Use hook in component",
+        "Send message, verify state updates",
+        "Test streaming behavior",
+        "Test error handling",
+        "Test clear function"
+      ]
+    },
+    {
+      "id": "task-54",
+      "title": "Create configuration state management hook",
+      "feature": "Configuration Panel",
+      "dependencies": ["task-32"],
+      "description": "Create useConfig hook for managing app configuration with localStorage sync",
+      "acceptance_criteria": [
+        "hooks/useConfig.ts exists",
+        "Manages config state",
+        "Loads from API on mount",
+        "Loads from localStorage",
+        "updateConfig function",
+        "Syncs with API",
+        "Persists to localStorage"
+      ],
+      "test_steps": [
+        "Use hook in component",
+        "Verify config loads",
+        "Update config, verify API call",
+        "Reload, verify localStorage"
+      ]
+    },
+    {
+      "id": "task-55",
+      "title": "Integrate all components in App.tsx",
+      "feature": "Chat Interface",
+      "dependencies": ["task-34", "task-35", "task-36", "task-53"],
+      "description": "Connect all chat components in App.tsx with state management and event handlers",
+      "acceptance_criteria": [
+        "Layout component wraps app",
+        "MessageList displays messages",
+        "ChatInput sends messages",
+        "useChat hook integrated",
+        "Game selector works",
+        "Settings panel opens",
+        "Clear conversation works",
+        "Typing indicator shows during streaming"
+      ],
+      "test_steps": [
+        "Send message, verify it appears",
+        "Test game selector",
+        "Open settings panel",
+        "Clear conversation",
+        "Verify typing indicator"
+      ]
+    },
+    {
+      "id": "task-56",
+      "title": "Add loading states to all async operations",
+      "feature": "Frontend Polish",
+      "dependencies": ["task-55"],
+      "description": "Add loading indicators and skeleton screens for all async operations (API calls, scraping, etc.)",
+      "acceptance_criteria": [
+        "Loading state for chat messages",
+        "Skeleton for message list",
+        "Loading state for settings",
+        "Loading state for build context",
+        "Loading state for freshness",
+        "Subtle glow animation",
+        "No blocking spinners"
+      ],
+      "test_steps": [
+        "Trigger each async operation",
+        "Verify loading states appear",
+        "Check skeleton screens",
+        "Test error states"
+      ]
+    },
+    {
+      "id": "task-57",
+      "title": "Add error handling and user feedback",
+      "feature": "Frontend Polish",
+      "dependencies": ["task-55"],
+      "description": "Implement error boundaries, error messages, and user feedback for all failure scenarios",
+      "acceptance_criteria": [
+        "Error boundary wraps app",
+        "Error messages displayed to user",
+        "Retry options for failed requests",
+        "Toast notifications for errors",
+        "Graceful degradation",
+        "User-friendly error text"
+      ],
+      "test_steps": [
+        "Test API failures",
+        "Verify error messages appear",
+        "Test retry functionality",
+        "Test error boundary",
+        "Check toast notifications"
+      ]
+    },
+    {
+      "id": "task-58",
+      "title": "Implement responsive design for mobile",
+      "feature": "Frontend Polish",
+      "dependencies": ["task-55"],
+      "description": "Add responsive breakpoints and mobile optimizations for all components",
+      "acceptance_criteria": [
+        "Mobile breakpoint at 640px",
+        "Tablet breakpoint at 768px",
+        "Desktop breakpoint at 1024px",
+        "Chat input usable on mobile",
+        "Settings panel usable on mobile",
+        "Item cards stack on mobile",
+        "Touch-friendly targets"
+      ],
+      "test_steps": [
+        "Test at 320px width",
+        "Test at 640px width",
+        "Test at 1024px width",
+        "Verify touch targets",
+        "Check item card layout"
+      ]
+    },
+    {
+      "id": "task-59",
+      "title": "Add PoE visual effects and animations",
+      "feature": "Frontend Polish",
+      "dependencies": ["task-58"],
+      "description": "Add subtle particle effects, glow animations, and smooth transitions matching PoE aesthetic",
+      "acceptance_criteria": [
+        "Subtle fog/particle background",
+        "Glow effects on interactive elements",
+        "Smooth transitions (no bouncy animations)",
+        "Hover effects on buttons",
+        "Focus states with gold glow",
+        "Atmospheric feel"
+      ],
+      "test_steps": [
+        "Check background effects",
+        "Test hover effects",
+        "Test focus states",
+        "Verify transitions are smooth",
+        "Check animations are subtle"
+      ]
+    },
+    {
+      "id": "task-60",
+      "title": "Create end-to-end chat flow test",
+      "feature": "Testing",
+      "dependencies": ["task-26", "task-55"],
+      "description": "Test complete chat flow from user input to AI response with citations",
+      "acceptance_criteria": [
+        "User can send message",
+        "Message appears in chat",
+        "AI streams response",
+        "Citations display",
+        "Item cards render if present",
+        "Typing indicator shows",
+        "Game selector filters results"
+      ],
+      "test_steps": [
+        "Select PoE1",
+        "Send 'What are good leveling uniques?'",
+        "Verify response streams",
+        "Check citations appear",
+        "Check item cards render",
+        "Switch to PoE2, ask same question",
+        "Verify different results"
+      ]
+    },
+    {
+      "id": "task-61",
+      "title": "Create RAG pipeline integration test",
+      "feature": "Testing",
+      "dependencies": ["task-13", "task-26"],
+      "description": "Test RAG pipeline with sample data and verify game filtering works correctly",
+      "acceptance_criteria": [
+        "Sample data indexed in ChromaDB",
+        "PoE1 query returns only PoE1 results",
+        "PoE2 query returns only PoE2 results",
+        "Build context influences results",
+        "Citations are accurate",
+        "Top-k parameter works"
+      ],
+      "test_steps": [
+        "Index sample PoE1 and PoE2 items",
+        "Query with game='poe1'",
+        "Verify only PoE1 items returned",
+        "Query with game='poe2'",
+        "Verify only PoE2 items returned",
+        "Test with build context"
+      ]
+    },
+    {
+      "id": "task-62",
+      "title": "Create scraper integration test",
+      "feature": "Testing",
+      "dependencies": ["task-23"],
+      "description": "Test scraper with actual poedb.tw pages and verify data is indexed correctly",
+      "acceptance_criteria": [
+        "Scraper fetches category page",
+        "Item links are extracted",
+        "Item details are scraped",
+        "Data is indexed in ChromaDB",
+        "Images URLs are captured",
+        "Game version is detected",
+        "Rate limiting works"
+      ],
+      "test_steps": [
+        "Trigger scrape for PoE1",
+        "Monitor status endpoint",
+        "Verify items are indexed",
+        "Check ChromaDB for data",
+        "Verify metadata structure"
+      ]
+    },
+    {
+      "id": "task-63",
+      "title": "Create configuration management test",
+      "feature": "Testing",
+      "dependencies": ["task-29", "task-48"],
+      "description": "Test configuration updates and verify they persist and affect API behavior",
+      "acceptance_criteria": [
+        "Can update LLM provider",
+        "Can update embedding provider",
+        "Can update API keys",
+        "Can update base URLs",
+        "Changes persist across reloads",
+        "New provider is used for requests"
+      ],
+      "test_steps": [
+        "Update LLM provider",
+        "Send chat request",
+        "Verify new provider used",
+        "Reload page",
+        "Verify config persisted",
+        "Test all providers"
+      ]
+    },
+    {
+      "id": "task-64",
+      "title": "Create frontend component tests",
+      "feature": "Testing",
+      "dependencies": ["task-55"],
+      "description": "Write tests for key React components (ItemCard, MessageList, ChatInput)",
+      "acceptance_criteria": [
+        "ItemCard renders correctly",
+        "MessageList handles empty state",
+        "ChatInput validates input",
+        "Settings panel opens/closes",
+        "Game selector persists selection"
+      ],
+      "test_steps": [
+        "Run component tests",
+        "Verify all tests pass",
+        "Check coverage",
+        "Test user interactions"
+      ]
+    },
+    {
+      "id": "task-65",
+      "title": "Create deployment documentation",
+      "feature": "Documentation",
+      "dependencies": ["task-8", "task-30"],
+      "description": "Create README with setup instructions, deployment guide, and configuration options",
+      "acceptance_criteria": [
+        "README.md exists",
+        "Setup instructions for backend",
+        "Setup instructions for frontend",
+        "Environment variables documented",
+        "Deployment guide included",
+        "Configuration options explained",
+        "Troubleshooting section"
+      ],
+      "test_steps": [
+        "Follow setup instructions",
+        "Verify each step works",
+        "Check all env vars are documented",
+        "Test deployment process"
+      ]
+    },
+    {
+      "id": "task-66",
+      "title": "Create API documentation",
+      "feature": "Documentation",
+      "dependencies": ["task-29"],
+      "description": "Document all API endpoints with request/response examples",
+      "acceptance_criteria": [
+        "API documentation exists",
+        "All endpoints documented",
+        "Request examples provided",
+        "Response examples provided",
+        "Error codes documented",
+        "Authentication explained"
+      ],
+      "test_steps": [
+        "Review API docs",
+        "Verify all endpoints listed",
+        "Check examples are accurate",
+        "Test endpoints match docs"
+      ]
+    },
+    {
+      "id": "task-67",
+      "title": "Perform end-to-end system testing",
+      "feature": "Testing",
+      "dependencies": ["task-60", "task-61", "task-62", "task-63", "task-64"],
+      "description": "Run comprehensive end-to-end tests covering all features and user flows",
+      "acceptance_criteria": [
+        "Chat flow works end-to-end",
+        "RAG filtering works correctly",
+        "Scraper indexes data",
+        "Configuration persists",
+        "Build context works",
+        "Freshness indicator accurate",
+        "All features integrated",
+        "No critical bugs"
+      ],
+      "test_steps": [
+        "Test complete user journey",
+        "Test all features",
+        "Test error scenarios",
+        "Test on mobile",
+        "Test with different configurations"
+      ]
+    },
+    {
+      "id": "task-68",
+      "title": "Performance optimization and load testing",
+      "feature": "Polish",
+      "dependencies": ["task-67"],
+      "description": "Optimize RAG query performance, implement response caching, and test under load",
+      "acceptance_criteria": [
+        "RAG queries complete in < 3 seconds",
+        "Chat responses start streaming in < 1 second",
+        "Scraper handles rate limiting",
+        "ChromaDB queries are optimized",
+        "Frontend bundle size optimized",
+        "No memory leaks"
+      ],
+      "test_steps": [
+        "Measure query performance",
+        "Test with multiple concurrent users",
+        "Check memory usage",
+        "Analyze bundle size",
+        "Test scraper performance"
+      ]
+    }
+  ],
+  "execution_order": [
+    "task-1", "task-30",
+    "task-2", "task-31", "task-32",
+    "task-3", "task-33",
+    "task-4", "task-5", "task-6", "task-7",
+    "task-8", "task-34",
+    "task-9", "task-10", "task-11",
+    "task-12", "task-13",
+    "task-14", "task-15",
+    "task-16", "task-17", "task-18", "task-19",
+    "task-20", "task-21",
+    "task-22", "task-23",
+    "task-24", "task-25",
+    "task-26", "task-27",
+    "task-28", "task-29",
+    "task-35", "task-36", "task-37", "task-38",
+    "task-39", "task-40",
+    "task-41", "task-42", "task-43",
+    "task-44", "task-45", "task-46", "task-47", "task-48",
+    "task-49", "task-50", "task-51",
+    "task-52",
+    "task-53", "task-54",
+    "task-55",
+    "task-56", "task-57", "task-58", "task-59",
+    "task-60", "task-61", "task-62", "task-63", "task-64",
+    "task-65", "task-66",
+    "task-67", "task-68"
+  ],
+  "metadata": {
+    "total_tasks": 68,
+    "feature_count": 7
+  }
+}
