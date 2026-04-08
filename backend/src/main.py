@@ -14,6 +14,14 @@ from src.services.embeddings import (
     create_embeddings,
     EmbeddingError
 )
+from src.services.vector_store import (
+    VectorStore,
+    VectorStoreError,
+    get_embeddings,
+    get_vector_store,
+    check_vector_store_health,
+)
+from langchain_core.documents import Document
 
 # Get settings instance
 settings = get_settings()
@@ -36,6 +44,20 @@ class CreateEmbeddingsRequest(BaseModel):
     api_key: str | None = None
     model_name: str | None = None
     test_text: str = "This is a test query"
+
+
+class VectorStoreSearchRequest(BaseModel):
+    """Request model for vector store similarity search."""
+    query: str
+    k: int = 4
+    game: str | None = None
+
+
+class VectorStoreAddRequest(BaseModel):
+    """Request model for adding documents to vector store."""
+    texts: list[str]
+    metadatas: list[dict] | None = None
+
 
 # Create FastAPI app instance
 app = FastAPI(
@@ -79,14 +101,16 @@ async def health_check(response: Response):
             - status: Overall health status ("healthy" or "degraded")
             - chromadb_status: ChromaDB connection status ("connected" or "disconnected")
             - embeddings_status: Embeddings service status ("ready" or "error")
+            - vectorstore_status: Vector store status ("ready" or "error")
             - version: Application version
             - chromadb_message: Detailed ChromaDB status message
             - embeddings_message: Detailed embeddings status message
+            - vectorstore_message: Detailed vector store status message
             - timestamp: ISO 8601 timestamp of the health check
 
     HTTP Status Codes:
-        - 200: System is healthy (ChromaDB connected and embeddings ready)
-        - 503: System is degraded (ChromaDB disconnected or embeddings not ready)
+        - 200: System is healthy (all services ready)
+        - 503: System is degraded (any service not ready)
     """
     # Check ChromaDB health
     chromadb_health = check_chromadb_health()
@@ -98,10 +122,16 @@ async def health_check(response: Response):
     embeddings_status = embeddings_health.get("status", "error")
     embeddings_message = embeddings_health.get("message", "Unknown status")
 
+    # Check vector store health
+    vectorstore_health = check_vector_store_health()
+    vectorstore_status = vectorstore_health.get("status", "error")
+
     # Determine overall status
-    # System is "healthy" if both ChromaDB and embeddings are ready
+    # System is "healthy" if all services are ready
     overall_status = "healthy" if (
-        chromadb_status == "connected" and embeddings_status == "ready"
+        chromadb_status == "connected" and
+        embeddings_status == "ready" and
+        vectorstore_status == "ready"
     ) else "degraded"
 
     # Set appropriate HTTP status code
@@ -114,9 +144,11 @@ async def health_check(response: Response):
         "status": overall_status,
         "chromadb_status": chromadb_status,
         "embeddings_status": embeddings_status,
+        "vectorstore_status": vectorstore_status,
         "version": settings.app_version,
         "chromadb_message": chromadb_message,
         "embeddings_message": embeddings_message,
+        "vectorstore_message": vectorstore_health.get("message", "Unknown status"),
         "timestamp": datetime.now(timezone.utc).isoformat(),
     }
 
@@ -301,6 +333,109 @@ async def test_openai_embeddings(request: EmbedTextRequest):
         return result
 
     except EmbeddingError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Unexpected error: {str(e)}")
+
+
+@api_router.get("/test/vectorstore/health", tags=["Testing"])
+async def test_vectorstore_health():
+    """
+    Test endpoint for vector store health check.
+
+    Returns:
+        dict: Vector store health status
+    """
+    try:
+        health = check_vector_store_health()
+        return {
+            "success": True,
+            **health
+        }
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Vector store health check failed: {str(e)}")
+
+
+@api_router.post("/test/vectorstore/add", tags=["Testing"])
+async def test_vectorstore_add(request: VectorStoreAddRequest):
+    """
+    Test endpoint for adding documents to vector store.
+
+    Args:
+        request: Contains texts and optional metadatas
+
+    Returns:
+        dict: Contains information about added documents
+    """
+    try:
+        vector_store = get_vector_store()
+
+        # Create documents
+        if request.metadatas:
+            documents = [
+                Document(page_content=text, metadata=meta)
+                for text, meta in zip(request.texts, request.metadatas)
+            ]
+            ids = vector_store.add_documents(documents)
+        else:
+            ids = vector_store.add_texts(request.texts)
+
+        return {
+            "success": True,
+            "documents_added": len(ids),
+            "ids": ids,
+            "message": f"Successfully added {len(ids)} documents to vector store"
+        }
+    except VectorStoreError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Unexpected error: {str(e)}")
+
+
+@api_router.post("/test/vectorstore/search", tags=["Testing"])
+async def test_vectorstore_search(request: VectorStoreSearchRequest):
+    """
+    Test endpoint for vector store similarity search.
+
+    Args:
+        request: Contains query, k (number of results), and optional game filter
+
+    Returns:
+        dict: Contains search results
+    """
+    try:
+        vector_store = get_vector_store()
+
+        # Perform search with or without game filter
+        if request.game:
+            results = vector_store.search_by_game(
+                query=request.query,
+                game=request.game,
+                k=request.k
+            )
+        else:
+            results = vector_store.similarity_search(
+                query=request.query,
+                k=request.k
+            )
+
+        # Format results
+        formatted_results = []
+        for doc in results:
+            formatted_results.append({
+                "content": doc.page_content,
+                "metadata": doc.metadata
+            })
+
+        return {
+            "success": True,
+            "query": request.query,
+            "game_filter": request.game,
+            "results_count": len(results),
+            "results": formatted_results,
+            "message": f"Found {len(results)} documents"
+        }
+    except VectorStoreError as e:
         raise HTTPException(status_code=400, detail=str(e))
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Unexpected error: {str(e)}")

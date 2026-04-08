@@ -24,6 +24,14 @@ from src.services.vector_store import (
     get_vector_store,
     check_vector_store_health,
 )
+from src.services.rag_chain import (
+    RAGChain,
+    RAGChainError,
+    Citation,
+    RetrievalResult,
+    get_rag_chain,
+    check_rag_chain_health,
+)
 
 __all__ = [
     "ChromaDBManager",
@@ -41,4 +49,10 @@ __all__ = [
     "get_embeddings",
     "get_vector_store",
     "check_vector_store_health",
+    "RAGChain",
+    "RAGChainError",
+    "Citation",
+    "RetrievalResult",
+    "get_rag_chain",
+    "check_rag_chain_health",
 ]
