@@ -1,20 +1,23 @@
 """
 FastAPI application entry point for POE Knowledge Assistant.
 """
-from fastapi import FastAPI
+from fastapi import FastAPI, APIRouter
 from fastapi.middleware.cors import CORSMiddleware
 from src.config import get_settings
-
-app = FastAPI(
-    title="POE Knowledge Assistant API",
-    description="Backend API for POE Knowledge Assistant",
-    version="1.0.0"
-)
 
 # Get settings instance
 settings = get_settings()
 
-# Configure CORS
+# Create FastAPI app instance
+app = FastAPI(
+    title="POE Knowledge Assistant API",
+    description="Backend API for POE Knowledge Assistant - A RAG-based chatbot for Path of Exile game knowledge",
+    version="1.0.0",
+    docs_url="/docs",
+    redoc_url="/redoc"
+)
+
+# Configure CORS middleware for frontend origin
 app.add_middleware(
     CORSMiddleware,
     allow_origins=settings.cors.get_origins_list(),
@@ -23,8 +26,11 @@ app.add_middleware(
     allow_headers=[settings.cors.allow_headers],
 )
 
+# Create base router
+api_router = APIRouter()
 
-@app.get("/")
+
+@api_router.get("/", tags=["Root"])
 async def root():
     """Root endpoint returning API information."""
     return {
@@ -34,13 +40,13 @@ async def root():
     }
 
 
-@app.get("/health")
+@api_router.get("/health", tags=["Health"])
 async def health_check():
     """Health check endpoint."""
     return {"status": "healthy"}
 
 
-@app.get("/api/config")
+@api_router.get("/config", tags=["Configuration"])
 async def get_config():
     """Get current configuration (non-sensitive)."""
     return {
@@ -65,6 +71,10 @@ async def get_config():
             "chunk_size": settings.rag.chunk_size,
         }
     }
+
+
+# Include base router with /api prefix
+app.include_router(api_router, prefix="/api")
 
 
 if __name__ == "__main__":
