@@ -32,6 +32,16 @@ from src.services.rag_chain import (
     get_rag_chain,
     check_rag_chain_health,
 )
+from src.services.llm_provider import (
+    OpenAILLM,
+    AnthropicLLM,
+    OllamaLLM,
+    LMStudioLLM,
+    LLMProviderError,
+    create_llm,
+    get_llm,
+    check_llm_health,
+)
 
 __all__ = [
     "ChromaDBManager",
@@ -55,4 +65,12 @@ __all__ = [
     "RetrievalResult",
     "get_rag_chain",
     "check_rag_chain_health",
+    "OpenAILLM",
+    "AnthropicLLM",
+    "OllamaLLM",
+    "LMStudioLLM",
+    "LLMProviderError",
+    "create_llm",
+    "get_llm",
+    "check_llm_health",
 ]

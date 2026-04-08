@@ -21,6 +21,15 @@ from src.services.vector_store import (
     get_vector_store,
     check_vector_store_health,
 )
+from src.services.llm_provider import (
+    OpenAILLM,
+    AnthropicLLM,
+    OllamaLLM,
+    LMStudioLLM,
+    LLMProviderError,
+    create_llm,
+    check_llm_health,
+)
 from langchain_core.documents import Document
 
 # Get settings instance
@@ -57,6 +66,25 @@ class VectorStoreAddRequest(BaseModel):
     """Request model for adding documents to vector store."""
     texts: list[str]
     metadatas: list[dict] | None = None
+
+
+class CreateLLMRequest(BaseModel):
+    """Request model for testing the LLM provider factory."""
+    provider: str = "openai"
+    api_key: str | None = None
+    model_name: str | None = None
+    temperature: float | None = None
+    max_tokens: int | None = None
+    base_url: str | None = None
+
+
+class LLMGenerateRequest(BaseModel):
+    """Request model for testing LLM generation."""
+    provider: str = "openai"
+    api_key: str | None = None
+    model_name: str | None = None
+    prompt: str = "Hello! What is Path of Exile?"
+    system_prompt: str | None = None
 
 
 # Create FastAPI app instance
@@ -439,6 +467,112 @@ async def test_vectorstore_search(request: VectorStoreSearchRequest):
         raise HTTPException(status_code=400, detail=str(e))
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Unexpected error: {str(e)}")
+
+
+@api_router.get("/test/llm/health", tags=["Testing"])
+async def test_llm_health():
+    """
+    Test endpoint for LLM provider health check.
+
+    Returns:
+        dict: LLM provider health status
+    """
+    try:
+        health = check_llm_health()
+        return {
+            "success": True,
+            **health
+        }
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"LLM health check failed: {str(e)}")
+
+
+@api_router.post("/test/llm/factory", tags=["Testing"])
+async def test_llm_factory(request: CreateLLMRequest):
+    """
+    Test endpoint for the LLM provider factory function.
+
+    This endpoint tests the create_llm factory function which creates
+    the appropriate LLM provider instance based on the provider parameter.
+
+    Args:
+        request: Contains provider and optional configuration parameters
+
+    Returns:
+        dict: Contains information about the created LLM provider instance
+    """
+    try:
+        # Prepare kwargs for factory function
+        kwargs = {}
+        if request.api_key:
+            kwargs['api_key'] = request.api_key
+        if request.model_name:
+            kwargs['model_name'] = request.model_name
+        if request.temperature is not None:
+            kwargs['temperature'] = request.temperature
+        if request.max_tokens:
+            kwargs['max_tokens'] = request.max_tokens
+        if request.base_url:
+            kwargs['base_url'] = request.base_url
+
+        # Create LLM using factory function
+        llm = create_llm(provider=request.provider, **kwargs)
+
+        # Determine the type
+        provider_type = llm.provider_name
+
+        # Get basic info
+        result = {
+            "success": True,
+            "provider_requested": request.provider,
+            "provider_created": provider_type,
+            "model_name": llm.model_name,
+            "is_ready": llm.is_ready(),
+        }
+
+        # Add provider-specific info
+        health = llm.health_check()
+        result["health"] = health
+        result["message"] = health.get("message", "No message")
+
+        return result
+
+    except LLMProviderError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Unexpected error: {str(e)}")
+
+
+@api_router.post("/test/llm/providers", tags=["Testing"])
+async def test_llm_providers():
+    """
+    Test endpoint that lists all available LLM providers.
+
+    Returns:
+        dict: Information about all supported providers and their default config
+    """
+    from src.config import LLMProvider as LLMProviderEnum
+
+    settings = get_settings()
+
+    providers = []
+    for p in LLMProviderEnum:
+        providers.append({
+            "name": p.value,
+            "is_default": p == settings.llm.provider,
+        })
+
+    return {
+        "success": True,
+        "available_providers": providers,
+        "default_provider": settings.llm.provider.value,
+        "default_model_by_provider": {
+            "openai": settings.llm.openai_model,
+            "anthropic": settings.llm.anthropic_model,
+            "ollama": settings.llm.ollama_model,
+            "lmstudio": settings.llm.lmstudio_model,
+        },
+    }
 
 
 # Include base router with /api prefix
