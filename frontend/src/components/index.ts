@@ -2,5 +2,5 @@
 // This file contains reusable UI components
 
 export { Header, Sidebar, MainLayout } from './layout';
-export { ChatMessageList, ChatMessageBubble, MarkdownRenderer } from './chat';
-export type { ChatMessageListProps, ChatMessageBubbleProps } from './chat';
+export { ChatMessageList, ChatMessageBubble, MarkdownRenderer, ChatInput } from './chat';
+export type { ChatMessageListProps, ChatMessageBubbleProps, ChatInputProps } from './chat';
