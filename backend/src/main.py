@@ -2229,6 +2229,164 @@ async def admin_scrape_trigger(request: ScrapeTriggerRequest):
 
 
 # ------------------------------------------------------------------
+# Admin scrape status endpoint
+# ------------------------------------------------------------------
+
+
+class ScrapeStatusResponse(BaseModel):
+    """Response model for the scrape status endpoint."""
+    success: bool = Field(description="Whether the request was successful")
+    job_id: str = Field(description="The job identifier")
+    status: str = Field(description="Current job status: pending, running, completed, failed, cancelled")
+    name: str = Field(default="", description="Human-readable job name")
+    job_type: str = Field(default="", description="Type of scraping job")
+    game: Optional[str] = Field(default=None, description="Game version being scraped (poe1 or poe2)")
+    category: Optional[str] = Field(default=None, description="Current category being scraped")
+    url: Optional[str] = Field(default=None, description="Target URL for the job")
+    pages_scraped: int = Field(default=0, description="Number of pages scraped so far")
+    documents_indexed: int = Field(default=0, description="Number of documents indexed so far")
+    items_scraped: int = Field(default=0, description="Number of items scraped")
+    categories_scraped: int = Field(default=0, description="Number of categories scraped")
+    progress: float = Field(default=0.0, description="Progress percentage (0-100)")
+    error: Optional[str] = Field(default=None, description="Error message if the job failed")
+    created_at: Optional[str] = Field(default=None, description="ISO 8601 timestamp when the job was created")
+    started_at: Optional[str] = Field(default=None, description="ISO 8601 timestamp when the job started")
+    completed_at: Optional[str] = Field(default=None, description="ISO 8601 timestamp when the job completed")
+    retries: int = Field(default=0, description="Number of retry attempts so far")
+    max_retries: int = Field(default=3, description="Maximum number of retries allowed")
+    message: str = Field(default="", description="Human-readable status message")
+
+    model_config = {
+        "json_schema_extra": {
+            "examples": [
+                {
+                    "success": True,
+                    "job_id": "job-category-a1b2c3d4",
+                    "status": "running",
+                    "name": "Shallow scrape: Unique Weapon (POE1)",
+                    "job_type": "category",
+                    "game": "poe1",
+                    "category": "Unique Weapon",
+                    "url": "https://poedb.tw/us/Unique_Weapon",
+                    "pages_scraped": 3,
+                    "documents_indexed": 45,
+                    "items_scraped": 45,
+                    "categories_scraped": 1,
+                    "progress": 75.0,
+                    "error": None,
+                    "created_at": "2024-01-15T10:00:00+00:00",
+                    "started_at": "2024-01-15T10:00:01+00:00",
+                    "completed_at": None,
+                    "retries": 0,
+                    "max_retries": 3,
+                    "message": "Job is currently running",
+                }
+            ]
+        }
+    }
+
+
+@api_router.get("/admin/scrape/status", tags=["Admin"], response_model=ScrapeStatusResponse)
+async def admin_scrape_status(job_id: str):
+    """
+    Get the status of a scraping job.
+
+    Accepts a ``job_id`` query parameter and returns detailed status
+    information about the scraping job, including progress counts,
+    current category, and error details.
+
+    **Status Values**:
+    - ``pending``: Job is queued and waiting to be processed
+    - ``running``: Job is actively being processed
+    - ``completed``: Job finished successfully
+    - ``failed``: Job failed (check ``error`` field for details)
+    - ``cancelled``: Job was cancelled by a user
+
+    **Query Parameters**:
+    - ``job_id`` (required): The job identifier returned by ``POST /api/admin/scrape``
+
+    Returns:
+        ScrapeStatusResponse with full job details.
+
+    Raises:
+        400: If job_id parameter is missing or empty.
+        404: If the specified job_id does not exist.
+        500: If an unexpected error occurs.
+    """
+    if not job_id or not job_id.strip():
+        raise HTTPException(
+            status_code=400,
+            detail="Query parameter 'job_id' is required and cannot be empty",
+        )
+
+    try:
+        manager = get_job_manager()
+        job_data = manager.get_job_status(job_id.strip())
+
+        if job_data is None:
+            raise HTTPException(
+                status_code=404,
+                detail=f"Job '{job_id}' not found",
+            )
+
+        # Extract result data for richer status information
+        result = job_data.get("result") or {}
+        status_val = job_data.get("status", "unknown")
+
+        # Derive pages_scraped and documents_indexed from result
+        pages_scraped = 0
+        documents_indexed = 0
+        if isinstance(result, dict):
+            pages_scraped = result.get("pages_scraped", 0)
+            documents_indexed = result.get("items_scraped", result.get("items_found", 0))
+
+        # Build a human-readable message based on status
+        if status_val == "pending":
+            message = f"Job '{job_data.get('name', job_id)}' is queued and waiting to be processed"
+        elif status_val == "running":
+            message = f"Job '{job_data.get('name', job_id)}' is currently running ({job_data.get('progress', 0):.1f}% complete)"
+        elif status_val == "completed":
+            message = f"Job '{job_data.get('name', job_id)}' completed successfully"
+        elif status_val == "failed":
+            message = f"Job '{job_data.get('name', job_id)}' failed: {job_data.get('error', 'Unknown error')}"
+        elif status_val == "cancelled":
+            message = f"Job '{job_data.get('name', job_id)}' was cancelled"
+        else:
+            message = f"Job '{job_data.get('name', job_id)}' has status: {status_val}"
+
+        return ScrapeStatusResponse(
+            success=True,
+            job_id=job_data.get("job_id", job_id),
+            status=status_val,
+            name=job_data.get("name", ""),
+            job_type=job_data.get("job_type", ""),
+            game=job_data.get("game"),
+            category=job_data.get("category"),
+            url=job_data.get("url"),
+            pages_scraped=pages_scraped,
+            documents_indexed=documents_indexed,
+            items_scraped=documents_indexed,
+            categories_scraped=1 if status_val == "completed" and job_data.get("job_type") == "category" else 0,
+            progress=job_data.get("progress", 0.0),
+            error=job_data.get("error"),
+            created_at=job_data.get("created_at"),
+            started_at=job_data.get("started_at"),
+            completed_at=job_data.get("completed_at"),
+            retries=job_data.get("retries", 0),
+            max_retries=job_data.get("max_retries", 3),
+            message=message,
+        )
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error("Failed to get scrape status for job_id=%s: %s", job_id, e)
+        raise HTTPException(
+            status_code=500,
+            detail=f"Failed to get scrape status: {str(e)}",
+        )
+
+
+# ------------------------------------------------------------------
 # Indexer endpoints
 # ------------------------------------------------------------------
 
