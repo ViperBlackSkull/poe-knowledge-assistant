@@ -73,6 +73,13 @@ from src.services.scraper import (
     detect_game_version_model,
     get_version_for_url,
 )
+from src.services.indexer import (
+    ChromaDBIndexer,
+    IndexerError,
+    get_indexer,
+    index_items,
+    check_indexer_health,
+)
 from langchain_core.documents import Document
 
 logger = logging.getLogger(__name__)
@@ -1390,6 +1397,446 @@ async def test_detect_game_version_batch(request: GameVersionBatchRequest):
             status_code=500,
             detail=f"Batch game version detection failed: {str(e)}",
         )
+
+
+# ------------------------------------------------------------------
+# Indexer endpoints
+# ------------------------------------------------------------------
+
+
+class IndexItemsRequest(BaseModel):
+    """Request model for indexing scraped items."""
+    items: list[dict] = Field(
+        ...,
+        description="List of scraped item dictionaries to index",
+        min_length=1,
+        max_length=500,
+    )
+    batch_size: int | None = Field(
+        default=None,
+        description="Override batch size for indexing (default: 100)",
+        ge=1,
+        le=500,
+    )
+    upsert: bool = Field(
+        default=True,
+        description="If True, update existing documents with same ID. "
+                    "If False, skip duplicates.",
+    )
+
+    model_config = {
+        "json_schema_extra": {
+            "examples": [
+                {
+                    "items": [
+                        {
+                            "name": "Tabula Rasa",
+                            "item_type": "armor",
+                            "url": "https://poedb.tw/us/Tabula_Rasa",
+                            "game": "poe1",
+                            "description": "Simple Robe",
+                        },
+                    ],
+                    "upsert": True,
+                }
+            ]
+        }
+    }
+
+
+class IndexSampleRequest(BaseModel):
+    """Request model for indexing sample items (for testing)."""
+    game: str = Field(
+        default="poe2",
+        description="Game version for sample items ('poe1' or 'poe2')",
+    )
+    count: int = Field(
+        default=5,
+        description="Number of sample items to generate and index",
+        ge=1,
+        le=50,
+    )
+
+    @field_validator("game")
+    @classmethod
+    def validate_game(cls, v):
+        """Validate game version."""
+        if v.lower() not in ["poe1", "poe2"]:
+            raise ValueError("Game version must be 'poe1' or 'poe2'")
+        return v.lower()
+
+
+class DeleteItemsRequest(BaseModel):
+    """Request model for deleting indexed items by URL."""
+    urls: list[str] = Field(
+        ...,
+        description="List of item URLs to delete from the index",
+        min_length=1,
+        max_length=500,
+    )
+
+
+@api_router.get("/test/indexer/health", tags=["Indexer"])
+async def test_indexer_health():
+    """
+    Check the health of the ChromaDB indexer.
+
+    Verifies that the vector store is ready and returns collection statistics.
+
+    Returns:
+        dict: Indexer health status and document count.
+    """
+    try:
+        health = check_indexer_health()
+        return {
+            "success": True,
+            **health,
+        }
+    except Exception as e:
+        raise HTTPException(
+            status_code=500,
+            detail=f"Indexer health check failed: {str(e)}",
+        )
+
+
+@api_router.get("/test/indexer/stats", tags=["Indexer"])
+async def test_indexer_stats():
+    """
+    Get indexing statistics from the ChromaDB collection.
+
+    Returns:
+        dict: Total documents, collection name, and vector store status.
+    """
+    try:
+        indexer = get_indexer()
+        stats = indexer.get_stats()
+        return {
+            "success": True,
+            **stats,
+        }
+    except Exception as e:
+        raise HTTPException(
+            status_code=500,
+            detail=f"Failed to get indexer stats: {str(e)}",
+        )
+
+
+@api_router.post("/test/indexer/index", tags=["Indexer"])
+async def test_indexer_index(request: IndexItemsRequest):
+    """
+    Index a list of scraped item dictionaries into ChromaDB.
+
+    Each item must have at least a ``name`` field.  The indexer generates
+    deterministic document IDs based on the item URL, builds searchable
+    document text from all available fields, and creates rich metadata
+    including game version, item type, categories, tags, and more.
+
+    When ``upsert`` is ``True`` (default), existing documents with the same
+    ID are updated rather than duplicated.
+
+    Returns:
+        dict: Indexing results with counts and any errors.
+    """
+    try:
+        result = index_items(
+            items=request.items,
+            batch_size=request.batch_size,
+            upsert=request.upsert,
+        )
+        return {
+            "success": True,
+            **result,
+            "message": (
+                f"Indexed {result['indexed_count']} items, "
+                f"skipped {result['skipped_count']} duplicates, "
+                f"failed {result['failed_count']}"
+            ),
+        }
+    except IndexerError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    except Exception as e:
+        raise HTTPException(
+            status_code=500,
+            detail=f"Indexing failed: {str(e)}",
+        )
+
+
+@api_router.post("/test/indexer/index-samples", tags=["Indexer"])
+async def test_indexer_index_samples(request: IndexSampleRequest):
+    """
+    Generate and index sample PoE items for testing.
+
+    Creates realistic sample items and indexes them into ChromaDB.
+    Useful for testing the indexer and vector search without
+    needing to scrape real data.
+
+    Returns:
+        dict: Indexing results with sample item details.
+    """
+    try:
+        sample_items = _generate_sample_items(request.game, request.count)
+        result = index_items(items=sample_items, upsert=True)
+
+        return {
+            "success": True,
+            "game": request.game,
+            "sample_items_count": len(sample_items),
+            "sample_items": [
+                {"name": item["name"], "item_type": item["item_type"], "url": item["url"]}
+                for item in sample_items
+            ],
+            **result,
+            "message": (
+                f"Generated and indexed {result['indexed_count']} sample "
+                f"{request.game.upper()} items"
+            ),
+        }
+    except IndexerError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    except Exception as e:
+        raise HTTPException(
+            status_code=500,
+            detail=f"Sample indexing failed: {str(e)}",
+        )
+
+
+@api_router.post("/test/indexer/delete", tags=["Indexer"])
+async def test_indexer_delete(request: DeleteItemsRequest):
+    """
+    Delete indexed items by their source URLs.
+
+    Returns:
+        dict: Deletion results with count and any errors.
+    """
+    try:
+        indexer = get_indexer()
+        result = indexer.delete_items_by_urls(request.urls)
+        return {
+            "success": True,
+            **result,
+            "message": f"Deleted {result['deleted_count']} items",
+        }
+    except Exception as e:
+        raise HTTPException(
+            status_code=500,
+            detail=f"Deletion failed: {str(e)}",
+        )
+
+
+@api_router.post("/test/indexer/search", tags=["Indexer"])
+async def test_indexer_search(request: VectorStoreSearchRequest):
+    """
+    Search indexed items in ChromaDB.
+
+    This is a convenience endpoint that searches the same collection
+    used by the indexer, with optional game version filtering.
+
+    Returns:
+        dict: Search results with document content and metadata.
+    """
+    try:
+        vector_store = get_vector_store()
+
+        if request.game:
+            results = vector_store.search_by_game(
+                query=request.query,
+                game=request.game,
+                k=request.k,
+            )
+        else:
+            results = vector_store.similarity_search(
+                query=request.query,
+                k=request.k,
+            )
+
+        formatted = []
+        for doc in results:
+            formatted.append({
+                "content": doc.page_content,
+                "metadata": doc.metadata,
+            })
+
+        return {
+            "success": True,
+            "query": request.query,
+            "game_filter": request.game,
+            "results_count": len(results),
+            "results": formatted,
+            "message": f"Found {len(results)} matching documents",
+        }
+    except VectorStoreError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    except Exception as e:
+        raise HTTPException(
+            status_code=500,
+            detail=f"Search failed: {str(e)}",
+        )
+
+
+def _generate_sample_items(game: str, count: int) -> list[dict]:
+    """
+    Generate sample PoE item dictionaries for testing.
+
+    Args:
+        game: Game version ('poe1' or 'poe2').
+        count: Number of items to generate.
+
+    Returns:
+        List of sample item dictionaries.
+    """
+    poe1_samples = [
+        {
+            "name": "Tabula Rasa",
+            "item_type": "armor",
+            "base_type": "Simple Robe",
+            "rarity": "Unique",
+            "url": "https://poedb.tw/us/Tabula_Rasa",
+            "game": "poe1",
+            "description": "Tabula Rasa has 6 linked white sockets.",
+            "properties": {
+                "Energy Shield": "0",
+                "Socket": "6",
+                "Link": "6",
+            },
+            "requirements": {"Level": "1"},
+            "tags": ["body_armour", "intelligence", "unique"],
+            "categories": ["Unique Body Armour"],
+        },
+        {
+            "name": "Headhunter",
+            "item_type": "accessory",
+            "base_type": "Leather Belt",
+            "rarity": "Unique",
+            "url": "https://poedb.tw/us/Headhunter",
+            "game": "poe1",
+            "description": "When you kill a Rare monster, you gain its mods for 20 seconds.",
+            "properties": {
+                "Life": "40",
+                "Strength": "20",
+            },
+            "requirements": {"Level": "40"},
+            "tags": ["belt", "accessory", "unique"],
+            "categories": ["Unique Belt"],
+        },
+        {
+            "name": "Shavronne's Wrappings",
+            "item_type": "armor",
+            "base_type": "Occultist's Vestment",
+            "rarity": "Unique",
+            "url": "https://poedb.tw/us/Shavronnes_Wrappings",
+            "game": "poe1",
+            "description": "Chaos Damage does not bypass Energy Shield.",
+            "properties": {
+                "Energy Shield": "400-500",
+            },
+            "requirements": {"Level": "62", "Int": "180"},
+            "tags": ["body_armour", "intelligence", "unique"],
+            "categories": ["Unique Body Armour"],
+        },
+        {
+            "name": "Fireball",
+            "item_type": "gem",
+            "url": "https://poedb.tw/us/Fireball",
+            "game": "poe1",
+            "description": "Fires a projectile that deals fire damage to targets it hits.",
+            "properties": {
+                "Damage": "100-150",
+                "Cast Time": "0.75s",
+            },
+            "tags": ["fire", "spell", "projectile", "aoe"],
+            "categories": ["Skill Gem"],
+        },
+        {
+            "name": "Chaos Orb",
+            "item_type": "currency",
+            "url": "https://poedb.tw/us/Chaos_Orb",
+            "game": "poe1",
+            "description": "Reforges a rare item with new random modifiers.",
+            "tags": ["currency"],
+            "categories": ["Currency"],
+        },
+    ]
+
+    poe2_samples = [
+        {
+            "name": "Kalandra's Touch",
+            "item_type": "accessory",
+            "base_type": "Ring",
+            "rarity": "Unique",
+            "url": "https://poe2db.tw/us/Kalandras_Touch",
+            "game": "poe2",
+            "description": "Mirrors the stats and effects of the ring in the other slot.",
+            "properties": {
+                "Effect": "Mirrored",
+            },
+            "tags": ["ring", "accessory", "unique"],
+            "categories": ["Unique Ring"],
+        },
+        {
+            "name": "Frostbolt",
+            "item_type": "gem",
+            "url": "https://poe2db.tw/us/Frostbolt",
+            "game": "poe2",
+            "description": "Fires a slow-moving projectile that pierces through enemies.",
+            "properties": {
+                "Damage": "80-120",
+                "Cast Time": "0.70s",
+            },
+            "tags": ["cold", "spell", "projectile"],
+            "categories": ["Skill Gem"],
+        },
+        {
+            "name": "Searing Touch",
+            "item_type": "weapon",
+            "base_type": "Staff",
+            "rarity": "Unique",
+            "url": "https://poe2db.tw/us/Searing_Touch",
+            "game": "poe2",
+            "description": "Increases fire damage and spell damage significantly.",
+            "properties": {
+                "Fire Damage": "+30%",
+                "Spell Damage": "+40%",
+            },
+            "tags": ["staff", "weapon", "fire", "unique"],
+            "categories": ["Unique Weapon"],
+        },
+        {
+            "name": "Void Sphere",
+            "item_type": "gem",
+            "url": "https://poe2db.tw/us/Void_Sphere",
+            "game": "poe2",
+            "description": "Creates a void sphere that damages and pulls enemies.",
+            "properties": {
+                "Damage": "50-80",
+                "Duration": "3s",
+            },
+            "tags": ["chaos", "spell", "aoe"],
+            "categories": ["Skill Gem"],
+        },
+        {
+            "name": "Exalted Orb",
+            "item_type": "currency",
+            "url": "https://poe2db.tw/us/Exalted_Orb",
+            "game": "poe2",
+            "description": "Adds a new random modifier to a rare item.",
+            "tags": ["currency"],
+            "categories": ["Currency"],
+        },
+    ]
+
+    pool = poe1_samples if game == "poe1" else poe2_samples
+    items = []
+    for i in range(count):
+        item = dict(pool[i % len(pool)])
+        # Add a unique suffix for items beyond the pool size to prevent
+        # ID collisions when generating more items than available samples
+        if i >= len(pool):
+            suffix_num = i // len(pool) + 1
+            item["name"] = f"{item['name']} #{suffix_num}"
+            item["url"] = f"{item['url']}_{suffix_num}"
+        items.append(item)
+
+    return items
 
 
 @api_router.post(

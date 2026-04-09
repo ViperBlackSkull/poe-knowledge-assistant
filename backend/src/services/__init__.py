@@ -75,6 +75,13 @@ from src.services.scraper import (
     extract_links,
     extract_table_data,
 )
+from src.services.indexer import (
+    ChromaDBIndexer,
+    IndexerError,
+    get_indexer,
+    index_items,
+    check_indexer_health,
+)
 
 __all__ = [
     "ChromaDBManager",
@@ -137,4 +144,10 @@ __all__ = [
     "extract_image_url",
     "extract_links",
     "extract_table_data",
+    # Indexer
+    "ChromaDBIndexer",
+    "IndexerError",
+    "get_indexer",
+    "index_items",
+    "check_indexer_health",
 ]
