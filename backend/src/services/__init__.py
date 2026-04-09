@@ -92,6 +92,17 @@ from src.services.job_manager import (
     get_job_manager,
     check_job_manager_health,
 )
+from src.services.scrape_timestamps import (
+    ScrapeTimestampStore,
+    TimestampStorageError,
+    TimestampReadError,
+    TimestampWriteError,
+    get_timestamp_store,
+    get_scrape_timestamps,
+    get_scrape_timestamp,
+    update_timestamp,
+    check_timestamp_storage_health,
+)
 
 __all__ = [
     "ChromaDBManager",
@@ -169,4 +180,14 @@ __all__ = [
     "ScrapingJobManager",
     "get_job_manager",
     "check_job_manager_health",
+    # Scrape Timestamps
+    "ScrapeTimestampStore",
+    "TimestampStorageError",
+    "TimestampReadError",
+    "TimestampWriteError",
+    "get_timestamp_store",
+    "get_scrape_timestamps",
+    "get_scrape_timestamp",
+    "update_timestamp",
+    "check_timestamp_storage_health",
 ]

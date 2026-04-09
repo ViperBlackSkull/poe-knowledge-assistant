@@ -90,6 +90,17 @@ from src.services.job_manager import (
     get_job_manager,
     check_job_manager_health,
 )
+from src.services.scrape_timestamps import (
+    ScrapeTimestampStore,
+    TimestampStorageError,
+    TimestampReadError,
+    TimestampWriteError,
+    get_timestamp_store,
+    get_scrape_timestamps,
+    get_scrape_timestamp,
+    update_timestamp,
+    check_timestamp_storage_health,
+)
 from langchain_core.documents import Document
 
 logger = logging.getLogger(__name__)
@@ -1774,6 +1785,251 @@ async def jobs_config():
         raise HTTPException(
             status_code=500,
             detail=f"Failed to get job config: {str(e)}",
+        )
+
+
+# ------------------------------------------------------------------
+# Scrape Timestamp endpoints
+# ------------------------------------------------------------------
+
+
+@api_router.get("/scrape-timestamps/health", tags=["Scrape Timestamps"])
+async def scrape_timestamps_health():
+    """
+    Health check for the scrape timestamp storage.
+
+    Returns:
+        dict: Health status including file path, existence, and size.
+    """
+    try:
+        health = check_timestamp_storage_health()
+        return {
+            "success": True,
+            **health,
+        }
+    except Exception as e:
+        raise HTTPException(
+            status_code=500,
+            detail=f"Scrape timestamp health check failed: {str(e)}",
+        )
+
+
+@api_router.get("/scrape-timestamps", tags=["Scrape Timestamps"])
+async def scrape_timestamps_get_all():
+    """
+    Get last scrape timestamps for all game versions.
+
+    Returns the full timestamp record including PoE1 and PoE2 last-scrape
+    times, cumulative item/category counts, and associated job IDs.
+
+    Returns:
+        dict: Timestamp data for all game versions plus metadata.
+    """
+    try:
+        data = get_scrape_timestamps()
+        return {
+            "success": True,
+            "timestamps": {
+                "poe1": data.get("poe1"),
+                "poe2": data.get("poe2"),
+            },
+            "metadata": data.get("metadata"),
+            "message": "Scrape timestamps retrieved successfully",
+        }
+    except Exception as e:
+        raise HTTPException(
+            status_code=500,
+            detail=f"Failed to retrieve scrape timestamps: {str(e)}",
+        )
+
+
+@api_router.get("/scrape-timestamps/{game}", tags=["Scrape Timestamps"])
+async def scrape_timestamps_get_game(game: str):
+    """
+    Get the last scrape timestamp for a specific game version.
+
+    Args:
+        game: Game version (``'poe1'`` or ``'poe2'``).
+
+    Returns:
+        dict: Timestamp data for the requested game version.
+    """
+    try:
+        game_lower = game.lower().strip()
+        if game_lower not in ("poe1", "poe2"):
+            raise HTTPException(
+                status_code=400,
+                detail=f"Invalid game version '{game}'. Must be 'poe1' or 'poe2'.",
+            )
+
+        data = get_scrape_timestamp(game_lower)
+        return {
+            "success": True,
+            "game": game_lower,
+            "timestamp": data,
+            "message": f"Scrape timestamp for {game_lower.upper()} retrieved successfully",
+        }
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(
+            status_code=500,
+            detail=f"Failed to retrieve scrape timestamp for {game}: {str(e)}",
+        )
+
+
+class ScrapeTimestampUpdateRequest(BaseModel):
+    """Request model for manually updating a scrape timestamp."""
+    game: str = Field(
+        ...,
+        description="Game version ('poe1' or 'poe2')",
+    )
+    job_id: Optional[str] = Field(
+        default=None,
+        description="Optional job ID to associate with the timestamp",
+    )
+    items_scraped: int = Field(
+        default=0,
+        description="Number of items scraped",
+        ge=0,
+    )
+    categories_scraped: int = Field(
+        default=0,
+        description="Number of categories scraped",
+        ge=0,
+    )
+
+    @field_validator("game")
+    @classmethod
+    def validate_game(cls, v):
+        """Validate game version."""
+        v_lower = v.lower().strip()
+        if v_lower not in ("poe1", "poe2"):
+            raise ValueError("Game version must be 'poe1' or 'poe2'")
+        return v_lower
+
+    model_config = {
+        "json_schema_extra": {
+            "examples": [
+                {
+                    "game": "poe2",
+                    "job_id": "job-category-abc12345",
+                    "items_scraped": 150,
+                    "categories_scraped": 12,
+                }
+            ]
+        }
+    }
+
+
+@api_router.post("/scrape-timestamps/update", tags=["Scrape Timestamps"])
+async def scrape_timestamps_update(request: ScrapeTimestampUpdateRequest):
+    """
+    Manually update the scrape timestamp for a game version.
+
+    This endpoint is typically called automatically by the job manager
+    upon successful job completion, but can also be called manually.
+
+    Returns:
+        dict: Updated timestamp entry for the game version.
+    """
+    try:
+        result = update_timestamp(
+            game=request.game,
+            job_id=request.job_id,
+            items_scraped=request.items_scraped,
+            categories_scraped=request.categories_scraped,
+        )
+        return {
+            "success": True,
+            "game": request.game,
+            "timestamp": result,
+            "message": f"Scrape timestamp for {request.game.upper()} updated successfully",
+        }
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    except TimestampWriteError as e:
+        raise HTTPException(status_code=500, detail=str(e))
+    except Exception as e:
+        raise HTTPException(
+            status_code=500,
+            detail=f"Failed to update scrape timestamp: {str(e)}",
+        )
+
+
+class ScrapeTimestampResetRequest(BaseModel):
+    """Request model for resetting scrape timestamps."""
+    game: Optional[str] = Field(
+        default=None,
+        description=(
+            "Game version to reset ('poe1' or 'poe2'). "
+            "If omitted, timestamps for both games are reset."
+        ),
+    )
+
+    @field_validator("game")
+    @classmethod
+    def validate_game(cls, v):
+        """Validate game version."""
+        if v is None:
+            return v
+        v_lower = v.lower().strip()
+        if v_lower not in ("poe1", "poe2"):
+            raise ValueError("Game version must be 'poe1' or 'poe2'")
+        return v_lower
+
+    model_config = {
+        "json_schema_extra": {
+            "examples": [
+                {"game": "poe1"},
+                {"game": None},
+            ]
+        }
+    }
+
+
+@api_router.post("/scrape-timestamps/reset", tags=["Scrape Timestamps"])
+async def scrape_timestamps_reset(request: ScrapeTimestampResetRequest):
+    """
+    Reset scrape timestamps for a game version or all game versions.
+
+    Args:
+        request: Contains optional ``game`` parameter.  If ``None``,
+            timestamps for **both** games are reset.
+
+    Returns:
+        dict: Confirmation of the reset operation.
+    """
+    try:
+        store = get_timestamp_store()
+        if request.game is None:
+            data = store.reset_all_timestamps()
+            return {
+                "success": True,
+                "action": "reset_all",
+                "timestamps": {
+                    "poe1": data.get("poe1"),
+                    "poe2": data.get("poe2"),
+                },
+                "message": "All scrape timestamps have been reset",
+            }
+        else:
+            entry = store.reset_timestamp(request.game)
+            return {
+                "success": True,
+                "action": f"reset_{request.game}",
+                "game": request.game,
+                "timestamp": entry,
+                "message": f"Scrape timestamp for {request.game.upper()} has been reset",
+            }
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    except TimestampWriteError as e:
+        raise HTTPException(status_code=500, detail=str(e))
+    except Exception as e:
+        raise HTTPException(
+            status_code=500,
+            detail=f"Failed to reset scrape timestamps: {str(e)}",
         )
 
 

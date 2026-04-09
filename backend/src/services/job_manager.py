@@ -41,6 +41,7 @@ from enum import Enum
 from typing import Any, Dict, List, Optional
 
 from src.config import get_settings
+from src.services.scrape_timestamps import update_timestamp as _update_scrape_timestamp
 
 logger = logging.getLogger(__name__)
 
@@ -703,6 +704,28 @@ class ScrapingJobManager:
                 job.progress = 100.0
                 job.result = result
                 self._stats["total_completed"] += 1
+
+                # Persist the last-scrape timestamp for the game version
+                # when a job finishes successfully.
+                if job.game:
+                    try:
+                        items_scraped = 0
+                        categories_scraped = 0
+                        if isinstance(result, dict):
+                            items_scraped = result.get("items_scraped", result.get("items_found", 0))
+                            categories_scraped = result.get("categories_scraped", result.get("pages_scraped", 0))
+                        _update_scrape_timestamp(
+                            game=job.game,
+                            job_id=job.job_id,
+                            items_scraped=items_scraped,
+                            categories_scraped=categories_scraped,
+                        )
+                    except Exception as ts_exc:
+                        self._logger.warning(
+                            "Failed to update scrape timestamp for game=%s: %s",
+                            job.game,
+                            ts_exc,
+                        )
 
             job.completed_at = datetime.now(timezone.utc).isoformat()
 
