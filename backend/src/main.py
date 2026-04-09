@@ -62,6 +62,9 @@ from src.services.scraper import (
     extract_image_url,
     extract_links,
     extract_table_data,
+    CategoryScraper,
+    CategoryItem,
+    scrape_category,
 )
 from langchain_core.documents import Document
 
@@ -835,6 +838,7 @@ async def test_scraper_modules():
     from src.services.scraper.http_client import __all__ as http_exports
     from src.services.scraper.base import __all__ as base_exports
     from src.services.scraper.parsers import __all__ as parser_exports
+    from src.services.scraper.category import __all__ as category_exports
 
     return {
         "success": True,
@@ -858,6 +862,11 @@ async def test_scraper_modules():
                 "file": "parsers.py",
                 "description": "DOM parsing utilities for poedb.tw pages",
                 "exports": parser_exports,
+            },
+            "category": {
+                "file": "category.py",
+                "description": "Category page scraper with pagination support",
+                "exports": category_exports,
             },
         },
         "total_exports": len(scraper_exports),
@@ -907,6 +916,127 @@ async def test_scraper_parse(request: ScraperFetchRequest):
         raise HTTPException(status_code=502, detail=str(e))
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Unexpected error: {str(e)}")
+
+
+class CategoryScrapeRequest(BaseModel):
+    """Request model for category page scraping."""
+    category_name: str = Field(
+        ...,
+        description="Human-readable name of the category (e.g. 'Unique', 'Gem')",
+        min_length=1,
+        max_length=200,
+    )
+    url: str = Field(
+        ...,
+        description="Full URL of the category page on poedb.tw",
+    )
+    follow_pagination: bool = Field(
+        default=True,
+        description="Whether to follow pagination links",
+    )
+    max_pages: int = Field(
+        default=10,
+        description="Maximum number of pagination pages to scrape",
+        ge=1,
+        le=50,
+    )
+
+    @field_validator("url")
+    @classmethod
+    def validate_url(cls, v):
+        """Validate URL format."""
+        if not v.startswith(("http://", "https://")):
+            raise ValueError("URL must start with http:// or https://")
+        return v
+
+    model_config = {
+        "json_schema_extra": {
+            "examples": [
+                {
+                    "category_name": "Unique",
+                    "url": "https://poedb.tw/us/Unique",
+                    "follow_pagination": True,
+                    "max_pages": 10,
+                }
+            ]
+        }
+    }
+
+
+@api_router.post("/test/scraper/category", tags=["Scraper"])
+async def test_scraper_category(request: CategoryScrapeRequest):
+    """
+    Scrape a category index page and extract item/skill links.
+
+    This endpoint uses the :class:`CategoryScraper` to fetch a category
+    page from poedb.tw, extract all valid item/skill links, and optionally
+    follow pagination to collect items from all pages.
+
+    Returns structured data including:
+    - List of items with titles, URLs, and metadata
+    - Page title and total item count
+    - Number of pages scraped and whether more exist
+    """
+    try:
+        async with CategoryScraper(max_pages=request.max_pages) as scraper:
+            result = await scraper.scrape_category(
+                category_name=request.category_name,
+                url=request.url,
+                follow_pagination=request.follow_pagination,
+            )
+
+        # Truncate items list for readability in API responses
+        items_preview = result.get("items", [])[:20]
+        total_items = result.get("total_items", 0)
+
+        return {
+            "success": True,
+            "category": result.get("category"),
+            "url": result.get("url"),
+            "page_title": result.get("page_title"),
+            "total_items": total_items,
+            "pages_scraped": result.get("pages_scraped"),
+            "has_more_pages": result.get("has_more_pages"),
+            "items_preview": items_preview,
+            "items_preview_count": len(items_preview),
+            "message": (
+                f"Scraped category '{request.category_name}': "
+                f"{total_items} items across {result.get('pages_scraped', 0)} page(s)"
+            ),
+        }
+    except ScraperError as e:
+        raise HTTPException(status_code=502, detail=str(e))
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Unexpected error: {str(e)}")
+
+
+@api_router.get("/test/scraper/category/categories", tags=["Scraper"])
+async def test_scraper_category_list():
+    """
+    List known poedb.tw category pages.
+
+    Returns a list of common category names and their URLs on poedb.tw
+    that can be used with the ``/test/scraper/category`` endpoint.
+    """
+    categories = [
+        {"name": "Gem", "url": "https://poedb.tw/us/Gem"},
+        {"name": "Currency", "url": "https://poedb.tw/us/Currency"},
+        {"name": "Map", "url": "https://poedb.tw/us/Map"},
+        {"name": "Passive Skill", "url": "https://poedb.tw/us/Passive_Skill"},
+        {"name": "Divination Card", "url": "https://poedb.tw/us/Divination_Card"},
+        {"name": "Unique Weapon", "url": "https://poedb.tw/us/Unique_Weapon"},
+        {"name": "Unique Armour", "url": "https://poedb.tw/us/Unique_Armour"},
+        {"name": "Skill Gem", "url": "https://poedb.tw/us/Skill_Gem"},
+        {"name": "Support Gem", "url": "https://poedb.tw/us/Support_Gem"},
+        {"name": "Boss", "url": "https://poedb.tw/us/Boss"},
+        {"name": "Area", "url": "https://poedb.tw/us/Area"},
+    ]
+    return {
+        "success": True,
+        "categories": categories,
+        "total": len(categories),
+        "message": "Known category pages on poedb.tw",
+    }
 
 
 @api_router.post(

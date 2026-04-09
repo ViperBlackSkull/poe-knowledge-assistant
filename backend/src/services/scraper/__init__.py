@@ -2,8 +2,8 @@
 Scraper module for the poedb.tw knowledge base.
 
 This package provides the HTTP client, base scraper classes, DOM parsing
-utilities, and custom exceptions needed to scrape Path of Exile data from
-poedb.tw.
+utilities, category scraper, and custom exceptions needed to scrape Path
+of Exile data from poedb.tw.
 
 Quick start::
 
@@ -26,6 +26,11 @@ Quick start::
     # Health check
     status = await check_scraper_health()
 
+    # Category scraping
+    from src.services.scraper import CategoryScraper
+    async with CategoryScraper() as scraper:
+        result = await scraper.scrape_category("Unique", "https://poedb.tw/us/Unique")
+
 Module structure::
 
     scraper/
@@ -34,6 +39,7 @@ Module structure::
     +-- http_client.py     -- Async HTTP client with retries & rate limiting
     +-- base.py            -- Abstract BaseScraper, ScrapeResult, SimpleScraper
     +-- parsers.py         -- DOM parsing utilities for poedb.tw pages
+    +-- category.py        -- Category page scraper with pagination support
 """
 
 from src.services.scraper.exceptions import (
@@ -68,6 +74,11 @@ from src.services.scraper.parsers import (
     find_first,
     safe_get_attr,
     safe_get_text,
+)
+from src.services.scraper.category import (
+    CategoryItem,
+    CategoryScraper,
+    scrape_category,
 )
 
 
@@ -114,6 +125,10 @@ __all__ = [
     "extract_image_url",
     "extract_links",
     "extract_table_data",
+    # Category scraper
+    "CategoryItem",
+    "CategoryScraper",
+    "scrape_category",
     # Health check
     "check_scraper_health",
 ]
