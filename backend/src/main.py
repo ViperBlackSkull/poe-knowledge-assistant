@@ -2991,6 +2991,155 @@ def _generate_sample_items(game: str, count: int) -> list[dict]:
     return items
 
 
+class ChatApiRequest(BaseModel):
+    """
+    Request model for POST /api/chat endpoint.
+
+    Accepts a question, game version, and optional build context,
+    and returns a streaming SSE response with citations.
+
+    Attributes:
+        question: The user's question about Path of Exile
+        game_version: Game version to query ('poe1' or 'poe2')
+        build_context: Optional build context (e.g., class, ascendancy)
+        conversation_id: Optional conversation ID for context continuity
+        conversation_history: Optional list of previous messages
+    """
+    question: str = Field(
+        ...,
+        description="User's question about Path of Exile",
+        min_length=1,
+        max_length=10000,
+    )
+    game_version: str = Field(
+        default="poe2",
+        description="Game version to query ('poe1' or 'poe2')",
+    )
+    build_context: Optional[str] = Field(
+        default=None,
+        description="Optional build context (e.g., class, ascendancy)",
+        max_length=500,
+    )
+    conversation_id: Optional[str] = Field(
+        default=None,
+        description="Optional conversation ID for maintaining context",
+        max_length=100,
+    )
+    conversation_history: Optional[List[dict]] = Field(
+        default=None,
+        description="Optional list of previous messages with 'role' and 'content' keys",
+    )
+
+    @field_validator("question")
+    @classmethod
+    def validate_question(cls, v):
+        """Ensure question is not just whitespace."""
+        if not v or not v.strip():
+            raise ValueError("Question cannot be empty or only whitespace")
+        return v.strip()
+
+    @field_validator("game_version")
+    @classmethod
+    def validate_game_version(cls, v):
+        """Validate game version."""
+        if v.lower() not in ["poe1", "poe2"]:
+            raise ValueError("Game version must be 'poe1' or 'poe2'")
+        return v.lower()
+
+    model_config = {
+        "json_schema_extra": {
+            "examples": [
+                {
+                    "question": "What are the best skills for a Witch in PoE2?",
+                    "game_version": "poe2",
+                    "build_context": "Witch - Blood Mage",
+                    "conversation_id": "conv-abc123",
+                }
+            ]
+        }
+    }
+
+
+@api_router.post(
+    "/chat",
+    tags=["Chat"],
+    summary="Chat with the POE Knowledge Assistant via SSE streaming",
+    response_class=StreamingResponse,
+)
+async def chat(request: ChatApiRequest):
+    """
+    Main chat endpoint that accepts a question and returns a streaming
+    SSE response with citations to source documents.
+
+    This endpoint:
+    1. Validates the incoming request (question, game_version, build_context)
+    2. Retrieves relevant documents from the vector store using the RAG chain
+    3. Streams the LLM-generated response token by token via SSE
+    4. Includes source citations in the response
+
+    SSE Event Types:
+        - **sources**: Sent first, contains retrieved source citations with
+          relevance scores and source URLs
+        - **token**: Sent for each chunk/token of the LLM response
+        - **done**: Sent when the full response is complete, includes metadata
+        - **error**: Sent if an error occurs at any stage
+
+    Each SSE event follows the format:
+        ```
+        event: <event_type>
+        data: <json_payload>
+
+        ```
+
+    Example SSE stream:
+        ```
+        event: sources
+        data: {"sources": [{"content": "...", "source": "https://poedb.tw/...", "relevance_score": 0.92}], "conversation_id": "conv-abc", "document_count": 3}
+
+        event: token
+        data: {"token": "Based", "chunk_index": 1}
+
+        event: token
+        data: {"token": " on", "chunk_index": 2}
+
+        event: done
+        data: {"conversation_id": "conv-abc", "game": "poe2", "total_chunks": 42, "timestamp": "..."}
+        ```
+
+    Args:
+        request: ChatApiRequest with question, game_version, and optional context
+
+    Returns:
+        StreamingResponse with content-type text/event-stream
+
+    Raises:
+        HTTPException 400: If the request body is invalid
+        HTTPException 500: If the server encounters an internal error
+    """
+    logger.info(
+        f"Chat request: question='{request.question[:50]}...', "
+        f"game_version={request.game_version}, "
+        f"build_context={request.build_context}, "
+        f"conversation_id={request.conversation_id}"
+    )
+
+    return StreamingResponse(
+        generate_streaming_response(
+            query=request.question,
+            game=request.game_version,
+            build_context=request.build_context,
+            conversation_id=request.conversation_id,
+            conversation_history=request.conversation_history,
+        ),
+        media_type="text/event-stream",
+        headers={
+            "Cache-Control": "no-cache",
+            "Connection": "keep-alive",
+            "X-Accel-Buffering": "no",
+        },
+    )
+
+
 @api_router.post(
     "/chat/stream",
     tags=["Chat"],
