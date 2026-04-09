@@ -409,7 +409,7 @@
         "title": "Create main layout component with header",
         "feature": "Chat Interface",
         "dependencies": ["task-31"],
-        "status": "todo"
+        "status": "done"
       },
       {
         "id": "task-35",
