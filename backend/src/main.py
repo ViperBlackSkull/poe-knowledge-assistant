@@ -9,7 +9,18 @@ from fastapi import FastAPI, APIRouter, Response, HTTPException
 from fastapi.responses import StreamingResponse
 from pydantic import BaseModel, Field, field_validator
 from fastapi.middleware.cors import CORSMiddleware
-from src.config import get_settings
+from src.config import get_settings, LLMProvider, EmbeddingProvider
+from src.models.config import (
+    AppConfig,
+    ServerConfig,
+    DatabaseConfig,
+    ChromaDBConfig,
+    RAGConfig,
+    CORSConfig,
+    LLMConfigResponse,
+    EmbeddingConfigResponse,
+    ScraperConfig,
+)
 from src.services.chroma_db import check_chromadb_health
 from src.services.embeddings import (
     check_embeddings_health,
@@ -332,31 +343,213 @@ async def health_check(response: Response):
     }
 
 
-@api_router.get("/config", tags=["Configuration"])
-async def get_config():
-    """Get current configuration (non-sensitive)."""
-    return {
-        "app_name": settings.app_name,
-        "app_version": settings.app_version,
-        "environment": settings.environment.value,
-        "llm_provider": settings.llm.provider.value,
-        "embedding_provider": settings.embedding.provider.value,
-        "server": {
-            "host": settings.server.host,
-            "port": settings.server.port,
-        },
-        "database": {
-            "url": settings.database.database_url,
-        },
-        "chromadb": {
-            "persist_directory": settings.chromadb.persist_directory,
-            "collection_name": settings.chromadb.collection_name,
-        },
-        "rag": {
-            "top_k": settings.rag.top_k_results,
-            "chunk_size": settings.rag.chunk_size,
+def _get_llm_model_and_settings():
+    """Get the active LLM model name, temperature, max_tokens, and api_key_set based on provider."""
+    provider = settings.llm.provider
+    if provider == LLMProvider.OPENAI:
+        return {
+            "model": settings.llm.openai_model,
+            "temperature": settings.llm.openai_temperature,
+            "max_tokens": settings.llm.openai_max_tokens,
+            "api_key_set": bool(settings.llm.openai_api_key),
         }
-    }
+    elif provider == LLMProvider.ANTHROPIC:
+        return {
+            "model": settings.llm.anthropic_model,
+            "temperature": settings.llm.anthropic_temperature,
+            "max_tokens": settings.llm.anthropic_max_tokens,
+            "api_key_set": bool(settings.llm.anthropic_api_key),
+        }
+    elif provider == LLMProvider.OLLAMA:
+        return {
+            "model": settings.llm.ollama_model,
+            "temperature": settings.llm.ollama_temperature,
+            "max_tokens": None,
+            "api_key_set": False,
+            "base_url": settings.llm.ollama_base_url,
+        }
+    elif provider == LLMProvider.LMSTUDIO:
+        return {
+            "model": settings.llm.lmstudio_model,
+            "temperature": settings.llm.lmstudio_temperature,
+            "max_tokens": None,
+            "api_key_set": False,
+            "base_url": settings.llm.lmstudio_base_url,
+        }
+    return {"model": "unknown", "temperature": 0.7, "max_tokens": 2000, "api_key_set": False}
+
+
+def _get_embedding_model_name():
+    """Get the active embedding model name based on provider."""
+    provider = settings.embedding.provider
+    if provider == EmbeddingProvider.OPENAI:
+        return settings.embedding.openai_embedding_model
+    elif provider == EmbeddingProvider.OLLAMA:
+        return settings.embedding.ollama_embedding_model
+    return settings.embedding.model
+
+
+def _mask_database_url(url: str) -> str:
+    """Mask sensitive parts of the database URL."""
+    if "://" in url:
+        scheme, rest = url.split("://", 1)
+        if "@" in rest:
+            # Has credentials: scheme://user:pass@host/db -> scheme://***@host/db
+            _, host_part = rest.rsplit("@", 1)
+            return f"{scheme}://***@{host_part}"
+    return url
+
+
+@api_router.get(
+    "/config",
+    tags=["Configuration"],
+    response_model=AppConfig,
+    responses={
+        200: {
+            "description": "Current application configuration",
+            "content": {
+                "application/json": {
+                    "example": {
+                        "app_name": "POE Knowledge Assistant",
+                        "app_version": "1.0.0",
+                        "environment": "development",
+                        "server": {
+                            "host": "0.0.0.0",
+                            "port": 8000,
+                            "debug": True,
+                            "workers": 1,
+                        },
+                        "database": {
+                            "database_url": "sqlite:///./data/poe_knowledge.db",
+                            "pool_size": 5,
+                            "max_overflow": 10,
+                        },
+                        "chromadb": {
+                            "persist_directory": "./data/chroma",
+                            "collection_name": "poe_knowledge",
+                        },
+                        "rag": {
+                            "top_k_results": 3,
+                            "chunk_size": 1000,
+                            "chunk_overlap": 200,
+                            "score_threshold": 0.7,
+                        },
+                        "cors": {
+                            "origins": ["http://localhost:3000"],
+                            "allow_credentials": True,
+                            "allow_methods": ["*"],
+                            "allow_headers": ["*"],
+                        },
+                        "llm": {
+                            "provider": "openai",
+                            "model": "gpt-4",
+                            "temperature": 0.7,
+                            "max_tokens": 2000,
+                            "api_key_set": False,
+                        },
+                        "embedding": {
+                            "provider": "local",
+                            "model": "all-MiniLM-L6-v2",
+                            "dimension": 384,
+                            "batch_size": 32,
+                        },
+                        "scraper": {
+                            "rate_limit_delay": 2.0,
+                            "max_retries": 3,
+                            "timeout": 30,
+                            "concurrent_requests": 5,
+                        },
+                    }
+                }
+            },
+        },
+        500: {"description": "Internal server error reading configuration"},
+    },
+)
+async def get_config():
+    """
+    Get current application configuration (non-sensitive).
+
+    Returns the complete application configuration with sensitive information
+    (API keys, secrets) masked. The response includes settings for:
+    - Application metadata (name, version, environment)
+    - Server configuration
+    - Database connection (URL with credentials masked)
+    - ChromaDB vector store
+    - RAG pipeline parameters
+    - CORS settings
+    - LLM provider settings (with API key presence indicated by boolean)
+    - Embedding provider settings
+    - Scraper configuration
+    """
+    try:
+        llm_settings = _get_llm_model_and_settings()
+        embedding_model = _get_embedding_model_name()
+
+        llm_config = LLMConfigResponse(
+            provider=settings.llm.provider,
+            model=llm_settings["model"],
+            temperature=llm_settings["temperature"],
+            max_tokens=llm_settings.get("max_tokens", 2000),
+            api_key_set=llm_settings["api_key_set"],
+        )
+
+        embedding_config = EmbeddingConfigResponse(
+            provider=settings.embedding.provider,
+            model=embedding_model,
+            dimension=settings.embedding.embedding_dimension,
+            batch_size=settings.embedding.batch_size,
+        )
+
+        config = AppConfig(
+            app_name=settings.app_name,
+            app_version=settings.app_version,
+            environment=settings.environment.value,
+            server=ServerConfig(
+                host=settings.server.host,
+                port=settings.server.port,
+                debug=settings.server.debug,
+                workers=settings.server.workers,
+            ),
+            database=DatabaseConfig(
+                database_url=_mask_database_url(settings.database.database_url),
+                pool_size=settings.database.database_pool_size,
+                max_overflow=settings.database.database_max_overflow,
+            ),
+            chromadb=ChromaDBConfig(
+                persist_directory=settings.chromadb.persist_directory,
+                collection_name=settings.chromadb.collection_name,
+            ),
+            rag=RAGConfig(
+                top_k_results=settings.rag.top_k_results,
+                chunk_size=settings.rag.chunk_size,
+                chunk_overlap=settings.rag.chunk_overlap,
+                score_threshold=settings.rag.score_threshold,
+            ),
+            cors=CORSConfig(
+                origins=settings.cors.get_origins_list(),
+                allow_credentials=settings.cors.allow_credentials,
+                allow_methods=[settings.cors.allow_methods],
+                allow_headers=[settings.cors.allow_headers],
+            ),
+            llm=llm_config,
+            embedding=embedding_config,
+            scraper=ScraperConfig(
+                rate_limit_delay=settings.scraper.rate_limit_delay,
+                max_retries=settings.scraper.max_retries,
+                timeout=settings.scraper.timeout,
+                concurrent_requests=settings.scraper.concurrent_requests,
+            ),
+        )
+
+        return config
+
+    except Exception as e:
+        logger.error(f"Failed to read configuration: {str(e)}")
+        raise HTTPException(
+            status_code=500,
+            detail=f"Failed to read configuration: {str(e)}",
+        )
 
 
 @api_router.post("/test/embeddings/query", tags=["Testing"])

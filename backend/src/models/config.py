@@ -347,6 +347,55 @@ class EmbeddingConfigResponse(BaseModel):
     }
 
 
+class ScraperConfig(BaseModel):
+    """
+    Scraper configuration model.
+
+    Attributes:
+        rate_limit_delay: Delay between requests in seconds
+        max_retries: Maximum retry attempts
+        timeout: Request timeout in seconds
+        concurrent_requests: Maximum concurrent requests
+    """
+    rate_limit_delay: float = Field(
+        default=2.0,
+        description="Delay between requests in seconds",
+        ge=0.0,
+        le=60.0
+    )
+    max_retries: int = Field(
+        default=3,
+        description="Maximum retry attempts",
+        ge=0,
+        le=10
+    )
+    timeout: int = Field(
+        default=30,
+        description="Request timeout in seconds",
+        ge=1,
+        le=300
+    )
+    concurrent_requests: int = Field(
+        default=5,
+        description="Maximum concurrent requests",
+        ge=1,
+        le=20
+    )
+
+    model_config = {
+        "json_schema_extra": {
+            "examples": [
+                {
+                    "rate_limit_delay": 2.0,
+                    "max_retries": 3,
+                    "timeout": 30,
+                    "concurrent_requests": 5
+                }
+            ]
+        }
+    }
+
+
 class AppConfig(BaseModel):
     """
     Complete application configuration model.
@@ -354,6 +403,7 @@ class AppConfig(BaseModel):
     Attributes:
         app_name: Application name
         app_version: Application version
+        environment: Application environment
         server: Server configuration
         database: Database configuration
         chromadb: ChromaDB configuration
@@ -361,6 +411,7 @@ class AppConfig(BaseModel):
         cors: CORS configuration
         llm: LLM configuration
         embedding: Embedding configuration
+        scraper: Scraper configuration
     """
     app_name: str = Field(
         default="POE Knowledge Assistant",
@@ -369,6 +420,10 @@ class AppConfig(BaseModel):
     app_version: str = Field(
         default="1.0.0",
         description="Application version"
+    )
+    environment: str = Field(
+        default="development",
+        description="Application environment"
     )
     server: ServerConfig = Field(
         default_factory=ServerConfig,
@@ -398,6 +453,10 @@ class AppConfig(BaseModel):
         ...,
         description="Embedding configuration"
     )
+    scraper: ScraperConfig = Field(
+        default_factory=ScraperConfig,
+        description="Scraper configuration"
+    )
 
     model_config = {
         "json_schema_extra": {
@@ -405,6 +464,7 @@ class AppConfig(BaseModel):
                 {
                     "app_name": "POE Knowledge Assistant",
                     "app_version": "1.0.0",
+                    "environment": "development",
                     "server": {
                         "host": "0.0.0.0",
                         "port": 8000,
@@ -444,6 +504,12 @@ class AppConfig(BaseModel):
                         "model": "all-MiniLM-L6-v2",
                         "dimension": 384,
                         "batch_size": 32
+                    },
+                    "scraper": {
+                        "rate_limit_delay": 2.0,
+                        "max_retries": 3,
+                        "timeout": 30,
+                        "concurrent_requests": 5
                     }
                 }
             ]
@@ -533,6 +599,7 @@ __all__ = [
     "CORSConfig",
     "LLMConfigResponse",
     "EmbeddingConfigResponse",
+    "ScraperConfig",
     "AppConfig",
     "ConfigUpdateRequest",
 ]
