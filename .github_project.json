@@ -281,7 +281,7 @@
         "title": "Implement item detail page scraper",
         "feature": "Knowledge Base Scraper",
         "dependencies": ["task-16"],
-        "status": "todo"
+        "status": "done"
       },
       {
         "id": "task-19",
