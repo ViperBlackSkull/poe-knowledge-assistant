@@ -353,7 +353,7 @@
         "title": "Implement conversation history management",
         "feature": "Chat API",
         "dependencies": ["task-26"],
-        "status": "todo"
+        "status": "done"
       },
       {
         "id": "task-28",
