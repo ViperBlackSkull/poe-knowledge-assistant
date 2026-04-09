@@ -2,6 +2,7 @@ import { useState, useRef, useCallback, useEffect, type KeyboardEvent, type Form
 import type { ChatMessage, GameVersion } from '@/types/chat';
 import type { ChatStreamRequest } from '@/types/streaming';
 import { streamChat as streamChatApi, sendChat as sendChatApi } from '@/lib/api-client';
+import { TypingIndicator } from './TypingIndicator';
 
 // ---------------------------------------------------------------------------
 // Types
@@ -351,19 +352,14 @@ export function ChatInput({
         )}
 
         {/* Typing indicator */}
-        {isLoading && (
-          <div
-            className="mb-3 flex items-center gap-2 text-poe-text-secondary text-sm"
-            data-testid="typing-indicator"
-          >
-            <div className="flex gap-1">
-              <span className="w-2 h-2 bg-poe-gold rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
-              <span className="w-2 h-2 bg-poe-gold rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
-              <span className="w-2 h-2 bg-poe-gold rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
-            </div>
-            <span>Assistant is thinking...</span>
-          </div>
-        )}
+        <TypingIndicator
+          isVisible={isLoading}
+          label="Assistant is thinking..."
+          variant="dots"
+          size="sm"
+          display="inline"
+          className="mb-3"
+        />
 
         {/* Input form */}
         <form

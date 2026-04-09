@@ -1,6 +1,7 @@
 import { useEffect, useRef, useCallback } from 'react';
 import type { ChatMessage } from '@/types/chat';
 import { ChatMessageBubble } from './ChatMessageBubble';
+import { TypingIndicator } from './TypingIndicator';
 
 /**
  * Props for the ChatMessageList component.
@@ -14,6 +15,8 @@ export interface ChatMessageListProps {
   className?: string;
   /** Whether to automatically scroll to the bottom when new messages arrive */
   autoScroll?: boolean;
+  /** Whether the assistant is currently generating a response */
+  isStreaming?: boolean;
 }
 
 /**
@@ -50,6 +53,7 @@ export function ChatMessageList({
   conversationId,
   className = '',
   autoScroll = true,
+  isStreaming = false,
 }: ChatMessageListProps) {
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const previousMessageCountRef = useRef(messages.length);
@@ -64,13 +68,13 @@ export function ChatMessageList({
     }
   }, []);
 
-  // Auto-scroll when new messages are added
+  // Auto-scroll when new messages are added or streaming state changes
   useEffect(() => {
-    if (autoScroll && messages.length > previousMessageCountRef.current) {
+    if (autoScroll && (messages.length > previousMessageCountRef.current || isStreaming)) {
       scrollToBottom();
     }
     previousMessageCountRef.current = messages.length;
-  }, [messages.length, autoScroll, scrollToBottom]);
+  }, [messages.length, autoScroll, scrollToBottom, isStreaming]);
 
   // Scroll to bottom on initial mount if there are existing messages
   useEffect(() => {
@@ -89,16 +93,26 @@ export function ChatMessageList({
       aria-live="polite"
     >
       <div className="max-w-3xl mx-auto">
-        {messages.length === 0 ? (
+        {messages.length === 0 && !isStreaming ? (
           <WelcomeBanner />
         ) : (
-          messages.map((message, index) => (
-            <ChatMessageBubble
-              key={`${message.timestamp}-${index}`}
-              message={message}
-              conversationId={conversationId}
+          <>
+            {messages.map((message, index) => (
+              <ChatMessageBubble
+                key={`${message.timestamp}-${index}`}
+                message={message}
+                conversationId={conversationId}
+              />
+            ))}
+            {/* Typing indicator shown when streaming and last message is an empty assistant placeholder */}
+            <TypingIndicator
+              isVisible={isStreaming}
+              label="Assistant is thinking..."
+              variant="dots"
+              size="md"
+              display="bubble"
             />
-          ))
+          </>
         )}
       </div>
     </div>

@@ -102,6 +102,7 @@ function App() {
         <ChatMessageList
           messages={messages}
           conversationId={conversationId}
+          isStreaming={isStreaming}
         />
 
         {/* Chat input */}
