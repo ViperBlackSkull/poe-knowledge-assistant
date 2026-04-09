@@ -65,6 +65,9 @@ from src.services.scraper import (
     CategoryScraper,
     CategoryItem,
     scrape_category,
+    ItemDetailScraper,
+    ItemDetail,
+    scrape_item_detail,
 )
 from langchain_core.documents import Document
 
@@ -839,6 +842,7 @@ async def test_scraper_modules():
     from src.services.scraper.base import __all__ as base_exports
     from src.services.scraper.parsers import __all__ as parser_exports
     from src.services.scraper.category import __all__ as category_exports
+    from src.services.scraper.item_detail import __all__ as item_detail_exports
 
     return {
         "success": True,
@@ -867,6 +871,11 @@ async def test_scraper_modules():
                 "file": "category.py",
                 "description": "Category page scraper with pagination support",
                 "exports": category_exports,
+            },
+            "item_detail": {
+                "file": "item_detail.py",
+                "description": "Item detail page scraper for individual items/skills/gems",
+                "exports": item_detail_exports,
             },
         },
         "total_exports": len(scraper_exports),
@@ -1036,6 +1045,193 @@ async def test_scraper_category_list():
         "categories": categories,
         "total": len(categories),
         "message": "Known category pages on poedb.tw",
+    }
+
+
+class ItemDetailScrapeRequest(BaseModel):
+    """Request model for item detail page scraping."""
+    url: str = Field(
+        ...,
+        description="Full URL of the item detail page on poedb.tw",
+    )
+    category: str | None = Field(
+        default=None,
+        description="Optional category name for metadata enrichment",
+        max_length=200,
+    )
+
+    @field_validator("url")
+    @classmethod
+    def validate_url(cls, v):
+        """Validate URL format."""
+        if not v.startswith(("http://", "https://")):
+            raise ValueError("URL must start with http:// or https://")
+        return v
+
+    model_config = {
+        "json_schema_extra": {
+            "examples": [
+                {
+                    "url": "https://poedb.tw/us/Tabula_Rasa",
+                    "category": "Unique Body Armour",
+                }
+            ]
+        }
+    }
+
+
+class ItemDetailBatchRequest(BaseModel):
+    """Request model for batch item detail page scraping."""
+    urls: list[str] = Field(
+        ...,
+        description="List of item detail page URLs to scrape",
+        min_length=1,
+        max_length=50,
+    )
+    category: str | None = Field(
+        default=None,
+        description="Optional category name applied to all items",
+        max_length=200,
+    )
+
+    model_config = {
+        "json_schema_extra": {
+            "examples": [
+                {
+                    "urls": [
+                        "https://poedb.tw/us/Tabula_Rasa",
+                        "https://poedb.tw/us/Shavronnes_Wrappings",
+                    ],
+                    "category": "Unique Body Armour",
+                }
+            ]
+        }
+    }
+
+
+@api_router.post("/test/scraper/item", tags=["Scraper"])
+async def test_scraper_item_detail(request: ItemDetailScrapeRequest):
+    """
+    Scrape a single item detail page from poedb.tw.
+
+    This endpoint uses the :class:`ItemDetailScraper` to fetch an item
+    detail page, extract comprehensive structured data including name,
+    type, properties, requirements, modifiers, flavour text, image URL,
+    tags, categories, and related items.
+
+    Returns structured item data with all extracted fields.
+    """
+    try:
+        async with ItemDetailScraper() as scraper:
+            result = await scraper.scrape_item(
+                url=request.url,
+                category=request.category,
+            )
+
+        return {
+            "success": True,
+            "item": result,
+            "message": (
+                f"Scraped item '{result.get('name', 'unknown')}' "
+                f"(type={result.get('item_type', 'unknown')})"
+            ),
+        }
+    except ScraperError as e:
+        raise HTTPException(status_code=502, detail=str(e))
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Unexpected error: {str(e)}")
+
+
+@api_router.post("/test/scraper/item/batch", tags=["Scraper"])
+async def test_scraper_item_detail_batch(request: ItemDetailBatchRequest):
+    """
+    Scrape multiple item detail pages from poedb.tw.
+
+    This endpoint scrapes multiple item pages sequentially and returns
+    aggregated results with success/failure counts.
+
+    Limited to 50 items per request to prevent abuse.
+    """
+    try:
+        async with ItemDetailScraper() as scraper:
+            result = await scraper.scrape_items_batch(
+                urls=request.urls,
+                category=request.category,
+            )
+
+        # Truncate items for API response readability
+        items_preview = result.get("items", [])[:10]
+
+        return {
+            "success": True,
+            "total": result.get("total", 0),
+            "succeeded": result.get("succeeded", 0),
+            "failed": result.get("failed", 0),
+            "errors": result.get("errors", []),
+            "items_preview": items_preview,
+            "items_preview_count": len(items_preview),
+            "message": (
+                f"Batch scrape complete: "
+                f"{result.get('succeeded', 0)}/{result.get('total', 0)} succeeded"
+            ),
+        }
+    except ScraperError as e:
+        raise HTTPException(status_code=502, detail=str(e))
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Unexpected error: {str(e)}")
+
+
+@api_router.get("/test/scraper/item/examples", tags=["Scraper"])
+async def test_scraper_item_examples():
+    """
+    List example item detail page URLs on poedb.tw.
+
+    Returns a list of well-known item pages that can be used with the
+    ``/test/scraper/item`` endpoint for testing and demonstration.
+    """
+    examples = [
+        {
+            "name": "Tabula Rasa",
+            "url": "https://poedb.tw/us/Tabula_Rasa",
+            "category": "Unique Body Armour",
+            "description": "Simple Tabula Rasa unique item page",
+        },
+        {
+            "name": "Shavronne's Wrappings",
+            "url": "https://poedb.tw/us/Shavronnes_Wrappings",
+            "category": "Unique Body Armour",
+            "description": "Unique item with explicit modifiers",
+        },
+        {
+            "name": "Headhunter",
+            "url": "https://poedb.tw/us/Headhunter",
+            "category": "Unique Belt",
+            "description": "Highly sought-after unique belt",
+        },
+        {
+            "name": "Fireball",
+            "url": "https://poedb.tw/us/Fireball",
+            "category": "Skill Gem",
+            "description": "Active skill gem page",
+        },
+        {
+            "name": "Chaos Orb",
+            "url": "https://poedb.tw/us/Chaos_Orb",
+            "category": "Currency",
+            "description": "Currency item page",
+        },
+        {
+            "name": "The Doctor",
+            "url": "https://poedb.tw/us/The_Doctor",
+            "category": "Divination Card",
+            "description": "Divination card page",
+        },
+    ]
+    return {
+        "success": True,
+        "examples": examples,
+        "total": len(examples),
+        "message": "Example item detail pages on poedb.tw",
     }
 
 

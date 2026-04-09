@@ -1,0 +1,365 @@
+- generic [ref=e3]:
+  - complementary [ref=e4]:
+    - generic [ref=e5]:
+      - heading "Necromancer" [level=1] [ref=e6]
+      - button "Collapse sidebar" [ref=e7] [cursor=pointer]: ←
+    - navigation [ref=e8]:
+      - list [ref=e9]:
+        - listitem [ref=e10]:
+          - button "🔮 Dashboard" [ref=e11] [cursor=pointer]:
+            - generic [ref=e12]: 🔮
+            - generic [ref=e13]: Dashboard
+        - listitem [ref=e14]:
+          - button "💀 Minions" [ref=e15] [cursor=pointer]:
+            - generic [ref=e16]: 💀
+            - generic [ref=e17]: Minions
+        - listitem [ref=e18]:
+          - button "⚡ Summon" [ref=e19] [cursor=pointer]:
+            - generic [ref=e20]: ⚡
+            - generic [ref=e21]: Summon
+        - listitem [ref=e22]:
+          - button "📜 Tasks" [ref=e23] [cursor=pointer]:
+            - generic [ref=e24]: 📜
+            - generic [ref=e25]: Tasks
+        - listitem [ref=e26]:
+          - button "🗡️ Artifacts" [ref=e27] [cursor=pointer]:
+            - generic [ref=e28]: 🗡️
+            - generic [ref=e29]: Artifacts
+        - listitem [ref=e30]:
+          - button "🌙 Rituals" [ref=e31] [cursor=pointer]:
+            - generic [ref=e32]: 🌙
+            - generic [ref=e33]: Rituals
+        - listitem [ref=e34]:
+          - button "📖 Grimoire" [ref=e35] [cursor=pointer]:
+            - generic [ref=e36]: 📖
+            - generic [ref=e37]: Grimoire
+        - listitem [ref=e38]:
+          - button "⚙️ Settings" [ref=e39] [cursor=pointer]:
+            - generic [ref=e40]: ⚙️
+            - generic [ref=e41]: Settings
+    - generic [ref=e43]:
+      - generic [ref=e46]: System Active
+      - generic [ref=e47]:
+        - paragraph [ref=e48]: "Active Minions: 0"
+        - paragraph [ref=e49]: "Tasks Running: 0"
+  - banner [ref=e50]:
+    - generic [ref=e52]:
+      - generic [ref=e53]: 🔍
+      - textbox "Search the dark arts..." [active] [ref=e54]
+    - generic [ref=e55]:
+      - button "Notifications" [ref=e56] [cursor=pointer]: 🔔
+      - button "Quick summon" [ref=e58] [cursor=pointer]: Quick Summon
+      - generic [ref=e59]:
+        - generic [ref=e61]: 🧙
+        - generic [ref=e62]: Necromancer
+  - main [ref=e63]:
+    - generic [ref=e65]:
+      - generic [ref=e66]:
+        - heading "Dashboard" [level=1] [ref=e67]
+        - paragraph [ref=e68]: Command center for your dark army of minions
+      - generic [ref=e69]:
+        - generic [ref=e71]:
+          - generic [ref=e72]:
+            - paragraph [ref=e73]: Active Minions
+            - paragraph [ref=e74]: "0"
+          - generic [ref=e75]: 💀
+        - generic [ref=e77]:
+          - generic [ref=e78]:
+            - paragraph [ref=e79]: Tasks Completed
+            - paragraph [ref=e80]: "0"
+          - generic [ref=e81]: 📜
+        - generic [ref=e83]:
+          - generic [ref=e84]:
+            - paragraph [ref=e85]: Artifacts Created
+            - paragraph [ref=e86]: "0"
+          - generic [ref=e87]: 🗡️
+        - generic [ref=e89]:
+          - generic [ref=e90]:
+            - paragraph [ref=e91]: Rituals Performed
+            - paragraph [ref=e92]: "0"
+          - generic [ref=e93]: 🌙
+      - generic [ref=e94]:
+        - generic [ref=e96]:
+          - generic [ref=e98]:
+            - button "💀 Necromancer Status" [ref=e99] [cursor=pointer]:
+              - generic [ref=e100]: 💀
+              - heading "Necromancer Status" [level=2] [ref=e101]
+              - img [ref=e102]
+            - generic [ref=e104]:
+              - generic [ref=e107]: Connected
+              - generic [ref=e110]: Active
+          - generic [ref=e111]:
+            - generic [ref=e113]:
+              - img [ref=e116]
+              - generic [ref=e149]:
+                - img [ref=e150]
+                - generic [ref=e153]:
+                  - generic [ref=e154]: 63%
+                  - generic [ref=e155]: Complete
+              - generic [ref=e157]:
+                - generic [ref=e158]:
+                  - generic:
+                    - img
+                    - generic [ref=e160]: Active
+                  - paragraph:
+                    - text: "5"
+                    - generic [ref=e161]: /8
+                - generic [ref=e162]:
+                  - generic:
+                    - img
+                    - generic [ref=e164]: Success
+                  - paragraph: 63%
+                - generic [ref=e165]:
+                  - generic:
+                    - img
+                    - generic [ref=e167]: Goals
+                  - paragraph: 3 active
+                - generic [ref=e168]:
+                  - generic:
+                    - img
+                    - generic [ref=e170]: Tokens
+                  - paragraph: 28.4K
+                - generic [ref=e171]:
+                  - generic:
+                    - img
+                    - generic [ref=e173]: Time
+                  - paragraph: 30m 47s
+            - generic [ref=e176]:
+              - generic [ref=e177]:
+                - img [ref=e178]
+                - generic [ref=e180]: Power
+              - generic [ref=e181]:
+                - generic [ref=e182]: 72%
+                - generic [ref=e183]: Medium
+            - generic [ref=e190]:
+              - generic [ref=e191]:
+                - img [ref=e192]
+                - generic [ref=e194]: Current Goal
+              - paragraph [ref=e195]: Refactor the authentication module and add OAuth2 support with PKCE flow
+            - generic [ref=e197]:
+              - generic [ref=e198]:
+                - img [ref=e199]
+                - generic [ref=e201]: Task Statistics
+              - generic [ref=e202]:
+                - generic [ref=e203]:
+                  - paragraph [ref=e204]: "24"
+                  - paragraph [ref=e205]: Total
+                - generic [ref=e206]:
+                  - paragraph [ref=e207]: "3"
+                  - paragraph [ref=e208]: Pending
+                - generic [ref=e209]:
+                  - paragraph [ref=e210]: "4"
+                  - paragraph [ref=e211]: Active
+                - generic [ref=e212]:
+                  - paragraph [ref=e213]: "15"
+                  - paragraph [ref=e214]: Done
+                - generic [ref=e215]:
+                  - paragraph [ref=e216]: "2"
+                  - paragraph [ref=e217]: Failed
+              - generic [ref=e219]:
+                - generic [ref=e220]: Overall Progress
+                - generic [ref=e221]: 15/24
+            - generic [ref=e227]:
+              - generic [ref=e228]:
+                - img [ref=e229]
+                - generic [ref=e231]: Recent Activity
+                - generic [ref=e232]: 5 events
+              - generic [ref=e233]:
+                - generic [ref=e234]:
+                  - generic [ref=e235]: ✅
+                  - paragraph [ref=e237]: "Skeleton-3 completed task: refactor auth module"
+                  - generic [ref=e238]: 2m ago
+                - generic [ref=e239]:
+                  - generic [ref=e240]: ✨
+                  - paragraph [ref=e242]: Summoned new Ghoul minion for deployment
+                  - generic [ref=e243]: 5m ago
+                - generic [ref=e244]:
+                  - generic [ref=e245]: ⚡
+                  - paragraph [ref=e247]: Power level surged to 72%
+                  - generic [ref=e248]: 8m ago
+                - generic [ref=e249]:
+                  - generic [ref=e250]: ❌
+                  - paragraph [ref=e252]: "Ghost-1 failed task: API integration test"
+                  - generic [ref=e253]: 12m ago
+                - generic [ref=e254]:
+                  - generic [ref=e255]: 🔄
+                  - paragraph [ref=e257]: Status changed from idle to active
+                  - generic [ref=e258]: 15m ago
+            - generic [ref=e260]:
+              - generic [ref=e261]:
+                - generic [ref=e262]:
+                  - img [ref=e263]
+                  - generic [ref=e265]: Minion Army
+                - generic [ref=e266]: 5 total
+              - generic [ref=e267]:
+                - generic [ref=e268]:
+                  - generic [ref=e269]: 💀
+                  - generic [ref=e270]: Skeletons
+                  - generic [ref=e273]: "2"
+                - generic [ref=e274]:
+                  - generic [ref=e275]: 👻
+                  - generic [ref=e276]: Ghosts
+                  - generic [ref=e279]: "1"
+                - generic [ref=e280]:
+                  - generic [ref=e281]: 🧟
+                  - generic [ref=e282]: Ghouls
+                  - generic [ref=e285]: "1"
+                - generic [ref=e286]:
+                  - generic [ref=e287]: 👁
+                  - generic [ref=e288]: Wraiths
+                  - generic [ref=e291]: "1"
+                - generic [ref=e292]:
+                  - generic [ref=e293]: ⚔️
+                  - generic [ref=e294]: Reapers
+                  - generic [ref=e296]: "0"
+              - generic [ref=e298]:
+                - generic [ref=e299]: Active Deployment
+                - generic [ref=e300]: 5/8
+        - generic [ref=e304]:
+          - generic [ref=e305]:
+            - generic [ref=e306]:
+              - generic [ref=e307]:
+                - generic [ref=e308]: 📜
+                - heading "Task Queue" [level=2] [ref=e309]
+              - generic [ref=e311]: 0 tasks
+            - generic [ref=e312]:
+              - button "All (0)" [ref=e313] [cursor=pointer]
+              - button "Pending (0)" [ref=e314] [cursor=pointer]: Pending (0)
+              - button "In Progress (0)" [ref=e316] [cursor=pointer]: In Progress (0)
+              - button "Completed (0)" [ref=e318] [cursor=pointer]: Completed (0)
+              - button "Failed (0)" [ref=e320] [cursor=pointer]: Failed (0)
+          - generic [ref=e322]:
+            - generic [ref=e323]: 🔮
+            - paragraph [ref=e324]: No tasks in queue
+            - paragraph [ref=e325]: Tasks will appear here when minions are summoned
+          - generic [ref=e327]:
+            - generic [ref=e328]:
+              - paragraph [ref=e329]: "0"
+              - paragraph [ref=e330]: Pending
+            - generic [ref=e331]:
+              - paragraph [ref=e332]: "0"
+              - paragraph [ref=e333]: Active
+            - generic [ref=e334]:
+              - paragraph [ref=e335]: "0"
+              - paragraph [ref=e336]: Done
+            - generic [ref=e337]:
+              - paragraph [ref=e338]: "0"
+              - paragraph [ref=e339]: Failed
+        - generic [ref=e340]:
+          - generic [ref=e341]:
+            - heading "Minion Army" [level=2] [ref=e342]
+            - button "Manage" [ref=e343] [cursor=pointer]
+          - generic [ref=e344]:
+            - generic [ref=e345]:
+              - generic [ref=e346]:
+                - generic [ref=e347]: 💀
+                - generic [ref=e348]: Skeleton
+              - generic [ref=e349]: "0"
+            - generic [ref=e350]:
+              - generic [ref=e351]:
+                - generic [ref=e352]: 👻
+                - generic [ref=e353]: Ghost
+              - generic [ref=e354]: "0"
+            - generic [ref=e355]:
+              - generic [ref=e356]:
+                - generic [ref=e357]: 🧟
+                - generic [ref=e358]: Ghoul
+              - generic [ref=e359]: "0"
+            - generic [ref=e360]:
+              - generic [ref=e361]:
+                - generic [ref=e362]: 👁️
+                - generic [ref=e363]: Wraith
+              - generic [ref=e364]: "0"
+            - generic [ref=e365]:
+              - generic [ref=e366]:
+                - generic [ref=e367]: ⚔️
+                - generic [ref=e368]: Reaper
+              - generic [ref=e369]: "0"
+      - generic [ref=e370]:
+        - heading "Quick Actions" [level=2] [ref=e371]
+        - generic [ref=e372]:
+          - button "⚡ Summon Minion Create a new minion" [ref=e373] [cursor=pointer]:
+            - generic [ref=e374]: ⚡
+            - generic [ref=e375]: Summon Minion
+            - generic [ref=e376]: Create a new minion
+          - button "📜 New Task Assign a task" [ref=e377] [cursor=pointer]:
+            - generic [ref=e378]: 📜
+            - generic [ref=e379]: New Task
+            - generic [ref=e380]: Assign a task
+          - button "🗡️ Create Artifact Generate code or files" [ref=e381] [cursor=pointer]:
+            - generic [ref=e382]: 🗡️
+            - generic [ref=e383]: Create Artifact
+            - generic [ref=e384]: Generate code or files
+          - button "🌙 Perform Ritual Execute a workflow" [ref=e385] [cursor=pointer]:
+            - generic [ref=e386]: 🌙
+            - generic [ref=e387]: Perform Ritual
+            - generic [ref=e388]: Execute a workflow
+      - generic [ref=e389]:
+        - generic [ref=e390]:
+          - generic [ref=e391]:
+            - generic [ref=e392]:
+              - generic [ref=e393]: ⚡
+              - heading "Activity Feed" [level=2] [ref=e394]
+            - generic [ref=e396]: 0 events
+          - generic [ref=e397]:
+            - button "All (0)" [ref=e398] [cursor=pointer]
+            - button "Agents (0)" [ref=e399] [cursor=pointer]
+            - button "Tasks (0)" [ref=e400] [cursor=pointer]
+            - button "Goals (0)" [ref=e401] [cursor=pointer]
+            - button "Messages (0)" [ref=e402] [cursor=pointer]
+            - button "System (0)" [ref=e403] [cursor=pointer]
+        - generic [ref=e405]:
+          - generic [ref=e406]: 🔮
+          - paragraph [ref=e407]: No activity yet
+          - paragraph [ref=e408]: Events will appear here as minions perform tasks
+        - generic [ref=e410]:
+          - generic [ref=e411]:
+            - paragraph [ref=e412]: "0"
+            - paragraph [ref=e413]: Agents
+          - generic [ref=e414]:
+            - paragraph [ref=e415]: "0"
+            - paragraph [ref=e416]: Tasks
+          - generic [ref=e417]:
+            - paragraph [ref=e418]: "0"
+            - paragraph [ref=e419]: Goals
+          - generic [ref=e420]:
+            - paragraph [ref=e421]: "0"
+            - paragraph [ref=e422]: Messages
+          - generic [ref=e423]:
+            - paragraph [ref=e424]: "0"
+            - paragraph [ref=e425]: System
+  - complementary [ref=e426]:
+    - button "Collapse goal history" [ref=e427] [cursor=pointer]:
+      - generic [ref=e428]: ▶
+    - generic [ref=e429]:
+      - generic [ref=e430]:
+        - generic [ref=e431]: 📜
+        - heading "Goal History" [level=2] [ref=e432]
+      - generic [ref=e433]:
+        - textbox "Search goals..." [ref=e434]
+        - img [ref=e435]
+    - generic [ref=e438]:
+      - button "All (0)" [ref=e439] [cursor=pointer]
+      - button "0" [ref=e440] [cursor=pointer]:
+        - img [ref=e441]
+        - generic [ref=e443]: "0"
+      - button "0" [ref=e444] [cursor=pointer]:
+        - img [ref=e445]
+        - generic [ref=e448]: "0"
+      - button "0" [ref=e449] [cursor=pointer]:
+        - img [ref=e450]
+        - generic [ref=e452]: "0"
+    - generic [ref=e454]:
+      - generic [ref=e455]: 🔮
+      - paragraph [ref=e456]: No goals yet
+      - paragraph [ref=e457]: Submit a goal to begin your dark journey
+    - generic [ref=e459]:
+      - generic [ref=e460]:
+        - paragraph [ref=e461]: "0"
+        - paragraph [ref=e462]: Completed
+      - generic [ref=e463]:
+        - paragraph [ref=e464]: "0"
+        - paragraph [ref=e465]: Pending
+      - generic [ref=e466]:
+        - paragraph [ref=e467]: "0"
+        - paragraph [ref=e468]: Failed
