@@ -61,6 +61,19 @@ from src.services.scraper import (
     ScrapeBatchResult,
     SimpleScraper,
     check_scraper_health,
+    SELECTORS,
+    safe_get_text,
+    safe_get_attr,
+    find_first,
+    find_all,
+    extract_page_title,
+    extract_item_name,
+    extract_stats,
+    extract_flavor_text,
+    extract_requirements,
+    extract_image_url,
+    extract_links,
+    extract_table_data,
 )
 
 __all__ = [
@@ -110,4 +123,18 @@ __all__ = [
     "ScrapeBatchResult",
     "SimpleScraper",
     "check_scraper_health",
+    # Scraper DOM parsers
+    "SELECTORS",
+    "safe_get_text",
+    "safe_get_attr",
+    "find_first",
+    "find_all",
+    "extract_page_title",
+    "extract_item_name",
+    "extract_stats",
+    "extract_flavor_text",
+    "extract_requirements",
+    "extract_image_url",
+    "extract_links",
+    "extract_table_data",
 ]

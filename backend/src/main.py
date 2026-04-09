@@ -53,6 +53,15 @@ from src.services.scraper import (
     ScrapeBatchResult,
     SimpleScraper,
     check_scraper_health,
+    SELECTORS,
+    extract_page_title,
+    extract_item_name,
+    extract_stats,
+    extract_flavor_text,
+    extract_requirements,
+    extract_image_url,
+    extract_links,
+    extract_table_data,
 )
 from langchain_core.documents import Document
 
@@ -808,6 +817,96 @@ async def test_scraper_config():
         },
         "message": "Scraper configuration retrieved successfully",
     }
+
+
+@api_router.get("/test/scraper/modules", tags=["Scraper"])
+async def test_scraper_modules():
+    """
+    List all modules and exports in the scraper package.
+
+    This endpoint is useful for verifying that the scraper base module
+    structure is complete and all components are importable.
+
+    Returns:
+        dict: Module structure, exported classes/functions, and version info.
+    """
+    from src.services.scraper import __all__ as scraper_exports
+    from src.services.scraper.exceptions import __all__ as exception_exports
+    from src.services.scraper.http_client import __all__ as http_exports
+    from src.services.scraper.base import __all__ as base_exports
+    from src.services.scraper.parsers import __all__ as parser_exports
+
+    return {
+        "success": True,
+        "scraper_modules": {
+            "exceptions": {
+                "file": "exceptions.py",
+                "description": "Custom exception hierarchy for scraper errors",
+                "exports": exception_exports,
+            },
+            "http_client": {
+                "file": "http_client.py",
+                "description": "Async HTTP client with retries, rate limiting, and session management",
+                "exports": http_exports,
+            },
+            "base": {
+                "file": "base.py",
+                "description": "Abstract BaseScraper, ScrapeResult, ScrapeBatchResult, SimpleScraper",
+                "exports": base_exports,
+            },
+            "parsers": {
+                "file": "parsers.py",
+                "description": "DOM parsing utilities for poedb.tw pages",
+                "exports": parser_exports,
+            },
+        },
+        "total_exports": len(scraper_exports),
+        "all_exports": scraper_exports,
+        "message": "Scraper module structure retrieved successfully",
+    }
+
+
+@api_router.post("/test/scraper/parse", tags=["Scraper"])
+async def test_scraper_parse(request: ScraperFetchRequest):
+    """
+    Test endpoint for fetching a page from poedb.tw and running DOM parsers on it.
+
+    This endpoint fetches a page, parses it, and runs the DOM parsing
+    utilities to extract structured information.
+
+    Args:
+        request: Contains the path to fetch and parse.
+
+    Returns:
+        dict: Contains parsed page data including title, links, images,
+              tables, stats, and requirements extracted by the parsers.
+    """
+    try:
+        async with HTTPClient() as client:
+            html = await client.get(request.path)
+            from bs4 import BeautifulSoup
+            soup = BeautifulSoup(html, "lxml")
+
+            return {
+                "success": True,
+                "url": f"{DEFAULT_BASE_URL}{request.path}",
+                "html_length": len(html),
+                "parsed_data": {
+                    "page_title": extract_page_title(soup),
+                    "item_name": extract_item_name(soup),
+                    "image_url": extract_image_url(soup),
+                    "flavor_text": extract_flavor_text(soup),
+                    "stats": extract_stats(soup),
+                    "requirements": extract_requirements(soup),
+                    "links_count": len(extract_links(soup)),
+                    "tables_count": len(extract_table_data(soup)),
+                },
+                "message": "Page fetched and parsed successfully",
+            }
+    except ScraperError as e:
+        raise HTTPException(status_code=502, detail=str(e))
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Unexpected error: {str(e)}")
 
 
 @api_router.post(

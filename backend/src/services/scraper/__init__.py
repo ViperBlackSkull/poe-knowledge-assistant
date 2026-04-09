@@ -1,12 +1,14 @@
 """
 Scraper module for the poedb.tw knowledge base.
 
-This package provides the HTTP client, base scraper classes, and custom
-exceptions needed to scrape Path of Exile data from poedb.tw.
+This package provides the HTTP client, base scraper classes, DOM parsing
+utilities, and custom exceptions needed to scrape Path of Exile data from
+poedb.tw.
 
 Quick start::
 
     from src.services.scraper import HTTPClient, SimpleScraper, check_scraper_health
+    from src.services.scraper.parsers import extract_page_title, extract_table_data
 
     # Async usage
     async with HTTPClient() as client:
@@ -16,8 +18,22 @@ Quick start::
     scraper = SimpleScraper()
     result = scraper.fetch("/us/Unique_Weapons")
 
+    # DOM parsing
+    from bs4 import BeautifulSoup
+    soup = BeautifulSoup(html, "lxml")
+    title = extract_page_title(soup)
+
     # Health check
     status = await check_scraper_health()
+
+Module structure::
+
+    scraper/
+    +-- __init__.py        -- Public API & re-exports
+    +-- exceptions.py      -- Custom exception hierarchy
+    +-- http_client.py     -- Async HTTP client with retries & rate limiting
+    +-- base.py            -- Abstract BaseScraper, ScrapeResult, SimpleScraper
+    +-- parsers.py         -- DOM parsing utilities for poedb.tw pages
 """
 
 from src.services.scraper.exceptions import (
@@ -37,6 +53,21 @@ from src.services.scraper.base import (
     ScrapeBatchResult,
     ScrapeResult,
     SimpleScraper,
+)
+from src.services.scraper.parsers import (
+    SELECTORS,
+    extract_flavor_text,
+    extract_image_url,
+    extract_item_name,
+    extract_links,
+    extract_page_title,
+    extract_requirements,
+    extract_stats,
+    extract_table_data,
+    find_all,
+    find_first,
+    safe_get_attr,
+    safe_get_text,
 )
 
 
@@ -69,6 +100,20 @@ __all__ = [
     "ScrapeResult",
     "ScrapeBatchResult",
     "SimpleScraper",
+    # DOM parsers
+    "SELECTORS",
+    "safe_get_text",
+    "safe_get_attr",
+    "find_first",
+    "find_all",
+    "extract_page_title",
+    "extract_item_name",
+    "extract_stats",
+    "extract_flavor_text",
+    "extract_requirements",
+    "extract_image_url",
+    "extract_links",
+    "extract_table_data",
     # Health check
     "check_scraper_health",
 ]
