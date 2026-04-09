@@ -369,7 +369,7 @@
         "title": "Create config update endpoint PUT /api/config",
         "feature": "Configuration Panel",
         "dependencies": ["task-28"],
-        "status": "todo"
+        "status": "done"
       },
       {
         "id": "task-30",

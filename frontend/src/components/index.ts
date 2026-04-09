@@ -1,4 +1,4 @@
 // React components for the POE Knowledge Assistant
-// This file will contain reusable UI components
+// This file contains reusable UI components
 
-export { };
+export { Header, Sidebar, MainLayout } from './layout';

@@ -1,195 +1,126 @@
-import { useState } from 'react'
-import './App.css'
+import { MainLayout } from '@/components';
 
+/**
+ * Root application component.
+ *
+ * Wraps the entire app in the MainLayout which provides:
+ * - PoE-themed header with navigation and controls
+ * - Main content area for the chat interface
+ * - Optional sidebar for configuration
+ */
 function App() {
-  const [count, setCount] = useState(0)
-  const [inputValue, setInputValue] = useState('')
-
   return (
-    <div className="min-h-screen bg-gradient-to-b from-[#1A1A1F] to-[#0C0C0E]">
-      {/* Header */}
-      <header className="bg-gradient-to-b from-[#2A2A32] to-[#1A1A1F] border-b border-[#3D3D44] shadow-lg">
-        <div className="max-w-7xl mx-auto px-4 py-6">
-          <h1 className="poe-header poe-header-large">
-            POE Knowledge Assistant
-          </h1>
-          <p className="text-[#9F9F9F] mt-2">
-            Your intelligent assistant for Path of Exile
-          </p>
+    <MainLayout showSidebar>
+      {/* Chat Interface Placeholder */}
+      <div className="flex flex-col h-full">
+        {/* Chat messages area */}
+        <div className="flex-1 overflow-y-auto px-4 py-6 sm:px-6 lg:px-8">
+          {/* Welcome message */}
+          <div className="max-w-3xl mx-auto">
+            <div className="text-center mb-8">
+              <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-poe-bg-tertiary border border-poe-border mb-4">
+                <span className="text-2xl text-poe-gold">?</span>
+              </div>
+              <h2 className="poe-header text-xl mb-2">
+                Welcome, Exile
+              </h2>
+              <p className="text-poe-text-secondary text-sm">
+                Ask me anything about Path of Exile - items, builds, mechanics, and more.
+              </p>
+            </div>
+
+            {/* Placeholder chat message - assistant */}
+            <div className="flex gap-3 mb-4">
+              <div className="shrink-0 w-8 h-8 rounded bg-poe-gold/20 border border-poe-gold/30 flex items-center justify-center">
+                <span className="text-poe-gold text-xs font-bold">A</span>
+              </div>
+              <div className="poe-card flex-1 max-w-[80%]">
+                <p className="text-poe-text-primary text-sm">
+                  Greetings, Exile! I am the PoE Knowledge Assistant. I can help you with
+                  item information, build recommendations, game mechanics, and much more.
+                  What would you like to know?
+                </p>
+              </div>
+            </div>
+
+            {/* Placeholder chat message - user */}
+            <div className="flex gap-3 mb-4 justify-end">
+              <div className="poe-card flex-1 max-w-[80%] bg-poe-bg-tertiary border-poe-gold/30">
+                <p className="text-poe-text-highlight text-sm">
+                  What are the best starter builds for Path of Exile 2?
+                </p>
+              </div>
+              <div className="shrink-0 w-8 h-8 rounded bg-poe-bg-tertiary border border-poe-border flex items-center justify-center">
+                <span className="text-poe-text-secondary text-xs font-bold">U</span>
+              </div>
+            </div>
+
+            {/* Placeholder chat message - assistant */}
+            <div className="flex gap-3 mb-4">
+              <div className="shrink-0 w-8 h-8 rounded bg-poe-gold/20 border border-poe-gold/30 flex items-center justify-center">
+                <span className="text-poe-gold text-xs font-bold">A</span>
+              </div>
+              <div className="poe-card flex-1 max-w-[80%]">
+                <p className="text-poe-text-primary text-sm">
+                  Here are some great starter builds for Path of Exile 2:
+                </p>
+                <ul className="text-poe-text-secondary text-sm mt-2 space-y-1 list-disc list-inside">
+                  <li>Warrior - Armor-stacking melee bruiser</li>
+                  <li>Ranger - Lightning Arrow bow build</li>
+                  <li>Sorceress - Spark chain-cast elementalist</li>
+                  <li>Monk - Ice strike dodge-based melee</li>
+                </ul>
+                <div className="mt-3 pt-3 border-t border-poe-border">
+                  <p className="text-poe-text-muted text-xs">
+                    Sources: poewiki.net, poe2db.net
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
-      </header>
 
-      {/* Main Content */}
-      <main className="max-w-7xl mx-auto px-4 py-8">
-        {/* Tailwind Test Section */}
-        <section className="mb-8">
-          <h2 className="text-2xl poe-header mb-4">
-            Tailwind CSS Configuration Test
-          </h2>
-          <div className="poe-card">
-            <p className="text-[#C8C8C8] mb-4">
-              Tailwind CSS is successfully configured with Path of Exile theme!
-            </p>
-
-            {/* Color Palette Demo */}
-            <div className="mb-6">
-              <h3 className="text-lg text-[#FFFFFF] mb-3">
-                PoE Color Palette
-              </h3>
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-                <div className="bg-[#AF6025] p-3 rounded text-center text-[#0C0C0E] font-bold">
-                  Gold Primary
-                </div>
-                <div className="bg-[#D4A85A] p-3 rounded text-center text-[#0C0C0E] font-bold">
-                  Gold Light
-                </div>
-                <div className="bg-[#7D4A1C] p-3 rounded text-center text-[#FFFFFF] font-bold">
-                  Gold Dark
-                </div>
-                <div className="bg-[#1C1C22] border border-[#3D3D44] p-3 rounded text-center text-[#C8C8C8]">
-                  Background
-                </div>
+        {/* Chat input area */}
+        <div className="border-t border-poe-border bg-poe-bg-secondary px-4 py-4 sm:px-6 lg:px-8">
+          <div className="max-w-3xl mx-auto">
+            <form
+              onSubmit={(e) => e.preventDefault()}
+              className="flex gap-3 items-end"
+            >
+              <div className="flex-1 relative">
+                <textarea
+                  placeholder="Ask about items, builds, mechanics..."
+                  rows={1}
+                  className="poe-input w-full resize-none text-sm pr-10"
+                  aria-label="Chat message input"
+                />
               </div>
-            </div>
-
-            {/* Rarity Colors Demo */}
-            <div className="mb-6">
-              <h3 className="text-lg text-[#FFFFFF] mb-3">
-                Item Rarity Colors
-              </h3>
-              <div className="flex flex-wrap gap-4">
-                <span className="poe-text-normal font-bold">Normal</span>
-                <span className="poe-text-magic font-bold">Magic</span>
-                <span className="poe-text-rare font-bold">Rare</span>
-                <span className="poe-text-unique font-bold">Unique</span>
-                <span className="poe-text-gem font-bold">Gem</span>
-                <span className="poe-text-currency font-bold">Currency</span>
-              </div>
-            </div>
-
-            {/* Element Colors Demo */}
-            <div className="mb-6">
-              <h3 className="text-lg text-[#FFFFFF] mb-3">
-                Element Colors
-              </h3>
-              <div className="flex flex-wrap gap-4">
-                <span className="text-fire font-bold">Fire</span>
-                <span className="text-cold font-bold">Cold</span>
-                <span className="text-lightning font-bold">Lightning</span>
-                <span className="text-chaos font-bold">Chaos</span>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* Interactive Components Demo */}
-        <section className="mb-8">
-          <h2 className="text-2xl poe-header mb-4">
-            PoE Component Examples
-          </h2>
-
-          <div className="grid md:grid-cols-2 gap-6">
-            {/* Buttons Demo */}
-            <div className="poe-card">
-              <h3 className="text-lg text-[#FFFFFF] mb-4">
-                Buttons
-              </h3>
-              <div className="space-y-4">
-                <div>
-                  <button
-                    onClick={() => setCount((count) => count + 1)}
-                    className="poe-button"
-                  >
-                    Count is {count}
-                  </button>
-                </div>
-                <div>
-                  <button className="poe-button-secondary">
-                    Secondary Button
-                  </button>
-                </div>
-                <div>
-                  <button className="px-4 py-2 bg-[#AF6025] text-[#FFFFFF] rounded border border-[#7D4A1C] hover:shadow-[0_0_10px_rgba(175,96,37,0.5)] transition-all duration-200">
-                    Unique Style
-                  </button>
-                </div>
-              </div>
-            </div>
-
-            {/* Input Demo */}
-            <div className="poe-card">
-              <h3 className="text-lg text-[#FFFFFF] mb-4">
-                Input Fields
-              </h3>
-              <div className="space-y-4">
-                <div>
-                  <label className="block text-[#9F9F9F] mb-2">
-                    Search the Knowledge Base
-                  </label>
-                  <input
-                    type="text"
-                    placeholder="Ask about items, builds, mechanics..."
-                    value={inputValue}
-                    onChange={(e) => setInputValue(e.target.value)}
-                    className="poe-input w-full"
+              <button
+                type="submit"
+                className="poe-button shrink-0 flex items-center gap-2"
+                aria-label="Send message"
+              >
+                <svg
+                  className="w-4 h-4"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth={2}
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5"
                   />
-                </div>
-                <div>
-                  <label className="block text-[#9F9F9F] mb-2">
-                    Character Name
-                  </label>
-                  <input
-                    type="text"
-                    placeholder="Enter character name"
-                    className="poe-input w-full"
-                  />
-                </div>
-              </div>
-            </div>
+                </svg>
+                <span className="hidden sm:inline">Send</span>
+              </button>
+            </form>
           </div>
-        </section>
-
-        {/* Glow Effects Demo */}
-        <section>
-          <h2 className="text-2xl poe-header mb-4">
-            Visual Effects
-          </h2>
-          <div className="grid md:grid-cols-3 gap-6">
-            <div className="poe-card hover:shadow-[0_0_10px_rgba(175,96,37,0.5)] transition-shadow duration-300">
-              <h4 className="text-[#AF6025] font-bold mb-2">Gold Glow</h4>
-              <p className="text-[#9F9F9F] text-sm">
-                Hover for golden glow effect
-              </p>
-            </div>
-            <div className="poe-card hover:shadow-[0_0_20px_rgba(175,96,37,0.7)] transition-shadow duration-300">
-              <h4 className="text-[#FFFF77] font-bold mb-2">Strong Glow</h4>
-              <p className="text-[#9F9F9F] text-sm">
-                Hover for stronger glow
-              </p>
-            </div>
-            <div className="poe-card border-[#8888FF] hover:border-[#8888FF] transition-colors duration-300">
-              <h4 className="text-[#8888FF] font-bold mb-2">Magic Border</h4>
-              <p className="text-[#9F9F9F] text-sm">
-                Magic rarity styling
-              </p>
-            </div>
-          </div>
-        </section>
-      </main>
-
-      {/* Footer */}
-      <footer className="border-t border-[#3D3D44] bg-[#141418] mt-12">
-        <div className="max-w-7xl mx-auto px-4 py-6 text-center">
-          <p className="text-[#6B6B6B] text-sm">
-            PoE Knowledge Assistant - Powered by React + Vite + TypeScript + Tailwind CSS
-          </p>
-          <p className="text-[#6B6B6B] text-xs mt-2">
-            Path of Exile is a trademark of Grinding Gear Games
-          </p>
         </div>
-      </footer>
-    </div>
-  )
+      </div>
+    </MainLayout>
+  );
 }
 
-export default App
+export default App;

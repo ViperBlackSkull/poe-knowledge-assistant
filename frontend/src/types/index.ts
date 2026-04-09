@@ -9,6 +9,7 @@
  *   scraper.ts   -- Data ingestion models (items, categories, scrape jobs)
  *   streaming.ts -- SSE streaming events for real-time chat
  *   endpoints.ts -- Per-endpoint request/response shapes for the live API routes
+ *   layout.ts    -- Layout component props (header, sidebar, main layout)
  *
  * Usage:
  *   import { ChatRequest, ChatResponse } from '@/types';
@@ -115,3 +116,14 @@ export type {
   ScraperFetchAsyncResponse,
   ScraperConfigResponse,
 } from './endpoints';
+
+// ---------------------------------------------------------------------------
+// Layout component types
+// ---------------------------------------------------------------------------
+export type {
+  NavItem,
+  HeaderProps,
+  MainLayoutProps,
+  ContentAreaProps,
+  SidebarProps,
+} from './layout';
