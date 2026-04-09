@@ -417,7 +417,7 @@
         "title": "Create chat message list component",
         "feature": "Chat Interface",
         "dependencies": ["task-34"],
-        "status": "in-progress"
+        "status": "done"
       },
       {
         "id": "task-36",
