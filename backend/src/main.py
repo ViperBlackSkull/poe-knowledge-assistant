@@ -1778,6 +1778,201 @@ async def jobs_config():
 
 
 # ------------------------------------------------------------------
+# Admin endpoints
+# ------------------------------------------------------------------
+
+
+# Known category URLs for each game version
+_POE1_CATEGORIES: list[dict[str, str]] = [
+    {"name": "Unique Weapon", "url": "https://poedb.tw/us/Unique_Weapon"},
+    {"name": "Unique Armour", "url": "https://poedb.tw/us/Unique_Armour"},
+    {"name": "Unique Accessory", "url": "https://poedb.tw/us/Unique_Accessory"},
+    {"name": "Unique Flask", "url": "https://poedb.tw/us/Unique_Flask"},
+    {"name": "Unique Jewel", "url": "https://poedb.tw/us/Unique_Jewel"},
+    {"name": "Skill Gem", "url": "https://poedb.tw/us/Skill_Gem"},
+    {"name": "Support Gem", "url": "https://poedb.tw/us/Support_Gem"},
+    {"name": "Currency", "url": "https://poedb.tw/us/Currency"},
+    {"name": "Map", "url": "https://poedb.tw/us/Map"},
+    {"name": "Divination Card", "url": "https://poedb.tw/us/Divination_Card"},
+    {"name": "Boss", "url": "https://poedb.tw/us/Boss"},
+    {"name": "Area", "url": "https://poedb.tw/us/Area"},
+]
+
+_POE2_CATEGORIES: list[dict[str, str]] = [
+    {"name": "Unique Weapon", "url": "https://poe2db.tw/us/Unique_Weapon"},
+    {"name": "Unique Armour", "url": "https://poe2db.tw/us/Unique_Armour"},
+    {"name": "Unique Accessory", "url": "https://poe2db.tw/us/Unique_Accessory"},
+    {"name": "Unique Flask", "url": "https://poe2db.tw/us/Unique_Flask"},
+    {"name": "Unique Jewel", "url": "https://poe2db.tw/us/Unique_Jewel"},
+    {"name": "Skill Gem", "url": "https://poe2db.tw/us/Skill_Gem"},
+    {"name": "Support Gem", "url": "https://poe2db.tw/us/Support_Gem"},
+    {"name": "Currency", "url": "https://poe2db.tw/us/Currency"},
+    {"name": "Map", "url": "https://poe2db.tw/us/Map"},
+    {"name": "Divination Card", "url": "https://poe2db.tw/us/Divination_Card"},
+    {"name": "Boss", "url": "https://poe2db.tw/us/Boss"},
+    {"name": "Area", "url": "https://poe2db.tw/us/Area"},
+]
+
+
+class ScrapeTriggerRequest(BaseModel):
+    """Request model for triggering a scraping job via admin endpoint."""
+    game: Optional[str] = Field(
+        default=None,
+        description=(
+            "Game version to scrape: 'poe1', 'poe2', or null/omitted for both. "
+            "Must be one of: poe1, poe2."
+        ),
+    )
+    depth: str = Field(
+        default="shallow",
+        description=(
+            "Scraping depth: 'shallow' scrapes category pages only, "
+            "'deep' scrapes categories plus all item detail pages."
+        ),
+    )
+
+    @field_validator("game")
+    @classmethod
+    def validate_game(cls, v):
+        """Validate game parameter."""
+        if v is None:
+            return v
+        v_lower = v.lower().strip()
+        if v_lower not in ("poe1", "poe2"):
+            raise ValueError(
+                f"Invalid game parameter '{v}'. Must be one of: poe1, poe2, or null for both."
+            )
+        return v_lower
+
+    @field_validator("depth")
+    @classmethod
+    def validate_depth(cls, v):
+        """Validate depth parameter."""
+        v_lower = v.lower().strip()
+        if v_lower not in ("shallow", "deep"):
+            raise ValueError(
+                f"Invalid depth parameter '{v}'. Must be 'shallow' or 'deep'."
+            )
+        return v_lower
+
+    model_config = {
+        "json_schema_extra": {
+            "examples": [
+                {
+                    "game": "poe1",
+                    "depth": "shallow",
+                },
+                {
+                    "game": "poe2",
+                    "depth": "deep",
+                },
+                {
+                    "game": None,
+                    "depth": "shallow",
+                },
+            ]
+        }
+    }
+
+
+class ScrapeTriggerResponse(BaseModel):
+    """Response model for the scrape trigger endpoint."""
+    success: bool = Field(description="Whether the scrape was successfully triggered")
+    job_ids: list[str] = Field(description="List of created job IDs")
+    games: list[str] = Field(description="List of games being scraped")
+    depth: str = Field(description="Scraping depth used")
+    total_jobs: int = Field(description="Total number of jobs created")
+    status: str = Field(description="Overall status of the trigger request")
+    message: str = Field(description="Human-readable status message")
+
+
+@api_router.post("/admin/scrape", tags=["Admin"], response_model=ScrapeTriggerResponse)
+async def admin_scrape_trigger(request: ScrapeTriggerRequest):
+    """
+    Trigger a knowledge base scraping operation.
+
+    Creates scraping jobs for the specified game(s) and depth level,
+    adds them to the job queue, and starts the job processing loop
+    asynchronously.
+
+    **Game Parameter**:
+    - ``poe1``: Scrape Path of Exile 1 data from poedb.tw
+    - ``poe2``: Scrape Path of Exile 2 data from poe2db.tw
+    - ``null`` (omit): Scrape both games
+
+    **Depth Parameter**:
+    - ``shallow``: Only scrape category index pages to discover item links
+    - ``deep``: Scrape category pages AND all individual item detail pages
+
+    The scraping runs asynchronously in the background. Use the returned
+    job IDs with the ``/api/jobs/{job_id}`` endpoint to monitor progress.
+
+    Returns:
+        ScrapeTriggerResponse with job IDs, games, and status info.
+    """
+    try:
+        manager = get_job_manager()
+
+        # Determine which games to scrape
+        if request.game is None:
+            games_to_scrape = ["poe1", "poe2"]
+        else:
+            games_to_scrape = [request.game]
+
+        is_deep = request.depth == "deep"
+        job_type = "full_category" if is_deep else "category"
+
+        all_job_ids: list[str] = []
+
+        for game in games_to_scrape:
+            categories = _POE1_CATEGORIES if game == "poe1" else _POE2_CATEGORIES
+
+            for cat in categories:
+                job_name = (
+                    f"{'Deep' if is_deep else 'Shallow'} scrape: "
+                    f"{cat['name']} ({game.upper()})"
+                )
+                result = manager.add_job(
+                    name=job_name,
+                    job_type=job_type,
+                    url=cat["url"],
+                    priority=JobPriority.NORMAL,
+                    game=game,
+                    category=cat["name"],
+                    metadata={
+                        "depth": request.depth,
+                        "trigger_source": "admin_api",
+                    },
+                )
+                all_job_ids.append(result["job_id"])
+
+        # Ensure the job manager processing loop is running
+        if not manager._running:
+            await manager.start()
+
+        return ScrapeTriggerResponse(
+            success=True,
+            job_ids=all_job_ids,
+            games=games_to_scrape,
+            depth=request.depth,
+            total_jobs=len(all_job_ids),
+            status="started",
+            message=(
+                f"Scraping triggered for {', '.join(g.upper() for g in games_to_scrape)} "
+                f"with {request.depth} depth. {len(all_job_ids)} jobs created."
+            ),
+        )
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    except Exception as e:
+        logger.error("Failed to trigger scrape: %s", e)
+        raise HTTPException(
+            status_code=500,
+            detail=f"Failed to trigger scrape: {str(e)}",
+        )
+
+
+# ------------------------------------------------------------------
 # Indexer endpoints
 # ------------------------------------------------------------------
 
