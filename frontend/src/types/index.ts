@@ -127,3 +127,16 @@ export type {
   ContentAreaProps,
   SidebarProps,
 } from './layout';
+
+// ---------------------------------------------------------------------------
+// Markdown renderer types
+// ---------------------------------------------------------------------------
+export type {
+  MarkdownRendererProps,
+  MarkdownVariant,
+  ParsedBlock,
+  ListItem,
+  TableRow,
+  TableColumnAlignment,
+  MarkdownStyleConfig,
+} from './markdown';

@@ -1,5 +1,5 @@
 import type { ChatMessage, MessageRole } from '@/types/chat';
-import { MarkdownRenderer } from './MarkdownRenderer';
+import { MarkdownRenderer } from '../common/MarkdownRenderer';
 
 /**
  * Props for the ChatMessageBubble component.
@@ -154,7 +154,7 @@ export function ChatMessageBubble({
             {message.content}
           </p>
         ) : (
-          <MarkdownRenderer content={message.content} />
+          <MarkdownRenderer content={message.content} variant="chat" showCodeCopyButton />
         )}
 
         {/* Metadata footer */}

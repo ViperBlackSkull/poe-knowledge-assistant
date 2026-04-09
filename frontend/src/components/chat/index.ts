@@ -7,3 +7,6 @@ export type { ChatMessageListProps } from './ChatMessageList';
 export type { ChatMessageBubbleProps } from './ChatMessageBubble';
 export type { ChatInputProps } from './ChatInput';
 export type { TypingIndicatorProps, TypingIndicatorVariant, TypingIndicatorSize } from './TypingIndicator';
+
+// Re-export the enhanced MarkdownRenderer from common for backward compatibility
+export { MarkdownRenderer as EnhancedMarkdownRenderer } from '../common/MarkdownRenderer';
