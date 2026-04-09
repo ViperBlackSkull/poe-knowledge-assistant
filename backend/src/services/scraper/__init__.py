@@ -91,6 +91,12 @@ from src.services.scraper.item_detail import (
     ItemDetailScraper,
     scrape_item_detail,
 )
+from src.services.scraper.game_version import (
+    detect_game_version,
+    detect_game_version_async,
+    detect_game_version_model,
+    get_version_for_url,
+)
 
 
 async def check_scraper_health() -> dict:
@@ -144,6 +150,11 @@ __all__ = [
     "ItemDetail",
     "ItemDetailScraper",
     "scrape_item_detail",
+    # Game version detection
+    "detect_game_version",
+    "detect_game_version_async",
+    "detect_game_version_model",
+    "get_version_for_url",
     # Health check
     "check_scraper_health",
 ]

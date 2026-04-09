@@ -68,6 +68,10 @@ from src.services.scraper import (
     ItemDetailScraper,
     ItemDetail,
     scrape_item_detail,
+    detect_game_version,
+    detect_game_version_async,
+    detect_game_version_model,
+    get_version_for_url,
 )
 from langchain_core.documents import Document
 
@@ -1233,6 +1237,159 @@ async def test_scraper_item_examples():
         "total": len(examples),
         "message": "Example item detail pages on poedb.tw",
     }
+
+
+class GameVersionDetectRequest(BaseModel):
+    """Request model for game version detection."""
+    url: str = Field(
+        ...,
+        description="Full URL to detect game version for",
+    )
+    fetch_content: bool = Field(
+        default=False,
+        description="If True, fetch the page and use content-based detection. "
+                    "If False, only URL-based heuristics are used.",
+    )
+
+    @field_validator("url")
+    @classmethod
+    def validate_url(cls, v):
+        """Validate URL format."""
+        if not v.startswith(("http://", "https://")):
+            raise ValueError("URL must start with http:// or https://")
+        return v
+
+    model_config = {
+        "json_schema_extra": {
+            "examples": [
+                {
+                    "url": "https://poedb.tw/us/Tabula_Rasa",
+                    "fetch_content": False,
+                },
+                {
+                    "url": "https://poe2db.tw/us/Fireball",
+                    "fetch_content": True,
+                },
+            ]
+        }
+    }
+
+
+@api_router.post("/test/scraper/game-version", tags=["Scraper"])
+async def test_detect_game_version(request: GameVersionDetectRequest):
+    """
+    Detect whether a URL belongs to PoE1 or PoE2.
+
+    This endpoint analyses the URL structure (domain, path) and optionally
+    the page content to determine if the URL points to Path of Exile 1 or
+    Path of Exile 2 content.
+
+    When ``fetch_content`` is ``True``, the page is fetched and the HTML
+    content is analysed for additional version indicators (page title,
+    meta tags, etc.) for more accurate detection.
+
+    Returns:
+        dict: Detection result with ``game_version`` ('poe1' or 'poe2'),
+        ``url``, ``detection_method``, and optional ``content_signals``.
+    """
+    try:
+        if request.fetch_content:
+            version = await detect_game_version_async(request.url)
+            method = "url_and_content"
+        else:
+            version = get_version_for_url(request.url)
+            method = "url_only"
+
+        return {
+            "success": True,
+            "url": request.url,
+            "game_version": version,
+            "detection_method": method,
+            "message": f"Detected {version.upper()} for {request.url}",
+        }
+    except Exception as e:
+        raise HTTPException(
+            status_code=500,
+            detail=f"Game version detection failed: {str(e)}",
+        )
+
+
+class GameVersionBatchRequest(BaseModel):
+    """Request model for batch game version detection."""
+    urls: list[str] = Field(
+        ...,
+        description="List of URLs to detect game versions for",
+        min_length=1,
+        max_length=100,
+    )
+
+    model_config = {
+        "json_schema_extra": {
+            "examples": [
+                {
+                    "urls": [
+                        "https://poedb.tw/us/Tabula_Rasa",
+                        "https://poe2db.tw/us/Fireball",
+                        "https://poedb.tw/us/Headhunter",
+                    ],
+                }
+            ]
+        }
+    }
+
+
+@api_router.post("/test/scraper/game-version/batch", tags=["Scraper"])
+async def test_detect_game_version_batch(request: GameVersionBatchRequest):
+    """
+    Detect game versions for multiple URLs at once.
+
+    Accepts a JSON body with a ``urls`` list and returns the detected version
+    for each.  Only URL-based detection is used (no page fetching).
+
+    Returns:
+        dict: Batch detection results with per-URL versions and summary.
+    """
+    try:
+        results = []
+        poe1_count = 0
+        poe2_count = 0
+
+        for url in request.urls:
+            try:
+                version = get_version_for_url(url)
+                if version == "poe1":
+                    poe1_count += 1
+                else:
+                    poe2_count += 1
+                results.append({
+                    "url": url,
+                    "game_version": version,
+                    "success": True,
+                })
+            except Exception as exc:
+                results.append({
+                    "url": url,
+                    "game_version": None,
+                    "success": False,
+                    "error": str(exc),
+                })
+
+        return {
+            "success": True,
+            "results": results,
+            "total": len(request.urls),
+            "poe1_count": poe1_count,
+            "poe2_count": poe2_count,
+            "message": (
+                f"Detected versions for {len(request.urls)} URLs: "
+                f"{poe1_count} PoE1, {poe2_count} PoE2"
+            ),
+        }
+    except Exception as e:
+        raise HTTPException(
+            status_code=500,
+            detail=f"Batch game version detection failed: {str(e)}",
+        )
 
 
 @api_router.post(

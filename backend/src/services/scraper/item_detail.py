@@ -28,6 +28,7 @@ from bs4 import BeautifulSoup, Tag
 
 from src.models.scraper import Game, ItemType
 from src.services.scraper.exceptions import ScraperError, ScraperParsingError
+from src.services.scraper.game_version import detect_game_version
 from src.services.scraper.http_client import DEFAULT_BASE_URL, HTTPClient
 from src.services.scraper.parsers import (
     extract_flavor_text,
@@ -351,11 +352,16 @@ class ItemDetailScraper:
 
         # 13. Additional metadata
         elapsed = __import__("time").monotonic() - start_time
+
+        # 14. Auto-detect game version from URL and page content
+        detected_version = detect_game_version(url, soup=soup)
+
         detail.metadata = {
             "page_title": extract_page_title(soup),
             "html_length": len(html),
             "scrape_elapsed_s": round(elapsed, 3),
-            "game": self.game.value,
+            "game": detected_version,
+            "game_source": self.game.value,
         }
 
         self._logger.info(
