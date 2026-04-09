@@ -1,0 +1,383 @@
+- generic [active] [ref=e1]:
+  - banner [ref=e3]:
+    - navigation [ref=e4]:
+      - generic [ref=e5]:
+        - link "PoEDB" [ref=e6] [cursor=pointer]:
+          - /url: /us/
+          - text: PoEDB
+          - subscript
+        - generic [ref=e7]:
+          - list [ref=e8]:
+            - listitem [ref=e9]:
+              - link "Items" [ref=e10] [cursor=pointer]:
+                - /url: "#"
+                - text: Items
+            - listitem [ref=e11]:
+              - link "Modifiers" [ref=e12] [cursor=pointer]:
+                - /url: "#"
+                - text: Modifiers
+            - listitem [ref=e13]:
+              - link "Quest" [ref=e14] [cursor=pointer]:
+                - /url: "#"
+                - text: Quest
+            - listitem [ref=e15]:
+              - link "Economy" [ref=e16] [cursor=pointer]:
+                - /url: Economy
+            - listitem [ref=e17]:
+              - link "Patreon" [ref=e18] [cursor=pointer]:
+                - /url: /us/patreon
+          - list [ref=e19]:
+            - listitem [ref=e20]:
+              - link "PoE2DB" [ref=e21] [cursor=pointer]:
+                - /url: https://poe2db.tw/us/Tabula_Rasa
+            - listitem [ref=e22]:
+              - link [ref=e23] [cursor=pointer]:
+                - /url: "#"
+          - search [ref=e25]:
+            - searchbox "Search" [ref=e26]
+  - main [ref=e28]:
+    - generic [ref=e31]:
+      - link "Mirage v3.28" [ref=e32] [cursor=pointer]:
+        - /url: Mirage_league
+        - img "Mirage" [ref=e34]
+      - link "Settlers v3.25" [ref=e35] [cursor=pointer]:
+        - /url: Settlers_league
+        - img "VillageShipping" [ref=e37]
+      - link "Sanctum v3.20" [ref=e38] [cursor=pointer]:
+        - /url: Sanctum_league
+        - img "Sanctum" [ref=e40]
+      - link "Archnemesis v3.17" [ref=e41] [cursor=pointer]:
+        - /url: Archnemesis_league
+        - img "Archnemesis" [ref=e43]
+      - link "Expedition v3.15" [ref=e44] [cursor=pointer]:
+        - /url: Expedition_league
+        - img "ExpeditionDetonator" [ref=e46]
+      - link "Ultimatum v3.14" [ref=e47] [cursor=pointer]:
+        - /url: Ultimatum_league
+        - img "UltimatumAltar" [ref=e49]
+      - link "Ritual v3.13" [ref=e50] [cursor=pointer]:
+        - /url: Ritual_league
+        - img "RitualRune" [ref=e52]
+      - link "Heist v3.12" [ref=e53] [cursor=pointer]:
+        - /url: Heist_league
+        - img "HeistSumgglersCache" [ref=e55]
+      - link "Harvest v3.11" [ref=e56] [cursor=pointer]:
+        - /url: Harvest_league
+        - img "HarvestPortal" [ref=e58]
+      - link "Delirium v3.10" [ref=e59] [cursor=pointer]:
+        - /url: Delirium_league
+        - img "AfflictionInitiator" [ref=e61]
+      - link "Blight v3.8" [ref=e62] [cursor=pointer]:
+        - /url: Blight_league
+        - img "BlightCore" [ref=e64]
+      - link "Legion v3.7" [ref=e65] [cursor=pointer]:
+        - /url: Legion_league
+        - img "LegionInitiator" [ref=e67]
+      - link "Betrayal v3.5" [ref=e68] [cursor=pointer]:
+        - /url: Betrayal_league
+        - img "BetrayalSymbolCatarina" [ref=e70]
+      - link "Delve v3.4" [ref=e71] [cursor=pointer]:
+        - /url: Delve_league
+        - img "DelveMineralVein" [ref=e73]
+      - link "Incursion v3.3" [ref=e74] [cursor=pointer]:
+        - /url: Incursion_league
+        - img "IncursionCraftingBench" [ref=e76]
+      - link "Bestiary v3.2" [ref=e77] [cursor=pointer]:
+        - /url: Bestiary_league
+        - img "BestiaryRareMonster" [ref=e79]
+      - link "Abyss v3.1" [ref=e80] [cursor=pointer]:
+        - /url: Abyss_league
+        - img "Abyss" [ref=e82]
+      - link "Breach v2.5" [ref=e83] [cursor=pointer]:
+        - /url: Breach_league
+        - img "Breach" [ref=e85]
+      - link "Essence v2.4" [ref=e86] [cursor=pointer]:
+        - /url: Essence_league
+        - img "Essence" [ref=e88]
+      - link "Tormented Spirit v1.3" [ref=e89] [cursor=pointer]:
+        - /url: Tormented_Spirit
+        - img [ref=e90]
+      - link "Beyond v1.2" [ref=e91] [cursor=pointer]:
+        - /url: Beyond
+        - img [ref=e92]
+      - link "Strongbox v1.1" [ref=e93] [cursor=pointer]:
+        - /url: Strongbox
+        - img "Strongbox" [ref=e95]
+      - link "Shrine v1.0" [ref=e96] [cursor=pointer]:
+        - /url: Shrine
+        - img "Shrine" [ref=e98]
+      - link "Rogue Exiles v0.11" [ref=e99] [cursor=pointer]:
+        - /url: Rogue_Exiles
+        - img [ref=e100]
+    - tablist [ref=e101]:
+      - tab "Tabula Rasa Unique" [selected] [ref=e102] [cursor=pointer]
+      - tab "Alternate Artwork /1" [ref=e103] [cursor=pointer]
+      - tab "Acquisition /2" [ref=e104] [cursor=pointer]
+      - tab "Tabula Rasa" [ref=e105] [cursor=pointer]
+    - generic [ref=e106]:
+      - tabpanel [ref=e107]:
+        - generic [ref=e109]:
+          - generic [ref=e110]:
+            - generic [ref=e111]:
+              - generic [ref=e113]: Tabula Rasa
+              - generic [ref=e115]: Simple Robe
+            - generic [ref=e117]:
+              - generic [ref=e118]: Body Armours
+              - generic [ref=e119]: "Quality: +20%"
+              - generic [ref=e120]: "Energy Shield: (16.8-24)"
+              - generic [ref=e121]: "Movement Speed: -3%"
+              - generic [ref=e123]: Requires Level 3, 17 Int
+              - generic [ref=e125]: local six linked white sockets [1]
+              - generic [ref=e126]: local unique tabula rasa no requirement or energy shield [1]
+              - generic [ref=e127]: "[Six Linked]"
+              - generic [ref=e128]: "[Sockets are White]"
+          - img [ref=e130]
+        - generic [ref=e131]:
+          - heading "Tabula Rasa Attr /7" [level=5] [ref=e132]
+          - grid [ref=e134]:
+            - rowgroup [ref=e135]:
+              - 'row "Name: No sort applied, activate to apply an ascending sort Show Full Descriptions: No sort applied, activate to apply an ascending sort" [ref=e136]':
+                - 'columnheader "Name: No sort applied, activate to apply an ascending sort" [ref=e137]':
+                  - generic [ref=e138]: Name
+                - 'columnheader "Show Full Descriptions: No sort applied, activate to apply an ascending sort" [ref=e139]':
+                  - generic [ref=e140]: Show Full Descriptions
+            - rowgroup [ref=e141]:
+              - row "The Market The Market" [ref=e142]:
+                - gridcell "The Market" [ref=e143]
+                - gridcell "The Market" [ref=e144]:
+                  - link "The Market" [ref=e145] [cursor=pointer]:
+                    - /url: https://www.pathofexile.com/trade/search/Mirage?q=%7B%22query%22%3A%7B%22name%22%3A%22Tabula+Rasa%22%7D%7D
+              - row "Acronym Link" [ref=e146]:
+                - gridcell "Acronym" [ref=e147]
+                - gridcell "Link" [ref=e148]:
+                  - link "Link" [ref=e149] [cursor=pointer]:
+                    - /url: /us/Link
+              - row "Icon Art/2DItems/Armours/BodyArmours/TabulaRasa" [ref=e150]:
+                - gridcell "Icon" [ref=e151]
+                - gridcell "Art/2DItems/Armours/BodyArmours/TabulaRasa" [ref=e152]
+              - row "Release Version 0.10.5" [ref=e153]:
+                - gridcell "Release Version" [ref=e154]
+                - gridcell "0.10.5" [ref=e155]
+              - row "BaseType Simple Robe" [ref=e156]:
+                - gridcell "BaseType" [ref=e157]
+                - gridcell "Simple Robe" [ref=e158]:
+                  - link "Simple Robe" [ref=e159] [cursor=pointer]:
+                    - /url: Simple_Robe
+              - row "Divination Card Humility Vanity" [ref=e160]:
+                - gridcell "Divination Card" [ref=e161]
+                - gridcell "Humility Vanity" [ref=e162]:
+                  - link "Humility" [ref=e163] [cursor=pointer]:
+                    - /url: Humility
+                  - link "Vanity" [ref=e164] [cursor=pointer]:
+                    - /url: Vanity
+              - row "Reference poe.ninja, Community Wiki" [ref=e165]:
+                - gridcell "Reference" [ref=e166]
+                - gridcell "poe.ninja, Community Wiki" [ref=e167]:
+                  - link "poe.ninja" [ref=e168] [cursor=pointer]:
+                    - /url: https://poe.ninja/poe1/builds/mirage?items=Tabula+Rasa
+                    - img [ref=e169]
+                    - text: poe.ninja
+                  - text: ","
+                  - link "Community Wiki" [ref=e170] [cursor=pointer]:
+                    - /url: https://www.poewiki.net/wiki/Tabula_Rasa
+        - generic [ref=e171]:
+          - heading "Version history /2" [level=5] [ref=e172]
+          - grid [ref=e174]:
+            - rowgroup [ref=e175]:
+              - 'row "Version: No sort applied, activate to apply an ascending sort Changes: No sort applied, activate to apply an ascending sort" [ref=e176]':
+                - 'columnheader "Version: No sort applied, activate to apply an ascending sort" [ref=e177]':
+                  - generic [ref=e178]: Version
+                - 'columnheader "Changes: No sort applied, activate to apply an ascending sort" [ref=e179]':
+                  - generic [ref=e180]: Changes
+            - rowgroup [ref=e181]:
+              - row "3.26.0 The Sambodhi's Wisdom Divination Card has been re-enabled and now awards a corrupted Tabula Rasa with 2 implicit modifiers." [ref=e182]:
+                - gridcell "3.26.0" [ref=e183]:
+                  - link "3.26.0" [ref=e184] [cursor=pointer]:
+                    - /url: Version_3.26.0
+                - gridcell "The Sambodhi's Wisdom Divination Card has been re-enabled and now awards a corrupted Tabula Rasa with 2 implicit modifiers." [ref=e185]:
+                  - listitem [ref=e187]: The Sambodhi's Wisdom Divination Card has been re-enabled and now awards a corrupted Tabula Rasa with 2 implicit modifiers.
+              - row "3.3.0 Updated the 2D and 3D art of Tabula Rasa to look less like a sweatshirt your grandmother gave you that was several sizes too large." [ref=e188]:
+                - gridcell "3.3.0" [ref=e189]:
+                  - link "3.3.0" [ref=e190] [cursor=pointer]:
+                    - /url: Version_3.3.0
+                - gridcell "Updated the 2D and 3D art of Tabula Rasa to look less like a sweatshirt your grandmother gave you that was several sizes too large." [ref=e191]:
+                  - listitem [ref=e193]: Updated the 2D and 3D art of Tabula Rasa to look less like a sweatshirt your grandmother gave you that was several sizes too large.
+        - generic [ref=e194]:
+          - generic [ref=e196]:
+            - heading "local unique tabula rasa no requirement or energy shield [1]" [level=5] [ref=e197]:
+              - generic [ref=e198]: local unique tabula rasa no requirement or energy shield [1]
+            - table [ref=e199]:
+              - rowgroup [ref=e200]:
+                - row "Family RemoveStatsFromTabulaRasa" [ref=e201]:
+                  - rowheader "Family" [ref=e202]
+                  - cell "RemoveStatsFromTabulaRasa" [ref=e203]
+                - row "Domains Item (1)" [ref=e204]:
+                  - rowheader "Domains" [ref=e205]
+                  - cell "Item (1)" [ref=e206]
+                - row "GenerationType Unique (3)" [ref=e207]:
+                  - rowheader "GenerationType" [ref=e208]
+                  - cell "Unique (3)" [ref=e209]
+                - row "Req. level 1" [ref=e210]:
+                  - rowheader "Req. level" [ref=e211]
+                  - cell "1" [ref=e212]
+                - row "Stats local unique tabula rasa no requirement or energy shield 1 — 1 Local Unscalable Value" [ref=e213]:
+                  - rowheader "Stats" [ref=e214]
+                  - cell "local unique tabula rasa no requirement or energy shield 1 — 1 Local Unscalable Value" [ref=e215]:
+                    - listitem [ref=e216]:
+                      - text: local unique tabula rasa no requirement or energy shield
+                      - generic [ref=e217]: 1 — 1
+                      - generic [ref=e218]: Local
+                      - generic [ref=e219]: Unscalable Value
+          - generic [ref=e221]:
+            - heading "local six linked white sockets [1]" [level=5] [ref=e222]:
+              - generic [ref=e223]: local six linked white sockets [1]
+            - table [ref=e224]:
+              - rowgroup [ref=e225]:
+                - row "Family ItemHasSixLinkedWhiteSockets" [ref=e226]:
+                  - rowheader "Family" [ref=e227]
+                  - cell "ItemHasSixLinkedWhiteSockets" [ref=e228]
+                - row "Domains Item (1)" [ref=e229]:
+                  - rowheader "Domains" [ref=e230]
+                  - cell "Item (1)" [ref=e231]
+                - row "GenerationType Unique (3)" [ref=e232]:
+                  - rowheader "GenerationType" [ref=e233]
+                  - cell "Unique (3)" [ref=e234]
+                - row "Req. level 1" [ref=e235]:
+                  - rowheader "Req. level" [ref=e236]
+                  - cell "1" [ref=e237]
+                - row "Stats local six linked white sockets 1 — 1 Local Unscalable Value" [ref=e238]:
+                  - rowheader "Stats" [ref=e239]
+                  - cell "local six linked white sockets 1 — 1 Local Unscalable Value" [ref=e240]:
+                    - listitem [ref=e241]:
+                      - text: local six linked white sockets
+                      - generic [ref=e242]: 1 — 1
+                      - generic [ref=e243]: Local
+                      - generic [ref=e244]: Unscalable Value
+        - generic [ref=e247]: "{ \"w\": 2, \"h\": 3, \"icon\": \"https://web.poecdn.com/gen/image/WzI1LDE0LHsiZiI6IjJESXRlbXMvQXJtb3Vycy9Cb2R5QXJtb3Vycy9UYWJ1bGFSYXNhIiwidyI6MiwiaCI6Mywic2NhbGUiOjF9XQ/3bdbff0756/TabulaRasa.png\", \"league\": \"Mirage\", \"name\": \"Tabula Rasa\", \"typeLine\": \"Simple Robe\", \"baseType\": \"Simple Robe\", \"rarity\": \"Unique\", \"ilvl\": 82, \"frameType\": 3 }"
+      - tabpanel:
+        - generic [ref=e248]:
+          - heading "Alternate Artwork /1" [level=5] [ref=e249]
+          - link "more.." [ref=e251] [cursor=pointer]:
+            - /url: Alternate_artwork
+          - grid [ref=e253]:
+            - rowgroup [ref=e254]:
+              - 'row "Icon: No sort applied, activate to apply an ascending sort Feature: No sort applied, activate to apply an ascending sort" [ref=e255]':
+                - 'columnheader "Icon: No sort applied, activate to apply an ascending sort" [ref=e256]':
+                  - generic [ref=e257]: Icon
+                - 'columnheader "Feature: No sort applied, activate to apply an ascending sort" [ref=e258]':
+                  - generic [ref=e259]: Feature
+            - rowgroup [ref=e260]:
+              - row "TabulaRasaAlt" [ref=e261]:
+                - gridcell "TabulaRasaAlt" [ref=e262]:
+                  - img "TabulaRasaAlt" [ref=e263]
+                - gridcell [ref=e264]
+      - tabpanel:
+        - generic [ref=e265]:
+          - heading "Acquisition /2" [level=5] [ref=e266]
+          - grid [ref=e268]:
+            - rowgroup [ref=e269]:
+              - 'row "Source: No sort applied, activate to apply an ascending sort Ingredient: No sort applied, activate to apply an ascending sort Offer: No sort applied, activate to apply an ascending sort" [ref=e270]':
+                - 'columnheader "Source: No sort applied, activate to apply an ascending sort" [ref=e271]':
+                  - generic [ref=e272]: Source
+                - 'columnheader "Ingredient: No sort applied, activate to apply an ascending sort" [ref=e273]':
+                  - generic [ref=e274]: Ingredient
+                - 'columnheader "Offer: No sort applied, activate to apply an ascending sort" [ref=e275]':
+                  - generic [ref=e276]: Offer
+            - rowgroup [ref=e277]:
+              - row "Humility Tabula Rasa" [ref=e278]:
+                - gridcell "Humility" [ref=e279]:
+                  - link "Humility" [ref=e280] [cursor=pointer]:
+                    - /url: Humility
+                - gridcell [ref=e281]
+                - gridcell "Tabula Rasa" [ref=e282]:
+                  - link "Tabula Rasa" [ref=e283] [cursor=pointer]:
+                    - /url: Tabula_Rasa
+              - row "Vanity Tabula Rasa" [ref=e284]:
+                - gridcell "Vanity" [ref=e285]:
+                  - link "Vanity" [ref=e286] [cursor=pointer]:
+                    - /url: Vanity
+                - gridcell [ref=e287]
+                - gridcell "Tabula Rasa" [ref=e288]:
+                  - link "Tabula Rasa" [ref=e289] [cursor=pointer]:
+                    - /url: Tabula_Rasa
+      - tabpanel:
+        - heading "Community Wiki" [level=4] [ref=e291]
+        - generic [ref=e293]:
+          - link "Edit" [ref=e294] [cursor=pointer]:
+            - /url: /us/marked?id=Tabula_Rasa
+          - generic [ref=e295]:
+            - heading "Tabula Rasa" [level=1] [ref=e296]
+            - heading "Mechanics" [level=2] [ref=e297]
+            - paragraph [ref=e298]: Tabula Rasa has 6 linked white sockets, but provides no defence values, even no base values of a Simple Robe.
+            - heading "Version history" [level=2] [ref=e299]
+            - grid [ref=e300]:
+              - rowgroup [ref=e301]:
+                - 'row "Version: No sort applied, activate to apply an ascending sort Changes: No sort applied, activate to apply an ascending sort" [ref=e302]':
+                  - 'columnheader "Version: No sort applied, activate to apply an ascending sort" [ref=e303]':
+                    - generic [ref=e304]: Version
+                  - 'columnheader "Changes: No sort applied, activate to apply an ascending sort" [ref=e305]':
+                    - generic [ref=e306]: Changes
+              - rowgroup [ref=e307]:
+                - row "3.3.0 Updated the 2D and 3D art of Tabula Rasa to look less like a sweatshirt your grandmother gave you that was several sizes too large." [ref=e308]:
+                  - gridcell "3.3.0" [ref=e309]
+                  - gridcell "Updated the 2D and 3D art of Tabula Rasa to look less like a sweatshirt your grandmother gave you that was several sizes too large." [ref=e310]:
+                    - listitem [ref=e311]: Updated the 2D and 3D art of Tabula Rasa to look less like a sweatshirt your grandmother gave you that was several sizes too large.
+                - row "0.10.5 Introduced to the game." [ref=e312]:
+                  - gridcell "0.10.5" [ref=e313]
+                  - gridcell "Introduced to the game." [ref=e314]:
+                    - listitem [ref=e315]: Introduced to the game.
+          - generic [ref=e316]:
+            - separator [ref=e317]
+            - text: Wikis Content is available under
+            - link "CC BY-NC-SA 3.0" [ref=e318] [cursor=pointer]:
+              - /url: https://creativecommons.org/licenses/by-nc-sa/3.0/
+            - text: unless otherwise noted.
+    - generic [ref=e319]:
+      - generic [ref=e321]:
+        - generic [ref=e322]:
+          - heading "Sites" [level=5] [ref=e323]
+          - list [ref=e324]:
+            - listitem [ref=e325]:
+              - link "poedb.tw" [ref=e326] [cursor=pointer]:
+                - /url: https://poedb.tw/
+            - listitem [ref=e327]:
+              - link "tlidb.com" [ref=e328] [cursor=pointer]:
+                - /url: https://tlidb.com/
+            - listitem [ref=e329]:
+              - link "poe2db.tw" [ref=e330] [cursor=pointer]:
+                - /url: https://poe2db.tw/
+            - listitem [ref=e331]:
+              - link "paldb.cc" [ref=e332] [cursor=pointer]:
+                - /url: https://paldb.cc/
+        - generic [ref=e333]:
+          - heading "News" [level=5] [ref=e334]
+          - list [ref=e335]:
+            - listitem [ref=e336]:
+              - link "GGG Tracker" [ref=e337] [cursor=pointer]:
+                - /url: news
+            - listitem [ref=e338]:
+              - link "Concurrent Players" [ref=e339] [cursor=pointer]:
+                - /url: League#ConcurrentPlayers
+            - listitem [ref=e340]:
+              - link "Ruthless" [ref=e341] [cursor=pointer]:
+                - /url: Ruthless_mode
+        - generic [ref=e342]:
+          - heading "About Site" [level=5] [ref=e343]
+          - list [ref=e344]:
+            - listitem [ref=e345]:
+              - link "Privacy" [ref=e346] [cursor=pointer]:
+                - /url: privacy
+            - listitem [ref=e347]:
+              - link "Disclaimers" [ref=e348] [cursor=pointer]:
+                - /url: General_disclaimer
+            - listitem [ref=e349]:
+              - link "Patreon" [ref=e350] [cursor=pointer]:
+                - /url: patreon
+        - generic [ref=e351]:
+          - heading "Community" [level=5] [ref=e352]
+          - list [ref=e353]:
+            - listitem [ref=e354]:
+              - link "/u/chuanhsing" [ref=e355] [cursor=pointer]:
+                - /url: https://www.reddit.com/user/chuanhsing
+      - generic [ref=e356]: Copyright © 2014-2025 PoEDB.
+  - status [ref=e357]

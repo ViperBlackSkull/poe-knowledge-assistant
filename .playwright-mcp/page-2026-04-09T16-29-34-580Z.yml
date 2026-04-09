@@ -1,0 +1,3881 @@
+- generic [active] [ref=e1]:
+  - banner [ref=e3]:
+    - navigation [ref=e4]:
+      - generic [ref=e5]:
+        - link "PoEDB" [ref=e6] [cursor=pointer]:
+          - /url: /us/
+          - text: PoEDB
+          - subscript
+        - generic [ref=e7]:
+          - list [ref=e8]:
+            - listitem [ref=e9]:
+              - link "Items" [ref=e10] [cursor=pointer]:
+                - /url: "#"
+                - text: Items
+            - listitem [ref=e11]:
+              - link "Modifiers" [ref=e12] [cursor=pointer]:
+                - /url: "#"
+                - text: Modifiers
+            - listitem [ref=e13]:
+              - link "Quest" [ref=e14] [cursor=pointer]:
+                - /url: "#"
+                - text: Quest
+            - listitem [ref=e15]:
+              - link "Economy" [ref=e16] [cursor=pointer]:
+                - /url: Economy
+            - listitem [ref=e17]:
+              - link "Patreon" [ref=e18] [cursor=pointer]:
+                - /url: /us/patreon
+          - list [ref=e19]:
+            - listitem [ref=e20]:
+              - link "PoE2DB" [ref=e21] [cursor=pointer]:
+                - /url: https://poe2db.tw
+            - listitem [ref=e22]:
+              - link [ref=e23] [cursor=pointer]:
+                - /url: "#"
+          - search [ref=e25]:
+            - searchbox "Search" [ref=e26]
+  - main [ref=e28]:
+    - generic [ref=e31]:
+      - link "Mirage v3.28" [ref=e32] [cursor=pointer]:
+        - /url: Mirage_league
+        - img "Mirage" [ref=e34]
+      - link "Settlers v3.25" [ref=e35] [cursor=pointer]:
+        - /url: Settlers_league
+        - img "VillageShipping" [ref=e37]
+      - link "Sanctum v3.20" [ref=e38] [cursor=pointer]:
+        - /url: Sanctum_league
+        - img "Sanctum" [ref=e40]
+      - link "Archnemesis v3.17" [ref=e41] [cursor=pointer]:
+        - /url: Archnemesis_league
+        - img "Archnemesis" [ref=e43]
+      - link "Expedition v3.15" [ref=e44] [cursor=pointer]:
+        - /url: Expedition_league
+        - img "ExpeditionDetonator" [ref=e46]
+      - link "Ultimatum v3.14" [ref=e47] [cursor=pointer]:
+        - /url: Ultimatum_league
+        - img "UltimatumAltar" [ref=e49]
+      - link "Ritual v3.13" [ref=e50] [cursor=pointer]:
+        - /url: Ritual_league
+        - img "RitualRune" [ref=e52]
+      - link "Heist v3.12" [ref=e53] [cursor=pointer]:
+        - /url: Heist_league
+        - img "HeistSumgglersCache" [ref=e55]
+      - link "Harvest v3.11" [ref=e56] [cursor=pointer]:
+        - /url: Harvest_league
+        - img "HarvestPortal" [ref=e58]
+      - link "Delirium v3.10" [ref=e59] [cursor=pointer]:
+        - /url: Delirium_league
+        - img "AfflictionInitiator" [ref=e61]
+      - link "Blight v3.8" [ref=e62] [cursor=pointer]:
+        - /url: Blight_league
+        - img "BlightCore" [ref=e64]
+      - link "Legion v3.7" [ref=e65] [cursor=pointer]:
+        - /url: Legion_league
+        - img "LegionInitiator" [ref=e67]
+      - link "Betrayal v3.5" [ref=e68] [cursor=pointer]:
+        - /url: Betrayal_league
+        - img "BetrayalSymbolCatarina" [ref=e70]
+      - link "Delve v3.4" [ref=e71] [cursor=pointer]:
+        - /url: Delve_league
+        - img "DelveMineralVein" [ref=e73]
+      - link "Incursion v3.3" [ref=e74] [cursor=pointer]:
+        - /url: Incursion_league
+        - img "IncursionCraftingBench" [ref=e76]
+      - link "Bestiary v3.2" [ref=e77] [cursor=pointer]:
+        - /url: Bestiary_league
+        - img "BestiaryRareMonster" [ref=e79]
+      - link "Abyss v3.1" [ref=e80] [cursor=pointer]:
+        - /url: Abyss_league
+        - img "Abyss" [ref=e82]
+      - link "Breach v2.5" [ref=e83] [cursor=pointer]:
+        - /url: Breach_league
+        - img "Breach" [ref=e85]
+      - link "Essence v2.4" [ref=e86] [cursor=pointer]:
+        - /url: Essence_league
+        - img "Essence" [ref=e88]
+      - link "Tormented Spirit v1.3" [ref=e89] [cursor=pointer]:
+        - /url: Tormented_Spirit
+        - img [ref=e90]
+      - link "Beyond v1.2" [ref=e91] [cursor=pointer]:
+        - /url: Beyond
+        - img [ref=e92]
+      - link "Strongbox v1.1" [ref=e93] [cursor=pointer]:
+        - /url: Strongbox
+        - img "Strongbox" [ref=e95]
+      - link "Shrine v1.0" [ref=e96] [cursor=pointer]:
+        - /url: Shrine
+        - img "Shrine" [ref=e98]
+      - link "Rogue Exiles v0.11" [ref=e99] [cursor=pointer]:
+        - /url: Rogue_Exiles
+        - img [ref=e100]
+    - generic [ref=e101]:
+      - generic [ref=e103]:
+        - heading "Mirage 3.28" [level=5] [ref=e104]:
+          - text: Mirage
+          - generic [ref=e105]: "3.28"
+        - generic [ref=e108]:
+          - generic [ref=e109]: 2026-03-06 19:00
+          - link "Running for" [ref=e111] [cursor=pointer]:
+            - /url: Mirage_league
+          - generic [ref=e112]: 33d 21h 29m 34s
+      - generic [ref=e114]:
+        - heading "Stash Tab Sales" [level=5] [ref=e115]
+        - generic [ref=e117]:
+          - generic [ref=e118]: 2026-04-24 00:00
+          - link "Starts in" [ref=e120] [cursor=pointer]:
+            - /url: shop
+          - generic [ref=e121]: 14d 07h 30m 26s
+    - generic [ref=e122]:
+      - generic [ref=e124]:
+        - heading "3.28 MirageMirage v3.28" [level=5] [ref=e125]:
+          - generic [ref=e126]: "3.28"
+          - text: Mirage
+          - link "Mirage v3.28" [ref=e127] [cursor=pointer]:
+            - /url: Mirage_league
+            - img "Mirage" [ref=e129]
+        - generic [ref=e130]:
+          - list [ref=e132]:
+            - listitem [ref=e133]: League•
+            - listitem [ref=e134]:
+              - link "Mirage League" [ref=e135] [cursor=pointer]:
+                - /url: Mirage_league
+              - text: •
+            - listitem [ref=e136]:
+              - link "Patchnotes" [ref=e137] [cursor=pointer]:
+                - /url: Version_3.28.0
+              - text: •
+            - listitem [ref=e138]:
+              - link "Gem" [ref=e139] [cursor=pointer]:
+                - /url: Mirage_gems
+              - text: •
+            - listitem [ref=e140]:
+              - link "Unique" [ref=e141] [cursor=pointer]:
+                - /url: Mirage_uniques
+              - text: •
+            - listitem [ref=e142]:
+              - link "Item" [ref=e143] [cursor=pointer]:
+                - /url: Mirage_items
+              - text: •
+            - listitem [ref=e144]:
+              - link "Varashta, the Winter Sekhema" [ref=e145] [cursor=pointer]:
+                - /url: /us/Varashta%2C_the_Winter_Sekhema
+              - text: •
+            - listitem [ref=e146]:
+              - link "Saresh Bloodline" [ref=e147] [cursor=pointer]:
+                - /url: Saresh_Bloodline
+              - text: •
+            - listitem [ref=e148]:
+              - link "Mirage" [ref=e149] [cursor=pointer]:
+                - /url: Mirage
+              - text: •
+            - listitem [ref=e150]:
+              - link "Wishes" [ref=e151] [cursor=pointer]:
+                - /url: Wishes
+              - text: •
+            - listitem [ref=e152]:
+              - link "Reliquarian" [ref=e153] [cursor=pointer]:
+                - /url: /us/Reliquarian
+              - text: •
+            - listitem [ref=e154]:
+              - link "Challenges" [ref=e155] [cursor=pointer]:
+                - /url: Mirage_challenges
+              - text: •
+            - listitem [ref=e156]:
+              - link "Exceptional" [ref=e157] [cursor=pointer]:
+                - /url: Exceptional
+              - text: •
+            - listitem [ref=e158]:
+              - link "Infamous Modifiers" [ref=e159] [cursor=pointer]:
+                - /url: Infamous_Modifiers
+              - text: •
+            - listitem [ref=e160]:
+              - link "Campaign landmarks" [ref=e161] [cursor=pointer]:
+                - /url: Campaign_landmarks
+          - list [ref=e163]:
+            - listitem [ref=e164]: Item•
+            - listitem [ref=e165]:
+              - link "Eldritch Voidstone" [ref=e166] [cursor=pointer]:
+                - /url: Eldritch_Voidstone
+              - text: •
+            - listitem [ref=e167]:
+              - link "Originator Voidstone" [ref=e168] [cursor=pointer]:
+                - /url: Originator_Voidstone
+              - text: •
+            - listitem [ref=e169]:
+              - link "Ceremonial Voidstone" [ref=e170] [cursor=pointer]:
+                - /url: Ceremonial_Voidstone
+              - text: •
+            - listitem [ref=e171]:
+              - link "Decayed Voidstone" [ref=e172] [cursor=pointer]:
+                - /url: Decayed_Voidstone
+              - text: •
+            - listitem [ref=e173]:
+              - link "The Black Barya" [ref=e174] [cursor=pointer]:
+                - /url: The_Black_Barya
+              - text: •
+            - listitem [ref=e175]:
+              - link "Cord Belt" [ref=e176] [cursor=pointer]:
+                - /url: Cord_Belt
+              - text: •
+            - listitem [ref=e177]:
+              - link "Honoured Incubator" [ref=e178] [cursor=pointer]:
+                - /url: Honoured_Incubator
+              - text: •
+            - listitem [ref=e179]:
+              - link "Sacred Incubator" [ref=e180] [cursor=pointer]:
+                - /url: Sacred_Incubator
+              - text: •
+            - listitem [ref=e181]:
+              - link "Miraged Incubator" [ref=e182] [cursor=pointer]:
+                - /url: Miraged_Incubator
+              - text: •
+            - listitem [ref=e183]:
+              - link "Imperfect Astral Lich" [ref=e184] [cursor=pointer]:
+                - /url: Imperfect_Astral_Lich
+              - text: •
+            - listitem [ref=e185]:
+              - link "Astral Lich" [ref=e186] [cursor=pointer]:
+                - /url: Astral_Lich
+              - text: •
+            - listitem [ref=e187]:
+              - link "Perfect Astral Lich" [ref=e188] [cursor=pointer]:
+                - /url: Perfect_Astral_Lich
+              - text: •
+            - listitem [ref=e189]:
+              - link "Imperfect Conjuror of Rot" [ref=e190] [cursor=pointer]:
+                - /url: Imperfect_Conjuror_of_Rot
+              - text: •
+            - listitem [ref=e191]:
+              - link "Conjuror of Rot" [ref=e192] [cursor=pointer]:
+                - /url: Conjuror_of_Rot
+              - text: •
+            - listitem [ref=e193]:
+              - link "Perfect Conjuror of Rot" [ref=e194] [cursor=pointer]:
+                - /url: Perfect_Conjuror_of_Rot
+              - text: •
+            - listitem [ref=e195]:
+              - link "Imperfect Adherent of Zarokh" [ref=e196] [cursor=pointer]:
+                - /url: Imperfect_Adherent_of_Zarokh
+              - text: •
+            - listitem [ref=e197]:
+              - link "Adherent of Zarokh" [ref=e198] [cursor=pointer]:
+                - /url: Adherent_of_Zarokh
+              - text: •
+            - listitem [ref=e199]:
+              - link "Perfect Adherent of Zarokh" [ref=e200] [cursor=pointer]:
+                - /url: Perfect_Adherent_of_Zarokh
+          - list [ref=e202]:
+            - listitem [ref=e203]: Currency•
+            - listitem [ref=e204]:
+              - link "DeliriumRefracting Fog" [ref=e205] [cursor=pointer]:
+                - /url: Refracting_Fog
+                - img "Delirium" [ref=e206]
+                - text: Refracting Fog
+              - text: •
+            - listitem [ref=e207]:
+              - link "EssenceofDesolationEssence of Desolation" [ref=e208] [cursor=pointer]:
+                - /url: Essence_of_Desolation
+                - img "EssenceofDesolation" [ref=e209]
+                - text: Essence of Desolation
+              - text: •
+            - listitem [ref=e210]:
+              - link "CoreBreachCurrencyFlesh of Xesht" [ref=e211] [cursor=pointer]:
+                - /url: Flesh_of_Xesht
+                - img "CoreBreachCurrency" [ref=e212]
+                - text: Flesh of Xesht
+              - text: •
+            - listitem [ref=e213]:
+              - link "QualityPrefixCatalystSinistral Catalyst" [ref=e214] [cursor=pointer]:
+                - /url: Sinistral_Catalyst
+                - img "QualityPrefixCatalyst" [ref=e215]
+                - text: Sinistral Catalyst
+              - text: •
+            - listitem [ref=e216]:
+              - link "QualitySuffixCatalystDextral Catalyst" [ref=e217] [cursor=pointer]:
+                - /url: Dextral_Catalyst
+                - img "QualitySuffixCatalyst" [ref=e218]
+                - text: Dextral Catalyst
+              - text: •
+            - listitem [ref=e219]:
+              - link "VolatileVaalOrbVolatile Vaal Orb" [ref=e220] [cursor=pointer]:
+                - /url: Volatile_Vaal_Orb
+                - img "VolatileVaalOrb" [ref=e221]
+                - text: Volatile Vaal Orb
+              - text: •
+            - listitem [ref=e222]:
+              - link "MemoryIncarnationofFearMemory of Trauma" [ref=e223] [cursor=pointer]:
+                - /url: Memory_of_Trauma
+                - img "MemoryIncarnationofFear" [ref=e224]
+                - text: Memory of Trauma
+              - text: •
+            - listitem [ref=e225]:
+              - link "MemoryIncarnationofDreadMemory of Reverence" [ref=e226] [cursor=pointer]:
+                - /url: Memory_of_Reverence
+                - img "MemoryIncarnationofDread" [ref=e227]
+                - text: Memory of Reverence
+              - text: •
+            - listitem [ref=e228]:
+              - link "MemoryIncarnationofNeglectMemory of Loneliness" [ref=e229] [cursor=pointer]:
+                - /url: Memory_of_Loneliness
+                - img "MemoryIncarnationofNeglect" [ref=e230]
+                - text: Memory of Loneliness
+              - text: •
+            - listitem [ref=e231]:
+              - link "FaridunLifeforceCrystallised Rancour" [ref=e232] [cursor=pointer]:
+                - /url: Crystallised_Rancour
+                - img "FaridunLifeforce" [ref=e233]
+                - text: Crystallised Rancour
+              - text: •
+            - listitem [ref=e234]:
+              - link "VillageRune36Runegraft of Consecration" [ref=e235] [cursor=pointer]:
+                - /url: Runegraft_of_Consecration
+                - img "VillageRune36" [ref=e236]
+                - text: Runegraft of Consecration
+              - text: •
+            - listitem [ref=e237]:
+              - link "VillageRune34Runegraft of Fury" [ref=e238] [cursor=pointer]:
+                - /url: Runegraft_of_Fury
+                - img "VillageRune34" [ref=e239]
+                - text: Runegraft of Fury
+              - text: •
+            - listitem [ref=e240]:
+              - link "VillageRune37Runegraft of Rallying" [ref=e241] [cursor=pointer]:
+                - /url: Runegraft_of_Rallying
+                - img "VillageRune37" [ref=e242]
+                - text: Runegraft of Rallying
+              - text: •
+            - listitem [ref=e243]:
+              - link "VillageRune33Runegraft of Rotblood" [ref=e244] [cursor=pointer]:
+                - /url: Runegraft_of_Rotblood
+                - img "VillageRune33" [ref=e245]
+                - text: Runegraft of Rotblood
+              - text: •
+            - listitem [ref=e246]:
+              - link "VillageRune30Runegraft of the Imbued" [ref=e247] [cursor=pointer]:
+                - /url: Runegraft_of_the_Imbued
+                - img "VillageRune30" [ref=e248]
+                - text: Runegraft of the Imbued
+              - text: •
+            - listitem [ref=e249]:
+              - link "VillageRune32Runegraft of the Agile" [ref=e250] [cursor=pointer]:
+                - /url: Runegraft_of_the_Agile
+                - img "VillageRune32" [ref=e251]
+                - text: Runegraft of the Agile
+              - text: •
+            - listitem [ref=e252]:
+              - link "VillageRune27Runegraft of Suffering" [ref=e253] [cursor=pointer]:
+                - /url: Runegraft_of_Suffering
+                - img "VillageRune27" [ref=e254]
+                - text: Runegraft of Suffering
+              - text: •
+            - listitem [ref=e255]:
+              - link "VillageRune26Runegraft of the Spellbound" [ref=e256] [cursor=pointer]:
+                - /url: Runegraft_of_the_Spellbound
+                - img "VillageRune26" [ref=e257]
+                - text: Runegraft of the Spellbound
+              - text: •
+            - listitem [ref=e258]:
+              - link "VillageRune31Runegraft of Resurgence" [ref=e259] [cursor=pointer]:
+                - /url: Runegraft_of_Resurgence
+                - img "VillageRune31" [ref=e260]
+                - text: Runegraft of Resurgence
+              - text: •
+            - listitem [ref=e261]:
+              - link "VillageRune29Runegraft of Connection" [ref=e262] [cursor=pointer]:
+                - /url: Runegraft_of_Connection
+                - img "VillageRune29" [ref=e263]
+                - text: Runegraft of Connection
+              - text: •
+            - listitem [ref=e264]:
+              - link "WishCurrencyItemCoin of Restoration" [ref=e265] [cursor=pointer]:
+                - /url: Coin_of_Restoration
+                - img "WishCurrencyItem" [ref=e266]
+                - text: Coin of Restoration
+              - text: •
+            - listitem [ref=e267]:
+              - link "CorruptedWishCurrencyItemCoin of Desecration" [ref=e268] [cursor=pointer]:
+                - /url: Coin_of_Desecration
+                - img "CorruptedWishCurrencyItem" [ref=e269]
+                - text: Coin of Desecration
+              - text: •
+            - listitem [ref=e270]:
+              - link "CurrencyWishSupportGemBlueCoin of Knowledge" [ref=e271] [cursor=pointer]:
+                - /url: Coin_of_Knowledge
+                - img "CurrencyWishSupportGemBlue" [ref=e272]
+                - text: Coin of Knowledge
+              - text: •
+            - listitem [ref=e273]:
+              - link "CurrencyWishSupportGemRedCoin of Power" [ref=e274] [cursor=pointer]:
+                - /url: Coin_of_Power
+                - img "CurrencyWishSupportGemRed" [ref=e275]
+                - text: Coin of Power
+              - text: •
+            - listitem [ref=e276]:
+              - link "CurrencyWishSupportGemGreenCoin of Skill" [ref=e277] [cursor=pointer]:
+                - /url: Coin_of_Skill
+                - img "CurrencyWishSupportGemGreen" [ref=e278]
+                - text: Coin of Skill
+              - text: •
+            - listitem [ref=e279]:
+              - link "AtlasMissionGenericTemplar Astrolabe" [ref=e280] [cursor=pointer]:
+                - /url: Templar_Astrolabe
+                - img "AtlasMissionGeneric" [ref=e281]
+                - text: Templar Astrolabe
+              - text: •
+            - listitem [ref=e282]:
+              - link "AtlasMissionHarvestFruiting Astrolabe" [ref=e283] [cursor=pointer]:
+                - /url: Fruiting_Astrolabe
+                - img "AtlasMissionHarvest" [ref=e284]
+                - text: Fruiting Astrolabe
+              - text: •
+            - listitem [ref=e285]:
+              - link "AtlasMissionAbyssLightless Astrolabe" [ref=e286] [cursor=pointer]:
+                - /url: Lightless_Astrolabe
+                - img "AtlasMissionAbyss" [ref=e287]
+                - text: Lightless Astrolabe
+              - text: •
+            - listitem [ref=e288]:
+              - link "AtlasMissionBreachGrasping Astrolabe" [ref=e289] [cursor=pointer]:
+                - /url: Grasping_Astrolabe
+                - img "AtlasMissionBreach" [ref=e290]
+                - text: Grasping Astrolabe
+              - text: •
+            - listitem [ref=e291]:
+              - link "AtlasMissionRitualNameless Astrolabe" [ref=e292] [cursor=pointer]:
+                - /url: Nameless_Astrolabe
+                - img "AtlasMissionRitual" [ref=e293]
+                - text: Nameless Astrolabe
+              - text: •
+            - listitem [ref=e294]:
+              - link "AtlasMissionBlightFungal Astrolabe" [ref=e295] [cursor=pointer]:
+                - /url: Fungal_Astrolabe
+                - img "AtlasMissionBlight" [ref=e296]
+                - text: Fungal Astrolabe
+              - text: •
+            - listitem [ref=e297]:
+              - link "AtlasMissionUltimatumChaotic Astrolabe" [ref=e298] [cursor=pointer]:
+                - /url: Chaotic_Astrolabe
+                - img "AtlasMissionUltimatum" [ref=e299]
+                - text: Chaotic Astrolabe
+              - text: •
+            - listitem [ref=e300]:
+              - link "AtlasMissionDeliriumEnshrouded Astrolabe" [ref=e301] [cursor=pointer]:
+                - /url: Enshrouded_Astrolabe
+                - img "AtlasMissionDelirium" [ref=e302]
+                - text: Enshrouded Astrolabe
+              - text: •
+            - listitem [ref=e303]:
+              - link "AtlasMissionLegionTimeless Astrolabe" [ref=e304] [cursor=pointer]:
+                - /url: Timeless_Astrolabe
+                - img "AtlasMissionLegion" [ref=e305]
+                - text: Timeless Astrolabe
+              - text: •
+            - listitem [ref=e306]:
+              - link "AtlasMissionExpeditionRunic Astrolabe" [ref=e307] [cursor=pointer]:
+                - /url: Runic_Astrolabe
+                - img "AtlasMissionExpedition" [ref=e308]
+                - text: Runic Astrolabe
+          - list [ref=e310]:
+            - listitem [ref=e311]: Scarab•
+            - listitem [ref=e312]:
+              - link "Anarchy Scarab of the Exceptional" [ref=e313] [cursor=pointer]:
+                - /url: Anarchy_Scarab_of_the_Exceptional
+              - text: •
+            - listitem [ref=e314]:
+              - link "Ritual Scarab of Corpses" [ref=e315] [cursor=pointer]:
+                - /url: Ritual_Scarab_of_Corpses
+              - text: •
+            - listitem [ref=e316]:
+              - link "Kalguuran Scarab of Enriching" [ref=e317] [cursor=pointer]:
+                - /url: Kalguuran_Scarab_of_Enriching
+              - text: •
+            - listitem [ref=e318]:
+              - link "Scarab of the Dextral" [ref=e319] [cursor=pointer]:
+                - /url: Scarab_of_the_Dextral
+              - text: •
+            - listitem [ref=e320]:
+              - link "Betrayal Scarab of Unbreaking" [ref=e321] [cursor=pointer]:
+                - /url: Betrayal_Scarab_of_Unbreaking
+              - text: •
+            - listitem [ref=e322]:
+              - link "Abyss Scarab of Descending" [ref=e323] [cursor=pointer]:
+                - /url: Abyss_Scarab_of_Descending
+              - text: •
+            - listitem [ref=e324]:
+              - link "Expedition Scarab of Infusion" [ref=e325] [cursor=pointer]:
+                - /url: Expedition_Scarab_of_Infusion
+          - list [ref=e327]:
+            - listitem [ref=e328]: Divination Cards•
+            - listitem [ref=e329]:
+              - link "The Everlasting" [ref=e330] [cursor=pointer]:
+                - /url: The_Everlasting
+              - text: •
+            - listitem [ref=e331]:
+              - link "Lucky Bastion" [ref=e332] [cursor=pointer]:
+                - /url: Lucky_Bastion
+              - text: •
+            - listitem [ref=e333]:
+              - link "The Miracle" [ref=e334] [cursor=pointer]:
+                - /url: The_Miracle
+              - text: •
+            - listitem [ref=e335]:
+              - link "Apocalypse" [ref=e336] [cursor=pointer]:
+                - /url: Apocalypse
+              - text: •
+            - listitem [ref=e337]:
+              - link "The Slumbering Beast" [ref=e338] [cursor=pointer]:
+                - /url: The_Slumbering_Beast
+              - text: •
+            - listitem [ref=e339]:
+              - link "The Forbidden Fruit" [ref=e340] [cursor=pointer]:
+                - /url: The_Forbidden_Fruit
+              - text: •
+            - listitem [ref=e341]:
+              - link "The Silly Boy" [ref=e342] [cursor=pointer]:
+                - /url: The_Silly_Boy
+              - text: •
+            - listitem [ref=e343]:
+              - link "Reflection of the Heart" [ref=e344] [cursor=pointer]:
+                - /url: Reflection_of_the_Heart
+          - list [ref=e346]:
+            - listitem [ref=e347]: Gems•
+            - listitem [ref=e348]:
+              - link "Holy Hammers" [ref=e349] [cursor=pointer]:
+                - /url: /us/Holy_Hammers
+              - text: •
+            - listitem [ref=e350]:
+              - link "Shield of Light" [ref=e351] [cursor=pointer]:
+                - /url: /us/Shield_of_Light
+              - text: •
+            - listitem [ref=e352]:
+              - link "Holy Strike" [ref=e353] [cursor=pointer]:
+                - /url: /us/Holy_Strike
+              - text: •
+            - listitem [ref=e354]:
+              - link "Divine Blast" [ref=e355] [cursor=pointer]:
+                - /url: /us/Divine_Blast
+              - text: •
+            - listitem [ref=e356]:
+              - link "Charged Dash of Projection" [ref=e357] [cursor=pointer]:
+                - /url: /us/Charged_Dash_of_Projection
+              - text: •
+            - listitem [ref=e358]:
+              - link "Shock Nova of Procession" [ref=e359] [cursor=pointer]:
+                - /url: /us/Shock_Nova_of_Procession
+              - text: •
+            - listitem [ref=e360]:
+              - link "Shockwave Totem of Authority" [ref=e361] [cursor=pointer]:
+                - /url: /us/Shockwave_Totem_of_Authority
+              - text: •
+            - listitem [ref=e362]:
+              - link "Creeping Frost of Floes" [ref=e363] [cursor=pointer]:
+                - /url: /us/Creeping_Frost_of_Floes
+              - text: •
+            - listitem [ref=e364]:
+              - link "Storm Burst of Repulsion" [ref=e365] [cursor=pointer]:
+                - /url: /us/Storm_Burst_of_Repulsion
+              - text: •
+            - listitem [ref=e366]:
+              - link "Searing Bond of Detonation" [ref=e367] [cursor=pointer]:
+                - /url: /us/Searing_Bond_of_Detonation
+              - text: •
+            - listitem [ref=e368]:
+              - link "Static Strike of Gathering Lightning" [ref=e369] [cursor=pointer]:
+                - /url: /us/Static_Strike_of_Gathering_Lightning
+              - text: •
+            - listitem [ref=e370]:
+              - link "Orb of Storms of Squalls" [ref=e371] [cursor=pointer]:
+                - /url: /us/Orb_of_Storms_of_Squalls
+              - text: •
+            - listitem [ref=e372]:
+              - link "Siphoning Trap of Pain" [ref=e373] [cursor=pointer]:
+                - /url: /us/Siphoning_Trap_of_Pain
+              - text: •
+            - listitem [ref=e374]:
+              - link "Flamethrower Trap of Stability" [ref=e375] [cursor=pointer]:
+                - /url: /us/Flamethrower_Trap_of_Stability
+              - text: •
+            - listitem [ref=e376]:
+              - link "Kinetic Fusillade of Detonation" [ref=e377] [cursor=pointer]:
+                - /url: /us/Kinetic_Fusillade_of_Detonation
+              - text: •
+            - listitem [ref=e378]:
+              - link "Greater Spell Cascade Support" [ref=e379] [cursor=pointer]:
+                - /url: /us/Greater_Spell_Cascade_Support
+              - text: •
+            - listitem [ref=e380]:
+              - link "Eclipse Support" [ref=e381] [cursor=pointer]:
+                - /url: /us/Eclipse_Support
+              - text: •
+            - listitem [ref=e382]:
+              - link "Invert the Rules Support" [ref=e383] [cursor=pointer]:
+                - /url: /us/Invert_the_Rules_Support
+              - text: •
+            - listitem [ref=e384]:
+              - link "Cast on Ward Break Support" [ref=e385] [cursor=pointer]:
+                - /url: /us/Cast_on_Ward_Break_Support
+              - text: •
+            - listitem [ref=e386]:
+              - link "Vaal Sacrifice Support" [ref=e387] [cursor=pointer]:
+                - /url: /us/Vaal_Sacrifice_Support
+              - text: •
+            - listitem [ref=e388]:
+              - link "Greater Spell Echo Support" [ref=e389] [cursor=pointer]:
+                - /url: /us/Greater_Spell_Echo_Support
+              - text: •
+            - listitem [ref=e390]:
+              - link "Vaal Temptation Support" [ref=e391] [cursor=pointer]:
+                - /url: /us/Vaal_Temptation_Support
+              - text: •
+            - listitem [ref=e392]:
+              - link "Machinations Support" [ref=e393] [cursor=pointer]:
+                - /url: /us/Machinations_Support
+              - text: •
+            - listitem [ref=e394]:
+              - link "Pyre Support" [ref=e395] [cursor=pointer]:
+                - /url: /us/Pyre_Support
+              - text: •
+            - listitem [ref=e396]:
+              - link "Bonespire Support" [ref=e397] [cursor=pointer]:
+                - /url: /us/Bonespire_Support
+              - text: •
+            - listitem [ref=e398]:
+              - link "Foulgrasp Support" [ref=e399] [cursor=pointer]:
+                - /url: /us/Foulgrasp_Support
+              - text: •
+            - listitem [ref=e400]:
+              - link "Hiveborn Support" [ref=e401] [cursor=pointer]:
+                - /url: /us/Hiveborn_Support
+              - text: •
+            - listitem [ref=e402]:
+              - link "Scornful Herald Support" [ref=e403] [cursor=pointer]:
+                - /url: /us/Scornful_Herald_Support
+              - text: •
+            - listitem [ref=e404]:
+              - link "Cull the Weak Support" [ref=e405] [cursor=pointer]:
+                - /url: /us/Cull_the_Weak_Support
+              - text: •
+            - listitem [ref=e406]:
+              - link "Greater Ancestral Call Support" [ref=e407] [cursor=pointer]:
+                - /url: /us/Greater_Ancestral_Call_Support
+              - text: •
+            - listitem [ref=e408]:
+              - link "Fissure Support" [ref=e409] [cursor=pointer]:
+                - /url: /us/Fissure_Support
+              - text: •
+            - listitem [ref=e410]:
+              - link "Hextoad Support" [ref=e411] [cursor=pointer]:
+                - /url: /us/Hextoad_Support
+              - text: •
+            - listitem [ref=e412]:
+              - link "Hexpass Support" [ref=e413] [cursor=pointer]:
+                - /url: /us/Hexpass_Support
+              - text: •
+            - listitem [ref=e414]:
+              - link "Greater Fork Support" [ref=e415] [cursor=pointer]:
+                - /url: /us/Greater_Fork_Support
+              - text: •
+            - listitem [ref=e416]:
+              - link "Greater Chain Support" [ref=e417] [cursor=pointer]:
+                - /url: /us/Greater_Chain_Support
+              - text: •
+            - listitem [ref=e418]:
+              - link "Lethal Dose Support" [ref=e419] [cursor=pointer]:
+                - /url: /us/Lethal_Dose_Support
+              - text: •
+            - listitem [ref=e420]:
+              - link "Companionship Support" [ref=e421] [cursor=pointer]:
+                - /url: /us/Companionship_Support
+              - text: •
+            - listitem [ref=e422]:
+              - link "Divine Sentinel Support" [ref=e423] [cursor=pointer]:
+                - /url: /us/Divine_Sentinel_Support
+              - text: •
+            - listitem [ref=e424]:
+              - link "Annihilation Support" [ref=e425] [cursor=pointer]:
+                - /url: /us/Annihilation_Support
+              - text: •
+            - listitem [ref=e426]:
+              - link "Invention Support" [ref=e427] [cursor=pointer]:
+                - /url: /us/Invention_Support
+              - text: •
+            - listitem [ref=e428]:
+              - link "Greater Kinetic Instability Support" [ref=e429] [cursor=pointer]:
+                - /url: /us/Greater_Kinetic_Instability_Support
+              - text: •
+            - listitem [ref=e430]:
+              - link "Cooldown Recovery Support" [ref=e431] [cursor=pointer]:
+                - /url: /us/Cooldown_Recovery_Support
+              - text: •
+            - listitem [ref=e432]:
+              - link "Voidstorm Support" [ref=e433] [cursor=pointer]:
+                - /url: /us/Voidstorm_Support
+              - text: •
+            - listitem [ref=e434]:
+              - link "Void Shockwave Support" [ref=e435] [cursor=pointer]:
+                - /url: /us/Void_Shockwave_Support
+              - text: •
+            - listitem [ref=e436]:
+              - link "Eldritch Blasphemy Support" [ref=e437] [cursor=pointer]:
+                - /url: /us/Eldritch_Blasphemy_Support
+              - text: •
+            - listitem [ref=e438]:
+              - link "Gluttony Support" [ref=e439] [cursor=pointer]:
+                - /url: /us/Gluttony_Support
+              - text: •
+            - listitem [ref=e440]:
+              - link "Overheat Support" [ref=e441] [cursor=pointer]:
+                - /url: /us/Overheat_Support
+              - text: •
+            - listitem [ref=e442]:
+              - link "Greater Multistrike Support" [ref=e443] [cursor=pointer]:
+                - /url: /us/Greater_Multistrike_Support
+              - text: •
+            - listitem [ref=e444]:
+              - link "Congregation Support" [ref=e445] [cursor=pointer]:
+                - /url: /us/Congregation_Support
+              - text: •
+            - listitem [ref=e446]:
+              - link "Frostmage Support" [ref=e447] [cursor=pointer]:
+                - /url: /us/Frostmage_Support
+              - text: •
+            - listitem [ref=e448]:
+              - link "Greater Devour Support" [ref=e449] [cursor=pointer]:
+                - /url: /us/Greater_Devour_Support
+              - text: •
+            - listitem [ref=e450]:
+              - link "Greater Unleash Support" [ref=e451] [cursor=pointer]:
+                - /url: /us/Greater_Unleash_Support
+              - text: •
+            - listitem [ref=e452]:
+              - link "Pacifism Support" [ref=e453] [cursor=pointer]:
+                - /url: /us/Pacifism_Support
+              - text: •
+            - listitem [ref=e454]:
+              - link "Bloodsoaked Banner Support" [ref=e455] [cursor=pointer]:
+                - /url: /us/Bloodsoaked_Banner_Support
+              - text: •
+            - listitem [ref=e456]:
+              - link "Minion Pact Support" [ref=e457] [cursor=pointer]:
+                - /url: /us/Minion_Pact_Support
+              - text: •
+            - listitem [ref=e458]:
+              - link "Unholy Trinity Support" [ref=e459] [cursor=pointer]:
+                - /url: /us/Unholy_Trinity_Support
+              - text: •
+            - listitem [ref=e460]:
+              - link "Overloaded Intensity Support" [ref=e461] [cursor=pointer]:
+                - /url: /us/Overloaded_Intensity_Support
+              - text: •
+            - listitem [ref=e462]:
+              - link "Transfusion Support" [ref=e463] [cursor=pointer]:
+                - /url: /us/Transfusion_Support
+              - text: •
+            - listitem [ref=e464]:
+              - link "Excommunicate Support" [ref=e465] [cursor=pointer]:
+                - /url: /us/Excommunicate_Support
+              - text: •
+            - listitem [ref=e466]:
+              - link "Exemplar Support" [ref=e467] [cursor=pointer]:
+                - /url: /us/Exemplar_Support
+              - text: •
+            - listitem [ref=e468]:
+              - link "Blessed Call Support" [ref=e469] [cursor=pointer]:
+                - /url: /us/Blessed_Call_Support
+              - text: •
+            - listitem [ref=e470]:
+              - link "Hallow Support" [ref=e471] [cursor=pointer]:
+                - /url: /us/Hallow_Support
+          - list [ref=e473]:
+            - listitem [ref=e474]: Unique•
+            - listitem [ref=e475]:
+              - link "Khatal's Weeping" [ref=e476] [cursor=pointer]:
+                - /url: Khatals_Weeping
+              - text: •
+            - listitem [ref=e477]:
+              - link "Khatal's Geyser" [ref=e478] [cursor=pointer]:
+                - /url: Khatals_Geyser
+              - text: •
+            - listitem [ref=e479]:
+              - link "The Sands of Time" [ref=e480] [cursor=pointer]:
+                - /url: The_Sands_of_Time
+              - text: •
+            - listitem [ref=e481]:
+              - link "Screams of the Desiccated" [ref=e482] [cursor=pointer]:
+                - /url: Screams_of_the_Desiccated
+              - text: •
+            - listitem [ref=e483]:
+              - link "Skysunder" [ref=e484] [cursor=pointer]:
+                - /url: Skysunder
+              - text: •
+            - listitem [ref=e485]:
+              - link "Fleshrender" [ref=e486] [cursor=pointer]:
+                - /url: Fleshrender
+              - text: •
+            - listitem [ref=e487]:
+              - link "Heroic Tragedy" [ref=e488] [cursor=pointer]:
+                - /url: Heroic_Tragedy
+              - text: •
+            - listitem [ref=e489]:
+              - link "The Sacred Chalice" [ref=e490] [cursor=pointer]:
+                - /url: The_Sacred_Chalice
+              - text: •
+            - listitem [ref=e491]:
+              - link "The Desecrated Chalice" [ref=e492] [cursor=pointer]:
+                - /url: The_Desecrated_Chalice
+              - text: •
+            - listitem [ref=e493]:
+              - link "Saresh's Darkness" [ref=e494] [cursor=pointer]:
+                - /url: Sareshs_Darkness
+              - text: •
+            - listitem [ref=e495]:
+              - link "Solerai's Radiance" [ref=e496] [cursor=pointer]:
+                - /url: Solerais_Radiance
+              - text: •
+            - listitem [ref=e497]:
+              - link "The Flame of Hope" [ref=e498] [cursor=pointer]:
+                - /url: The_Flame_of_Hope
+              - text: •
+            - listitem [ref=e499]:
+              - link "The Broken Elegy" [ref=e500] [cursor=pointer]:
+                - /url: The_Broken_Elegy
+              - text: •
+            - listitem [ref=e501]:
+              - link "The Bane of Hope" [ref=e502] [cursor=pointer]:
+                - /url: The_Bane_of_Hope
+              - text: •
+            - listitem [ref=e503]:
+              - link "Replica Gifts from Above" [ref=e504] [cursor=pointer]:
+                - /url: Replica_Gifts_from_Above
+              - text: •
+            - listitem [ref=e505]:
+              - link "The Bandit Lord's Band" [ref=e506] [cursor=pointer]:
+                - /url: The_Bandit_Lords_Band
+          - list [ref=e508]:
+            - listitem [ref=e509]: Boss•
+            - listitem [ref=e510]:
+              - link "Saresh, of the Weeping Black" [ref=e511] [cursor=pointer]:
+                - /url: /us/Saresh%2C_of_the_Weeping_Black
+      - generic [ref=e513]:
+        - heading "Atlas of Worlds" [level=5] [ref=e514]
+        - generic [ref=e515]:
+          - list [ref=e517]:
+            - listitem [ref=e518]: League•
+            - listitem [ref=e519]:
+              - link "EndGame" [ref=e520] [cursor=pointer]:
+                - /url: EndGame
+              - text: •
+            - listitem [ref=e521]:
+              - link "Map Device" [ref=e522] [cursor=pointer]:
+                - /url: Map_Device
+              - text: •
+            - listitem [ref=e523]:
+              - link "Atlas of Worlds" [ref=e524] [cursor=pointer]:
+                - /url: Atlas_of_Worlds
+              - text: •
+            - listitem [ref=e525]:
+              - link "Voidstone" [ref=e526] [cursor=pointer]:
+                - /url: Voidstone
+              - text: •
+            - listitem [ref=e527]:
+              - link "Atlas Skill Tree" [ref=e528] [cursor=pointer]:
+                - /url: atlas-skill-tree
+              - text: •
+            - listitem [ref=e529]:
+              - link "Atlas Tree Modifiers" [ref=e530] [cursor=pointer]:
+                - /url: Atlas_passive_skill
+              - text: •
+            - listitem [ref=e531]:
+              - link "Maps" [ref=e532] [cursor=pointer]:
+                - /url: Maps
+              - text: •
+            - listitem [ref=e533]:
+              - link "ValdosPuzzleBoxValdo's Puzzle Box" [ref=e534] [cursor=pointer]:
+                - /url: Valdos_Puzzle_Box
+                - img "ValdosPuzzleBox" [ref=e535]
+                - text: Valdo's Puzzle Box
+              - text: •
+            - listitem [ref=e536]:
+              - link "Nightmare Map" [ref=e537] [cursor=pointer]:
+                - /url: Nightmare_map
+              - text: •
+            - listitem [ref=e538]:
+              - link "Eldritch Altar" [ref=e539] [cursor=pointer]:
+                - /url: Eldritch_Altar
+              - text: •
+            - listitem [ref=e540]:
+              - link "Memory Altar" [ref=e541] [cursor=pointer]:
+                - /url: Memory_Altar
+              - text: •
+            - listitem [ref=e542]:
+              - link "Pinnacle Boss" [ref=e543] [cursor=pointer]:
+                - /url: /us/Pinnacle_boss
+              - text: •
+            - listitem [ref=e544]:
+              - link "Atlas Memory vault" [ref=e545] [cursor=pointer]:
+                - /url: Atlas_Memory_vault
+          - list [ref=e547]:
+            - listitem [ref=e548]: Item•
+            - listitem [ref=e549]:
+              - link "Maps" [ref=e550] [cursor=pointer]:
+                - /url: Maps
+              - text: •
+            - listitem [ref=e551]:
+              - link "Map Fragments" [ref=e552] [cursor=pointer]:
+                - /url: Map_Fragments
+              - text: •
+            - listitem [ref=e553]:
+              - link "Misc Map Items" [ref=e554] [cursor=pointer]:
+                - /url: Misc_Map_Items
+              - text: •
+            - listitem [ref=e555]:
+              - link "Scarab" [ref=e556] [cursor=pointer]:
+                - /url: Scarab
+              - text: •
+            - listitem [ref=e557]:
+              - link "Allflame Ember" [ref=e558] [cursor=pointer]:
+                - /url: Allflame_ember
+              - text: •
+            - listitem [ref=e559]:
+              - link "RegretOrbOrb of Unmaking" [ref=e560] [cursor=pointer]:
+                - /url: Orb_of_Unmaking
+                - img "RegretOrb" [ref=e561]
+                - text: Orb of Unmaking
+              - text: •
+            - listitem [ref=e562]:
+              - link "Breachstone" [ref=e563] [cursor=pointer]:
+                - /url: Breachstone
+              - text: •
+            - listitem [ref=e564]:
+              - link "Emblem" [ref=e565] [cursor=pointer]:
+                - /url: Emblem
+              - text: •
+            - listitem [ref=e566]:
+              - link "Lure" [ref=e567] [cursor=pointer]:
+                - /url: Lure
+              - text: •
+            - listitem [ref=e568]:
+              - link "Delirium Orb" [ref=e569] [cursor=pointer]:
+                - /url: Delirium_Orb
+              - text: •
+            - listitem [ref=e570]:
+              - link "Memory Strands" [ref=e571] [cursor=pointer]:
+                - /url: Memory_Strands
+              - text: •
+            - listitem [ref=e572]:
+              - link "Memory Threads" [ref=e573] [cursor=pointer]:
+                - /url: Memory_Threads
+              - text: •
+            - listitem [ref=e574]:
+              - link "Astrolabe" [ref=e575] [cursor=pointer]:
+                - /url: Astrolabe
+          - list [ref=e577]:
+            - listitem [ref=e578]: Character•
+            - listitem [ref=e579]:
+              - link "Kirac" [ref=e580] [cursor=pointer]:
+                - /url: /us/Kirac
+              - text: •
+            - listitem [ref=e581]:
+              - link "The Envoy" [ref=e582] [cursor=pointer]:
+                - /url: /us/The_Envoy
+              - text: •
+            - listitem [ref=e583]:
+              - link "Eagon Caeserius" [ref=e584] [cursor=pointer]:
+                - /url: /us/Eagon_Caeserius
+          - list [ref=e586]:
+            - listitem [ref=e587]:
+              - link "Secrets of the Atlas" [ref=e588] [cursor=pointer]:
+                - /url: Secrets_of_the_Atlas
+              - text: •
+            - listitem [ref=e589]:
+              - link "Incarnation of Dread" [ref=e590] [cursor=pointer]:
+                - /url: /us/Incarnation_of_Dread
+              - text: •
+            - listitem [ref=e591]:
+              - link "Incarnation of Fear" [ref=e592] [cursor=pointer]:
+                - /url: /us/Incarnation_of_Fear
+              - text: •
+            - listitem [ref=e593]:
+              - link "Incarnation of Neglect" [ref=e594] [cursor=pointer]:
+                - /url: /us/Incarnation_of_Neglect
+          - list [ref=e596]:
+            - listitem [ref=e597]:
+              - link "Siege of the Atlas" [ref=e598] [cursor=pointer]:
+                - /url: Siege_of_the_Atlas
+              - text: •
+            - listitem [ref=e599]:
+              - link "The Searing Exarch" [ref=e600] [cursor=pointer]:
+                - /url: /us/The_Searing_Exarch
+              - text: •
+            - listitem [ref=e601]:
+              - link "The Eater of Worlds" [ref=e602] [cursor=pointer]:
+                - /url: /us/The_Eater_of_Worlds
+              - text: •
+            - listitem [ref=e603]:
+              - link "The Black Star" [ref=e604] [cursor=pointer]:
+                - /url: /us/The_Black_Star
+              - text: •
+            - listitem [ref=e605]:
+              - link "The Infinite Hunger" [ref=e606] [cursor=pointer]:
+                - /url: /us/The_Infinite_Hunger
+              - text: •
+            - listitem [ref=e607]:
+              - link "The Searing Exarch" [ref=e608] [cursor=pointer]:
+                - /url: /us/The_Searing_Exarch
+              - text: •
+            - listitem [ref=e609]:
+              - link "The Eater of Worlds" [ref=e610] [cursor=pointer]:
+                - /url: /us/The_Eater_of_Worlds
+          - list [ref=e612]:
+            - listitem [ref=e613]:
+              - link "Echoes of the Atlas" [ref=e614] [cursor=pointer]:
+                - /url: Echoes_of_the_Atlas
+              - text: •
+            - listitem [ref=e615]:
+              - link "The Maven" [ref=e616] [cursor=pointer]:
+                - /url: /us/The_Maven
+              - text: •
+            - listitem [ref=e617]:
+              - link "Maven's Invitation" [ref=e618] [cursor=pointer]:
+                - /url: /us/Mavens_Invitation%3A_The_Feared
+              - text: •
+            - listitem [ref=e619]:
+              - link "The Maven" [ref=e620] [cursor=pointer]:
+                - /url: /us/The_Maven
+          - list [ref=e622]:
+            - listitem [ref=e623]:
+              - link "Conquerors of the Atlas" [ref=e624] [cursor=pointer]:
+                - /url: Conquerors_of_the_Atlas
+              - text: •
+            - listitem [ref=e625]:
+              - link "Sirus, Awakener of Worlds" [ref=e626] [cursor=pointer]:
+                - /url: /us/Sirus%2C_Awakener_of_Worlds
+          - list [ref=e628]:
+            - listitem [ref=e629]:
+              - link "War for the Atlas" [ref=e630] [cursor=pointer]:
+                - /url: War_for_the_Atlas
+              - text: •
+            - listitem [ref=e631]:
+              - link "Venarius" [ref=e632] [cursor=pointer]:
+                - /url: /us/Venarius
+              - text: •
+            - listitem [ref=e633]:
+              - link "The Elder" [ref=e634] [cursor=pointer]:
+                - /url: /us/The_Elder
+              - text: •
+            - listitem [ref=e635]:
+              - link "The Shaper" [ref=e636] [cursor=pointer]:
+                - /url: /us/The_Shaper
+              - text: •
+            - listitem [ref=e637]:
+              - link "Atziri, Queen of the Vaal" [ref=e638] [cursor=pointer]:
+                - /url: /us/Atziri%2C_Queen_of_the_Vaal
+              - text: •
+            - listitem [ref=e639]:
+              - link "The Elder" [ref=e640] [cursor=pointer]:
+                - /url: /us/The_Elder
+          - list [ref=e642]:
+            - listitem [ref=e643]:
+              - link "Atlas of Worlds" [ref=e644] [cursor=pointer]:
+                - /url: Atlas_of_Worlds
+              - text: •
+            - listitem [ref=e645]:
+              - link "A Call to Arms" [ref=e646] [cursor=pointer]:
+                - /url: /us/A_Call_to_Arms
+              - text: •
+            - listitem [ref=e647]:
+              - link "The Atlas of Worlds" [ref=e648] [cursor=pointer]:
+                - /url: /us/The_Atlas_of_Worlds
+      - generic [ref=e650]:
+        - heading "Item" [level=5] [ref=e651]
+        - generic [ref=e652]:
+          - list [ref=e654]:
+            - listitem [ref=e655]:
+              - link "Items" [ref=e656] [cursor=pointer]:
+                - /url: Items
+              - text: •
+            - listitem [ref=e657]:
+              - link "Unique" [ref=e658] [cursor=pointer]:
+                - /url: /us/Unique_item
+              - text: •
+            - listitem [ref=e659]:
+              - link "Foulborn" [ref=e660] [cursor=pointer]:
+                - /url: Foulborn
+          - list [ref=e662]:
+            - listitem [ref=e663]: Gems•
+            - listitem [ref=e664]:
+              - link "Gem" [ref=e665] [cursor=pointer]:
+                - /url: /us/Gem
+              - text: •
+            - listitem [ref=e666]:
+              - link "Skill Gems" [ref=e667] [cursor=pointer]:
+                - /url: Skill_Gems
+              - text: •
+            - listitem [ref=e668]:
+              - link "Support Gems" [ref=e669] [cursor=pointer]:
+                - /url: Support_Gems
+              - text: •
+            - listitem [ref=e670]:
+              - link "Transfigured Gems" [ref=e671] [cursor=pointer]:
+                - /url: Transfigured_Gems
+              - text: •
+            - listitem [ref=e672]:
+              - link "Trarthus Gems" [ref=e673] [cursor=pointer]:
+                - /url: Trarthus_Gems
+              - text: •
+            - listitem [ref=e674]:
+              - link "Exceptional" [ref=e675] [cursor=pointer]:
+                - /url: Exceptional
+          - list [ref=e677]:
+            - listitem [ref=e678]: One Handed Weapons•
+            - listitem [ref=e679]:
+              - link "Claws" [ref=e680] [cursor=pointer]:
+                - /url: Claws
+              - text: •
+            - listitem [ref=e681]:
+              - link "Daggers" [ref=e682] [cursor=pointer]:
+                - /url: Daggers
+              - text: •
+            - listitem [ref=e683]:
+              - link "Wands" [ref=e684] [cursor=pointer]:
+                - /url: Wands
+              - text: •
+            - listitem [ref=e685]:
+              - link "One Hand Swords" [ref=e686] [cursor=pointer]:
+                - /url: One_Hand_Swords
+              - text: •
+            - listitem [ref=e687]:
+              - link "One Hand Axes" [ref=e688] [cursor=pointer]:
+                - /url: One_Hand_Axes
+              - text: •
+            - listitem [ref=e689]:
+              - link "One Hand Maces" [ref=e690] [cursor=pointer]:
+                - /url: One_Hand_Maces
+              - text: •
+            - listitem [ref=e691]:
+              - link "Sceptres" [ref=e692] [cursor=pointer]:
+                - /url: Sceptres
+              - text: •
+            - listitem [ref=e693]:
+              - link "Rune Daggers" [ref=e694] [cursor=pointer]:
+                - /url: Rune_Daggers
+              - text: •
+            - listitem [ref=e695]:
+              - link "Thrusting One Hand Swords" [ref=e696] [cursor=pointer]:
+                - /url: Thrusting_One_Hand_Swords
+          - list [ref=e698]:
+            - listitem [ref=e699]: Two Handed Weapons•
+            - listitem [ref=e700]:
+              - link "Bows" [ref=e701] [cursor=pointer]:
+                - /url: Bows
+              - text: •
+            - listitem [ref=e702]:
+              - link "Staves" [ref=e703] [cursor=pointer]:
+                - /url: Staves
+              - text: •
+            - listitem [ref=e704]:
+              - link "Two Hand Swords" [ref=e705] [cursor=pointer]:
+                - /url: Two_Hand_Swords
+              - text: •
+            - listitem [ref=e706]:
+              - link "Two Hand Axes" [ref=e707] [cursor=pointer]:
+                - /url: Two_Hand_Axes
+              - text: •
+            - listitem [ref=e708]:
+              - link "Two Hand Maces" [ref=e709] [cursor=pointer]:
+                - /url: Two_Hand_Maces
+              - text: •
+            - listitem [ref=e710]:
+              - link "Warstaves" [ref=e711] [cursor=pointer]:
+                - /url: Warstaves
+              - text: •
+            - listitem [ref=e712]:
+              - link "Fishing Rods" [ref=e713] [cursor=pointer]:
+                - /url: Fishing_Rods
+          - list [ref=e715]:
+            - listitem [ref=e716]: Off-hand•
+            - listitem [ref=e717]:
+              - link "Quivers" [ref=e718] [cursor=pointer]:
+                - /url: Quivers
+              - text: •
+            - listitem [ref=e719]:
+              - link "Shields" [ref=e720] [cursor=pointer]:
+                - /url: Shields
+          - list [ref=e722]:
+            - listitem [ref=e723]: Armour•
+            - listitem [ref=e724]:
+              - link "Gloves" [ref=e725] [cursor=pointer]:
+                - /url: Gloves
+              - text: •
+            - listitem [ref=e726]:
+              - link "Boots" [ref=e727] [cursor=pointer]:
+                - /url: Boots
+              - text: •
+            - listitem [ref=e728]:
+              - link "Body Armours" [ref=e729] [cursor=pointer]:
+                - /url: Body_Armours
+              - text: •
+            - listitem [ref=e730]:
+              - link "Helmets" [ref=e731] [cursor=pointer]:
+                - /url: Helmets
+          - list [ref=e733]:
+            - listitem [ref=e734]: Jewellery•
+            - listitem [ref=e735]:
+              - link "Amulets" [ref=e736] [cursor=pointer]:
+                - /url: Amulets
+              - text: •
+            - listitem [ref=e737]:
+              - link "Rings" [ref=e738] [cursor=pointer]:
+                - /url: Rings
+              - text: •
+            - listitem [ref=e739]:
+              - link "Belts" [ref=e740] [cursor=pointer]:
+                - /url: Belts
+              - text: •
+            - listitem [ref=e741]:
+              - link "Trinkets" [ref=e742] [cursor=pointer]:
+                - /url: Trinkets
+          - list [ref=e744]:
+            - listitem [ref=e745]: Flasks•
+            - listitem [ref=e746]:
+              - link "Flasks" [ref=e747] [cursor=pointer]:
+                - /url: /us/Flasks
+              - text: •
+            - listitem [ref=e748]:
+              - link "Life Flasks" [ref=e749] [cursor=pointer]:
+                - /url: Life_Flasks
+              - text: •
+            - listitem [ref=e750]:
+              - link "Mana Flasks" [ref=e751] [cursor=pointer]:
+                - /url: Mana_Flasks
+              - text: •
+            - listitem [ref=e752]:
+              - link "Utility Flasks" [ref=e753] [cursor=pointer]:
+                - /url: Utility_Flasks
+              - text: •
+            - listitem [ref=e754]:
+              - link "Tinctures" [ref=e755] [cursor=pointer]:
+                - /url: Tinctures
+          - list [ref=e757]:
+            - listitem [ref=e758]: Currency•
+            - listitem [ref=e759]:
+              - link "Stackable Currency" [ref=e760] [cursor=pointer]:
+                - /url: Stackable_Currency
+              - text: •
+            - listitem [ref=e761]:
+              - link "Oil" [ref=e762] [cursor=pointer]:
+                - /url: /us/Oil
+              - text: •
+            - listitem [ref=e763]:
+              - link "Fossil" [ref=e764] [cursor=pointer]:
+                - /url: /us/Fossil
+              - text: •
+            - listitem [ref=e765]:
+              - link "Vial" [ref=e766] [cursor=pointer]:
+                - /url: /us/Vial
+              - text: •
+            - listitem [ref=e767]:
+              - link "Blessing" [ref=e768] [cursor=pointer]:
+                - /url: /us/Blessing
+              - text: •
+            - listitem [ref=e769]:
+              - link "Tattoo" [ref=e770] [cursor=pointer]:
+                - /url: /us/Tattoo
+              - text: •
+            - listitem [ref=e771]:
+              - link "Runegraft" [ref=e772] [cursor=pointer]:
+                - /url: /us/Runegraft
+              - text: •
+            - listitem [ref=e773]:
+              - link "Lycia's Invocation" [ref=e774] [cursor=pointer]:
+                - /url: /us/Lycias_Invocation
+              - text: •
+            - listitem [ref=e775]:
+              - link "Omen" [ref=e776] [cursor=pointer]:
+                - /url: /us/Omen
+              - text: •
+            - listitem [ref=e777]:
+              - link "Essence" [ref=e778] [cursor=pointer]:
+                - /url: /us/Essence
+              - text: •
+            - listitem [ref=e779]:
+              - link "Splinter" [ref=e780] [cursor=pointer]:
+                - /url: /us/Splinter
+              - text: •
+            - listitem [ref=e781]:
+              - link "Catalysts" [ref=e782] [cursor=pointer]:
+                - /url: /us/Catalysts
+          - list [ref=e784]:
+            - listitem [ref=e785]: Maps•
+            - listitem [ref=e786]:
+              - link "Maps" [ref=e787] [cursor=pointer]:
+                - /url: Maps
+              - text: •
+            - listitem [ref=e788]:
+              - link "Map Fragments" [ref=e789] [cursor=pointer]:
+                - /url: Map_Fragments
+              - text: •
+            - listitem [ref=e790]:
+              - link "Misc Map Items" [ref=e791] [cursor=pointer]:
+                - /url: Misc_Map_Items
+              - text: •
+            - listitem [ref=e792]:
+              - link "Expedition Logbooks" [ref=e793] [cursor=pointer]:
+                - /url: Expedition_Logbooks
+              - text: •
+            - listitem [ref=e794]:
+              - link "Breachstones" [ref=e795] [cursor=pointer]:
+                - /url: Breachstones
+              - text: •
+            - listitem [ref=e796]:
+              - link "Scarab" [ref=e797] [cursor=pointer]:
+                - /url: /us/Scarab
+              - text: •
+            - listitem [ref=e798]:
+              - link "Breachstone" [ref=e799] [cursor=pointer]:
+                - /url: /us/Breachstone
+              - text: •
+            - listitem [ref=e800]:
+              - link "Emblem" [ref=e801] [cursor=pointer]:
+                - /url: /us/Emblem
+              - text: •
+            - listitem [ref=e802]:
+              - link "Lure" [ref=e803] [cursor=pointer]:
+                - /url: /us/Lure
+              - text: •
+            - listitem [ref=e804]:
+              - link "Delirium Orb" [ref=e805] [cursor=pointer]:
+                - /url: /us/Delirium_Orb
+              - text: •
+            - listitem [ref=e806]:
+              - link "Astrolabe" [ref=e807] [cursor=pointer]:
+                - /url: /us/Astrolabe
+          - list [ref=e809]:
+            - listitem [ref=e810]: Jewels•
+            - listitem [ref=e811]:
+              - link "Jewels" [ref=e812] [cursor=pointer]:
+                - /url: Jewels
+              - text: •
+            - listitem [ref=e813]:
+              - link "Abyss Jewels" [ref=e814] [cursor=pointer]:
+                - /url: Abyss_Jewels
+              - text: •
+            - listitem [ref=e815]:
+              - link "Cluster Jewel" [ref=e816] [cursor=pointer]:
+                - /url: /us/Cluster_Jewel
+              - text: •
+            - listitem [ref=e817]:
+              - link "Timeless Jewel" [ref=e818] [cursor=pointer]:
+                - /url: /us/Timeless_Jewel
+          - list [ref=e820]:
+            - listitem [ref=e821]: Other•
+            - listitem [ref=e822]:
+              - link "Vault Keys" [ref=e823] [cursor=pointer]:
+                - /url: Vault_Keys
+              - text: •
+            - listitem [ref=e824]:
+              - link "Sanctum Research" [ref=e825] [cursor=pointer]:
+                - /url: Sanctum_Research
+              - text: •
+            - listitem [ref=e826]:
+              - link "Relics" [ref=e827] [cursor=pointer]:
+                - /url: Relics
+              - text: •
+            - listitem [ref=e828]:
+              - link "Pieces" [ref=e829] [cursor=pointer]:
+                - /url: Pieces
+              - text: •
+            - listitem [ref=e830]:
+              - link "Incubators" [ref=e831] [cursor=pointer]:
+                - /url: Incubators
+              - text: •
+            - listitem [ref=e832]:
+              - link "Corpses" [ref=e833] [cursor=pointer]:
+                - /url: Corpses
+              - text: •
+            - listitem [ref=e834]:
+              - link "Embers of the Allflame" [ref=e835] [cursor=pointer]:
+                - /url: Embers_of_the_Allflame
+              - text: •
+            - listitem [ref=e836]:
+              - link "Divination Cards" [ref=e837] [cursor=pointer]:
+                - /url: Divination_Cards
+              - text: •
+            - listitem [ref=e838]:
+              - link "Hideouts" [ref=e839] [cursor=pointer]:
+                - /url: /us/Hideout
+              - text: •
+            - listitem [ref=e840]:
+              - link "Resonator" [ref=e841] [cursor=pointer]:
+                - /url: /us/Resonator
+              - text: •
+            - listitem [ref=e842]:
+              - link "Strongbox" [ref=e843] [cursor=pointer]:
+                - /url: /us/Strongbox
+              - text: •
+            - listitem [ref=e844]:
+              - link "League Specific" [ref=e845] [cursor=pointer]:
+                - /url: /us/LeagueSpecific
+              - text: •
+            - listitem [ref=e846]:
+              - link "experimentedsymbolReplica" [ref=e847] [cursor=pointer]:
+                - /url: /us/Replica_unique_item
+                - img "experimentedsymbol"
+                - text: Replica
+          - list [ref=e849]:
+            - listitem [ref=e850]: Heist•
+            - listitem [ref=e851]:
+              - link "Contracts" [ref=e852] [cursor=pointer]:
+                - /url: Contracts
+              - text: •
+            - listitem [ref=e853]:
+              - link "Blueprints" [ref=e854] [cursor=pointer]:
+                - /url: Blueprints
+              - text: •
+            - listitem [ref=e855]:
+              - link "Heist Targets" [ref=e856] [cursor=pointer]:
+                - /url: Heist_Targets
+              - text: •
+            - listitem [ref=e857]:
+              - link "Experimented" [ref=e858] [cursor=pointer]:
+                - /url: /us/Experimented_base_type
+          - list [ref=e860]:
+            - listitem [ref=e861]: Heist Gear•
+            - listitem [ref=e862]:
+              - link "Heist Gear" [ref=e863] [cursor=pointer]:
+                - /url: Heist_Gear
+              - text: •
+            - listitem [ref=e864]:
+              - link "Heist Tools" [ref=e865] [cursor=pointer]:
+                - /url: Heist_Tools
+              - text: •
+            - listitem [ref=e866]:
+              - link "Heist Cloaks" [ref=e867] [cursor=pointer]:
+                - /url: Heist_Cloaks
+              - text: •
+            - listitem [ref=e868]:
+              - link "Heist Brooches" [ref=e869] [cursor=pointer]:
+                - /url: Heist_Brooches
+      - generic [ref=e871]:
+        - heading "SkillBookQuest" [level=5] [ref=e872]:
+          - img "SkillBook" [ref=e873]
+          - text: Quest
+        - generic [ref=e874]:
+          - list [ref=e876]:
+            - listitem [ref=e877]:
+              - link "Quest" [ref=e878] [cursor=pointer]:
+                - /url: /us/Quest
+              - text: •
+            - listitem [ref=e879]:
+              - link "Vaal Side Areas" [ref=e880] [cursor=pointer]:
+                - /url: /us/Vaal_side_area
+              - text: •
+            - listitem [ref=e881]:
+              - link "Reward" [ref=e882] [cursor=pointer]:
+                - /url: /us/QuestRewards
+              - text: •
+            - listitem [ref=e883]:
+              - link "The Pantheon" [ref=e884] [cursor=pointer]:
+                - /url: /us/The_Pantheon
+              - text: •
+            - listitem [ref=e885]:
+              - link "Monster" [ref=e886] [cursor=pointer]:
+                - /url: /us/Monster
+              - text: •
+            - listitem [ref=e887]:
+              - link "Passive Point" [ref=e888] [cursor=pointer]:
+                - /url: /us/Passive_skill
+              - text: •
+            - listitem [ref=e889]:
+              - link "Mastery" [ref=e890] [cursor=pointer]:
+                - /url: /us/Passive_mastery
+              - text: •
+            - listitem [ref=e891]:
+              - link "Keystone" [ref=e892] [cursor=pointer]:
+                - /url: /us/Keystone
+              - text: •
+            - listitem [ref=e893]:
+              - link "Notable" [ref=e894] [cursor=pointer]:
+                - /url: /us/Notable
+              - text: •
+            - listitem [ref=e895]:
+              - link "Passive Skill Tree" [ref=e896] [cursor=pointer]:
+                - /url: /us/passive-skill-tree/
+          - list [ref=e898]:
+            - listitem [ref=e899]: Part 0•
+            - listitem [ref=e900]:
+              - link "Act 1" [ref=e901] [cursor=pointer]:
+                - /url: /us/Act_1
+              - text: •
+            - listitem [ref=e902]:
+              - link "Act 2" [ref=e903] [cursor=pointer]:
+                - /url: /us/Act_2
+              - text: •
+            - listitem [ref=e904]:
+              - link "Act 3" [ref=e905] [cursor=pointer]:
+                - /url: /us/Act_3
+              - text: •
+            - listitem [ref=e906]:
+              - link "Act 4" [ref=e907] [cursor=pointer]:
+                - /url: /us/Act_4
+              - text: •
+            - listitem [ref=e908]:
+              - link "Act 5" [ref=e909] [cursor=pointer]:
+                - /url: /us/Act_5
+          - list [ref=e911]:
+            - listitem [ref=e912]: Part 1•
+            - listitem [ref=e913]:
+              - link "Act 6" [ref=e914] [cursor=pointer]:
+                - /url: /us/Act_6
+              - text: •
+            - listitem [ref=e915]:
+              - link "Act 7" [ref=e916] [cursor=pointer]:
+                - /url: /us/Act_7
+              - text: •
+            - listitem [ref=e917]:
+              - link "Act 8" [ref=e918] [cursor=pointer]:
+                - /url: /us/Act_8
+              - text: •
+            - listitem [ref=e919]:
+              - link "Act 9" [ref=e920] [cursor=pointer]:
+                - /url: /us/Act_9
+              - text: •
+            - listitem [ref=e921]:
+              - link "Act 10" [ref=e922] [cursor=pointer]:
+                - /url: /us/Act_10
+          - list [ref=e924]:
+            - listitem [ref=e925]: Epilogue•
+            - listitem [ref=e926]:
+              - link "Oriath" [ref=e927] [cursor=pointer]:
+                - /url: /us/Oriath
+              - text: •
+            - listitem [ref=e928]:
+              - link "The Atlas of Worlds" [ref=e929] [cursor=pointer]:
+                - /url: /us/The_Atlas_of_Worlds
+          - list [ref=e931]:
+            - listitem [ref=e932]: Ascendancy•
+            - listitem [ref=e933]:
+              - link "Character" [ref=e934] [cursor=pointer]:
+                - /url: /us/Character
+              - text: •
+            - listitem [ref=e935]:
+              - link "Character class" [ref=e936] [cursor=pointer]:
+                - /url: /us/Character_class
+              - text: •
+            - listitem [ref=e937]:
+              - link "Ascendancy Classes" [ref=e938] [cursor=pointer]:
+                - /url: /us/Ascendancy_class
+              - text: •
+            - listitem [ref=e939]:
+              - link "Bloodline Ascendancy class" [ref=e940] [cursor=pointer]:
+                - /url: Bloodline_Ascendancy_class
+              - text: •
+            - listitem [ref=e941]:
+              - link "The Lord's Labyrinth" [ref=e942] [cursor=pointer]:
+                - /url: /us/The_Lords_Labyrinth
+          - list [ref=e944]:
+            - listitem [ref=e945]:
+              - link "Duelist" [ref=e947] [cursor=pointer]:
+                - /url: /us/Duelist
+              - text: •
+            - listitem [ref=e948]:
+              - link "Slayer" [ref=e949] [cursor=pointer]:
+                - /url: /us/Slayer
+              - text: •
+            - listitem [ref=e950]:
+              - link "Gladiator" [ref=e951] [cursor=pointer]:
+                - /url: /us/Gladiator
+              - text: •
+            - listitem [ref=e952]:
+              - link "Champion" [ref=e953] [cursor=pointer]:
+                - /url: /us/Champion
+          - list [ref=e955]:
+            - listitem [ref=e956]:
+              - link "Marauder" [ref=e958] [cursor=pointer]:
+                - /url: /us/Marauder
+              - text: •
+            - listitem [ref=e959]:
+              - link "Juggernaut" [ref=e960] [cursor=pointer]:
+                - /url: /us/Juggernaut
+              - text: •
+            - listitem [ref=e961]:
+              - link "Berserker" [ref=e962] [cursor=pointer]:
+                - /url: /us/Berserker
+              - text: •
+            - listitem [ref=e963]:
+              - link "Chieftain" [ref=e964] [cursor=pointer]:
+                - /url: /us/Chieftain
+          - list [ref=e966]:
+            - listitem [ref=e967]:
+              - link "Ranger" [ref=e969] [cursor=pointer]:
+                - /url: /us/Ranger
+              - text: •
+            - listitem [ref=e970]:
+              - link "Warden" [ref=e971] [cursor=pointer]:
+                - /url: /us/Warden
+              - text: •
+            - listitem [ref=e972]:
+              - link "Deadeye" [ref=e973] [cursor=pointer]:
+                - /url: /us/Deadeye
+              - text: •
+            - listitem [ref=e974]:
+              - link "Pathfinder" [ref=e975] [cursor=pointer]:
+                - /url: /us/Pathfinder
+          - list [ref=e977]:
+            - listitem [ref=e978]:
+              - link "Scion" [ref=e980] [cursor=pointer]:
+                - /url: /us/Scion
+              - text: •
+            - listitem [ref=e981]:
+              - link "Ascendant" [ref=e982] [cursor=pointer]:
+                - /url: /us/Ascendant
+              - text: •
+            - listitem [ref=e983]:
+              - link "Reliquarian" [ref=e984] [cursor=pointer]:
+                - /url: /us/Reliquarian
+          - list [ref=e986]:
+            - listitem [ref=e987]:
+              - link "Shadow" [ref=e989] [cursor=pointer]:
+                - /url: /us/Shadow
+              - text: •
+            - listitem [ref=e990]:
+              - link "Assassin" [ref=e991] [cursor=pointer]:
+                - /url: /us/Assassin
+              - text: •
+            - listitem [ref=e992]:
+              - link "Trickster" [ref=e993] [cursor=pointer]:
+                - /url: /us/Trickster
+              - text: •
+            - listitem [ref=e994]:
+              - link "Saboteur" [ref=e995] [cursor=pointer]:
+                - /url: /us/Saboteur
+          - list [ref=e997]:
+            - listitem [ref=e998]:
+              - link "Templar" [ref=e1000] [cursor=pointer]:
+                - /url: /us/Templar
+              - text: •
+            - listitem [ref=e1001]:
+              - link "Inquisitor" [ref=e1002] [cursor=pointer]:
+                - /url: /us/Inquisitor
+              - text: •
+            - listitem [ref=e1003]:
+              - link "Hierophant" [ref=e1004] [cursor=pointer]:
+                - /url: /us/Hierophant
+              - text: •
+            - listitem [ref=e1005]:
+              - link "Guardian" [ref=e1006] [cursor=pointer]:
+                - /url: /us/Guardian
+          - list [ref=e1008]:
+            - listitem [ref=e1009]:
+              - link "Witch" [ref=e1011] [cursor=pointer]:
+                - /url: /us/Witch
+              - text: •
+            - listitem [ref=e1012]:
+              - link "Occultist" [ref=e1013] [cursor=pointer]:
+                - /url: /us/Occultist
+              - text: •
+            - listitem [ref=e1014]:
+              - link "Elementalist" [ref=e1015] [cursor=pointer]:
+                - /url: /us/Elementalist
+              - text: •
+            - listitem [ref=e1016]:
+              - link "Necromancer" [ref=e1017] [cursor=pointer]:
+                - /url: /us/Necromancer
+      - generic [ref=e1019]:
+        - heading "Knowledge" [level=5] [ref=e1020]
+        - list [ref=e1023]:
+          - listitem [ref=e1024]: Crafting•
+          - listitem [ref=e1025]:
+            - link "Modifiers" [ref=e1026] [cursor=pointer]:
+              - /url: Modifiers
+            - text: •
+          - listitem [ref=e1027]:
+            - link "Vendor Recipes" [ref=e1028] [cursor=pointer]:
+              - /url: /us/Vendor_recipe_system
+            - text: •
+          - listitem [ref=e1029]:
+            - link "Crafting Bench" [ref=e1030] [cursor=pointer]:
+              - /url: Crafting_Bench
+            - text: •
+          - listitem [ref=e1031]:
+            - link "Horticrafting" [ref=e1032] [cursor=pointer]:
+              - /url: Horticrafting
+            - text: •
+          - listitem [ref=e1033]:
+            - link "Metamods" [ref=e1034] [cursor=pointer]:
+              - /url: metamods
+            - text: •
+          - listitem [ref=e1035]: Mechanics•
+          - listitem [ref=e1036]:
+            - link "Wraeclast Map" [ref=e1037] [cursor=pointer]:
+              - /url: Wraeclast_Map
+            - text: •
+          - listitem [ref=e1038]:
+            - link "Glossary" [ref=e1039] [cursor=pointer]:
+              - /url: /us/Glossary
+            - text: •
+          - listitem [ref=e1040]:
+            - link "League" [ref=e1041] [cursor=pointer]:
+              - /url: League#ConcurrentPlayers
+            - text: •
+          - listitem [ref=e1042]:
+            - link "GameConstants" [ref=e1043] [cursor=pointer]:
+              - /url: /us/GameConstants
+            - text: •
+          - listitem [ref=e1044]:
+            - link "Achievements" [ref=e1045] [cursor=pointer]:
+              - /url: /us/Achievements
+            - text: •
+          - listitem [ref=e1046]:
+            - link "Currency Exchange" [ref=e1047] [cursor=pointer]:
+              - /url: Currency_Exchange
+            - text: •
+          - listitem [ref=e1048]:
+            - link "Helpful Tips" [ref=e1049] [cursor=pointer]:
+              - /url: /us/HelpfulTips
+            - text: •
+          - listitem [ref=e1050]:
+            - link "Effect" [ref=e1051] [cursor=pointer]:
+              - /url: /us/Effect
+            - text: •
+          - listitem [ref=e1052]:
+            - link "Influenced Item" [ref=e1053] [cursor=pointer]:
+              - /url: /us/Influenced_item
+            - text: •
+          - listitem [ref=e1054]:
+            - link "Synthesised Item" [ref=e1055] [cursor=pointer]:
+              - /url: /us/Synthesised_item
+            - text: •
+          - listitem [ref=e1056]:
+            - link "Ground effect" [ref=e1057] [cursor=pointer]:
+              - /url: /us/Ground_effect
+            - text: •
+          - listitem [ref=e1058]:
+            - link "Command" [ref=e1059] [cursor=pointer]:
+              - /url: /us/Commands
+            - text: •
+          - listitem [ref=e1060]:
+            - link "Minimap Icons" [ref=e1061] [cursor=pointer]:
+              - /url: /us/MinimapIcons
+      - generic [ref=e1063]:
+        - heading "Tools" [level=5] [ref=e1064]
+        - list [ref=e1067]:
+          - listitem [ref=e1068]:
+            - link "Tools" [ref=e1069] [cursor=pointer]:
+              - /url: Tools
+            - text: •
+          - listitem [ref=e1070]: PoB•
+          - listitem [ref=e1071]:
+            - link "PoB Code" [ref=e1072] [cursor=pointer]:
+              - /url: pob
+            - text: •
+          - listitem [ref=e1073]:
+            - link "PoB Character" [ref=e1074] [cursor=pointer]:
+              - /url: account
+            - text: •
+          - listitem [ref=e1075]: Util•
+          - listitem [ref=e1076]:
+            - link "Unique Generator" [ref=e1077] [cursor=pointer]:
+              - /url: /us/unique_gen
+            - text: •
+          - listitem [ref=e1078]:
+            - link "Gem Generator" [ref=e1079] [cursor=pointer]:
+              - /url: /us/gem_gen
+            - text: •
+          - listitem [ref=e1080]:
+            - link "Divination Generator" [ref=e1081] [cursor=pointer]:
+              - /url: /us/div_gen
+            - text: •
+          - listitem [ref=e1082]:
+            - link "Hideout Share" [ref=e1083] [cursor=pointer]:
+              - /url: /us/HideoutShare
+            - text: •
+          - listitem [ref=e1084]:
+            - link "Gem Roadmap" [ref=e1085] [cursor=pointer]:
+              - /url: /us/GemRoadmap
+            - text: •
+          - listitem [ref=e1086]:
+            - link "Extra Content" [ref=e1087] [cursor=pointer]:
+              - /url: /us/Extra_Content
+            - text: •
+          - listitem [ref=e1088]:
+            - link "Timeless Jewel" [ref=e1089] [cursor=pointer]:
+              - /url: TimelessJewel
+            - text: •
+          - listitem [ref=e1090]:
+            - link "DataHistory" [ref=e1091] [cursor=pointer]:
+              - /url: DataHistory
+            - text: •
+          - listitem [ref=e1092]:
+            - link "Model" [ref=e1093] [cursor=pointer]:
+              - /url: /model
+      - generic [ref=e1095]:
+        - heading "Acronym" [level=5] [ref=e1096]
+        - generic [ref=e1097]:
+          - generic [ref=e1098]:
+            - link "Kalandra" [ref=e1099] [cursor=pointer]:
+              - /url: /us/Kalandra#Acronym
+            - text: ·
+            - link "Extra Content" [ref=e1100] [cursor=pointer]:
+              - /url: /us/Extra_Content#Acronym
+            - text: ·
+            - link "Boss" [ref=e1101] [cursor=pointer]:
+              - /url: /us/Boss#Acronym
+            - text: ·
+            - link "Battlemage" [ref=e1102] [cursor=pointer]:
+              - /url: /us/Battlemage#Acronym
+            - text: ·
+            - link "Offering" [ref=e1103] [cursor=pointer]:
+              - /url: /us/Offering#Acronym
+            - text: ·
+            - link "Aspect" [ref=e1104] [cursor=pointer]:
+              - /url: /us/Aspect#Acronym
+            - text: ·
+            - link "Ignore" [ref=e1105] [cursor=pointer]:
+              - /url: /us/Ignore#Acronym
+            - text: ·
+            - link "Elemental proliferation" [ref=e1106] [cursor=pointer]:
+              - /url: /us/Elemental_proliferation#Acronym
+            - text: ·
+            - link "Hexproof" [ref=e1107] [cursor=pointer]:
+              - /url: /us/Hexproof#Acronym
+            - text: ·
+            - link "Stationary" [ref=e1108] [cursor=pointer]:
+              - /url: /us/Stationary#Acronym
+            - text: ·
+            - link "Cooldown" [ref=e1109] [cursor=pointer]:
+              - /url: /us/Cooldown#Acronym
+            - text: ·
+            - link "Movement speed" [ref=e1110] [cursor=pointer]:
+              - /url: /us/Movement_speed#Acronym
+            - text: ·
+            - link "Action speed" [ref=e1111] [cursor=pointer]:
+              - /url: /us/Action_speed#Acronym
+            - text: ·
+            - link "Low life" [ref=e1112] [cursor=pointer]:
+              - /url: /us/Low_life#Acronym
+            - text: ·
+            - link "Full life" [ref=e1113] [cursor=pointer]:
+              - /url: /us/Full_life#Acronym
+            - text: ·
+            - link "Low mana" [ref=e1114] [cursor=pointer]:
+              - /url: /us/Low_mana#Acronym
+            - text: ·
+            - link "Knockback" [ref=e1115] [cursor=pointer]:
+              - /url: /us/Knockback#Acronym
+            - text: ·
+            - link "Hit" [ref=e1116] [cursor=pointer]:
+              - /url: /us/Hit#Acronym
+            - text: ·
+            - link "Kill" [ref=e1117] [cursor=pointer]:
+              - /url: /us/Kill#Acronym
+            - text: ·
+            - link "Stun" [ref=e1118] [cursor=pointer]:
+              - /url: /us/Stun#Acronym
+            - text: ·
+            - link "Damage reflection" [ref=e1119] [cursor=pointer]:
+              - /url: /us/Damage_reflection#Acronym
+            - text: ·
+            - link "Reservation" [ref=e1120] [cursor=pointer]:
+              - /url: /us/Reservation#Acronym
+            - text: ·
+            - link "Focus" [ref=e1121] [cursor=pointer]:
+              - /url: /us/Focus#Acronym
+            - text: ·
+            - link "Rage" [ref=e1122] [cursor=pointer]:
+              - /url: /us/Rage#Acronym
+            - text: ·
+            - link "Exert" [ref=e1123] [cursor=pointer]:
+              - /url: /us/Exert#Acronym
+            - text: ·
+            - link "Destroy" [ref=e1124] [cursor=pointer]:
+              - /url: /us/Destroy#Acronym
+            - text: ·
+            - link "Endurance charge" [ref=e1125] [cursor=pointer]:
+              - /url: /us/Endurance_charge#Acronym
+            - text: ·
+            - link "Frenzy charge" [ref=e1126] [cursor=pointer]:
+              - /url: /us/Frenzy_charge#Acronym
+            - text: ·
+            - link "Power charge" [ref=e1127] [cursor=pointer]:
+              - /url: /us/Power_charge#Acronym
+            - text: ·
+            - link "Shatter" [ref=e1128] [cursor=pointer]:
+              - /url: /us/Shatter#Acronym
+          - generic [ref=e1129]:
+            - text: Weapon ·
+            - link "Weapon" [ref=e1130] [cursor=pointer]:
+              - /url: /us/Weapon#Acronym
+            - text: ·
+            - link "Dual wielding" [ref=e1131] [cursor=pointer]:
+              - /url: /us/Dual_wielding#Acronym
+            - text: ·
+            - link "One Handed Melee Weapon" [ref=e1132] [cursor=pointer]:
+              - /url: /us/One_Handed_Melee_Weapon#Acronym
+            - text: ·
+            - link "Two Handed Melee Weapon" [ref=e1133] [cursor=pointer]:
+              - /url: /us/Two_Handed_Melee_Weapon#Acronym
+            - text: ·
+            - link "Unarmed" [ref=e1134] [cursor=pointer]:
+              - /url: /us/Unarmed#Acronym
+            - text: ·
+            - link "Unencumbered" [ref=e1135] [cursor=pointer]:
+              - /url: /us/Unencumbered#Acronym
+          - generic [ref=e1136]:
+            - text: Gem Tags ·
+            - link "Travel" [ref=e1137] [cursor=pointer]:
+              - /url: /us/Travel#Acronym
+            - text: ·
+            - link "Prismatic" [ref=e1138] [cursor=pointer]:
+              - /url: /us/Prismatic#Acronym
+            - text: ·
+            - link "Blink" [ref=e1139] [cursor=pointer]:
+              - /url: /us/Blink#Acronym
+            - text: ·
+            - link "Area of effect" [ref=e1140] [cursor=pointer]:
+              - /url: /us/Area_of_effect#Acronym
+            - text: ·
+            - link "Slam" [ref=e1141] [cursor=pointer]:
+              - /url: /us/Slam#Acronym
+            - text: ·
+            - link "Channelling" [ref=e1142] [cursor=pointer]:
+              - /url: /us/Channelling#Acronym
+            - text: ·
+            - link "Aura" [ref=e1143] [cursor=pointer]:
+              - /url: /us/Aura#Acronym
+            - text: ·
+            - link "Herald" [ref=e1144] [cursor=pointer]:
+              - /url: /us/Herald#Acronym
+            - text: ·
+            - link "Vaal" [ref=e1145] [cursor=pointer]:
+              - /url: /us/Vaal#Acronym
+            - text: ·
+            - link "Melee" [ref=e1146] [cursor=pointer]:
+              - /url: /us/Melee#Acronym
+            - text: ·
+            - link "Trigger" [ref=e1147] [cursor=pointer]:
+              - /url: /us/Trigger#Acronym
+            - text: ·
+            - link "Stance" [ref=e1148] [cursor=pointer]:
+              - /url: /us/Stance#Acronym
+            - text: ·
+            - link "Warcry" [ref=e1149] [cursor=pointer]:
+              - /url: /us/Warcry#Acronym
+            - text: ·
+            - link "Banner" [ref=e1150] [cursor=pointer]:
+              - /url: /us/Banner#Acronym
+            - text: ·
+            - link "Valour" [ref=e1151] [cursor=pointer]:
+              - /url: /us/Valour#Acronym
+          - generic [ref=e1152]:
+            - text: Damage ·
+            - link "Physical damage" [ref=e1153] [cursor=pointer]:
+              - /url: /us/Physical_damage#Acronym
+            - text: ·
+            - link "Elemental damage" [ref=e1154] [cursor=pointer]:
+              - /url: /us/Elemental_damage#Acronym
+            - text: ·
+            - link "Chaos damage" [ref=e1155] [cursor=pointer]:
+              - /url: /us/Chaos_damage#Acronym
+            - text: ·
+            - link "Fire damage" [ref=e1156] [cursor=pointer]:
+              - /url: /us/Fire_damage#Acronym
+            - text: ·
+            - link "Cold damage" [ref=e1157] [cursor=pointer]:
+              - /url: /us/Cold_damage#Acronym
+            - text: ·
+            - link "Lightning damage" [ref=e1158] [cursor=pointer]:
+              - /url: /us/Lightning_damage#Acronym
+            - text: ·
+            - link "Overkill damage" [ref=e1159] [cursor=pointer]:
+              - /url: /us/Overkill_damage#Acronym
+            - text: ·
+            - link "Damage to attacks" [ref=e1160] [cursor=pointer]:
+              - /url: /us/Damage_to_attacks#Acronym
+            - text: ·
+            - link "Damage to spells" [ref=e1161] [cursor=pointer]:
+              - /url: /us/Damage_to_spells#Acronym
+            - text: ·
+            - link "Duration" [ref=e1162] [cursor=pointer]:
+              - /url: /us/Duration#Acronym
+            - text: ·
+            - link "Damage over time" [ref=e1163] [cursor=pointer]:
+              - /url: /us/Damage_over_time#Acronym
+            - text: ·
+            - link "Critical strike" [ref=e1164] [cursor=pointer]:
+              - /url: /us/Critical_strike#Acronym
+            - text: ·
+            - link "Attack speed" [ref=e1165] [cursor=pointer]:
+              - /url: /us/Attack_speed#Acronym
+            - text: ·
+            - link "Cast speed" [ref=e1166] [cursor=pointer]:
+              - /url: /us/Cast_speed#Acronym
+            - text: ·
+            - link "Culling strike" [ref=e1167] [cursor=pointer]:
+              - /url: /us/Culling_strike#Acronym
+            - text: ·
+            - link "Burning" [ref=e1168] [cursor=pointer]:
+              - /url: /us/Burning#Acronym
+            - text: ·
+            - link "Explode" [ref=e1169] [cursor=pointer]:
+              - /url: /us/Explode#Acronym
+            - text: ·
+            - link "Overwhelm" [ref=e1170] [cursor=pointer]:
+              - /url: /us/Overwhelm#Acronym
+            - text: ·
+            - link "Resistance penetration" [ref=e1171] [cursor=pointer]:
+              - /url: /us/Resistance_penetration#Acronym
+            - text: ·
+            - link "Damage conversion" [ref=e1172] [cursor=pointer]:
+              - /url: /us/Damage_conversion#Acronym
+            - text: ·
+            - link "Accuracy" [ref=e1173] [cursor=pointer]:
+              - /url: /us/Accuracy#Acronym
+            - text: ·
+            - link "Double damage" [ref=e1174] [cursor=pointer]:
+              - /url: /us/Double_damage#Acronym
+            - text: ·
+            - link "Triple damage" [ref=e1175] [cursor=pointer]:
+              - /url: /us/Triple_damage#Acronym
+            - text: ·
+            - link "Counterattack" [ref=e1176] [cursor=pointer]:
+              - /url: /us/Counterattack#Acronym
+            - text: ·
+            - link "Retaliation" [ref=e1177] [cursor=pointer]:
+              - /url: /us/Retaliation#Acronym
+          - generic [ref=e1178]:
+            - text: Minion ·
+            - link "Minion" [ref=e1179] [cursor=pointer]:
+              - /url: /us/Minion#Acronym
+            - text: ·
+            - link "Trap" [ref=e1180] [cursor=pointer]:
+              - /url: /us/Trap#Acronym
+            - text: ·
+            - link "Mine" [ref=e1181] [cursor=pointer]:
+              - /url: /us/Mine#Acronym
+            - text: ·
+            - link "Throwing speed" [ref=e1182] [cursor=pointer]:
+              - /url: /us/Throwing_speed#Acronym
+            - text: ·
+            - link "Spectre" [ref=e1183] [cursor=pointer]:
+              - /url: /us/Spectre#Acronym
+            - text: ·
+            - link "Skeleton" [ref=e1184] [cursor=pointer]:
+              - /url: /us/Skeleton#Acronym
+            - text: ·
+            - link "Zombie" [ref=e1185] [cursor=pointer]:
+              - /url: /us/Zombie#Acronym
+            - text: ·
+            - link "Totem" [ref=e1186] [cursor=pointer]:
+              - /url: /us/Totem#Acronym
+            - text: ·
+            - link "Tinctures" [ref=e1187] [cursor=pointer]:
+              - /url: /us/Tinctures#Acronym
+            - text: ·
+            - link "Golem" [ref=e1188] [cursor=pointer]:
+              - /url: /us/Golem#Acronym
+            - text: ·
+            - link "Brand" [ref=e1189] [cursor=pointer]:
+              - /url: /us/Brand#Acronym
+            - text: ·
+            - link "Corpses" [ref=e1190] [cursor=pointer]:
+              - /url: /us/Corpses#Acronym
+            - text: ·
+            - link "Phantasm" [ref=e1191] [cursor=pointer]:
+              - /url: /us/Phantasm#Acronym
+            - text: ·
+            - link "Sentinel" [ref=e1192] [cursor=pointer]:
+              - /url: /us/Sentinel#Acronym
+          - generic [ref=e1193]:
+            - text: Projectile ·
+            - link "Projectile" [ref=e1194] [cursor=pointer]:
+              - /url: /us/Projectile#Acronym
+            - text: ·
+            - link "Projectile Speed" [ref=e1195] [cursor=pointer]:
+              - /url: /us/Projectile_Speed#Acronym
+            - text: ·
+            - link "Additional arrow" [ref=e1196] [cursor=pointer]:
+              - /url: /us/Additional_arrow#Acronym
+            - text: ·
+            - link "Split" [ref=e1197] [cursor=pointer]:
+              - /url: /us/Split#Acronym
+            - text: ·
+            - link "Pierce" [ref=e1198] [cursor=pointer]:
+              - /url: /us/Pierce#Acronym
+            - text: ·
+            - link "Fork" [ref=e1199] [cursor=pointer]:
+              - /url: /us/Fork#Acronym
+            - text: ·
+            - link "Chain" [ref=e1200] [cursor=pointer]:
+              - /url: /us/Chain#Acronym
+            - text: ·
+            - link "Return" [ref=e1201] [cursor=pointer]:
+              - /url: /us/Return#Acronym
+          - generic [ref=e1202]:
+            - text: Defences ·
+            - link "Defences" [ref=e1203] [cursor=pointer]:
+              - /url: /us/Defences#Acronym
+            - text: ·
+            - link "Recharge" [ref=e1204] [cursor=pointer]:
+              - /url: /us/Recharge#Acronym
+            - text: ·
+            - link "Recovery" [ref=e1205] [cursor=pointer]:
+              - /url: /us/Recovery#Acronym
+            - text: ·
+            - link "Regeneration" [ref=e1206] [cursor=pointer]:
+              - /url: /us/Regeneration#Acronym
+            - text: ·
+            - link "Guard" [ref=e1207] [cursor=pointer]:
+              - /url: /us/Guard#Acronym
+            - text: ·
+            - link "Physical damage reduction" [ref=e1208] [cursor=pointer]:
+              - /url: /us/Physical_damage_reduction#Acronym
+            - text: ·
+            - link "Mana before Life" [ref=e1209] [cursor=pointer]:
+              - /url: /us/Mana_before_Life#Acronym
+            - text: ·
+            - link "Armour" [ref=e1210] [cursor=pointer]:
+              - /url: /us/Armour#Acronym
+            - text: ·
+            - link "Block" [ref=e1211] [cursor=pointer]:
+              - /url: /us/Block#Acronym
+            - text: ·
+            - link "Evasion" [ref=e1212] [cursor=pointer]:
+              - /url: /us/Evasion#Acronym
+            - text: ·
+            - link "Spell suppression" [ref=e1213] [cursor=pointer]:
+              - /url: /us/Spell_suppression#Acronym
+            - text: ·
+            - link "Resistance" [ref=e1214] [cursor=pointer]:
+              - /url: /us/Resistance#Acronym
+            - text: ·
+            - link "Avoidance" [ref=e1215] [cursor=pointer]:
+              - /url: /us/Avoidance#Acronym
+            - text: ·
+            - link "Damage taken" [ref=e1216] [cursor=pointer]:
+              - /url: /us/Damage_taken#Acronym
+            - text: ·
+            - link "Damage taken as" [ref=e1217] [cursor=pointer]:
+              - /url: /us/Damage_taken_as#Acronym
+            - text: ·
+            - link "Energy shield" [ref=e1218] [cursor=pointer]:
+              - /url: /us/Energy_shield#Acronym
+            - text: ·
+            - link "Gain on hit" [ref=e1219] [cursor=pointer]:
+              - /url: /us/Gain_on_hit#Acronym
+            - text: ·
+            - link "Leech" [ref=e1220] [cursor=pointer]:
+              - /url: /us/Leech#Acronym
+            - text: ·
+            - link "Aegis" [ref=e1221] [cursor=pointer]:
+              - /url: /us/Aegis#Acronym
+            - text: ·
+            - link "Ward" [ref=e1222] [cursor=pointer]:
+              - /url: /us/Ward#Acronym
+            - text: ·
+            - link "Savage hit" [ref=e1223] [cursor=pointer]:
+              - /url: /us/Savage_hit#Acronym
+            - text: ·
+            - link "Recoup" [ref=e1224] [cursor=pointer]:
+              - /url: /us/Recoup#Acronym
+            - text: ·
+            - link "Restore" [ref=e1225] [cursor=pointer]:
+              - /url: /us/Restore#Acronym
+          - generic [ref=e1226]:
+            - text: Buff ·
+            - link "Buff" [ref=e1227] [cursor=pointer]:
+              - /url: /us/Buff#Acronym
+            - text: ·
+            - link "Adrenaline" [ref=e1228] [cursor=pointer]:
+              - /url: /us/Adrenaline#Acronym
+            - text: ·
+            - link "Fortify" [ref=e1229] [cursor=pointer]:
+              - /url: /us/Fortify#Acronym
+            - text: ·
+            - link "Onslaught" [ref=e1230] [cursor=pointer]:
+              - /url: /us/Onslaught#Acronym
+            - text: ·
+            - link "Elusive" [ref=e1231] [cursor=pointer]:
+              - /url: /us/Elusive#Acronym
+            - text: ·
+            - link "Tailwind" [ref=e1232] [cursor=pointer]:
+              - /url: /us/Tailwind#Acronym
+            - text: ·
+            - link "Phasing" [ref=e1233] [cursor=pointer]:
+              - /url: /us/Phasing#Acronym
+            - text: ·
+            - link "Unholy Might" [ref=e1234] [cursor=pointer]:
+              - /url: /us/Unholy_Might#Acronym
+            - text: ·
+            - link "Soul Eater" [ref=e1235] [cursor=pointer]:
+              - /url: /us/Soul_Eater#Acronym
+            - text: ·
+            - link "Conflux" [ref=e1236] [cursor=pointer]:
+              - /url: /us/Conflux#Acronym
+            - text: ·
+            - link "Cruelty" [ref=e1237] [cursor=pointer]:
+              - /url: /us/Cruelty#Acronym
+            - text: ·
+            - link "Arcane Surge" [ref=e1238] [cursor=pointer]:
+              - /url: /us/Arcane_Surge#Acronym
+            - text: ·
+            - link "Link" [ref=e1239] [cursor=pointer]:
+              - /url: /us/Link#Acronym
+          - generic [ref=e1240]:
+            - text: Debuff ·
+            - link "Blind" [ref=e1241] [cursor=pointer]:
+              - /url: /us/Blind#Acronym
+            - text: ·
+            - link "Maim" [ref=e1242] [cursor=pointer]:
+              - /url: /us/Maim#Acronym
+            - text: ·
+            - link "Hinder" [ref=e1243] [cursor=pointer]:
+              - /url: /us/Hinder#Acronym
+            - text: ·
+            - link "Intimidate" [ref=e1244] [cursor=pointer]:
+              - /url: /us/Intimidate#Acronym
+            - text: ·
+            - link "Unnerve" [ref=e1245] [cursor=pointer]:
+              - /url: /us/Unnerve#Acronym
+            - text: ·
+            - link "Ash" [ref=e1246] [cursor=pointer]:
+              - /url: /us/Ash#Acronym
+            - text: ·
+            - link "Exposure" [ref=e1247] [cursor=pointer]:
+              - /url: /us/Exposure#Acronym
+            - text: ·
+            - link "Crushed" [ref=e1248] [cursor=pointer]:
+              - /url: /us/Crushed#Acronym
+            - text: ·
+            - link "Withered" [ref=e1249] [cursor=pointer]:
+              - /url: /us/Withered#Acronym
+            - text: ·
+            - link "Corrupted Blood" [ref=e1250] [cursor=pointer]:
+              - /url: /us/Corrupted_Blood#Acronym
+            - text: ·
+            - link "Debilitate" [ref=e1251] [cursor=pointer]:
+              - /url: /us/Debilitate#Acronym
+            - text: ·
+            - link "Taunt" [ref=e1252] [cursor=pointer]:
+              - /url: /us/Taunt#Acronym
+            - text: ·
+            - link "Silence" [ref=e1253] [cursor=pointer]:
+              - /url: /us/Silence#Acronym
+            - text: ·
+            - link "Curse" [ref=e1254] [cursor=pointer]:
+              - /url: /us/Curse#Acronym
+            - text: ·
+            - link "Hex" [ref=e1255] [cursor=pointer]:
+              - /url: /us/Hex#Acronym
+            - text: ·
+            - link "Mark" [ref=e1256] [cursor=pointer]:
+              - /url: /us/Mark#Acronym
+            - text: ·
+            - link "Impale" [ref=e1257] [cursor=pointer]:
+              - /url: /us/Impale#Acronym
+            - text: ·
+            - link "Grasping Vines" [ref=e1258] [cursor=pointer]:
+              - /url: /us/Grasping_Vines#Acronym
+            - text: ·
+            - link "Petrified" [ref=e1259] [cursor=pointer]:
+              - /url: /us/Petrified#Acronym
+          - generic [ref=e1260]:
+            - text: Ailment ·
+            - link "Ailment" [ref=e1261] [cursor=pointer]:
+              - /url: /us/Ailment#Acronym
+            - text: ·
+            - link "Avoid elemental ailment" [ref=e1262] [cursor=pointer]:
+              - /url: /us/Avoid_elemental_ailment#Acronym
+            - text: ·
+            - link "Ignite" [ref=e1263] [cursor=pointer]:
+              - /url: /us/Ignite#Acronym
+            - text: ·
+            - link "Chill" [ref=e1264] [cursor=pointer]:
+              - /url: /us/Chill#Acronym
+            - text: ·
+            - link "Freeze" [ref=e1265] [cursor=pointer]:
+              - /url: /us/Freeze#Acronym
+            - text: ·
+            - link "Shock" [ref=e1266] [cursor=pointer]:
+              - /url: /us/Shock#Acronym
+            - text: ·
+            - link "Scorch" [ref=e1267] [cursor=pointer]:
+              - /url: /us/Scorch#Acronym
+            - text: ·
+            - link "Brittle" [ref=e1268] [cursor=pointer]:
+              - /url: /us/Brittle#Acronym
+            - text: ·
+            - link "Sap" [ref=e1269] [cursor=pointer]:
+              - /url: /us/Sap#Acronym
+            - text: ·
+            - link "Poison" [ref=e1270] [cursor=pointer]:
+              - /url: /us/Poison#Acronym
+            - text: ·
+            - link "Bleeding" [ref=e1271] [cursor=pointer]:
+              - /url: /us/Bleeding#Acronym
+          - generic [ref=e1272]:
+            - text: Misc ·
+            - link "Rarity" [ref=e1273] [cursor=pointer]:
+              - /url: /us/Rarity#Acronym
+            - text: ·
+            - link "Quantity" [ref=e1274] [cursor=pointer]:
+              - /url: /us/Quantity#Acronym
+            - text: ·
+            - link "Quality" [ref=e1275] [cursor=pointer]:
+              - /url: /us/Quality#Acronym
+            - text: ·
+            - link "Character size" [ref=e1276] [cursor=pointer]:
+              - /url: /us/Character_size#Acronym
+            - text: ·
+            - link "Experience" [ref=e1277] [cursor=pointer]:
+              - /url: /us/Experience#Acronym
+            - text: ·
+            - link "Partying" [ref=e1278] [cursor=pointer]:
+              - /url: /us/Partying#Acronym
+            - text: ·
+            - link "Ally" [ref=e1279] [cursor=pointer]:
+              - /url: /us/Ally#Acronym
+            - text: ·
+            - link "Light radius" [ref=e1280] [cursor=pointer]:
+              - /url: /us/Light_radius#Acronym
+            - text: ·
+            - link "Luck" [ref=e1281] [cursor=pointer]:
+              - /url: /us/Luck#Acronym
+            - text: ·
+            - link "Recently" [ref=e1282] [cursor=pointer]:
+              - /url: /us/Recently#Acronym
+            - text: ·
+            - link "Attribute" [ref=e1283] [cursor=pointer]:
+              - /url: /us/Attribute#Acronym
+            - text: ·
+            - link "Modifiers" [ref=e1284] [cursor=pointer]:
+              - /url: /us/Modifiers#Acronym
+            - text: ·
+            - link "Corrupted" [ref=e1285] [cursor=pointer]:
+              - /url: /us/Corrupted#Acronym
+            - text: ·
+            - link "Distance" [ref=e1286] [cursor=pointer]:
+              - /url: /us/Distance#Acronym
+            - text: ·
+            - link "Memory Threads" [ref=e1287] [cursor=pointer]:
+              - /url: /us/Memory_Threads#Acronym
+            - text: ·
+            - link "Memory Strands" [ref=e1288] [cursor=pointer]:
+              - /url: /us/Memory_Strands#Acronym
+          - generic [ref=e1289]:
+            - text: League ·
+            - link "Expedition" [ref=e1290] [cursor=pointer]:
+              - /url: /us/Expedition#Acronym
+            - text: ·
+            - link "Ritual" [ref=e1291] [cursor=pointer]:
+              - /url: /us/Ritual#Acronym
+            - text: ·
+            - link "Heist" [ref=e1292] [cursor=pointer]:
+              - /url: /us/Heist#Acronym
+            - text: ·
+            - link "Harvest" [ref=e1293] [cursor=pointer]:
+              - /url: /us/Harvest#Acronym
+            - text: ·
+            - link "Delirium" [ref=e1294] [cursor=pointer]:
+              - /url: /us/Delirium#Acronym
+            - text: ·
+            - link "Metamorph" [ref=e1295] [cursor=pointer]:
+              - /url: /us/Metamorph#Acronym
+            - text: ·
+            - link "Blight" [ref=e1296] [cursor=pointer]:
+              - /url: /us/Blight#Acronym
+            - text: ·
+            - link "Legion" [ref=e1297] [cursor=pointer]:
+              - /url: /us/Legion#Acronym
+            - text: ·
+            - link "Synthesis" [ref=e1298] [cursor=pointer]:
+              - /url: /us/Synthesis#Acronym
+            - text: ·
+            - link "Betrayal" [ref=e1299] [cursor=pointer]:
+              - /url: /us/Betrayal#Acronym
+            - text: ·
+            - link "Delve" [ref=e1300] [cursor=pointer]:
+              - /url: /us/Delve#Acronym
+            - text: ·
+            - link "Incursion" [ref=e1301] [cursor=pointer]:
+              - /url: /us/Incursion#Acronym
+            - text: ·
+            - link "Bestiary" [ref=e1302] [cursor=pointer]:
+              - /url: /us/Bestiary#Acronym
+            - text: ·
+            - link "Abyss" [ref=e1303] [cursor=pointer]:
+              - /url: /us/Abyss#Acronym
+            - text: ·
+            - link "Harbinger" [ref=e1304] [cursor=pointer]:
+              - /url: /us/Harbinger#Acronym
+            - text: ·
+            - link "Breach" [ref=e1305] [cursor=pointer]:
+              - /url: /us/Breach#Acronym
+            - text: ·
+            - link "Essence" [ref=e1306] [cursor=pointer]:
+              - /url: /us/Essence#Acronym
+            - text: ·
+            - link "Talisman" [ref=e1307] [cursor=pointer]:
+              - /url: /us/Talisman#Acronym
+            - text: ·
+            - link "Tormented Spirit" [ref=e1308] [cursor=pointer]:
+              - /url: /us/Tormented_Spirit#Acronym
+            - text: ·
+            - link "Rampage" [ref=e1309] [cursor=pointer]:
+              - /url: /us/Rampage#Acronym
+            - text: ·
+            - link "Rogue exile" [ref=e1310] [cursor=pointer]:
+              - /url: /us/Rogue_exile#Acronym
+            - text: ·
+            - link "Foulborn" [ref=e1311] [cursor=pointer]:
+              - /url: /us/Foulborn#Acronym
+      - generic [ref=e1313]:
+        - heading "Lore" [level=5] [ref=e1314]
+        - list [ref=e1317]:
+          - listitem [ref=e1318]: Main•
+          - listitem [ref=e1319]:
+            - link "NPC" [ref=e1320] [cursor=pointer]:
+              - /url: /us/NPCs
+            - text: •
+          - listitem [ref=e1321]:
+            - link "FlavourText" [ref=e1322] [cursor=pointer]:
+              - /url: /us/FlavourText
+            - text: •
+          - listitem [ref=e1323]: Lore•
+          - listitem [ref=e1324]:
+            - link "Echoes of the Atlas" [ref=e1325] [cursor=pointer]:
+              - /url: /us/Echoes_of_the_Atlas#Lore
+            - text: •
+          - listitem [ref=e1326]:
+            - link "Miscellaneous Lore" [ref=e1327] [cursor=pointer]:
+              - /url: /us/Miscellaneous_Lore#Lore
+            - text: •
+          - listitem [ref=e1328]:
+            - link "Primeval Wraeclast" [ref=e1329] [cursor=pointer]:
+              - /url: /us/Primeval_Wraeclast#Lore
+            - text: •
+          - listitem [ref=e1330]:
+            - link "Replica Unique Items" [ref=e1331] [cursor=pointer]:
+              - /url: /us/Replica_Unique_Items#Lore
+            - text: •
+          - listitem [ref=e1332]:
+            - link "Siege of the Atlas" [ref=e1333] [cursor=pointer]:
+              - /url: /us/Siege_of_the_Atlas#Lore
+            - text: •
+          - listitem [ref=e1334]:
+            - link "The Ancient Maraketh" [ref=e1335] [cursor=pointer]:
+              - /url: /us/The_Ancient_Maraketh#Lore
+            - text: •
+          - listitem [ref=e1336]:
+            - link "The Conquerors of the Atlas" [ref=e1337] [cursor=pointer]:
+              - /url: /us/The_Conquerors_of_the_Atlas#Lore
+            - text: •
+          - listitem [ref=e1338]:
+            - link "The Eternal Empire" [ref=e1339] [cursor=pointer]:
+              - /url: /us/The_Eternal_Empire#Lore
+            - text: •
+          - listitem [ref=e1340]:
+            - link "The History of the Elder" [ref=e1341] [cursor=pointer]:
+              - /url: /us/The_History_of_the_Elder#Lore
+            - text: •
+          - listitem [ref=e1342]:
+            - link "The Kalguur" [ref=e1343] [cursor=pointer]:
+              - /url: /us/The_Kalguur#Lore
+            - text: •
+          - listitem [ref=e1344]:
+            - link "The Return of the Gods" [ref=e1345] [cursor=pointer]:
+              - /url: /us/The_Return_of_the_Gods#Lore
+            - text: •
+          - listitem [ref=e1346]:
+            - link "The Ring" [ref=e1347] [cursor=pointer]:
+              - /url: /us/The_Ring#Lore
+            - text: •
+          - listitem [ref=e1348]:
+            - link "The Rise and Fall of the Gods" [ref=e1349] [cursor=pointer]:
+              - /url: /us/The_Rise_and_Fall_of_the_Gods#Lore
+            - text: •
+          - listitem [ref=e1350]:
+            - link "The Templars" [ref=e1351] [cursor=pointer]:
+              - /url: /us/The_Templars#Lore
+            - text: •
+          - listitem [ref=e1352]:
+            - link "The Vaal" [ref=e1353] [cursor=pointer]:
+              - /url: /us/The_Vaal#Lore
+            - text: •
+          - listitem [ref=e1354]:
+            - link "The War for the Atlas" [ref=e1355] [cursor=pointer]:
+              - /url: /us/The_War_for_the_Atlas#Lore
+            - text: •
+          - listitem [ref=e1356]: Misc•
+          - listitem [ref=e1357]:
+            - link "Atziri" [ref=e1358] [cursor=pointer]:
+              - /url: /us/Atziri
+            - text: •
+          - listitem [ref=e1359]:
+            - link "Veruso" [ref=e1360] [cursor=pointer]:
+              - /url: /us/Veruso
+            - text: •
+          - listitem [ref=e1361]:
+            - link "Romira" [ref=e1362] [cursor=pointer]:
+              - /url: /us/Romira
+            - text: •
+          - listitem [ref=e1363]:
+            - link "Izaro" [ref=e1364] [cursor=pointer]:
+              - /url: /us/Izaro
+            - text: •
+          - listitem [ref=e1365]:
+            - link "Chitus" [ref=e1366] [cursor=pointer]:
+              - /url: /us/Chitus
+            - text: •
+          - listitem [ref=e1367]:
+            - link "Kaom" [ref=e1368] [cursor=pointer]:
+              - /url: /us/Kaom
+            - text: •
+          - listitem [ref=e1369]:
+            - link "Venarius" [ref=e1370] [cursor=pointer]:
+              - /url: /us/Venarius
+            - text: •
+          - listitem [ref=e1371]:
+            - link "Dominus" [ref=e1372] [cursor=pointer]:
+              - /url: /us/Dominus
+            - text: •
+          - listitem [ref=e1373]:
+            - link "Gravicius" [ref=e1374] [cursor=pointer]:
+              - /url: /us/Gravicius
+            - text: •
+          - listitem [ref=e1375]:
+            - link "Marceus" [ref=e1376] [cursor=pointer]:
+              - /url: /us/Marceus
+            - text: •
+          - listitem [ref=e1377]:
+            - link "Rigwald" [ref=e1378] [cursor=pointer]:
+              - /url: /us/Rigwald
+            - text: •
+          - listitem [ref=e1379]:
+            - link "Titucius" [ref=e1380] [cursor=pointer]:
+              - /url: /us/Titucius
+            - text: •
+          - listitem [ref=e1381]:
+            - link "Voll" [ref=e1382] [cursor=pointer]:
+              - /url: /us/Voll
+            - text: •
+          - listitem [ref=e1383]:
+            - link "Deshret" [ref=e1384] [cursor=pointer]:
+              - /url: /us/Deshret
+            - text: •
+          - listitem [ref=e1385]:
+            - link "Asenath" [ref=e1386] [cursor=pointer]:
+              - /url: /us/Asenath
+            - text: •
+          - listitem [ref=e1387]:
+            - link "Adus" [ref=e1388] [cursor=pointer]:
+              - /url: /us/Adus
+            - text: •
+          - listitem [ref=e1389]:
+            - link "Shavronne" [ref=e1390] [cursor=pointer]:
+              - /url: /us/Shavronne
+            - text: •
+          - listitem [ref=e1391]:
+            - link "Doedre" [ref=e1392] [cursor=pointer]:
+              - /url: /us/Doedre
+            - text: •
+          - listitem [ref=e1393]:
+            - link "Malachai" [ref=e1394] [cursor=pointer]:
+              - /url: /us/Malachai
+            - text: •
+          - listitem [ref=e1395]:
+            - link "Maligaro" [ref=e1396] [cursor=pointer]:
+              - /url: /us/Maligaro
+            - text: •
+          - listitem [ref=e1397]:
+            - link "Doryani" [ref=e1398] [cursor=pointer]:
+              - /url: /us/Doryani
+            - text: •
+          - listitem [ref=e1399]:
+            - link "Piety" [ref=e1400] [cursor=pointer]:
+              - /url: /us/Piety
+            - text: •
+          - listitem [ref=e1401]:
+            - link "Gaius Sentari" [ref=e1402] [cursor=pointer]:
+              - /url: /us/Gaius_Sentari
+            - text: •
+          - listitem [ref=e1403]:
+            - link "Brutus" [ref=e1404] [cursor=pointer]:
+              - /url: /us/Brutus
+            - text: •
+          - listitem [ref=e1405]:
+            - link "Icius Perandus" [ref=e1406] [cursor=pointer]:
+              - /url: /us/Icius_Perandus
+            - text: •
+          - listitem [ref=e1407]:
+            - link "Cadiro" [ref=e1408] [cursor=pointer]:
+              - /url: /us/Cadiro
+            - text: •
+          - listitem [ref=e1409]:
+            - link "Victario" [ref=e1410] [cursor=pointer]:
+              - /url: /us/Victario
+            - text: •
+          - listitem [ref=e1411]:
+            - link "Ondar" [ref=e1412] [cursor=pointer]:
+              - /url: /us/Ondar
+            - text: •
+          - listitem [ref=e1413]:
+            - link "Dialla" [ref=e1414] [cursor=pointer]:
+              - /url: /us/Dialla
+            - text: •
+          - listitem [ref=e1415]:
+            - link "Fairgraves" [ref=e1416] [cursor=pointer]:
+              - /url: /us/Fairgraves
+            - text: •
+          - listitem [ref=e1417]:
+            - link "Merveil" [ref=e1418] [cursor=pointer]:
+              - /url: /us/Merveil
+            - text: •
+          - listitem [ref=e1419]:
+            - link "Daresso" [ref=e1420] [cursor=pointer]:
+              - /url: /us/Daresso
+            - text: •
+          - listitem [ref=e1421]:
+            - link "Hyrri" [ref=e1422] [cursor=pointer]:
+              - /url: /us/Hyrri
+            - text: •
+          - listitem [ref=e1423]:
+            - link "Lavianga" [ref=e1424] [cursor=pointer]:
+              - /url: /us/Lavianga
+            - text: •
+          - listitem [ref=e1425]:
+            - link "Zerphi" [ref=e1426] [cursor=pointer]:
+              - /url: /us/Zerphi
+            - text: •
+          - listitem [ref=e1427]:
+            - link "Geofri" [ref=e1428] [cursor=pointer]:
+              - /url: /us/Geofri
+            - text: •
+          - listitem [ref=e1429]:
+            - link "Hrimnor" [ref=e1430] [cursor=pointer]:
+              - /url: /us/Hrimnor
+            - text: •
+          - listitem [ref=e1431]:
+            - link "Kadavrus" [ref=e1432] [cursor=pointer]:
+              - /url: /us/Kadavrus
+            - text: •
+          - listitem [ref=e1433]:
+            - link "Viridi" [ref=e1434] [cursor=pointer]:
+              - /url: /us/Viridi
+            - text: •
+          - listitem [ref=e1435]:
+            - link "Kalandra" [ref=e1436] [cursor=pointer]:
+              - /url: /us/Kalandra
+            - text: •
+          - listitem [ref=e1437]:
+            - link "Ngamakanui" [ref=e1438] [cursor=pointer]:
+              - /url: /us/Ngamakanui
+            - text: •
+          - listitem [ref=e1439]:
+            - link "Trarthus" [ref=e1440] [cursor=pointer]:
+              - /url: /us/Trarthus
+            - text: •
+          - listitem [ref=e1441]:
+            - link "Ezomyr" [ref=e1442] [cursor=pointer]:
+              - /url: /us/Ezomyr
+            - text: •
+          - listitem [ref=e1443]:
+            - link "Ezomyte" [ref=e1444] [cursor=pointer]:
+              - /url: /us/Ezomyte
+            - text: •
+          - listitem [ref=e1445]:
+            - link "Stridevolf" [ref=e1446] [cursor=pointer]:
+              - /url: /us/Stridevolf
+            - text: •
+          - listitem [ref=e1447]:
+            - link "Azmeri" [ref=e1448] [cursor=pointer]:
+              - /url: /us/Azmeri
+            - text: •
+          - listitem [ref=e1449]:
+            - link "Phaaryl" [ref=e1450] [cursor=pointer]:
+              - /url: /us/Phaaryl
+            - text: •
+          - listitem [ref=e1451]:
+            - link "Ogham" [ref=e1452] [cursor=pointer]:
+              - /url: /us/Ogham
+            - text: •
+          - listitem [ref=e1453]:
+            - link "Vastiri" [ref=e1454] [cursor=pointer]:
+              - /url: /us/Vastiri
+            - text: •
+          - listitem [ref=e1455]:
+            - link "Faridun" [ref=e1456] [cursor=pointer]:
+              - /url: /us/Faridun
+            - text: •
+          - listitem [ref=e1457]:
+            - link "Utzaal" [ref=e1458] [cursor=pointer]:
+              - /url: /us/Utzaal
+            - text: •
+          - listitem [ref=e1459]:
+            - link "Valdo" [ref=e1460] [cursor=pointer]:
+              - /url: /us/Valdo
+      - generic [ref=e1462]:
+        - heading "RSS More..." [level=5] [ref=e1463]:
+          - text: RSS
+          - link "More..." [ref=e1465] [cursor=pointer]:
+            - /url: /us/news
+        - generic [ref=e1466]:
+          - link "04/03 Weekend Stash Tab Sale" [ref=e1467] [cursor=pointer]:
+            - /url: https://www.pathofexile.com/forum/view-thread/3926103
+          - link "04/02 Hideout Showcase" [ref=e1468] [cursor=pointer]:
+            - /url: https://www.pathofexile.com/forum/view-thread/3926115
+          - link "04/01 Mirage Supporter Packs Concept Art - Iron Incarcerator Series" [ref=e1469] [cursor=pointer]:
+            - /url: https://www.pathofexile.com/forum/view-thread/3925889
+          - link "03/30 Zizaran’s Class Gauntlet Event Starts on April 8th" [ref=e1470] [cursor=pointer]:
+            - /url: https://www.pathofexile.com/forum/view-thread/3925479
+          - link "03/27 New Microtransactions - Weekend Weapon and Shields Sale" [ref=e1471] [cursor=pointer]:
+            - /url: https://www.pathofexile.com/forum/view-thread/3924654
+      - generic [ref=e1473]:
+        - heading "Youtube" [level=5] [ref=e1474]: Youtube
+        - generic [ref=e1476]:
+          - 'link "04/02 Path of Exile: Hideout Showcase April 2026" [ref=e1477] [cursor=pointer]':
+            - /url: https://www.youtube.com/watch?v=WYe0cnuP8HQ
+          - 'link "03/31 Build Showcase: Pounce Tactician by Lexxure" [ref=e1478] [cursor=pointer]':
+            - /url: https://www.youtube.com/watch?v=1a-NFHRpPvM
+          - 'link "03/10 PLAY PATH OF EXILE: MIRAGE FOR FREE NOW! #gaming #pathofexile #arpg" [ref=e1479] [cursor=pointer]':
+            - /url: https://www.youtube.com/watch?v=wngb3PEPg3E
+          - 'link "03/05 Path of Exile: Mirage Challenge Rewards" [ref=e1480] [cursor=pointer]':
+            - /url: https://www.youtube.com/watch?v=60p4WENX9ig
+          - 'link "03/05 Path of Exile: Mirage Launch Twitch Drops" [ref=e1481] [cursor=pointer]':
+            - /url: https://www.youtube.com/watch?v=NL_TyTsh_u8
+      - generic [ref=e1483]:
+        - heading "Theme" [level=5] [ref=e1484]
+        - list [ref=e1487]:
+          - listitem [ref=e1488]:
+            - link "Shop" [ref=e1489] [cursor=pointer]:
+              - /url: shop
+            - text: •
+          - listitem [ref=e1490]:
+            - link "Consumable" [ref=e1491] [cursor=pointer]:
+              - /url: /us/Consumable
+            - text: •
+          - listitem [ref=e1492]:
+            - link "Blight" [ref=e1493] [cursor=pointer]:
+              - /url: /us/Blight
+            - text: •
+          - listitem [ref=e1494]:
+            - link "Infernal" [ref=e1495] [cursor=pointer]:
+              - /url: /us/Infernal
+            - text: •
+          - listitem [ref=e1496]:
+            - link "Necrotic" [ref=e1497] [cursor=pointer]:
+              - /url: /us/Necrotic
+            - text: •
+          - listitem [ref=e1498]:
+            - link "Breach" [ref=e1499] [cursor=pointer]:
+              - /url: /us/Breach
+            - text: •
+          - listitem [ref=e1500]:
+            - link "Legacy" [ref=e1501] [cursor=pointer]:
+              - /url: /us/Legacy
+            - text: •
+          - listitem [ref=e1502]:
+            - link "Gore" [ref=e1503] [cursor=pointer]:
+              - /url: /us/Gore
+            - text: •
+          - listitem [ref=e1504]:
+            - link "Ghostflame" [ref=e1505] [cursor=pointer]:
+              - /url: /us/Ghostflame
+            - text: •
+          - listitem [ref=e1506]:
+            - link "Gloom" [ref=e1507] [cursor=pointer]:
+              - /url: /us/Gloom
+            - text: •
+          - listitem [ref=e1508]:
+            - link "Dragon" [ref=e1509] [cursor=pointer]:
+              - /url: /us/Dragon
+            - text: •
+          - listitem [ref=e1510]:
+            - link "Demonic" [ref=e1511] [cursor=pointer]:
+              - /url: /us/Demonic
+            - text: •
+          - listitem [ref=e1512]:
+            - link "Deicide" [ref=e1513] [cursor=pointer]:
+              - /url: /us/Deicide
+            - text: •
+          - listitem [ref=e1514]:
+            - link "Arctic" [ref=e1515] [cursor=pointer]:
+              - /url: /us/Arctic
+            - text: •
+          - listitem [ref=e1516]:
+            - link "Arcane" [ref=e1517] [cursor=pointer]:
+              - /url: /us/Arcane
+            - text: •
+          - listitem [ref=e1518]:
+            - link "Steam-Powered" [ref=e1519] [cursor=pointer]:
+              - /url: /us/Steam-Powered
+            - text: •
+          - listitem [ref=e1520]:
+            - link "Vampiric" [ref=e1521] [cursor=pointer]:
+              - /url: /us/Vampiric
+            - text: •
+          - listitem [ref=e1522]:
+            - link "Verdant" [ref=e1523] [cursor=pointer]:
+              - /url: /us/Verdant
+            - text: •
+          - listitem [ref=e1524]:
+            - link "Seraph" [ref=e1525] [cursor=pointer]:
+              - /url: /us/Seraph
+            - text: •
+          - listitem [ref=e1526]:
+            - link "Prophecy" [ref=e1527] [cursor=pointer]:
+              - /url: /us/Prophecy
+            - text: •
+          - listitem [ref=e1528]:
+            - link "Ebony" [ref=e1529] [cursor=pointer]:
+              - /url: /us/Ebony
+            - text: •
+          - listitem [ref=e1530]:
+            - link "Radiant" [ref=e1531] [cursor=pointer]:
+              - /url: /us/Radiant
+            - text: •
+          - listitem [ref=e1532]:
+            - link "Lightning" [ref=e1533] [cursor=pointer]:
+              - /url: /us/Lightning
+            - text: •
+          - listitem [ref=e1534]:
+            - link "Acid" [ref=e1535] [cursor=pointer]:
+              - /url: /us/Acid
+            - text: •
+          - listitem [ref=e1536]:
+            - link "Crimson" [ref=e1537] [cursor=pointer]:
+              - /url: /us/Crimson
+            - text: •
+          - listitem [ref=e1538]:
+            - link "Celestial" [ref=e1539] [cursor=pointer]:
+              - /url: /us/Celestial
+            - text: •
+          - listitem [ref=e1540]:
+            - link "Golden" [ref=e1541] [cursor=pointer]:
+              - /url: /us/Golden
+            - text: •
+          - listitem [ref=e1542]:
+            - link "Purple" [ref=e1543] [cursor=pointer]:
+              - /url: /us/Purple
+            - text: •
+          - listitem [ref=e1544]:
+            - link "Emerald" [ref=e1545] [cursor=pointer]:
+              - /url: /us/Emerald
+            - text: •
+          - listitem [ref=e1546]:
+            - link "Dance" [ref=e1547] [cursor=pointer]:
+              - /url: /us/Dance
+            - text: •
+          - listitem [ref=e1548]:
+            - link "Animal" [ref=e1549] [cursor=pointer]:
+              - /url: /us/Animal
+            - text: •
+          - listitem [ref=e1550]:
+            - link "Tribal" [ref=e1551] [cursor=pointer]:
+              - /url: /us/Tribal
+            - text: •
+          - listitem [ref=e1552]:
+            - link "Challenge Rewards" [ref=e1553] [cursor=pointer]:
+              - /url: /us/Challenge_Rewards
+            - text: •
+          - listitem [ref=e1554]:
+            - link "Closed Beta Supporter Packs" [ref=e1555] [cursor=pointer]:
+              - /url: /us/Closed_Beta_Supporter_Packs
+            - text: •
+          - listitem [ref=e1556]:
+            - link "Open Beta Supporter Packs" [ref=e1557] [cursor=pointer]:
+              - /url: /us/Open_Beta_Supporter_Packs
+            - text: •
+          - listitem [ref=e1558]:
+            - link "Release Supporter Packs" [ref=e1559] [cursor=pointer]:
+              - /url: /us/Release_Supporter_Packs
+            - text: •
+          - listitem [ref=e1560]:
+            - link "Forsaken Masters" [ref=e1561] [cursor=pointer]:
+              - /url: /us/Forsaken_Masters
+            - text: •
+          - listitem [ref=e1562]:
+            - link "Awakening" [ref=e1563] [cursor=pointer]:
+              - /url: /us/Awakening
+            - text: •
+          - listitem [ref=e1564]:
+            - link "Ascendancy" [ref=e1565] [cursor=pointer]:
+              - /url: /us/Ascendancy
+            - text: •
+          - listitem [ref=e1566]:
+            - link "Atlas" [ref=e1567] [cursor=pointer]:
+              - /url: /us/Atlas
+            - text: •
+          - listitem [ref=e1568]:
+            - link "Fall of Oriath" [ref=e1569] [cursor=pointer]:
+              - /url: /us/Fall_of_Oriath
+            - text: •
+          - listitem [ref=e1570]:
+            - link "Miscellaneous" [ref=e1571] [cursor=pointer]:
+              - /url: /us/Miscellaneous
+            - text: •
+          - listitem [ref=e1572]:
+            - link "Ultimate Chaos" [ref=e1573] [cursor=pointer]:
+              - /url: /us/Ultimate_Chaos
+            - text: •
+          - listitem [ref=e1574]:
+            - link "Pure Light" [ref=e1575] [cursor=pointer]:
+              - /url: /us/Pure_Light
+            - text: •
+          - listitem [ref=e1576]:
+            - link "Harbinger" [ref=e1577] [cursor=pointer]:
+              - /url: /us/Harbinger
+            - text: •
+          - listitem [ref=e1578]:
+            - link "Pitch Black" [ref=e1579] [cursor=pointer]:
+              - /url: /us/Pitch_Black
+            - text: •
+          - listitem [ref=e1580]:
+            - link "Wasteland Warrior" [ref=e1581] [cursor=pointer]:
+              - /url: /us/Wasteland_Warrior
+            - text: •
+          - listitem [ref=e1582]:
+            - link "Desert" [ref=e1583] [cursor=pointer]:
+              - /url: /us/Desert
+            - text: •
+          - listitem [ref=e1584]:
+            - link "Executioner" [ref=e1585] [cursor=pointer]:
+              - /url: /us/Executioner
+            - text: •
+          - listitem [ref=e1586]:
+            - link "Fire" [ref=e1587] [cursor=pointer]:
+              - /url: /us/Fire
+            - text: •
+          - listitem [ref=e1588]:
+            - link "Ice" [ref=e1589] [cursor=pointer]:
+              - /url: /us/Ice
+            - text: •
+          - listitem [ref=e1590]:
+            - link "Polar" [ref=e1591] [cursor=pointer]:
+              - /url: /us/Polar
+            - text: •
+          - listitem [ref=e1592]:
+            - link "Lich" [ref=e1593] [cursor=pointer]:
+              - /url: /us/Lich
+            - text: •
+          - listitem [ref=e1594]:
+            - link "Fire and Ice" [ref=e1595] [cursor=pointer]:
+              - /url: /us/Fire_and_Ice
+            - text: •
+          - listitem [ref=e1596]:
+            - link "Abyss" [ref=e1597] [cursor=pointer]:
+              - /url: /us/Abyss
+            - text: •
+          - listitem [ref=e1598]:
+            - link "Halloween" [ref=e1599] [cursor=pointer]:
+              - /url: /us/Halloween
+            - text: •
+          - listitem [ref=e1600]:
+            - link "Warlock" [ref=e1601] [cursor=pointer]:
+              - /url: /us/Warlock
+            - text: •
+          - listitem [ref=e1602]:
+            - link "Pirate" [ref=e1603] [cursor=pointer]:
+              - /url: /us/Pirate
+            - text: •
+          - listitem [ref=e1604]:
+            - link "War for the Atlas" [ref=e1605] [cursor=pointer]:
+              - /url: /us/War_for_the_Atlas
+            - text: •
+          - listitem [ref=e1606]:
+            - link "Nature" [ref=e1607] [cursor=pointer]:
+              - /url: /us/Nature
+            - text: •
+          - listitem [ref=e1608]:
+            - link "Gothic" [ref=e1609] [cursor=pointer]:
+              - /url: /us/Gothic
+            - text: •
+          - listitem [ref=e1610]:
+            - link "Sin and Innocence" [ref=e1611] [cursor=pointer]:
+              - /url: /us/Sin_and_Innocence
+            - text: •
+          - listitem [ref=e1612]:
+            - link "Bestiary" [ref=e1613] [cursor=pointer]:
+              - /url: /us/Bestiary
+            - text: •
+          - listitem [ref=e1614]:
+            - link "Stygian" [ref=e1615] [cursor=pointer]:
+              - /url: /us/Stygian
+            - text: •
+          - listitem [ref=e1616]:
+            - link "Manticore" [ref=e1617] [cursor=pointer]:
+              - /url: /us/Manticore
+            - text: •
+          - listitem [ref=e1618]:
+            - link "Seawitch" [ref=e1619] [cursor=pointer]:
+              - /url: /us/Seawitch
+            - text: •
+          - listitem [ref=e1620]:
+            - link "Phantasmal" [ref=e1621] [cursor=pointer]:
+              - /url: /us/Phantasmal
+            - text: •
+          - listitem [ref=e1622]:
+            - link "Fallen Angel" [ref=e1623] [cursor=pointer]:
+              - /url: /us/Fallen_Angel
+            - text: •
+          - listitem [ref=e1624]:
+            - link "Malachai" [ref=e1625] [cursor=pointer]:
+              - /url: /us/Malachai
+            - text: •
+          - listitem [ref=e1626]:
+            - link "Crystal" [ref=e1627] [cursor=pointer]:
+              - /url: /us/Crystal
+            - text: •
+          - listitem [ref=e1628]:
+            - link "Incursion" [ref=e1629] [cursor=pointer]:
+              - /url: /us/Incursion
+            - text: •
+          - listitem [ref=e1630]:
+            - link "Carnage" [ref=e1631] [cursor=pointer]:
+              - /url: /us/Carnage
+            - text: •
+          - listitem [ref=e1632]:
+            - link "Apocalypse" [ref=e1633] [cursor=pointer]:
+              - /url: /us/Apocalypse
+            - text: •
+          - listitem [ref=e1634]:
+            - link "Ivory Chaos" [ref=e1635] [cursor=pointer]:
+              - /url: /us/Ivory_Chaos
+            - text: •
+          - listitem [ref=e1636]:
+            - link "Madman" [ref=e1637] [cursor=pointer]:
+              - /url: /us/Madman
+            - text: •
+          - listitem [ref=e1638]:
+            - link "Gryffon" [ref=e1639] [cursor=pointer]:
+              - /url: /us/Gryffon
+            - text: •
+          - listitem [ref=e1640]:
+            - link "Gorgon" [ref=e1641] [cursor=pointer]:
+              - /url: /us/Gorgon
+            - text: •
+          - listitem [ref=e1642]:
+            - link "Sphinx" [ref=e1643] [cursor=pointer]:
+              - /url: /us/Sphinx
+            - text: •
+          - listitem [ref=e1644]:
+            - link "Delve" [ref=e1645] [cursor=pointer]:
+              - /url: /us/Delve
+            - text: •
+          - listitem [ref=e1646]:
+            - link "Oriath" [ref=e1647] [cursor=pointer]:
+              - /url: /us/Oriath
+            - text: •
+          - listitem [ref=e1648]:
+            - link "Pyre" [ref=e1649] [cursor=pointer]:
+              - /url: /us/Pyre
+            - text: •
+          - listitem [ref=e1650]:
+            - link "Coliseum" [ref=e1651] [cursor=pointer]:
+              - /url: /us/Coliseum
+            - text: •
+          - listitem [ref=e1652]:
+            - link "Night Lotus" [ref=e1653] [cursor=pointer]:
+              - /url: /us/Night_Lotus
+            - text: •
+          - listitem [ref=e1654]:
+            - link "Harpyon" [ref=e1655] [cursor=pointer]:
+              - /url: /us/Harpyon
+            - text: •
+          - listitem [ref=e1656]:
+            - link "Elder" [ref=e1657] [cursor=pointer]:
+              - /url: /us/Elder
+            - text: •
+          - listitem [ref=e1658]:
+            - link "Betrayal" [ref=e1659] [cursor=pointer]:
+              - /url: /us/Betrayal
+            - text: •
+          - listitem [ref=e1660]:
+            - link "Fairgraves" [ref=e1661] [cursor=pointer]:
+              - /url: /us/Fairgraves
+            - text: •
+          - listitem [ref=e1662]:
+            - link "Utility" [ref=e1663] [cursor=pointer]:
+              - /url: /us/Utility
+            - text: •
+          - listitem [ref=e1664]:
+            - link "Coastal" [ref=e1665] [cursor=pointer]:
+              - /url: /us/Coastal
+            - text: •
+          - listitem [ref=e1666]:
+            - link "Encampment" [ref=e1667] [cursor=pointer]:
+              - /url: /us/Encampment
+            - text: •
+          - listitem [ref=e1668]:
+            - link "Forest" [ref=e1669] [cursor=pointer]:
+              - /url: /us/Forest
+            - text: •
+          - listitem [ref=e1670]:
+            - link "Ruins" [ref=e1671] [cursor=pointer]:
+              - /url: /us/Ruins
+            - text: •
+          - listitem [ref=e1672]:
+            - link "Vaal" [ref=e1673] [cursor=pointer]:
+              - /url: /us/Vaal
+            - text: •
+          - listitem [ref=e1674]:
+            - link "Dungeon" [ref=e1675] [cursor=pointer]:
+              - /url: /us/Dungeon
+            - text: •
+          - listitem [ref=e1676]:
+            - link "Sarn" [ref=e1677] [cursor=pointer]:
+              - /url: /us/Sarn
+            - text: •
+          - listitem [ref=e1678]:
+            - link "Gardens" [ref=e1679] [cursor=pointer]:
+              - /url: /us/Gardens
+            - text: •
+          - listitem [ref=e1680]:
+            - link "Ornate" [ref=e1681] [cursor=pointer]:
+              - /url: /us/Ornate
+            - text: •
+          - listitem [ref=e1682]:
+            - link "Sceptre" [ref=e1683] [cursor=pointer]:
+              - /url: /us/Sceptre
+            - text: •
+          - listitem [ref=e1684]:
+            - link "Crypt" [ref=e1685] [cursor=pointer]:
+              - /url: /us/Crypt
+            - text: •
+          - listitem [ref=e1686]:
+            - link "Effects" [ref=e1687] [cursor=pointer]:
+              - /url: /us/Effects
+            - text: •
+          - listitem [ref=e1688]:
+            - link "Cave" [ref=e1689] [cursor=pointer]:
+              - /url: /us/Cave
+            - text: •
+          - listitem [ref=e1690]:
+            - link "Beast" [ref=e1691] [cursor=pointer]:
+              - /url: /us/Beast
+            - text: •
+          - listitem [ref=e1692]:
+            - link "Karui" [ref=e1693] [cursor=pointer]:
+              - /url: /us/Karui
+            - text: •
+          - listitem [ref=e1694]:
+            - link "Labyrinth" [ref=e1695] [cursor=pointer]:
+              - /url: /us/Labyrinth
+            - text: •
+          - listitem [ref=e1696]:
+            - link "Highgate" [ref=e1697] [cursor=pointer]:
+              - /url: /us/Highgate
+            - text: •
+          - listitem [ref=e1698]:
+            - link "Ossuary" [ref=e1699] [cursor=pointer]:
+              - /url: /us/Ossuary
+            - text: •
+          - listitem [ref=e1700]:
+            - link "Reliquary" [ref=e1701] [cursor=pointer]:
+              - /url: /us/Reliquary
+            - text: •
+          - listitem [ref=e1702]:
+            - link "Vanguard" [ref=e1703] [cursor=pointer]:
+              - /url: /us/Vanguard
+            - text: •
+          - listitem [ref=e1704]:
+            - link "Pitfighter" [ref=e1705] [cursor=pointer]:
+              - /url: /us/Pitfighter
+            - text: •
+          - listitem [ref=e1706]:
+            - link "Crucible" [ref=e1707] [cursor=pointer]:
+              - /url: /us/Crucible
+            - text: •
+          - listitem [ref=e1708]:
+            - link "Library" [ref=e1709] [cursor=pointer]:
+              - /url: /us/Library
+            - text: •
+          - listitem [ref=e1710]:
+            - link "Slave Pens" [ref=e1711] [cursor=pointer]:
+              - /url: /us/Slave_Pens
+            - text: •
+          - listitem [ref=e1712]:
+            - link "Innocence" [ref=e1713] [cursor=pointer]:
+              - /url: /us/Innocence
+            - text: •
+          - listitem [ref=e1714]:
+            - link "Assassin" [ref=e1715] [cursor=pointer]:
+              - /url: /us/Assassin
+            - text: •
+          - listitem [ref=e1716]:
+            - link "Empyrean" [ref=e1717] [cursor=pointer]:
+              - /url: /us/Empyrean
+            - text: •
+          - listitem [ref=e1718]:
+            - link "Blackguard" [ref=e1719] [cursor=pointer]:
+              - /url: /us/Blackguard
+            - text: •
+          - listitem [ref=e1720]:
+            - link "Chamber of Sins" [ref=e1721] [cursor=pointer]:
+              - /url: /us/Chamber_of_Sins
+            - text: •
+          - listitem [ref=e1722]:
+            - link "Temple" [ref=e1723] [cursor=pointer]:
+              - /url: /us/Temple
+            - text: •
+          - listitem [ref=e1724]:
+            - link "Excavation" [ref=e1725] [cursor=pointer]:
+              - /url: /us/Excavation
+            - text: •
+          - listitem [ref=e1726]:
+            - link "Bones" [ref=e1727] [cursor=pointer]:
+              - /url: /us/Bones
+            - text: •
+          - listitem [ref=e1728]:
+            - link "Church" [ref=e1729] [cursor=pointer]:
+              - /url: /us/Church
+            - text: •
+          - listitem [ref=e1730]:
+            - link "Courthouse" [ref=e1731] [cursor=pointer]:
+              - /url: /us/Courthouse
+            - text: •
+          - listitem [ref=e1732]:
+            - link "Exiles" [ref=e1733] [cursor=pointer]:
+              - /url: /us/Exiles
+            - text: •
+          - listitem [ref=e1734]:
+            - link "Synthesis" [ref=e1735] [cursor=pointer]:
+              - /url: /us/Synthesis
+            - text: •
+          - listitem [ref=e1736]:
+            - link "Primeval" [ref=e1737] [cursor=pointer]:
+              - /url: /us/Primeval
+            - text: •
+          - listitem [ref=e1738]:
+            - link "Glimmerwood" [ref=e1739] [cursor=pointer]:
+              - /url: /us/Glimmerwood
+            - text: •
+          - listitem [ref=e1740]:
+            - link "Maraketh" [ref=e1741] [cursor=pointer]:
+              - /url: /us/Maraketh
+            - text: •
+          - listitem [ref=e1742]:
+            - link "Viper" [ref=e1743] [cursor=pointer]:
+              - /url: /us/Viper
+            - text: •
+          - listitem [ref=e1744]:
+            - link "Darkprism" [ref=e1745] [cursor=pointer]:
+              - /url: /us/Darkprism
+            - text: •
+          - listitem [ref=e1746]:
+            - link "Sunprism" [ref=e1747] [cursor=pointer]:
+              - /url: /us/Sunprism
+            - text: •
+          - listitem [ref=e1748]:
+            - link "Gargoyle" [ref=e1749] [cursor=pointer]:
+              - /url: /us/Gargoyle
+            - text: •
+          - listitem [ref=e1750]:
+            - link "Mageguard" [ref=e1751] [cursor=pointer]:
+              - /url: /us/Mageguard
+            - text: •
+          - listitem [ref=e1752]:
+            - link "Extinction" [ref=e1753] [cursor=pointer]:
+              - /url: /us/Extinction
+            - text: •
+          - listitem [ref=e1754]:
+            - link "Legion" [ref=e1755] [cursor=pointer]:
+              - /url: /us/Legion
+            - text: •
+          - listitem [ref=e1756]:
+            - link "Frontier" [ref=e1757] [cursor=pointer]:
+              - /url: /us/Frontier
+            - text: •
+          - listitem [ref=e1758]:
+            - link "Illusionist" [ref=e1759] [cursor=pointer]:
+              - /url: /us/Illusionist
+            - text: •
+          - listitem [ref=e1760]:
+            - link "Elemental" [ref=e1761] [cursor=pointer]:
+              - /url: /us/Elemental
+            - text: •
+          - listitem [ref=e1762]:
+            - link "Zenith" [ref=e1763] [cursor=pointer]:
+              - /url: /us/Zenith
+            - text: •
+          - listitem [ref=e1764]:
+            - link "Miracle" [ref=e1765] [cursor=pointer]:
+              - /url: /us/Miracle
+            - text: •
+          - listitem [ref=e1766]:
+            - link "Cardinal" [ref=e1767] [cursor=pointer]:
+              - /url: /us/Cardinal
+            - text: •
+          - listitem [ref=e1768]:
+            - link "Vaal Viper" [ref=e1769] [cursor=pointer]:
+              - /url: /us/Vaal_Viper
+            - text: •
+          - listitem [ref=e1770]:
+            - link "Void Emperor" [ref=e1771] [cursor=pointer]:
+              - /url: /us/Void_Emperor
+            - text: •
+          - listitem [ref=e1772]:
+            - link "Carnival" [ref=e1773] [cursor=pointer]:
+              - /url: /us/Carnival
+            - text: •
+          - listitem [ref=e1774]:
+            - link "Chiyou" [ref=e1775] [cursor=pointer]:
+              - /url: /us/Chiyou
+            - text: •
+          - listitem [ref=e1776]:
+            - link "Havenwood" [ref=e1777] [cursor=pointer]:
+              - /url: /us/Havenwood
+            - text: •
+          - listitem [ref=e1778]:
+            - link "Polaris" [ref=e1779] [cursor=pointer]:
+              - /url: /us/Polaris
+            - text: •
+          - listitem [ref=e1780]:
+            - link "Basilisk" [ref=e1781] [cursor=pointer]:
+              - /url: /us/Basilisk
+            - text: •
+          - listitem [ref=e1782]:
+            - link "Crusader" [ref=e1783] [cursor=pointer]:
+              - /url: /us/Crusader
+            - text: •
+          - listitem [ref=e1784]:
+            - link "Eyrie" [ref=e1785] [cursor=pointer]:
+              - /url: /us/Eyrie
+            - text: •
+          - listitem [ref=e1786]:
+            - link "Judicator" [ref=e1787] [cursor=pointer]:
+              - /url: /us/Judicator
+            - text: •
+          - listitem [ref=e1788]:
+            - link "Orion" [ref=e1789] [cursor=pointer]:
+              - /url: /us/Orion
+            - text: •
+          - listitem [ref=e1790]:
+            - link "Metamorph" [ref=e1791] [cursor=pointer]:
+              - /url: /us/Metamorph
+            - text: •
+          - listitem [ref=e1792]:
+            - link "ExileCon" [ref=e1793] [cursor=pointer]:
+              - /url: /us/ExileCon
+            - text: •
+          - listitem [ref=e1794]:
+            - link "Revenant" [ref=e1795] [cursor=pointer]:
+              - /url: /us/Revenant
+            - text: •
+          - listitem [ref=e1796]:
+            - link "Coldsnap" [ref=e1797] [cursor=pointer]:
+              - /url: /us/Coldsnap
+            - text: •
+          - listitem [ref=e1798]:
+            - link "Malice" [ref=e1799] [cursor=pointer]:
+              - /url: /us/Malice
+            - text: •
+          - listitem [ref=e1800]:
+            - link "Thaumaturgy" [ref=e1801] [cursor=pointer]:
+              - /url: /us/Thaumaturgy
+            - text: •
+          - listitem [ref=e1802]:
+            - link "Balefire" [ref=e1803] [cursor=pointer]:
+              - /url: /us/Balefire
+            - text: •
+          - listitem [ref=e1804]:
+            - link "Delirium" [ref=e1805] [cursor=pointer]:
+              - /url: /us/Delirium
+            - text: •
+          - listitem [ref=e1806]:
+            - link "Heartseeker" [ref=e1807] [cursor=pointer]:
+              - /url: /us/Heartseeker
+            - text: •
+          - listitem [ref=e1808]:
+            - link "Dark Magic" [ref=e1809] [cursor=pointer]:
+              - /url: /us/Dark_Magic
+            - text: •
+          - listitem [ref=e1810]:
+            - link "Jinli" [ref=e1811] [cursor=pointer]:
+              - /url: /us/Jinli
+            - text: •
+          - listitem [ref=e1812]:
+            - link "Imagination" [ref=e1813] [cursor=pointer]:
+              - /url: /us/Imagination
+            - text: •
+          - listitem [ref=e1814]:
+            - link "High Priest" [ref=e1815] [cursor=pointer]:
+              - /url: /us/High_Priest
+            - text: •
+          - listitem [ref=e1816]:
+            - link "Goddess" [ref=e1817] [cursor=pointer]:
+              - /url: /us/Goddess
+            - text: •
+          - listitem [ref=e1818]:
+            - link "Sawblade" [ref=e1819] [cursor=pointer]:
+              - /url: /us/Sawblade
+            - text: •
+          - listitem [ref=e1820]:
+            - link "Dreadspire" [ref=e1821] [cursor=pointer]:
+              - /url: /us/Dreadspire
+            - text: •
+          - listitem [ref=e1822]:
+            - link "Angels and Demons" [ref=e1823] [cursor=pointer]:
+              - /url: /us/Angels_and_Demons
+            - text: •
+          - listitem [ref=e1824]:
+            - link "Nightwatch" [ref=e1825] [cursor=pointer]:
+              - /url: /us/Nightwatch
+            - text: •
+          - listitem [ref=e1826]:
+            - link "Harvest" [ref=e1827] [cursor=pointer]:
+              - /url: /us/Harvest
+            - text: •
+          - listitem [ref=e1828]:
+            - link "Heist" [ref=e1829] [cursor=pointer]:
+              - /url: /us/Heist
+            - text: •
+          - listitem [ref=e1830]:
+            - link "Twilight" [ref=e1831] [cursor=pointer]:
+              - /url: /us/Twilight
+            - text: •
+          - listitem [ref=e1832]:
+            - link "Ethercraft" [ref=e1833] [cursor=pointer]:
+              - /url: /us/Ethercraft
+            - text: •
+          - listitem [ref=e1834]:
+            - link "Darkwood" [ref=e1835] [cursor=pointer]:
+              - /url: /us/Darkwood
+            - text: •
+          - listitem [ref=e1836]:
+            - link "Judgement" [ref=e1837] [cursor=pointer]:
+              - /url: /us/Judgement
+            - text: •
+          - listitem [ref=e1838]:
+            - link "Rapture" [ref=e1839] [cursor=pointer]:
+              - /url: /us/Rapture
+            - text: •
+          - listitem [ref=e1840]:
+            - link "Valkyrie" [ref=e1841] [cursor=pointer]:
+              - /url: /us/Valkyrie
+            - text: •
+          - listitem [ref=e1842]:
+            - link "Warlord" [ref=e1843] [cursor=pointer]:
+              - /url: /us/Warlord
+            - text: •
+          - listitem [ref=e1844]:
+            - link "Ritual" [ref=e1845] [cursor=pointer]:
+              - /url: /us/Ritual
+            - text: •
+          - listitem [ref=e1846]:
+            - link "Glimmersprite" [ref=e1847] [cursor=pointer]:
+              - /url: /us/Glimmersprite
+            - text: •
+          - listitem [ref=e1848]:
+            - link "Core 2021" [ref=e1849] [cursor=pointer]:
+              - /url: /us/Core_2021
+            - text: •
+          - listitem [ref=e1850]:
+            - link "Maven" [ref=e1851] [cursor=pointer]:
+              - /url: /us/Maven
+            - text: •
+          - listitem [ref=e1852]:
+            - link "Oblivion" [ref=e1853] [cursor=pointer]:
+              - /url: /us/Oblivion
+            - text: •
+          - listitem [ref=e1854]:
+            - link "Brimstone" [ref=e1855] [cursor=pointer]:
+              - /url: /us/Brimstone
+            - text: •
+          - listitem [ref=e1856]:
+            - link "Frost Viking" [ref=e1857] [cursor=pointer]:
+              - /url: /us/Frost_Viking
+            - text: •
+          - listitem [ref=e1858]:
+            - link "Ultimatum" [ref=e1859] [cursor=pointer]:
+              - /url: /us/Ultimatum
+            - text: •
+          - listitem [ref=e1860]:
+            - link "Apollyon" [ref=e1861] [cursor=pointer]:
+              - /url: /us/Apollyon
+            - text: •
+          - listitem [ref=e1862]:
+            - link "Merchant" [ref=e1863] [cursor=pointer]:
+              - /url: /us/Merchant
+            - text: •
+          - listitem [ref=e1864]:
+            - link "Midnight Pact" [ref=e1865] [cursor=pointer]:
+              - /url: /us/Midnight_Pact
+            - text: •
+          - listitem [ref=e1866]:
+            - link "Jingwei" [ref=e1867] [cursor=pointer]:
+              - /url: /us/Jingwei
+            - text: •
+          - listitem [ref=e1868]:
+            - link "Slither" [ref=e1869] [cursor=pointer]:
+              - /url: /us/Slither
+            - text: •
+          - listitem [ref=e1870]:
+            - link "Expedition" [ref=e1871] [cursor=pointer]:
+              - /url: /us/Expedition
+            - text: •
+          - listitem [ref=e1872]:
+            - link "Myrmidon" [ref=e1873] [cursor=pointer]:
+              - /url: /us/Myrmidon
+            - text: •
+          - listitem [ref=e1874]:
+            - link "Banebrand" [ref=e1875] [cursor=pointer]:
+              - /url: /us/Banebrand
+            - text: •
+          - listitem [ref=e1876]:
+            - link "Starfall" [ref=e1877] [cursor=pointer]:
+              - /url: /us/Starfall
+            - text: •
+          - listitem [ref=e1878]:
+            - link "Necrolord" [ref=e1879] [cursor=pointer]:
+              - /url: /us/Necrolord
+            - text: •
+          - listitem [ref=e1880]:
+            - link "Direblade" [ref=e1881] [cursor=pointer]:
+              - /url: /us/Direblade
+            - text: •
+          - listitem [ref=e1882]:
+            - link "Cursed" [ref=e1883] [cursor=pointer]:
+              - /url: /us/Cursed
+            - text: •
+          - listitem [ref=e1884]:
+            - link "Atlantis" [ref=e1885] [cursor=pointer]:
+              - /url: /us/Atlantis
+            - text: •
+          - listitem [ref=e1886]:
+            - link "Scourge" [ref=e1887] [cursor=pointer]:
+              - /url: /us/Scourge
+            - text: •
+          - listitem [ref=e1888]:
+            - link "Scourgelord" [ref=e1889] [cursor=pointer]:
+              - /url: /us/Scourgelord
+            - text: •
+          - listitem [ref=e1890]:
+            - link "Onyx" [ref=e1891] [cursor=pointer]:
+              - /url: /us/Onyx
+            - text: •
+          - listitem [ref=e1892]:
+            - link "Astral" [ref=e1893] [cursor=pointer]:
+              - /url: /us/Astral
+            - text: •
+          - listitem [ref=e1894]:
+            - link "Core 2022" [ref=e1895] [cursor=pointer]:
+              - /url: /us/Core_2022
+            - text: •
+          - listitem [ref=e1896]:
+            - link "Winter Dragon" [ref=e1897] [cursor=pointer]:
+              - /url: /us/Winter_Dragon
+            - text: •
+          - listitem [ref=e1898]:
+            - link "Harmony" [ref=e1899] [cursor=pointer]:
+              - /url: /us/Harmony
+            - text: •
+          - listitem [ref=e1900]:
+            - link "God of Thunder" [ref=e1901] [cursor=pointer]:
+              - /url: /us/God_of_Thunder
+            - text: •
+          - listitem [ref=e1902]:
+            - link "Archnemesis" [ref=e1903] [cursor=pointer]:
+              - /url: /us/Archnemesis
+            - text: •
+          - listitem [ref=e1904]:
+            - link "Auspicious" [ref=e1905] [cursor=pointer]:
+              - /url: /us/Auspicious
+            - text: •
+          - listitem [ref=e1906]:
+            - link "Harmonious" [ref=e1907] [cursor=pointer]:
+              - /url: /us/Harmonious
+            - text: •
+          - listitem [ref=e1908]:
+            - link "Vulcan" [ref=e1909] [cursor=pointer]:
+              - /url: /us/Vulcan
+            - text: •
+          - listitem [ref=e1910]:
+            - link "Mercurial" [ref=e1911] [cursor=pointer]:
+              - /url: /us/Mercurial
+            - text: •
+          - listitem [ref=e1912]:
+            - link "Ethereal" [ref=e1913] [cursor=pointer]:
+              - /url: /us/Ethereal
+            - text: •
+          - listitem [ref=e1914]:
+            - link "Masquerade" [ref=e1915] [cursor=pointer]:
+              - /url: /us/Masquerade
+            - text: •
+          - listitem [ref=e1916]:
+            - link "Kirac's Vault" [ref=e1917] [cursor=pointer]:
+              - /url: /us/Kiracs_Vault
+            - text: •
+          - listitem [ref=e1918]:
+            - link "Chaos" [ref=e1919] [cursor=pointer]:
+              - /url: /us/Chaos
+            - text: •
+          - listitem [ref=e1920]:
+            - link "Sentinel" [ref=e1921] [cursor=pointer]:
+              - /url: /us/Sentinel
+            - text: •
+          - listitem [ref=e1922]:
+            - link "Ophidian" [ref=e1923] [cursor=pointer]:
+              - /url: /us/Ophidian
+            - text: •
+          - listitem [ref=e1924]:
+            - link "Ruby" [ref=e1925] [cursor=pointer]:
+              - /url: /us/Ruby
+            - text: •
+          - listitem [ref=e1926]:
+            - link "Sapphire" [ref=e1927] [cursor=pointer]:
+              - /url: /us/Sapphire
+            - text: •
+          - listitem [ref=e1928]:
+            - link "Molten" [ref=e1929] [cursor=pointer]:
+              - /url: /us/Molten
+            - text: •
+          - listitem [ref=e1930]:
+            - link "Mist" [ref=e1931] [cursor=pointer]:
+              - /url: /us/Mist
+            - text: •
+          - listitem [ref=e1932]:
+            - link "Exalted" [ref=e1933] [cursor=pointer]:
+              - /url: /us/Exalted
+            - text: •
+          - listitem [ref=e1934]:
+            - link "Lunar" [ref=e1935] [cursor=pointer]:
+              - /url: /us/Lunar
+            - text: •
+          - listitem [ref=e1936]:
+            - link "Lake of Kalandra" [ref=e1937] [cursor=pointer]:
+              - /url: /us/Lake_of_Kalandra
+            - text: •
+          - listitem [ref=e1938]:
+            - link "Forbidden Sanctum" [ref=e1939] [cursor=pointer]:
+              - /url: /us/Forbidden_Sanctum
+            - text: •
+          - listitem [ref=e1940]:
+            - link "Core 2023" [ref=e1941] [cursor=pointer]:
+              - /url: /us/Core_2023
+            - text: •
+          - listitem [ref=e1942]:
+            - link "Alchemist" [ref=e1943] [cursor=pointer]:
+              - /url: /us/Alchemist
+            - text: •
+          - listitem [ref=e1944]:
+            - link "Arachnid" [ref=e1945] [cursor=pointer]:
+              - /url: /us/Arachnid
+            - text: •
+          - listitem [ref=e1946]:
+            - link "Shade" [ref=e1947] [cursor=pointer]:
+              - /url: /us/Shade
+            - text: •
+          - listitem [ref=e1948]:
+            - link "Disciple" [ref=e1949] [cursor=pointer]:
+              - /url: /us/Disciple
+            - text: •
+          - listitem [ref=e1950]:
+            - link "Trial of the Ancestors" [ref=e1951] [cursor=pointer]:
+              - /url: /us/Trial_of_the_Ancestors
+            - text: •
+          - listitem [ref=e1952]:
+            - link "Magmatic" [ref=e1953] [cursor=pointer]:
+              - /url: /us/Magmatic
+            - text: •
+          - listitem [ref=e1954]:
+            - link "Core 2024" [ref=e1955] [cursor=pointer]:
+              - /url: /us/Core_2024
+            - text: •
+          - listitem [ref=e1956]:
+            - link "Affliction Theme" [ref=e1957] [cursor=pointer]:
+              - /url: /us/Affliction_Theme
+            - text: •
+          - listitem [ref=e1958]:
+            - link "Race Rewards" [ref=e1959] [cursor=pointer]:
+              - /url: /us/Race_Rewards
+            - text: •
+          - listitem [ref=e1960]:
+            - link "Solar" [ref=e1961] [cursor=pointer]:
+              - /url: /us/Solar
+            - text: •
+          - listitem [ref=e1962]:
+            - link "Eldritch" [ref=e1963] [cursor=pointer]:
+              - /url: /us/Eldritch
+            - text: •
+          - listitem [ref=e1964]:
+            - link "Necropolis" [ref=e1965] [cursor=pointer]:
+              - /url: /us/Necropolis
+            - text: •
+          - listitem [ref=e1966]:
+            - link "Voidborn" [ref=e1967] [cursor=pointer]:
+              - /url: /us/Voidborn
+            - text: •
+          - listitem [ref=e1968]:
+            - link "Wuzhiqi" [ref=e1969] [cursor=pointer]:
+              - /url: /us/Wuzhiqi
+            - text: •
+          - listitem [ref=e1970]:
+            - link "Paladin" [ref=e1971] [cursor=pointer]:
+              - /url: /us/Paladin
+            - text: •
+          - listitem [ref=e1972]:
+            - link "Penance" [ref=e1973] [cursor=pointer]:
+              - /url: /us/Penance
+            - text: •
+          - listitem [ref=e1974]:
+            - link "Settlers of Kalguur" [ref=e1975] [cursor=pointer]:
+              - /url: /us/Settlers_of_Kalguur
+            - text: •
+          - listitem [ref=e1976]:
+            - link "Dawn of the Hunt" [ref=e1977] [cursor=pointer]:
+              - /url: /us/Dawn_of_the_Hunt
+            - text: •
+          - listitem [ref=e1978]:
+            - link "Phrecian Magistrate" [ref=e1979] [cursor=pointer]:
+              - /url: /us/Phrecian_Magistrate
+            - text: •
+          - listitem [ref=e1980]:
+            - link "Cryptkeeper" [ref=e1981] [cursor=pointer]:
+              - /url: /us/Cryptkeeper
+            - text: •
+          - listitem [ref=e1982]:
+            - link "Honour Guard" [ref=e1983] [cursor=pointer]:
+              - /url: /us/Honour_Guard
+            - text: •
+          - listitem [ref=e1984]:
+            - link "Zodiac Dragon" [ref=e1985] [cursor=pointer]:
+              - /url: /us/Zodiac_Dragon
+            - text: •
+          - listitem [ref=e1986]:
+            - link "Justice" [ref=e1987] [cursor=pointer]:
+              - /url: /us/Justice
+            - text: •
+          - listitem [ref=e1988]:
+            - link "Trarthan Executioner" [ref=e1989] [cursor=pointer]:
+              - /url: /us/Trarthan_Executioner
+            - text: •
+          - listitem [ref=e1990]:
+            - link "Flesh Warden" [ref=e1991] [cursor=pointer]:
+              - /url: /us/Flesh_Warden
+            - text: •
+          - listitem [ref=e1992]:
+            - link "Third Edict" [ref=e1993] [cursor=pointer]:
+              - /url: /us/Third_Edict
+            - text: •
+          - listitem [ref=e1994]:
+            - link "Djinn" [ref=e1995] [cursor=pointer]:
+              - /url: /us/Djinn
+            - text: •
+          - listitem [ref=e1996]:
+            - link "Champion of Theopolis" [ref=e1997] [cursor=pointer]:
+              - /url: /us/Champion_of_Theopolis
+            - text: •
+          - listitem [ref=e1998]:
+            - link "Verdant Magus" [ref=e1999] [cursor=pointer]:
+              - /url: /us/Verdant_Magus
+            - text: •
+          - listitem [ref=e2000]:
+            - link "Keepers of the Flame" [ref=e2001] [cursor=pointer]:
+              - /url: /us/Keepers_of_the_Flame
+            - text: •
+          - listitem [ref=e2002]:
+            - link "Kalguuran" [ref=e2003] [cursor=pointer]:
+              - /url: /us/Kalguuran
+            - text: •
+          - listitem [ref=e2004]:
+            - link "Precursor" [ref=e2005] [cursor=pointer]:
+              - /url: /us/Precursor
+            - text: •
+          - listitem [ref=e2006]:
+            - link "Crocolisk" [ref=e2007] [cursor=pointer]:
+              - /url: /us/Crocolisk
+            - text: •
+          - listitem [ref=e2008]:
+            - link "The Last of the Druids" [ref=e2009] [cursor=pointer]:
+              - /url: /us/The_Last_of_the_Druids
+            - text: •
+          - listitem [ref=e2010]:
+            - link "Curator of Wisdom" [ref=e2011] [cursor=pointer]:
+              - /url: /us/Curator_of_Wisdom
+            - text: •
+          - listitem [ref=e2012]:
+            - link "Iron Incarcerator" [ref=e2013] [cursor=pointer]:
+              - /url: /us/Iron_Incarcerator
+            - text: •
+          - listitem [ref=e2014]:
+            - link "Mirage" [ref=e2015] [cursor=pointer]:
+              - /url: /us/Mirage
+            - text: •
+          - listitem [ref=e2016]:
+            - link "Originator's" [ref=e2017] [cursor=pointer]:
+              - /url: /us/Originators
+            - text: •
+          - listitem [ref=e2018]:
+            - link "Awakener's" [ref=e2019] [cursor=pointer]:
+              - /url: /us/Awakeners
+            - text: •
+          - listitem [ref=e2020]:
+            - link "Regal" [ref=e2021] [cursor=pointer]:
+              - /url: /us/Regal
+            - text: •
+          - listitem [ref=e2022]:
+            - link "Temporal" [ref=e2023] [cursor=pointer]:
+              - /url: /us/Temporal
+            - text: •
+          - listitem [ref=e2024]:
+            - link "Breach Swarm" [ref=e2025] [cursor=pointer]:
+              - /url: /us/Breach_Swarm
+            - text: •
+          - listitem [ref=e2026]:
+            - link "Path of Exile 2 Early Access" [ref=e2027] [cursor=pointer]:
+              - /url: /us/Path_of_Exile_2_Early_Access
+            - text: •
+          - listitem [ref=e2028]:
+            - link "Combine" [ref=e2029] [cursor=pointer]:
+              - /url: /us/MicrotransactionCombineFormula
+    - generic [ref=e2030]:
+      - generic [ref=e2032]:
+        - generic [ref=e2033]:
+          - heading "Sites" [level=5] [ref=e2034]
+          - list [ref=e2035]:
+            - listitem [ref=e2036]:
+              - link "poedb.tw" [ref=e2037] [cursor=pointer]:
+                - /url: https://poedb.tw/
+            - listitem [ref=e2038]:
+              - link "tlidb.com" [ref=e2039] [cursor=pointer]:
+                - /url: https://tlidb.com/
+            - listitem [ref=e2040]:
+              - link "poe2db.tw" [ref=e2041] [cursor=pointer]:
+                - /url: https://poe2db.tw/
+            - listitem [ref=e2042]:
+              - link "paldb.cc" [ref=e2043] [cursor=pointer]:
+                - /url: https://paldb.cc/
+        - generic [ref=e2044]:
+          - heading "News" [level=5] [ref=e2045]
+          - list [ref=e2046]:
+            - listitem [ref=e2047]:
+              - link "GGG Tracker" [ref=e2048] [cursor=pointer]:
+                - /url: news
+            - listitem [ref=e2049]:
+              - link "Concurrent Players" [ref=e2050] [cursor=pointer]:
+                - /url: League#ConcurrentPlayers
+            - listitem [ref=e2051]:
+              - link "Ruthless" [ref=e2052] [cursor=pointer]:
+                - /url: Ruthless_mode
+        - generic [ref=e2053]:
+          - heading "About Site" [level=5] [ref=e2054]
+          - list [ref=e2055]:
+            - listitem [ref=e2056]:
+              - link "Privacy" [ref=e2057] [cursor=pointer]:
+                - /url: privacy
+            - listitem [ref=e2058]:
+              - link "Disclaimers" [ref=e2059] [cursor=pointer]:
+                - /url: General_disclaimer
+            - listitem [ref=e2060]:
+              - link "Patreon" [ref=e2061] [cursor=pointer]:
+                - /url: patreon
+        - generic [ref=e2062]:
+          - heading "Community" [level=5] [ref=e2063]
+          - list [ref=e2064]:
+            - listitem [ref=e2065]:
+              - link "/u/chuanhsing" [ref=e2066] [cursor=pointer]:
+                - /url: https://www.reddit.com/user/chuanhsing
+      - generic [ref=e2067]: Copyright © 2014-2025 PoEDB.
+  - status [ref=e2068]

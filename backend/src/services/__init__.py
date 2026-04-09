@@ -82,6 +82,16 @@ from src.services.indexer import (
     index_items,
     check_indexer_health,
 )
+from src.services.job_manager import (
+    JobStatus,
+    JobType,
+    JobPriority,
+    ScrapingJob,
+    RateLimiter,
+    ScrapingJobManager,
+    get_job_manager,
+    check_job_manager_health,
+)
 
 __all__ = [
     "ChromaDBManager",
@@ -150,4 +160,13 @@ __all__ = [
     "get_indexer",
     "index_items",
     "check_indexer_health",
+    # Job Manager
+    "JobStatus",
+    "JobType",
+    "JobPriority",
+    "ScrapingJob",
+    "RateLimiter",
+    "ScrapingJobManager",
+    "get_job_manager",
+    "check_job_manager_health",
 ]

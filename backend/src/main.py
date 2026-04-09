@@ -80,6 +80,16 @@ from src.services.indexer import (
     index_items,
     check_indexer_health,
 )
+from src.services.job_manager import (
+    JobStatus,
+    JobType,
+    JobPriority,
+    ScrapingJob,
+    RateLimiter,
+    ScrapingJobManager,
+    get_job_manager,
+    check_job_manager_health,
+)
 from langchain_core.documents import Document
 
 logger = logging.getLogger(__name__)
@@ -1396,6 +1406,374 @@ async def test_detect_game_version_batch(request: GameVersionBatchRequest):
         raise HTTPException(
             status_code=500,
             detail=f"Batch game version detection failed: {str(e)}",
+        )
+
+
+# ------------------------------------------------------------------
+# Job Manager endpoints
+# ------------------------------------------------------------------
+
+
+class AddJobRequest(BaseModel):
+    """Request model for adding a scraping job."""
+    name: str = Field(
+        ...,
+        description="Human-readable name for the job",
+        min_length=1,
+        max_length=200,
+    )
+    job_type: str = Field(
+        default="category",
+        description="Type of scraping job: category, item_detail, batch_items, full_category",
+    )
+    url: Optional[str] = Field(
+        default=None,
+        description="Target URL for the job",
+        max_length=2000,
+    )
+    priority: int = Field(
+        default=5,
+        description="Priority level (1=critical, 3=high, 5=normal, 7=low, 10=background)",
+        ge=1,
+        le=10,
+    )
+    max_retries: Optional[int] = Field(
+        default=None,
+        description="Maximum retry attempts (defaults to manager setting)",
+        ge=0,
+        le=10,
+    )
+    metadata: Optional[dict] = Field(
+        default=None,
+        description="Additional metadata for the job",
+    )
+    urls: Optional[list[str]] = Field(
+        default=None,
+        description="List of URLs for batch jobs",
+        max_length=500,
+    )
+    game: Optional[str] = Field(
+        default=None,
+        description="Game version (poe1 or poe2)",
+    )
+    category: Optional[str] = Field(
+        default=None,
+        description="Category name for the job",
+        max_length=200,
+    )
+
+    model_config = {
+        "json_schema_extra": {
+            "examples": [
+                {
+                    "name": "Scrape Unique Weapons",
+                    "job_type": "category",
+                    "url": "https://poedb.tw/us/Unique_Weapon",
+                    "priority": 5,
+                    "game": "poe1",
+                    "category": "Unique Weapon",
+                }
+            ]
+        }
+    }
+
+
+class ListJobsRequest(BaseModel):
+    """Request model for listing jobs with optional filters."""
+    status: Optional[str] = Field(
+        default=None,
+        description="Filter by status: pending, running, completed, failed, cancelled",
+    )
+    job_type: Optional[str] = Field(
+        default=None,
+        description="Filter by job type: category, item_detail, batch_items, full_category",
+    )
+    limit: int = Field(
+        default=100,
+        description="Maximum number of jobs to return",
+        ge=1,
+        le=500,
+    )
+    offset: int = Field(
+        default=0,
+        description="Number of jobs to skip",
+        ge=0,
+    )
+
+
+@api_router.get("/jobs/health", tags=["Jobs"])
+async def jobs_health():
+    """
+    Health check for the scraping job manager.
+
+    Returns:
+        dict: Job manager health status and statistics.
+    """
+    try:
+        health = check_job_manager_health()
+        return {
+            "success": True,
+            **health,
+        }
+    except Exception as e:
+        raise HTTPException(
+            status_code=500,
+            detail=f"Job manager health check failed: {str(e)}",
+        )
+
+
+@api_router.get("/jobs/stats", tags=["Jobs"])
+async def jobs_stats():
+    """
+    Get comprehensive job manager statistics.
+
+    Returns queue size, running jobs, completed/failed counts,
+    rate limiter status, and configuration.
+    """
+    try:
+        manager = get_job_manager()
+        stats = manager.get_stats()
+        return {
+            "success": True,
+            **stats,
+        }
+    except Exception as e:
+        raise HTTPException(
+            status_code=500,
+            detail=f"Failed to get job stats: {str(e)}",
+        )
+
+
+@api_router.post("/jobs/add", tags=["Jobs"])
+async def jobs_add(request: AddJobRequest):
+    """
+    Add a new scraping job to the job queue.
+
+    Jobs are processed according to their priority (lower number = higher
+    priority). Rate limiting and concurrency controls are applied
+    automatically during processing.
+
+    Supported job types:
+    - **category**: Scrape a category index page for item links
+    - **item_detail**: Scrape a single item detail page
+    - **batch_items**: Scrape multiple item detail pages
+    - **full_category**: Scrape category + all item details
+
+    The job manager must be started (via ``/jobs/start``) before
+    jobs will be processed.
+    """
+    try:
+        manager = get_job_manager()
+        result = manager.add_job(
+            name=request.name,
+            job_type=request.job_type,
+            url=request.url,
+            priority=request.priority,
+            max_retries=request.max_retries,
+            metadata=request.metadata,
+            urls=request.urls,
+            game=request.game,
+            category=request.category,
+        )
+        return {
+            "success": True,
+            **result,
+        }
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    except Exception as e:
+        raise HTTPException(
+            status_code=500,
+            detail=f"Failed to add job: {str(e)}",
+        )
+
+
+@api_router.get("/jobs/{job_id}", tags=["Jobs"])
+async def jobs_get_status(job_id: str):
+    """
+    Get the status of a specific job.
+
+    Returns all job details including status, progress, result,
+    error (if any), timestamps, and metadata.
+    """
+    try:
+        manager = get_job_manager()
+        status = manager.get_job_status(job_id)
+
+        if status is None:
+            raise HTTPException(
+                status_code=404,
+                detail=f"Job '{job_id}' not found",
+            )
+
+        return {
+            "success": True,
+            **status,
+        }
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(
+            status_code=500,
+            detail=f"Failed to get job status: {str(e)}",
+        )
+
+
+@api_router.post("/jobs/list", tags=["Jobs"])
+async def jobs_list(request: ListJobsRequest):
+    """
+    List jobs with optional filtering and pagination.
+
+    Returns a paginated list of jobs. Can be filtered by status
+    and/or job type.
+    """
+    try:
+        manager = get_job_manager()
+        result = manager.list_jobs(
+            status=request.status,
+            job_type=request.job_type,
+            limit=request.limit,
+            offset=request.offset,
+        )
+        return {
+            "success": True,
+            **result,
+        }
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    except Exception as e:
+        raise HTTPException(
+            status_code=500,
+            detail=f"Failed to list jobs: {str(e)}",
+        )
+
+
+@api_router.post("/jobs/{job_id}/cancel", tags=["Jobs"])
+async def jobs_cancel(job_id: str):
+    """
+    Cancel a pending or running job.
+
+    Pending jobs are cancelled immediately. Running jobs are
+    signalled to stop at the next checkpoint.
+    """
+    try:
+        manager = get_job_manager()
+        result = manager.cancel_job(job_id)
+        return {
+            "success": True,
+            **result,
+        }
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    except Exception as e:
+        raise HTTPException(
+            status_code=500,
+            detail=f"Failed to cancel job: {str(e)}",
+        )
+
+
+@api_router.post("/jobs/start", tags=["Jobs"])
+async def jobs_start():
+    """
+    Start the job processing loop.
+
+    This begins processing jobs from the priority queue. The
+    processing loop runs in the background until stopped.
+    """
+    try:
+        manager = get_job_manager()
+        await manager.start()
+        return {
+            "success": True,
+            "message": "Job processing started",
+            "stats": manager.get_stats(),
+        }
+    except Exception as e:
+        raise HTTPException(
+            status_code=500,
+            detail=f"Failed to start job processing: {str(e)}",
+        )
+
+
+@api_router.post("/jobs/stop", tags=["Jobs"])
+async def jobs_stop():
+    """
+    Stop the job processing loop gracefully.
+
+    Currently running jobs are allowed to complete. Pending
+    jobs remain in the queue for when processing resumes.
+    """
+    try:
+        manager = get_job_manager()
+        await manager.stop()
+        return {
+            "success": True,
+            "message": "Job processing stopped",
+            "stats": manager.get_stats(),
+        }
+    except Exception as e:
+        raise HTTPException(
+            status_code=500,
+            detail=f"Failed to stop job processing: {str(e)}",
+        )
+
+
+@api_router.post("/jobs/clear", tags=["Jobs"])
+async def jobs_clear():
+    """
+    Clear completed, failed, and cancelled jobs from history.
+
+    Pending and running jobs are not affected.
+    """
+    try:
+        manager = get_job_manager()
+        result = manager.clear_completed_jobs()
+        return {
+            "success": True,
+            **result,
+            "message": f"Cleared {result['cleared_count']} finished jobs",
+        }
+    except Exception as e:
+        raise HTTPException(
+            status_code=500,
+            detail=f"Failed to clear jobs: {str(e)}",
+        )
+
+
+@api_router.get("/jobs/config/info", tags=["Jobs"])
+async def jobs_config():
+    """
+    Get job manager configuration and supported values.
+
+    Returns the current configuration including concurrency limits,
+    rate limiting settings, supported job types and statuses.
+    """
+    try:
+        manager = get_job_manager()
+        stats = manager.get_stats()
+
+        return {
+            "success": True,
+            "config": {
+                "max_concurrent_jobs": stats["max_concurrent_jobs"],
+                "rate_limiter": stats["rate_limiter"],
+                "job_timeout_seconds": stats["job_timeout_seconds"],
+            },
+            "supported_job_types": [t.value for t in JobType],
+            "supported_statuses": [s.value for s in JobStatus],
+            "priority_levels": {
+                "critical": JobPriority.CRITICAL,
+                "high": JobPriority.HIGH,
+                "normal": JobPriority.NORMAL,
+                "low": JobPriority.LOW,
+                "background": JobPriority.BACKGROUND,
+            },
+            "message": "Job manager configuration retrieved successfully",
+        }
+    except Exception as e:
+        raise HTTPException(
+            status_code=500,
+            detail=f"Failed to get job config: {str(e)}",
         )
 
 
