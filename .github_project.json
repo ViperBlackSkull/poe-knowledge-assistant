@@ -393,7 +393,7 @@
         "title": "Create TypeScript types for API contracts",
         "feature": "Frontend Foundation",
         "dependencies": ["task-30"],
-        "status": "todo"
+        "status": "done"
       },
       {
         "id": "task-33",
