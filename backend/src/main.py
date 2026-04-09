@@ -2034,6 +2034,171 @@ async def scrape_timestamps_reset(request: ScrapeTimestampResetRequest):
 
 
 # ------------------------------------------------------------------
+# Data Freshness endpoint
+# ------------------------------------------------------------------
+
+
+_STALENESS_THRESHOLD_DAYS = 30
+
+
+def _compute_relative_time(dt: datetime) -> str:
+    """
+    Compute a human-readable relative time string from a datetime to now.
+
+    Args:
+        dt: A timezone-aware datetime in UTC.
+
+    Returns:
+        A human-readable string such as ``'2 hours ago'``,
+        ``'3 days ago'``, or ``'just now'``.
+    """
+    now = datetime.now(timezone.utc)
+    diff = now - dt
+    seconds = int(diff.total_seconds())
+
+    if seconds < 0:
+        return "just now"
+
+    intervals = [
+        (365 * 24 * 3600, "year"),
+        (30 * 24 * 3600, "month"),
+        (7 * 24 * 3600, "week"),
+        (24 * 3600, "day"),
+        (3600, "hour"),
+        (60, "minute"),
+        (1, "second"),
+    ]
+
+    for threshold, label in intervals:
+        count = seconds // threshold
+        if count >= 1:
+            plural = "s" if count != 1 else ""
+            return f"{count} {label}{plural} ago"
+
+    return "just now"
+
+
+def _is_stale(dt: datetime) -> bool:
+    """Return True if *dt* is older than the staleness threshold."""
+    now = datetime.now(timezone.utc)
+    diff = now - dt
+    return diff.days > _STALENESS_THRESHOLD_DAYS
+
+
+def _build_freshness_entry(game: str, data: dict) -> dict:
+    """
+    Build a freshness entry for a single game version.
+
+    Args:
+        game: Game version key (``'poe1'`` or ``'poe2'``).
+        data: The raw timestamp dictionary for that game version.
+
+    Returns:
+        A dictionary with freshness metadata.
+    """
+    last_scraped_at = data.get("last_scraped_at")
+
+    if last_scraped_at is None:
+        return {
+            "game": game,
+            "last_scraped_at": None,
+            "relative_time": None,
+            "is_stale": False,
+            "staleness_warning": None,
+            "has_data": False,
+            "items_scraped": data.get("items_scraped", 0),
+            "categories_scraped": data.get("categories_scraped", 0),
+            "last_successful_job_id": data.get("last_successful_job_id"),
+        }
+
+    # Parse the ISO-8601 timestamp.
+    try:
+        dt = datetime.fromisoformat(last_scraped_at)
+        # Ensure timezone-aware.
+        if dt.tzinfo is None:
+            dt = dt.replace(tzinfo=timezone.utc)
+    except (ValueError, TypeError):
+        return {
+            "game": game,
+            "last_scraped_at": last_scraped_at,
+            "relative_time": "unknown",
+            "is_stale": False,
+            "staleness_warning": "Could not parse timestamp",
+            "has_data": True,
+            "items_scraped": data.get("items_scraped", 0),
+            "categories_scraped": data.get("categories_scraped", 0),
+            "last_successful_job_id": data.get("last_successful_job_id"),
+        }
+
+    relative_time = _compute_relative_time(dt)
+    stale = _is_stale(dt)
+    warning = None
+    if stale:
+        warning = (
+            f"Data for {game.upper()} is more than "
+            f"{_STALENESS_THRESHOLD_DAYS} days old. "
+            "Consider running a new scrape to update the knowledge base."
+        )
+
+    return {
+        "game": game,
+        "last_scraped_at": last_scraped_at,
+        "relative_time": relative_time,
+        "is_stale": stale,
+        "staleness_warning": warning,
+        "has_data": True,
+        "items_scraped": data.get("items_scraped", 0),
+        "categories_scraped": data.get("categories_scraped", 0),
+        "last_successful_job_id": data.get("last_successful_job_id"),
+    }
+
+
+@api_router.get("/freshness", tags=["Data Freshness"])
+async def data_freshness():
+    """
+    Get data freshness information for all game versions.
+
+    Returns the last scrape timestamp, a human-readable relative time
+    (e.g. ``'2 hours ago'``), separate entries for PoE1 and PoE2, and
+    a staleness warning when data is older than 30 days.
+
+    When no scrape has occurred yet, the ``relative_time`` field will be
+    ``null`` and ``has_data`` will be ``false``.
+
+    Returns:
+        dict: Freshness status for both PoE1 and PoE2.
+    """
+    try:
+        all_data = get_scrape_timestamps()
+
+        poe1_entry = _build_freshness_entry("poe1", all_data.get("poe1", {}))
+        poe2_entry = _build_freshness_entry("poe2", all_data.get("poe2", {}))
+
+        any_stale = poe1_entry["is_stale"] or poe2_entry["is_stale"]
+        any_has_data = poe1_entry["has_data"] or poe2_entry["has_data"]
+
+        return {
+            "success": True,
+            "freshness": {
+                "poe1": poe1_entry,
+                "poe2": poe2_entry,
+            },
+            "summary": {
+                "any_stale": any_stale,
+                "any_data_available": any_has_data,
+                "staleness_threshold_days": _STALENESS_THRESHOLD_DAYS,
+            },
+            "message": "Data freshness retrieved successfully",
+        }
+    except Exception as e:
+        logger.error("Failed to compute data freshness: %s", e)
+        raise HTTPException(
+            status_code=500,
+            detail=f"Failed to retrieve data freshness: {str(e)}",
+        )
+
+
+# ------------------------------------------------------------------
 # Admin endpoints
 # ------------------------------------------------------------------
 

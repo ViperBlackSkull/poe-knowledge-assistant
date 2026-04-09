@@ -1,0 +1,991 @@
+- generic [ref=e3]:
+  - generic:
+    - img
+  - generic [ref=e4]:
+    - generic [ref=e7]:
+      - generic [ref=e8]:
+        - heading "POE Knowledge Assistant API 1.0.0 OAS 3.1" [level=1] [ref=e9]:
+          - text: POE Knowledge Assistant API
+          - generic [ref=e10]:
+            - generic [ref=e12]: 1.0.0
+            - generic [ref=e14]: OAS 3.1
+        - link "/openapi.json" [ref=e15] [cursor=pointer]:
+          - /url: /openapi.json
+          - generic [ref=e16]: /openapi.json
+      - paragraph [ref=e19]: Backend API for POE Knowledge Assistant - A RAG-based chatbot for Path of Exile game knowledge
+    - generic [ref=e22]:
+      - generic [ref=e24]:
+        - heading "Root Collapse operation" [level=3] [ref=e25] [cursor=pointer]:
+          - link "Root" [ref=e26]:
+            - /url: "#/Root"
+          - button "Collapse operation" [expanded] [ref=e27]:
+            - img [ref=e28]
+        - generic [ref=e34] [cursor=pointer]:
+          - button "GET /api/ Root" [ref=e35]:
+            - generic [ref=e36]: GET
+            - generic [ref=e37]:
+              - link /api/ [ref=e39]:
+                - /url: "#/Root/root_api__get"
+                - generic [ref=e40]:
+                  - text: /api
+                  - text: /
+              - generic [ref=e41]: Root
+          - generic "Copy to clipboard"
+          - button "get /api/" [ref=e44]:
+            - img [ref=e45]
+      - generic [ref=e48]:
+        - heading "Health Collapse operation" [level=3] [ref=e49] [cursor=pointer]:
+          - link "Health" [ref=e50]:
+            - /url: "#/Health"
+          - button "Collapse operation" [expanded] [ref=e51]:
+            - img [ref=e52]
+        - generic [ref=e58] [cursor=pointer]:
+          - button "GET /api/health Health Check" [ref=e59]:
+            - generic [ref=e60]: GET
+            - generic [ref=e61]:
+              - link "/api/health" [ref=e63]:
+                - /url: "#/Health/health_check_api_health_get"
+                - generic [ref=e64]:
+                  - text: /api
+                  - text: /health
+              - generic [ref=e65]: Health Check
+          - generic "Copy to clipboard"
+          - button "get /api/health" [ref=e68]:
+            - img [ref=e69]
+      - generic [ref=e72]:
+        - heading "Configuration Collapse operation" [level=3] [ref=e73] [cursor=pointer]:
+          - link "Configuration" [ref=e74]:
+            - /url: "#/Configuration"
+          - button "Collapse operation" [expanded] [ref=e75]:
+            - img [ref=e76]
+        - generic [ref=e82] [cursor=pointer]:
+          - button "GET /api/config Get Config" [ref=e83]:
+            - generic [ref=e84]: GET
+            - generic [ref=e85]:
+              - link "/api/config" [ref=e87]:
+                - /url: "#/Configuration/get_config_api_config_get"
+                - generic [ref=e88]:
+                  - text: /api
+                  - text: /config
+              - generic [ref=e89]: Get Config
+          - generic "Copy to clipboard"
+          - button "get /api/config" [ref=e92]:
+            - img [ref=e93]
+      - generic [ref=e96]:
+        - heading "Testing Collapse operation" [level=3] [ref=e97] [cursor=pointer]:
+          - link "Testing" [ref=e98]:
+            - /url: "#/Testing"
+          - button "Collapse operation" [expanded] [ref=e99]:
+            - img [ref=e100]
+        - generic [ref=e103]:
+          - generic [ref=e106] [cursor=pointer]:
+            - button "POST /api/test/embeddings/query Test Embed Query" [ref=e107]:
+              - generic [ref=e108]: POST
+              - generic [ref=e109]:
+                - link "/api/test/embeddings/query" [ref=e111]:
+                  - /url: "#/Testing/test_embed_query_api_test_embeddings_query_post"
+                  - generic [ref=e112]:
+                    - text: /api
+                    - text: /test
+                    - text: /embeddings
+                    - text: /query
+                - generic [ref=e113]: Test Embed Query
+            - generic "Copy to clipboard"
+            - button "post /api/test/embeddings/query" [ref=e116]:
+              - img [ref=e117]
+          - generic [ref=e121] [cursor=pointer]:
+            - button "POST /api/test/embeddings/documents Test Embed Documents" [ref=e122]:
+              - generic [ref=e123]: POST
+              - generic [ref=e124]:
+                - link "/api/test/embeddings/documents" [ref=e126]:
+                  - /url: "#/Testing/test_embed_documents_api_test_embeddings_documents_post"
+                  - generic [ref=e127]:
+                    - text: /api
+                    - text: /test
+                    - text: /embeddings
+                    - text: /documents
+                - generic [ref=e128]: Test Embed Documents
+            - generic "Copy to clipboard"
+            - button "post /api/test/embeddings/documents" [ref=e131]:
+              - img [ref=e132]
+          - generic [ref=e136] [cursor=pointer]:
+            - button "POST /api/test/embeddings/factory Test Embeddings Factory" [ref=e137]:
+              - generic [ref=e138]: POST
+              - generic [ref=e139]:
+                - link "/api/test/embeddings/factory" [ref=e141]:
+                  - /url: "#/Testing/test_embeddings_factory_api_test_embeddings_factory_post"
+                  - generic [ref=e142]:
+                    - text: /api
+                    - text: /test
+                    - text: /embeddings
+                    - text: /factory
+                - generic [ref=e143]: Test Embeddings Factory
+            - generic "Copy to clipboard"
+            - button "post /api/test/embeddings/factory" [ref=e146]:
+              - img [ref=e147]
+          - generic [ref=e151] [cursor=pointer]:
+            - button "POST /api/test/embeddings/openai Test Openai Embeddings" [ref=e152]:
+              - generic [ref=e153]: POST
+              - generic [ref=e154]:
+                - link "/api/test/embeddings/openai" [ref=e156]:
+                  - /url: "#/Testing/test_openai_embeddings_api_test_embeddings_openai_post"
+                  - generic [ref=e157]:
+                    - text: /api
+                    - text: /test
+                    - text: /embeddings
+                    - text: /openai
+                - generic [ref=e158]: Test Openai Embeddings
+            - generic "Copy to clipboard"
+            - button "post /api/test/embeddings/openai" [ref=e161]:
+              - img [ref=e162]
+          - generic [ref=e166] [cursor=pointer]:
+            - button "GET /api/test/vectorstore/health Test Vectorstore Health" [ref=e167]:
+              - generic [ref=e168]: GET
+              - generic [ref=e169]:
+                - link "/api/test/vectorstore/health" [ref=e171]:
+                  - /url: "#/Testing/test_vectorstore_health_api_test_vectorstore_health_get"
+                  - generic [ref=e172]:
+                    - text: /api
+                    - text: /test
+                    - text: /vectorstore
+                    - text: /health
+                - generic [ref=e173]: Test Vectorstore Health
+            - generic "Copy to clipboard"
+            - button "get /api/test/vectorstore/health" [ref=e176]:
+              - img [ref=e177]
+          - generic [ref=e181] [cursor=pointer]:
+            - button "POST /api/test/vectorstore/add Test Vectorstore Add" [ref=e182]:
+              - generic [ref=e183]: POST
+              - generic [ref=e184]:
+                - link "/api/test/vectorstore/add" [ref=e186]:
+                  - /url: "#/Testing/test_vectorstore_add_api_test_vectorstore_add_post"
+                  - generic [ref=e187]:
+                    - text: /api
+                    - text: /test
+                    - text: /vectorstore
+                    - text: /add
+                - generic [ref=e188]: Test Vectorstore Add
+            - generic "Copy to clipboard"
+            - button "post /api/test/vectorstore/add" [ref=e191]:
+              - img [ref=e192]
+          - generic [ref=e196] [cursor=pointer]:
+            - button "POST /api/test/vectorstore/search Test Vectorstore Search" [ref=e197]:
+              - generic [ref=e198]: POST
+              - generic [ref=e199]:
+                - link "/api/test/vectorstore/search" [ref=e201]:
+                  - /url: "#/Testing/test_vectorstore_search_api_test_vectorstore_search_post"
+                  - generic [ref=e202]:
+                    - text: /api
+                    - text: /test
+                    - text: /vectorstore
+                    - text: /search
+                - generic [ref=e203]: Test Vectorstore Search
+            - generic "Copy to clipboard"
+            - button "post /api/test/vectorstore/search" [ref=e206]:
+              - img [ref=e207]
+          - generic [ref=e211] [cursor=pointer]:
+            - button "GET /api/test/llm/health Test Llm Health" [ref=e212]:
+              - generic [ref=e213]: GET
+              - generic [ref=e214]:
+                - link "/api/test/llm/health" [ref=e216]:
+                  - /url: "#/Testing/test_llm_health_api_test_llm_health_get"
+                  - generic [ref=e217]:
+                    - text: /api
+                    - text: /test
+                    - text: /llm
+                    - text: /health
+                - generic [ref=e218]: Test Llm Health
+            - generic "Copy to clipboard"
+            - button "get /api/test/llm/health" [ref=e221]:
+              - img [ref=e222]
+          - generic [ref=e226] [cursor=pointer]:
+            - button "POST /api/test/llm/factory Test Llm Factory" [ref=e227]:
+              - generic [ref=e228]: POST
+              - generic [ref=e229]:
+                - link "/api/test/llm/factory" [ref=e231]:
+                  - /url: "#/Testing/test_llm_factory_api_test_llm_factory_post"
+                  - generic [ref=e232]:
+                    - text: /api
+                    - text: /test
+                    - text: /llm
+                    - text: /factory
+                - generic [ref=e233]: Test Llm Factory
+            - generic "Copy to clipboard"
+            - button "post /api/test/llm/factory" [ref=e236]:
+              - img [ref=e237]
+          - generic [ref=e241] [cursor=pointer]:
+            - button "POST /api/test/llm/providers Test Llm Providers" [ref=e242]:
+              - generic [ref=e243]: POST
+              - generic [ref=e244]:
+                - link "/api/test/llm/providers" [ref=e246]:
+                  - /url: "#/Testing/test_llm_providers_api_test_llm_providers_post"
+                  - generic [ref=e247]:
+                    - text: /api
+                    - text: /test
+                    - text: /llm
+                    - text: /providers
+                - generic [ref=e248]: Test Llm Providers
+            - generic "Copy to clipboard"
+            - button "post /api/test/llm/providers" [ref=e251]:
+              - img [ref=e252]
+      - generic [ref=e255]:
+        - heading "Scraper Collapse operation" [level=3] [ref=e256] [cursor=pointer]:
+          - link "Scraper" [ref=e257]:
+            - /url: "#/Scraper"
+          - button "Collapse operation" [expanded] [ref=e258]:
+            - img [ref=e259]
+        - generic [ref=e262]:
+          - generic [ref=e265] [cursor=pointer]:
+            - button "GET /api/test/scraper/health Test Scraper Health" [ref=e266]:
+              - generic [ref=e267]: GET
+              - generic [ref=e268]:
+                - link "/api/test/scraper/health" [ref=e270]:
+                  - /url: "#/Scraper/test_scraper_health_api_test_scraper_health_get"
+                  - generic [ref=e271]:
+                    - text: /api
+                    - text: /test
+                    - text: /scraper
+                    - text: /health
+                - generic [ref=e272]: Test Scraper Health
+            - generic "Copy to clipboard"
+            - button "get /api/test/scraper/health" [ref=e275]:
+              - img [ref=e276]
+          - generic [ref=e280] [cursor=pointer]:
+            - button "POST /api/test/scraper/fetch Test Scraper Fetch" [ref=e281]:
+              - generic [ref=e282]: POST
+              - generic [ref=e283]:
+                - link "/api/test/scraper/fetch" [ref=e285]:
+                  - /url: "#/Scraper/test_scraper_fetch_api_test_scraper_fetch_post"
+                  - generic [ref=e286]:
+                    - text: /api
+                    - text: /test
+                    - text: /scraper
+                    - text: /fetch
+                - generic [ref=e287]: Test Scraper Fetch
+            - generic "Copy to clipboard"
+            - button "post /api/test/scraper/fetch" [ref=e290]:
+              - img [ref=e291]
+          - generic [ref=e295] [cursor=pointer]:
+            - button "POST /api/test/scraper/fetch-async Test Scraper Fetch Async" [ref=e296]:
+              - generic [ref=e297]: POST
+              - generic [ref=e298]:
+                - link "/api/test/scraper/fetch-async" [ref=e300]:
+                  - /url: "#/Scraper/test_scraper_fetch_async_api_test_scraper_fetch_async_post"
+                  - generic [ref=e301]:
+                    - text: /api
+                    - text: /test
+                    - text: /scraper
+                    - text: /fetch-async
+                - generic [ref=e302]: Test Scraper Fetch Async
+            - generic "Copy to clipboard"
+            - button "post /api/test/scraper/fetch-async" [ref=e305]:
+              - img [ref=e306]
+          - generic [ref=e310] [cursor=pointer]:
+            - button "GET /api/test/scraper/config Test Scraper Config" [ref=e311]:
+              - generic [ref=e312]: GET
+              - generic [ref=e313]:
+                - link "/api/test/scraper/config" [ref=e315]:
+                  - /url: "#/Scraper/test_scraper_config_api_test_scraper_config_get"
+                  - generic [ref=e316]:
+                    - text: /api
+                    - text: /test
+                    - text: /scraper
+                    - text: /config
+                - generic [ref=e317]: Test Scraper Config
+            - generic "Copy to clipboard"
+            - button "get /api/test/scraper/config" [ref=e320]:
+              - img [ref=e321]
+          - generic [ref=e325] [cursor=pointer]:
+            - button "GET /api/test/scraper/modules Test Scraper Modules" [ref=e326]:
+              - generic [ref=e327]: GET
+              - generic [ref=e328]:
+                - link "/api/test/scraper/modules" [ref=e330]:
+                  - /url: "#/Scraper/test_scraper_modules_api_test_scraper_modules_get"
+                  - generic [ref=e331]:
+                    - text: /api
+                    - text: /test
+                    - text: /scraper
+                    - text: /modules
+                - generic [ref=e332]: Test Scraper Modules
+            - generic "Copy to clipboard"
+            - button "get /api/test/scraper/modules" [ref=e335]:
+              - img [ref=e336]
+          - generic [ref=e340] [cursor=pointer]:
+            - button "POST /api/test/scraper/parse Test Scraper Parse" [ref=e341]:
+              - generic [ref=e342]: POST
+              - generic [ref=e343]:
+                - link "/api/test/scraper/parse" [ref=e345]:
+                  - /url: "#/Scraper/test_scraper_parse_api_test_scraper_parse_post"
+                  - generic [ref=e346]:
+                    - text: /api
+                    - text: /test
+                    - text: /scraper
+                    - text: /parse
+                - generic [ref=e347]: Test Scraper Parse
+            - generic "Copy to clipboard"
+            - button "post /api/test/scraper/parse" [ref=e350]:
+              - img [ref=e351]
+          - generic [ref=e355] [cursor=pointer]:
+            - button "POST /api/test/scraper/category Test Scraper Category" [ref=e356]:
+              - generic [ref=e357]: POST
+              - generic [ref=e358]:
+                - link "/api/test/scraper/category" [ref=e360]:
+                  - /url: "#/Scraper/test_scraper_category_api_test_scraper_category_post"
+                  - generic [ref=e361]:
+                    - text: /api
+                    - text: /test
+                    - text: /scraper
+                    - text: /category
+                - generic [ref=e362]: Test Scraper Category
+            - generic "Copy to clipboard"
+            - button "post /api/test/scraper/category" [ref=e365]:
+              - img [ref=e366]
+          - generic [ref=e370] [cursor=pointer]:
+            - button "GET /api/test/scraper/category/categories Test Scraper Category List" [ref=e371]:
+              - generic [ref=e372]: GET
+              - generic [ref=e373]:
+                - link "/api/test/scraper/category/categories" [ref=e375]:
+                  - /url: "#/Scraper/test_scraper_category_list_api_test_scraper_category_categories_get"
+                  - generic [ref=e376]:
+                    - text: /api
+                    - text: /test
+                    - text: /scraper
+                    - text: /category
+                    - text: /categories
+                - generic [ref=e377]: Test Scraper Category List
+            - generic "Copy to clipboard"
+            - button "get /api/test/scraper/category/categories" [ref=e380]:
+              - img [ref=e381]
+          - generic [ref=e385] [cursor=pointer]:
+            - button "POST /api/test/scraper/item Test Scraper Item Detail" [ref=e386]:
+              - generic [ref=e387]: POST
+              - generic [ref=e388]:
+                - link "/api/test/scraper/item" [ref=e390]:
+                  - /url: "#/Scraper/test_scraper_item_detail_api_test_scraper_item_post"
+                  - generic [ref=e391]:
+                    - text: /api
+                    - text: /test
+                    - text: /scraper
+                    - text: /item
+                - generic [ref=e392]: Test Scraper Item Detail
+            - generic "Copy to clipboard"
+            - button "post /api/test/scraper/item" [ref=e395]:
+              - img [ref=e396]
+          - generic [ref=e400] [cursor=pointer]:
+            - button "POST /api/test/scraper/item/batch Test Scraper Item Detail Batch" [ref=e401]:
+              - generic [ref=e402]: POST
+              - generic [ref=e403]:
+                - link "/api/test/scraper/item/batch" [ref=e405]:
+                  - /url: "#/Scraper/test_scraper_item_detail_batch_api_test_scraper_item_batch_post"
+                  - generic [ref=e406]:
+                    - text: /api
+                    - text: /test
+                    - text: /scraper
+                    - text: /item
+                    - text: /batch
+                - generic [ref=e407]: Test Scraper Item Detail Batch
+            - generic "Copy to clipboard"
+            - button "post /api/test/scraper/item/batch" [ref=e410]:
+              - img [ref=e411]
+          - generic [ref=e415] [cursor=pointer]:
+            - button "GET /api/test/scraper/item/examples Test Scraper Item Examples" [ref=e416]:
+              - generic [ref=e417]: GET
+              - generic [ref=e418]:
+                - link "/api/test/scraper/item/examples" [ref=e420]:
+                  - /url: "#/Scraper/test_scraper_item_examples_api_test_scraper_item_examples_get"
+                  - generic [ref=e421]:
+                    - text: /api
+                    - text: /test
+                    - text: /scraper
+                    - text: /item
+                    - text: /examples
+                - generic [ref=e422]: Test Scraper Item Examples
+            - generic "Copy to clipboard"
+            - button "get /api/test/scraper/item/examples" [ref=e425]:
+              - img [ref=e426]
+          - generic [ref=e430] [cursor=pointer]:
+            - button "POST /api/test/scraper/game-version Test Detect Game Version" [ref=e431]:
+              - generic [ref=e432]: POST
+              - generic [ref=e433]:
+                - link "/api/test/scraper/game-version" [ref=e435]:
+                  - /url: "#/Scraper/test_detect_game_version_api_test_scraper_game_version_post"
+                  - generic [ref=e436]:
+                    - text: /api
+                    - text: /test
+                    - text: /scraper
+                    - text: /game-version
+                - generic [ref=e437]: Test Detect Game Version
+            - generic "Copy to clipboard"
+            - button "post /api/test/scraper/game-version" [ref=e440]:
+              - img [ref=e441]
+          - generic [ref=e445] [cursor=pointer]:
+            - button "POST /api/test/scraper/game-version/batch Test Detect Game Version Batch" [ref=e446]:
+              - generic [ref=e447]: POST
+              - generic [ref=e448]:
+                - link "/api/test/scraper/game-version/batch" [ref=e450]:
+                  - /url: "#/Scraper/test_detect_game_version_batch_api_test_scraper_game_version_batch_post"
+                  - generic [ref=e451]:
+                    - text: /api
+                    - text: /test
+                    - text: /scraper
+                    - text: /game-version
+                    - text: /batch
+                - generic [ref=e452]: Test Detect Game Version Batch
+            - generic "Copy to clipboard"
+            - button "post /api/test/scraper/game-version/batch" [ref=e455]:
+              - img [ref=e456]
+      - generic [ref=e459]:
+        - heading "Jobs Collapse operation" [level=3] [ref=e460] [cursor=pointer]:
+          - link "Jobs" [ref=e461]:
+            - /url: "#/Jobs"
+          - button "Collapse operation" [expanded] [ref=e462]:
+            - img [ref=e463]
+        - generic [ref=e466]:
+          - generic [ref=e469] [cursor=pointer]:
+            - button "GET /api/jobs/health Jobs Health" [ref=e470]:
+              - generic [ref=e471]: GET
+              - generic [ref=e472]:
+                - link "/api/jobs/health" [ref=e474]:
+                  - /url: "#/Jobs/jobs_health_api_jobs_health_get"
+                  - generic [ref=e475]:
+                    - text: /api
+                    - text: /jobs
+                    - text: /health
+                - generic [ref=e476]: Jobs Health
+            - generic "Copy to clipboard"
+            - button "get /api/jobs/health" [ref=e479]:
+              - img [ref=e480]
+          - generic [ref=e484] [cursor=pointer]:
+            - button "GET /api/jobs/stats Jobs Stats" [ref=e485]:
+              - generic [ref=e486]: GET
+              - generic [ref=e487]:
+                - link "/api/jobs/stats" [ref=e489]:
+                  - /url: "#/Jobs/jobs_stats_api_jobs_stats_get"
+                  - generic [ref=e490]:
+                    - text: /api
+                    - text: /jobs
+                    - text: /stats
+                - generic [ref=e491]: Jobs Stats
+            - generic "Copy to clipboard"
+            - button "get /api/jobs/stats" [ref=e494]:
+              - img [ref=e495]
+          - generic [ref=e499] [cursor=pointer]:
+            - button "POST /api/jobs/add Jobs Add" [ref=e500]:
+              - generic [ref=e501]: POST
+              - generic [ref=e502]:
+                - link "/api/jobs/add" [ref=e504]:
+                  - /url: "#/Jobs/jobs_add_api_jobs_add_post"
+                  - generic [ref=e505]:
+                    - text: /api
+                    - text: /jobs
+                    - text: /add
+                - generic [ref=e506]: Jobs Add
+            - generic "Copy to clipboard"
+            - button "post /api/jobs/add" [ref=e509]:
+              - img [ref=e510]
+          - generic [ref=e514] [cursor=pointer]:
+            - 'button "GET /api/jobs/{job_id} Jobs Get Status" [ref=e515]':
+              - generic [ref=e516]: GET
+              - generic [ref=e517]:
+                - 'link "/api/jobs/{job_id}" [ref=e519]':
+                  - /url: "#/Jobs/jobs_get_status_api_jobs__job_id__get"
+                  - generic [ref=e520]:
+                    - text: /api
+                    - text: /jobs
+                    - text: "/{job_id}"
+                - generic [ref=e521]: Jobs Get Status
+            - generic "Copy to clipboard"
+            - 'button "get /api/jobs/{job_id}" [ref=e524]':
+              - img [ref=e525]
+          - generic [ref=e529] [cursor=pointer]:
+            - button "POST /api/jobs/list Jobs List" [ref=e530]:
+              - generic [ref=e531]: POST
+              - generic [ref=e532]:
+                - link "/api/jobs/list" [ref=e534]:
+                  - /url: "#/Jobs/jobs_list_api_jobs_list_post"
+                  - generic [ref=e535]:
+                    - text: /api
+                    - text: /jobs
+                    - text: /list
+                - generic [ref=e536]: Jobs List
+            - generic "Copy to clipboard"
+            - button "post /api/jobs/list" [ref=e539]:
+              - img [ref=e540]
+          - generic [ref=e544] [cursor=pointer]:
+            - 'button "POST /api/jobs/{job_id}/cancel Jobs Cancel" [ref=e545]':
+              - generic [ref=e546]: POST
+              - generic [ref=e547]:
+                - 'link "/api/jobs/{job_id}/cancel" [ref=e549]':
+                  - /url: "#/Jobs/jobs_cancel_api_jobs__job_id__cancel_post"
+                  - generic [ref=e550]:
+                    - text: /api
+                    - text: /jobs
+                    - text: "/{job_id}"
+                    - text: /cancel
+                - generic [ref=e551]: Jobs Cancel
+            - generic "Copy to clipboard"
+            - 'button "post /api/jobs/{job_id}/cancel" [ref=e554]':
+              - img [ref=e555]
+          - generic [ref=e559] [cursor=pointer]:
+            - button "POST /api/jobs/start Jobs Start" [ref=e560]:
+              - generic [ref=e561]: POST
+              - generic [ref=e562]:
+                - link "/api/jobs/start" [ref=e564]:
+                  - /url: "#/Jobs/jobs_start_api_jobs_start_post"
+                  - generic [ref=e565]:
+                    - text: /api
+                    - text: /jobs
+                    - text: /start
+                - generic [ref=e566]: Jobs Start
+            - generic "Copy to clipboard"
+            - button "post /api/jobs/start" [ref=e569]:
+              - img [ref=e570]
+          - generic [ref=e574] [cursor=pointer]:
+            - button "POST /api/jobs/stop Jobs Stop" [ref=e575]:
+              - generic [ref=e576]: POST
+              - generic [ref=e577]:
+                - link "/api/jobs/stop" [ref=e579]:
+                  - /url: "#/Jobs/jobs_stop_api_jobs_stop_post"
+                  - generic [ref=e580]:
+                    - text: /api
+                    - text: /jobs
+                    - text: /stop
+                - generic [ref=e581]: Jobs Stop
+            - generic "Copy to clipboard"
+            - button "post /api/jobs/stop" [ref=e584]:
+              - img [ref=e585]
+          - generic [ref=e589] [cursor=pointer]:
+            - button "POST /api/jobs/clear Jobs Clear" [ref=e590]:
+              - generic [ref=e591]: POST
+              - generic [ref=e592]:
+                - link "/api/jobs/clear" [ref=e594]:
+                  - /url: "#/Jobs/jobs_clear_api_jobs_clear_post"
+                  - generic [ref=e595]:
+                    - text: /api
+                    - text: /jobs
+                    - text: /clear
+                - generic [ref=e596]: Jobs Clear
+            - generic "Copy to clipboard"
+            - button "post /api/jobs/clear" [ref=e599]:
+              - img [ref=e600]
+          - generic [ref=e604] [cursor=pointer]:
+            - button "GET /api/jobs/config/info Jobs Config" [ref=e605]:
+              - generic [ref=e606]: GET
+              - generic [ref=e607]:
+                - link "/api/jobs/config/info" [ref=e609]:
+                  - /url: "#/Jobs/jobs_config_api_jobs_config_info_get"
+                  - generic [ref=e610]:
+                    - text: /api
+                    - text: /jobs
+                    - text: /config
+                    - text: /info
+                - generic [ref=e611]: Jobs Config
+            - generic "Copy to clipboard"
+            - button "get /api/jobs/config/info" [ref=e614]:
+              - img [ref=e615]
+      - generic [ref=e618]:
+        - heading "Admin Collapse operation" [level=3] [ref=e619] [cursor=pointer]:
+          - link "Admin" [ref=e620]:
+            - /url: "#/Admin"
+          - button "Collapse operation" [expanded] [ref=e621]:
+            - img [ref=e622]
+        - generic [ref=e627]:
+          - generic [ref=e628] [cursor=pointer]:
+            - button "POST /api/admin/scrape Admin Scrape Trigger" [expanded] [active] [ref=e629]:
+              - generic [ref=e630]: POST
+              - generic [ref=e631]:
+                - link "/api/admin/scrape" [ref=e633]:
+                  - /url: "#/Admin/admin_scrape_trigger_api_admin_scrape_post"
+                  - generic [ref=e634]:
+                    - text: /api
+                    - text: /admin
+                    - text: /scrape
+                - generic [ref=e635]: Admin Scrape Trigger
+            - generic "Copy to clipboard" [ref=e1008]:
+              - img [ref=e1009]
+            - button "post /api/admin/scrape" [expanded] [ref=e638]:
+              - img [ref=e1010]
+          - generic [ref=e1013]:
+            - generic [ref=e1016]:
+              - paragraph [ref=e1017]: Trigger a knowledge base scraping operation.
+              - paragraph [ref=e1018]: Creates scraping jobs for the specified game(s) and depth level, adds them to the job queue, and starts the job processing loop asynchronously.
+              - paragraph [ref=e1019]:
+                - strong [ref=e1020]: Game Parameter
+                - text: ":"
+              - list [ref=e1021]:
+                - listitem [ref=e1022]:
+                  - code [ref=e1023]: poe1
+                  - text: ": Scrape Path of Exile 1 data from poedb.tw"
+                - listitem [ref=e1024]:
+                  - code [ref=e1025]: poe2
+                  - text: ": Scrape Path of Exile 2 data from poe2db.tw"
+                - listitem [ref=e1026]:
+                  - code [ref=e1027]: "null"
+                  - text: "(omit): Scrape both games"
+              - paragraph [ref=e1028]:
+                - strong [ref=e1029]: Depth Parameter
+                - text: ":"
+              - list [ref=e1030]:
+                - listitem [ref=e1031]:
+                  - code [ref=e1032]: shallow
+                  - text: ": Only scrape category index pages to discover item links"
+                - listitem [ref=e1033]:
+                  - code [ref=e1034]: deep
+                  - text: ": Scrape category pages AND all individual item detail pages"
+              - paragraph [ref=e1035]:
+                - text: The scraping runs asynchronously in the background. Use the returned job IDs with the
+                - code [ref=e1036]: "/api/jobs/{job_id}"
+                - text: endpoint to monitor progress.
+              - paragraph [ref=e1037]: "Returns: ScrapeTriggerResponse with job IDs, games, and status info."
+            - generic [ref=e1038]:
+              - generic [ref=e1039]:
+                - heading "Parameters" [level=4] [ref=e1042] [cursor=pointer]
+                - button "Try it out" [ref=e1044] [cursor=pointer]
+              - paragraph [ref=e1047]: No parameters
+              - generic [ref=e1048]:
+                - generic [ref=e1049]:
+                  - heading "Request bodyrequired" [level=4] [ref=e1050]
+                  - combobox "Request content type" [ref=e1053]:
+                    - option "application/json" [selected]
+                - generic [ref=e1056]:
+                  - tablist [ref=e1057]:
+                    - tab "Example Value" [selected] [ref=e1058] [cursor=pointer]
+                    - tab "Schema" [ref=e1059] [cursor=pointer]
+                  - tabpanel "Example Value" [ref=e1060]:
+                    - code [ref=e1063]: "{ \"depth\": \"shallow\", \"game\": \"poe1\" }"
+            - generic [ref=e1065]:
+              - heading "Responses" [level=4] [ref=e1067]
+              - region [ref=e1069]:
+                - rowgroup [ref=e1070]:
+                  - row "Code Description Links" [ref=e1071]:
+                    - cell "Code" [ref=e1072]
+                    - cell "Description" [ref=e1073]
+                    - cell "Links" [ref=e1074]
+                - rowgroup [ref=e1075]:
+                  - row "200 Successful Response Media type application/json Controls Accept header. Example Value No links" [ref=e1076]:
+                    - cell "200" [ref=e1077]
+                    - cell "Successful Response Media type application/json Controls Accept header. Example Value" [ref=e1078]:
+                      - paragraph [ref=e1081]: Successful Response
+                      - generic [ref=e1083]:
+                        - generic [ref=e1084]: Media type
+                        - combobox "Media Type" [ref=e1086]:
+                          - option "application/json" [selected]
+                        - generic [ref=e1087]:
+                          - text: Controls
+                          - code [ref=e1088]: Accept
+                          - text: header.
+                      - generic [ref=e1089]:
+                        - tablist [ref=e1090]:
+                          - tab "Example Value" [selected] [ref=e1091] [cursor=pointer]
+                          - tab "Schema" [ref=e1092] [cursor=pointer]
+                        - tabpanel "Example Value" [ref=e1093]:
+                          - code [ref=e1097]: "{ \"success\": true, \"job_ids\": [ \"string\" ], \"games\": [ \"string\" ], \"depth\": \"string\", \"total_jobs\": 0, \"status\": \"string\", \"message\": \"string\" }"
+                    - cell "No links" [ref=e1098]
+                  - row "422 Validation Error Media type application/json Example Value No links" [ref=e1099]:
+                    - cell "422" [ref=e1100]
+                    - cell "Validation Error Media type application/json Example Value" [ref=e1101]:
+                      - paragraph [ref=e1104]: Validation Error
+                      - generic [ref=e1106]:
+                        - generic [ref=e1107]: Media type
+                        - combobox "Media Type" [ref=e1109]:
+                          - option "application/json" [selected]
+                      - generic [ref=e1110]:
+                        - tablist [ref=e1111]:
+                          - tab "Example Value" [selected] [ref=e1112] [cursor=pointer]
+                          - tab "Schema" [ref=e1113] [cursor=pointer]
+                        - tabpanel "Example Value" [ref=e1114]:
+                          - code [ref=e1118]: "{ \"detail\": [ { \"loc\": [ \"string\", 0 ], \"msg\": \"string\", \"type\": \"string\", \"input\": \"string\", \"ctx\": {} } ] }"
+                    - cell "No links" [ref=e1119]
+      - generic [ref=e642]:
+        - heading "Indexer Collapse operation" [level=3] [ref=e643] [cursor=pointer]:
+          - link "Indexer" [ref=e644]:
+            - /url: "#/Indexer"
+          - button "Collapse operation" [expanded] [ref=e645]:
+            - img [ref=e646]
+        - generic [ref=e649]:
+          - generic [ref=e652] [cursor=pointer]:
+            - button "GET /api/test/indexer/health Test Indexer Health" [ref=e653]:
+              - generic [ref=e654]: GET
+              - generic [ref=e655]:
+                - link "/api/test/indexer/health" [ref=e657]:
+                  - /url: "#/Indexer/test_indexer_health_api_test_indexer_health_get"
+                  - generic [ref=e658]:
+                    - text: /api
+                    - text: /test
+                    - text: /indexer
+                    - text: /health
+                - generic [ref=e659]: Test Indexer Health
+            - generic "Copy to clipboard"
+            - button "get /api/test/indexer/health" [ref=e662]:
+              - img [ref=e663]
+          - generic [ref=e667] [cursor=pointer]:
+            - button "GET /api/test/indexer/stats Test Indexer Stats" [ref=e668]:
+              - generic [ref=e669]: GET
+              - generic [ref=e670]:
+                - link "/api/test/indexer/stats" [ref=e672]:
+                  - /url: "#/Indexer/test_indexer_stats_api_test_indexer_stats_get"
+                  - generic [ref=e673]:
+                    - text: /api
+                    - text: /test
+                    - text: /indexer
+                    - text: /stats
+                - generic [ref=e674]: Test Indexer Stats
+            - generic "Copy to clipboard"
+            - button "get /api/test/indexer/stats" [ref=e677]:
+              - img [ref=e678]
+          - generic [ref=e682] [cursor=pointer]:
+            - button "POST /api/test/indexer/index Test Indexer Index" [ref=e683]:
+              - generic [ref=e684]: POST
+              - generic [ref=e685]:
+                - link "/api/test/indexer/index" [ref=e687]:
+                  - /url: "#/Indexer/test_indexer_index_api_test_indexer_index_post"
+                  - generic [ref=e688]:
+                    - text: /api
+                    - text: /test
+                    - text: /indexer
+                    - text: /index
+                - generic [ref=e689]: Test Indexer Index
+            - generic "Copy to clipboard"
+            - button "post /api/test/indexer/index" [ref=e692]:
+              - img [ref=e693]
+          - generic [ref=e697] [cursor=pointer]:
+            - button "POST /api/test/indexer/index-samples Test Indexer Index Samples" [ref=e698]:
+              - generic [ref=e699]: POST
+              - generic [ref=e700]:
+                - link "/api/test/indexer/index-samples" [ref=e702]:
+                  - /url: "#/Indexer/test_indexer_index_samples_api_test_indexer_index_samples_post"
+                  - generic [ref=e703]:
+                    - text: /api
+                    - text: /test
+                    - text: /indexer
+                    - text: /index-samples
+                - generic [ref=e704]: Test Indexer Index Samples
+            - generic "Copy to clipboard"
+            - button "post /api/test/indexer/index-samples" [ref=e707]:
+              - img [ref=e708]
+          - generic [ref=e712] [cursor=pointer]:
+            - button "POST /api/test/indexer/delete Test Indexer Delete" [ref=e713]:
+              - generic [ref=e714]: POST
+              - generic [ref=e715]:
+                - link "/api/test/indexer/delete" [ref=e717]:
+                  - /url: "#/Indexer/test_indexer_delete_api_test_indexer_delete_post"
+                  - generic [ref=e718]:
+                    - text: /api
+                    - text: /test
+                    - text: /indexer
+                    - text: /delete
+                - generic [ref=e719]: Test Indexer Delete
+            - generic "Copy to clipboard"
+            - button "post /api/test/indexer/delete" [ref=e722]:
+              - img [ref=e723]
+          - generic [ref=e727] [cursor=pointer]:
+            - button "POST /api/test/indexer/search Test Indexer Search" [ref=e728]:
+              - generic [ref=e729]: POST
+              - generic [ref=e730]:
+                - link "/api/test/indexer/search" [ref=e732]:
+                  - /url: "#/Indexer/test_indexer_search_api_test_indexer_search_post"
+                  - generic [ref=e733]:
+                    - text: /api
+                    - text: /test
+                    - text: /indexer
+                    - text: /search
+                - generic [ref=e734]: Test Indexer Search
+            - generic "Copy to clipboard"
+            - button "post /api/test/indexer/search" [ref=e737]:
+              - img [ref=e738]
+      - generic [ref=e741]:
+        - heading "Chat Collapse operation" [level=3] [ref=e742] [cursor=pointer]:
+          - link "Chat" [ref=e743]:
+            - /url: "#/Chat"
+          - button "Collapse operation" [expanded] [ref=e744]:
+            - img [ref=e745]
+        - generic [ref=e748]:
+          - generic [ref=e751] [cursor=pointer]:
+            - button "POST /api/chat/stream Stream a chat response via Server-Sent Events" [ref=e752]:
+              - generic [ref=e753]: POST
+              - generic [ref=e754]:
+                - link "/api/chat/stream" [ref=e756]:
+                  - /url: "#/Chat/chat_stream_api_chat_stream_post"
+                  - generic [ref=e757]:
+                    - text: /api
+                    - text: /chat
+                    - text: /stream
+                - generic [ref=e758]: Stream a chat response via Server-Sent Events
+            - generic "Copy to clipboard"
+            - button "post /api/chat/stream" [ref=e761]:
+              - img [ref=e762]
+          - generic [ref=e766] [cursor=pointer]:
+            - button "GET /api/chat/stream/health Chat Stream Health" [ref=e767]:
+              - generic [ref=e768]: GET
+              - generic [ref=e769]:
+                - link "/api/chat/stream/health" [ref=e771]:
+                  - /url: "#/Chat/chat_stream_health_api_chat_stream_health_get"
+                  - generic [ref=e772]:
+                    - text: /api
+                    - text: /chat
+                    - text: /stream
+                    - text: /health
+                - generic [ref=e773]: Chat Stream Health
+            - generic "Copy to clipboard"
+            - button "get /api/chat/stream/health" [ref=e776]:
+              - img [ref=e777]
+    - generic [ref=e781]:
+      - heading "Schemas" [level=4] [ref=e782] [cursor=pointer]:
+        - button "Schemas" [expanded] [ref=e783]:
+          - generic [ref=e784]: Schemas
+          - img [ref=e785]
+      - generic [ref=e787]:
+        - article [ref=e788]:
+          - generic [ref=e789]:
+            - button "AddJobRequest" [ref=e790] [cursor=pointer]:
+              - generic [ref=e792]: AddJobRequest
+              - img [ref=e794]
+            - button "Expand all" [ref=e796] [cursor=pointer]
+            - strong [ref=e797]: object
+        - article [ref=e798]:
+          - generic [ref=e799]:
+            - button "CategoryScrapeRequest" [ref=e800] [cursor=pointer]:
+              - generic [ref=e802]: CategoryScrapeRequest
+              - img [ref=e804]
+            - button "Expand all" [ref=e806] [cursor=pointer]
+            - strong [ref=e807]: object
+        - article [ref=e808]:
+          - generic [ref=e809]:
+            - button "ChatStreamRequest" [ref=e810] [cursor=pointer]:
+              - generic [ref=e812]: ChatStreamRequest
+              - img [ref=e814]
+            - button "Expand all" [ref=e816] [cursor=pointer]
+            - strong [ref=e817]: object
+        - article [ref=e818]:
+          - generic [ref=e819]:
+            - button "CreateEmbeddingsRequest" [ref=e820] [cursor=pointer]:
+              - generic [ref=e822]: CreateEmbeddingsRequest
+              - img [ref=e824]
+            - button "Expand all" [ref=e826] [cursor=pointer]
+            - strong [ref=e827]: object
+        - article [ref=e828]:
+          - generic [ref=e829]:
+            - button "CreateLLMRequest" [ref=e830] [cursor=pointer]:
+              - generic [ref=e832]: CreateLLMRequest
+              - img [ref=e834]
+            - button "Expand all" [ref=e836] [cursor=pointer]
+            - strong [ref=e837]: object
+        - article [ref=e838]:
+          - generic [ref=e839]:
+            - button "DeleteItemsRequest" [ref=e840] [cursor=pointer]:
+              - generic [ref=e842]: DeleteItemsRequest
+              - img [ref=e844]
+            - button "Expand all" [ref=e846] [cursor=pointer]
+            - strong [ref=e847]: object
+        - article [ref=e848]:
+          - generic [ref=e849]:
+            - button "EmbedDocumentsRequest" [ref=e850] [cursor=pointer]:
+              - generic [ref=e852]: EmbedDocumentsRequest
+              - img [ref=e854]
+            - button "Expand all" [ref=e856] [cursor=pointer]
+            - strong [ref=e857]: object
+        - article [ref=e858]:
+          - generic [ref=e859]:
+            - button "EmbedTextRequest" [ref=e860] [cursor=pointer]:
+              - generic [ref=e862]: EmbedTextRequest
+              - img [ref=e864]
+            - button "Expand all" [ref=e866] [cursor=pointer]
+            - strong [ref=e867]: object
+        - article [ref=e868]:
+          - generic [ref=e869]:
+            - button "GameVersionBatchRequest" [ref=e870] [cursor=pointer]:
+              - generic [ref=e872]: GameVersionBatchRequest
+              - img [ref=e874]
+            - button "Expand all" [ref=e876] [cursor=pointer]
+            - strong [ref=e877]: object
+        - article [ref=e878]:
+          - generic [ref=e879]:
+            - button "GameVersionDetectRequest" [ref=e880] [cursor=pointer]:
+              - generic [ref=e882]: GameVersionDetectRequest
+              - img [ref=e884]
+            - button "Expand all" [ref=e886] [cursor=pointer]
+            - strong [ref=e887]: object
+        - article [ref=e888]:
+          - generic [ref=e889]:
+            - button "HTTPValidationError" [ref=e890] [cursor=pointer]:
+              - generic [ref=e892]: HTTPValidationError
+              - img [ref=e894]
+            - button "Expand all" [ref=e896] [cursor=pointer]
+            - strong [ref=e897]: object
+        - article [ref=e898]:
+          - generic [ref=e899]:
+            - button "IndexItemsRequest" [ref=e900] [cursor=pointer]:
+              - generic [ref=e902]: IndexItemsRequest
+              - img [ref=e904]
+            - button "Expand all" [ref=e906] [cursor=pointer]
+            - strong [ref=e907]: object
+        - article [ref=e908]:
+          - generic [ref=e909]:
+            - button "IndexSampleRequest" [ref=e910] [cursor=pointer]:
+              - generic [ref=e912]: IndexSampleRequest
+              - img [ref=e914]
+            - button "Expand all" [ref=e916] [cursor=pointer]
+            - strong [ref=e917]: object
+        - article [ref=e918]:
+          - generic [ref=e919]:
+            - button "ItemDetailBatchRequest" [ref=e920] [cursor=pointer]:
+              - generic [ref=e922]: ItemDetailBatchRequest
+              - img [ref=e924]
+            - button "Expand all" [ref=e926] [cursor=pointer]
+            - strong [ref=e927]: object
+        - article [ref=e928]:
+          - generic [ref=e929]:
+            - button "ItemDetailScrapeRequest" [ref=e930] [cursor=pointer]:
+              - generic [ref=e932]: ItemDetailScrapeRequest
+              - img [ref=e934]
+            - button "Expand all" [ref=e936] [cursor=pointer]
+            - strong [ref=e937]: object
+        - article [ref=e938]:
+          - generic [ref=e939]:
+            - button "ListJobsRequest" [ref=e940] [cursor=pointer]:
+              - generic [ref=e942]: ListJobsRequest
+              - img [ref=e944]
+            - button "Expand all" [ref=e946] [cursor=pointer]
+            - strong [ref=e947]: object
+        - article [ref=e948]:
+          - generic [ref=e949]:
+            - button "ScrapeTriggerRequest" [ref=e950] [cursor=pointer]:
+              - generic [ref=e952]: ScrapeTriggerRequest
+              - img [ref=e954]
+            - button "Expand all" [ref=e956] [cursor=pointer]
+            - strong [ref=e957]: object
+        - article [ref=e958]:
+          - generic [ref=e959]:
+            - button "ScrapeTriggerResponse" [ref=e960] [cursor=pointer]:
+              - generic [ref=e962]: ScrapeTriggerResponse
+              - img [ref=e964]
+            - button "Expand all" [ref=e966] [cursor=pointer]
+            - strong [ref=e967]: object
+        - article [ref=e968]:
+          - generic [ref=e969]:
+            - button "ScraperFetchRequest" [ref=e970] [cursor=pointer]:
+              - generic [ref=e972]: ScraperFetchRequest
+              - img [ref=e974]
+            - button "Expand all" [ref=e976] [cursor=pointer]
+            - strong [ref=e977]: object
+        - article [ref=e978]:
+          - generic [ref=e979]:
+            - button "ValidationError" [ref=e980] [cursor=pointer]:
+              - generic [ref=e982]: ValidationError
+              - img [ref=e984]
+            - button "Expand all" [ref=e986] [cursor=pointer]
+            - strong [ref=e987]: object
+        - article [ref=e988]:
+          - generic [ref=e989]:
+            - button "VectorStoreAddRequest" [ref=e990] [cursor=pointer]:
+              - generic [ref=e992]: VectorStoreAddRequest
+              - img [ref=e994]
+            - button "Expand all" [ref=e996] [cursor=pointer]
+            - strong [ref=e997]: object
+        - article [ref=e998]:
+          - generic [ref=e999]:
+            - button "VectorStoreSearchRequest" [ref=e1000] [cursor=pointer]:
+              - generic [ref=e1002]: VectorStoreSearchRequest
+              - img [ref=e1004]
+            - button "Expand all" [ref=e1006] [cursor=pointer]
+            - strong [ref=e1007]: object
