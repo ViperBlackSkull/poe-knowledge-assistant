@@ -265,7 +265,7 @@
         "title": "Create poedb.tw scraper base module",
         "feature": "Knowledge Base Scraper",
         "dependencies": ["task-2"],
-        "status": "todo"
+        "status": "done"
       },
       {
         "id": "task-17",
