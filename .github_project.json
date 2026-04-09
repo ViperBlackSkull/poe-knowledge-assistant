@@ -441,7 +441,7 @@
         "title": "Create markdown renderer component",
         "feature": "Chat Interface",
         "dependencies": ["task-34"],
-        "status": "todo"
+        "status": "done"
       },
       {
         "id": "task-39",
