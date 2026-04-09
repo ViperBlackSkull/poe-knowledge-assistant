@@ -361,7 +361,7 @@
         "title": "Create config endpoint GET /api/config",
         "feature": "Configuration Panel",
         "dependencies": ["task-3"],
-        "status": "todo"
+        "status": "done"
       },
       {
         "id": "task-29",

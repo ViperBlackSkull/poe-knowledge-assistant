@@ -20,6 +20,8 @@ from src.models.config import (
     LLMConfigResponse,
     EmbeddingConfigResponse,
     ScraperConfig,
+    ConfigUpdateRequest,
+    ConfigUpdateResponse,
 )
 from src.services.chroma_db import check_chromadb_health
 from src.services.embeddings import (
@@ -119,6 +121,12 @@ from src.services.conversation_history import (
     get_conversation_store,
     reset_conversation_store,
     check_conversation_history_health,
+)
+from src.services.runtime_config import (
+    RuntimeConfigManager,
+    ConfigUpdateError,
+    get_runtime_config_manager,
+    check_runtime_config_health,
 )
 from langchain_core.documents import Document
 
@@ -364,7 +372,7 @@ def _get_llm_model_and_settings():
         return {
             "model": settings.llm.ollama_model,
             "temperature": settings.llm.ollama_temperature,
-            "max_tokens": None,
+            "max_tokens": 2000,
             "api_key_set": False,
             "base_url": settings.llm.ollama_base_url,
         }
@@ -372,7 +380,7 @@ def _get_llm_model_and_settings():
         return {
             "model": settings.llm.lmstudio_model,
             "temperature": settings.llm.lmstudio_temperature,
-            "max_tokens": None,
+            "max_tokens": 2000,
             "api_key_set": False,
             "base_url": settings.llm.lmstudio_base_url,
         }
@@ -549,6 +557,155 @@ async def get_config():
         raise HTTPException(
             status_code=500,
             detail=f"Failed to read configuration: {str(e)}",
+        )
+
+
+@api_router.put(
+    "/config",
+    tags=["Configuration"],
+    response_model=ConfigUpdateResponse,
+    responses={
+        200: {
+            "description": "Configuration updated successfully",
+            "content": {
+                "application/json": {
+                    "example": {
+                        "success": True,
+                        "message": "Configuration updated successfully. 3 field(s) changed.",
+                        "updated_fields": ["llm_provider", "llm_model", "llm_temperature"],
+                        "requires_restart": False,
+                        "config": {
+                            "app_name": "POE Knowledge Assistant",
+                            "app_version": "1.0.0",
+                            "environment": "development",
+                        },
+                    }
+                }
+            },
+        },
+        400: {
+            "description": "Validation error in configuration update",
+            "content": {
+                "application/json": {
+                    "example": {
+                        "detail": "Configuration update failed: No fields provided for update."
+                    }
+                }
+            },
+        },
+        422: {
+            "description": "Request body validation error (e.g. invalid enum value)",
+        },
+        500: {
+            "description": "Internal server error applying configuration",
+        },
+    },
+)
+async def update_config(request: ConfigUpdateRequest):
+    """
+    Update application configuration at runtime.
+
+    Accepts partial configuration updates. Only the fields included in the
+    request body will be modified; all other settings remain unchanged.
+
+    **Hot-reloadable settings** (take effect immediately):
+    - LLM provider, model, temperature, max_tokens
+    - API keys (OpenAI, Anthropic)
+    - Embedding provider, model
+    - RAG parameters (top_k, score_threshold, chunk_size, chunk_overlap)
+    - Ollama / LM Studio base URLs
+
+    **Validation rules**:
+    - API keys are validated for minimum length
+    - Provider-specific API key requirements are checked (in production)
+    - RAG chunk_overlap must be less than chunk_size
+    - Temperature must be between 0.0 and 2.0
+    - At least one field must be provided
+
+    **Security**:
+    - API keys are stored in environment variables and never returned in responses
+    - The response includes masked configuration (same as GET /api/config)
+    """
+    try:
+        config_manager = get_runtime_config_manager()
+        result = config_manager.update_config(request)
+
+        # Build updated config for response (re-use GET /config logic)
+        updated_settings = get_settings()
+        llm_settings = _get_llm_model_and_settings()
+        embedding_model = _get_embedding_model_name()
+
+        updated_config = AppConfig(
+            app_name=updated_settings.app_name,
+            app_version=updated_settings.app_version,
+            environment=updated_settings.environment.value,
+            server=ServerConfig(
+                host=updated_settings.server.host,
+                port=updated_settings.server.port,
+                debug=updated_settings.server.debug,
+                workers=updated_settings.server.workers,
+            ),
+            database=DatabaseConfig(
+                database_url=_mask_database_url(updated_settings.database.database_url),
+                pool_size=updated_settings.database.database_pool_size,
+                max_overflow=updated_settings.database.database_max_overflow,
+            ),
+            chromadb=ChromaDBConfig(
+                persist_directory=updated_settings.chromadb.persist_directory,
+                collection_name=updated_settings.chromadb.collection_name,
+            ),
+            rag=RAGConfig(
+                top_k_results=updated_settings.rag.top_k_results,
+                chunk_size=updated_settings.rag.chunk_size,
+                chunk_overlap=updated_settings.rag.chunk_overlap,
+                score_threshold=updated_settings.rag.score_threshold,
+            ),
+            cors=CORSConfig(
+                origins=updated_settings.cors.get_origins_list(),
+                allow_credentials=updated_settings.cors.allow_credentials,
+                allow_methods=[updated_settings.cors.allow_methods],
+                allow_headers=[updated_settings.cors.allow_headers],
+            ),
+            llm=LLMConfigResponse(
+                provider=updated_settings.llm.provider,
+                model=llm_settings["model"],
+                temperature=llm_settings["temperature"],
+                max_tokens=llm_settings.get("max_tokens", 2000),
+                api_key_set=llm_settings["api_key_set"],
+            ),
+            embedding=EmbeddingConfigResponse(
+                provider=updated_settings.embedding.provider,
+                model=embedding_model,
+                dimension=updated_settings.embedding.embedding_dimension,
+                batch_size=updated_settings.embedding.batch_size,
+            ),
+            scraper=ScraperConfig(
+                rate_limit_delay=updated_settings.scraper.rate_limit_delay,
+                max_retries=updated_settings.scraper.max_retries,
+                timeout=updated_settings.scraper.timeout,
+                concurrent_requests=updated_settings.scraper.concurrent_requests,
+            ),
+        )
+
+        return ConfigUpdateResponse(
+            success=result["success"],
+            message=result["message"],
+            updated_fields=result["updated_fields"],
+            requires_restart=result["requires_restart"],
+            config=updated_config,
+        )
+
+    except ConfigUpdateError as e:
+        logger.warning(f"Configuration update validation failed: {str(e)}")
+        raise HTTPException(
+            status_code=400,
+            detail=f"Configuration update failed: {str(e)}",
+        )
+    except Exception as e:
+        logger.error(f"Failed to update configuration: {str(e)}")
+        raise HTTPException(
+            status_code=500,
+            detail=f"Failed to update configuration: {str(e)}",
         )
 
 

@@ -528,10 +528,17 @@ class ConfigUpdateRequest(BaseModel):
         llm_model: New LLM model name
         llm_temperature: New temperature setting
         llm_max_tokens: New max tokens setting
+        openai_api_key: New OpenAI API key (stored securely)
+        anthropic_api_key: New Anthropic API key (stored securely)
         embedding_provider: New embedding provider
         embedding_model: New embedding model
+        openai_embedding_api_key: New OpenAI API key for embeddings
         rag_top_k: New top-k results setting
         rag_score_threshold: New score threshold
+        rag_chunk_size: New chunk size setting
+        rag_chunk_overlap: New chunk overlap setting
+        ollama_base_url: New Ollama base URL
+        lmstudio_base_url: New LM Studio base URL
     """
     llm_provider: Optional[LLMProvider] = Field(
         default=None,
@@ -553,6 +560,18 @@ class ConfigUpdateRequest(BaseModel):
         ge=1,
         le=32000
     )
+    openai_api_key: Optional[str] = Field(
+        default=None,
+        description="New OpenAI API key (stored securely, never returned in responses)",
+        min_length=1,
+        max_length=200,
+    )
+    anthropic_api_key: Optional[str] = Field(
+        default=None,
+        description="New Anthropic API key (stored securely, never returned in responses)",
+        min_length=1,
+        max_length=200,
+    )
     embedding_provider: Optional[EmbeddingProvider] = Field(
         default=None,
         description="New embedding provider"
@@ -560,6 +579,12 @@ class ConfigUpdateRequest(BaseModel):
     embedding_model: Optional[str] = Field(
         default=None,
         description="New embedding model"
+    )
+    openai_embedding_api_key: Optional[str] = Field(
+        default=None,
+        description="New OpenAI API key for embeddings (stored securely)",
+        min_length=1,
+        max_length=200,
     )
     rag_top_k: Optional[int] = Field(
         default=None,
@@ -573,6 +598,47 @@ class ConfigUpdateRequest(BaseModel):
         ge=0.0,
         le=1.0
     )
+    rag_chunk_size: Optional[int] = Field(
+        default=None,
+        description="New chunk size setting",
+        ge=100,
+        le=4000,
+    )
+    rag_chunk_overlap: Optional[int] = Field(
+        default=None,
+        description="New chunk overlap setting",
+        ge=0,
+        le=1000,
+    )
+    ollama_base_url: Optional[str] = Field(
+        default=None,
+        description="New Ollama base URL",
+    )
+    lmstudio_base_url: Optional[str] = Field(
+        default=None,
+        description="New LM Studio base URL",
+    )
+
+    @field_validator("llm_model", "embedding_model", "ollama_base_url", "lmstudio_base_url")
+    @classmethod
+    def validate_non_empty_string(cls, v):
+        """Validate that string fields are not empty when provided."""
+        if v is not None and not v.strip():
+            raise ValueError("Field cannot be empty or only whitespace")
+        return v
+
+    @field_validator("openai_api_key", "anthropic_api_key", "openai_embedding_api_key")
+    @classmethod
+    def validate_api_key(cls, v):
+        """Validate API key format when provided."""
+        if v is not None:
+            v = v.strip()
+            if not v:
+                raise ValueError("API key cannot be empty or only whitespace")
+            # Basic format validation - API keys should be reasonable strings
+            if len(v) < 8:
+                raise ValueError("API key appears too short to be valid")
+        return v
 
     model_config = {
         "json_schema_extra": {
@@ -581,8 +647,63 @@ class ConfigUpdateRequest(BaseModel):
                     "llm_provider": "anthropic",
                     "llm_model": "claude-3-sonnet-20240229",
                     "llm_temperature": 0.8,
+                    "anthropic_api_key": "sk-ant-...",
                     "embedding_provider": "openai",
-                    "rag_top_k": 5
+                    "openai_embedding_api_key": "sk-...",
+                    "rag_top_k": 5,
+                    "rag_chunk_size": 1000,
+                    "rag_chunk_overlap": 200,
+                }
+            ]
+        }
+    }
+
+
+class ConfigUpdateResponse(BaseModel):
+    """
+    Response model for configuration update.
+
+    Attributes:
+        success: Whether the update was successful
+        message: Human-readable status message
+        updated_fields: List of field names that were updated
+        requires_restart: Whether the changes require a restart to take effect
+        config: The updated configuration (with sensitive data masked)
+    """
+    success: bool = Field(
+        ...,
+        description="Whether the update was successful"
+    )
+    message: str = Field(
+        ...,
+        description="Human-readable status message"
+    )
+    updated_fields: List[str] = Field(
+        default_factory=list,
+        description="List of field names that were updated"
+    )
+    requires_restart: bool = Field(
+        default=False,
+        description="Whether changes require a restart to take effect"
+    )
+    config: Optional[AppConfig] = Field(
+        default=None,
+        description="Updated configuration (with sensitive data masked)"
+    )
+
+    model_config = {
+        "json_schema_extra": {
+            "examples": [
+                {
+                    "success": True,
+                    "message": "Configuration updated successfully",
+                    "updated_fields": ["llm_provider", "llm_model", "openai_api_key"],
+                    "requires_restart": False,
+                    "config": {
+                        "app_name": "POE Knowledge Assistant",
+                        "app_version": "1.0.0",
+                        "environment": "development",
+                    }
                 }
             ]
         }
@@ -602,4 +723,5 @@ __all__ = [
     "ScraperConfig",
     "AppConfig",
     "ConfigUpdateRequest",
+    "ConfigUpdateResponse",
 ]
