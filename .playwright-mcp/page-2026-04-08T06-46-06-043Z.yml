@@ -1,8 +1,0 @@
-- generic [ref=e3]:
-  - banner [ref=e4]:
-    - heading "POE Knowledge Assistant" [level=1] [ref=e5]
-    - paragraph [ref=e6]: Your intelligent assistant for Path of Exile
-  - main [ref=e7]:
-    - generic [ref=e8]:
-      - button "count is 2" [active] [ref=e12] [cursor=pointer]
-      - paragraph [ref=e10]: Frontend is successfully running with React + Vite + TypeScript

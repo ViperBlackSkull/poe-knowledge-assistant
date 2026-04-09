@@ -7,7 +7,7 @@ from typing import Dict, List, Optional
 from pydantic import BaseModel, Field, field_validator
 
 # Import enums from config module to avoid duplication
-from backend.src.config import (
+from src.config import (
     EmbeddingProvider as EmbeddingProviderEnum,
     LLMProvider as LLMProviderEnum,
 )

@@ -8,12 +8,12 @@ This module exports all models used throughout the application:
 - Scraper models: For data ingestion and scraping
 
 Usage:
-    from backend.src.models import ChatRequest, ChatResponse
-    from backend.src.models import HealthStatus, APIResponse
+    from src.models import ChatRequest, ChatResponse
+    from src.models import HealthStatus, APIResponse
 """
 
 # Chat models
-from backend.src.models.chat import (
+from src.models.chat import (
     ChatMessage,
     ChatRequest,
     ChatResponse,
@@ -24,7 +24,7 @@ from backend.src.models.chat import (
 )
 
 # Configuration models
-from backend.src.models.config import (
+from src.models.config import (
     AppConfig,
     ChromaDBConfig,
     ConfigUpdateRequest,
@@ -39,7 +39,7 @@ from backend.src.models.config import (
 )
 
 # Scraper models
-from backend.src.models.scraper import (
+from src.models.scraper import (
     Game,
     ItemType,
     PoECategory,
@@ -51,7 +51,7 @@ from backend.src.models.scraper import (
 )
 
 # System models
-from backend.src.models.system import (
+from src.models.system import (
     APIError,
     APIResponse,
     ErrorDetail,

@@ -80,13 +80,25 @@ class VectorStore:
                 f"(collection: {self.collection_name})"
             )
 
-            # Create LangChain Chroma vector store
-            # This wraps the existing ChromaDB collection
-            self._vectorstore = Chroma(
-                collection_name=self.collection_name,
-                embedding_function=self._embeddings,
-                persist_directory=self.persist_directory,
-            )
+            # Create LangChain Chroma vector store using the existing
+            # ChromaDB client from the manager to avoid "An instance of
+            # Chroma already exists for <path> with different settings"
+            # errors caused by creating a second PersistentClient.
+            if self._chroma_manager and self._chroma_manager.client is not None:
+                logger.info("Reusing existing ChromaDB client from ChromaDBManager")
+                self._vectorstore = Chroma(
+                    collection_name=self.collection_name,
+                    embedding_function=self._embeddings,
+                    client=self._chroma_manager.client,
+                )
+            else:
+                # Fallback: create with persist_directory if no manager client
+                logger.info("No existing ChromaDB client, creating with persist_directory")
+                self._vectorstore = Chroma(
+                    collection_name=self.collection_name,
+                    embedding_function=self._embeddings,
+                    persist_directory=self.persist_directory,
+                )
 
             logger.info("Vector store initialized successfully")
 

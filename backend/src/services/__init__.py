@@ -47,6 +47,21 @@ from src.services.streaming import (
     generate_streaming_response,
     check_streaming_health,
 )
+from src.services.scraper import (
+    ScraperError,
+    ScraperConnectionError,
+    ScraperHTTPError,
+    ScraperRateLimitError,
+    ScraperParsingError,
+    ScraperTimeoutError,
+    HTTPClient,
+    DEFAULT_BASE_URL,
+    BaseScraper,
+    ScrapeResult,
+    ScrapeBatchResult,
+    SimpleScraper,
+    check_scraper_health,
+)
 
 __all__ = [
     "ChromaDBManager",
@@ -81,4 +96,18 @@ __all__ = [
     "StreamingError",
     "generate_streaming_response",
     "check_streaming_health",
+    # Scraper
+    "ScraperError",
+    "ScraperConnectionError",
+    "ScraperHTTPError",
+    "ScraperRateLimitError",
+    "ScraperParsingError",
+    "ScraperTimeoutError",
+    "HTTPClient",
+    "DEFAULT_BASE_URL",
+    "BaseScraper",
+    "ScrapeResult",
+    "ScrapeBatchResult",
+    "SimpleScraper",
+    "check_scraper_health",
 ]

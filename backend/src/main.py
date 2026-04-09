@@ -39,6 +39,21 @@ from src.services.streaming import (
     generate_streaming_response,
     check_streaming_health,
 )
+from src.services.scraper import (
+    ScraperError,
+    ScraperConnectionError,
+    ScraperHTTPError,
+    ScraperRateLimitError,
+    ScraperParsingError,
+    ScraperTimeoutError,
+    HTTPClient,
+    DEFAULT_BASE_URL,
+    BaseScraper,
+    ScrapeResult,
+    ScrapeBatchResult,
+    SimpleScraper,
+    check_scraper_health,
+)
 from langchain_core.documents import Document
 
 logger = logging.getLogger(__name__)
@@ -653,6 +668,145 @@ async def test_llm_providers():
             "ollama": settings.llm.ollama_model,
             "lmstudio": settings.llm.lmstudio_model,
         },
+    }
+
+
+@api_router.get("/test/scraper/health", tags=["Scraper"])
+async def test_scraper_health():
+    """
+    Health check for the scraper HTTP client.
+
+    Verifies connectivity to poedb.tw.
+
+    Returns:
+        dict: Scraper health status including response time.
+    """
+    try:
+        health = await check_scraper_health()
+        return {
+            "success": True,
+            **health,
+        }
+    except Exception as e:
+        raise HTTPException(
+            status_code=500,
+            detail=f"Scraper health check failed: {str(e)}",
+        )
+
+
+class ScraperFetchRequest(BaseModel):
+    """Request model for scraper fetch test."""
+    path: str = Field(
+        default="/",
+        description="Relative URL path to fetch from poedb.tw",
+        max_length=500,
+    )
+
+
+@api_router.post("/test/scraper/fetch", tags=["Scraper"])
+async def test_scraper_fetch(request: ScraperFetchRequest):
+    """
+    Test endpoint for fetching a single page from poedb.tw.
+
+    This endpoint uses the synchronous SimpleScraper to fetch a page
+    and return basic information about the response.
+
+    Args:
+        request: Contains the path to fetch.
+
+    Returns:
+        dict: Contains fetch result including URL, success status, timing,
+              and basic page info (title, html length).
+    """
+    try:
+        scraper = SimpleScraper()
+        result = scraper.fetch(request.path)
+
+        response = {
+            "success": result.success,
+            "url": result.url,
+            "elapsed_s": round(result.elapsed_s, 3),
+        }
+
+        if result.success and result.soup:
+            title_tag = result.soup.find("title")
+            response["page_title"] = title_tag.get_text(strip=True) if title_tag else None
+            response["html_length"] = len(result.html) if result.html else 0
+            response["message"] = "Page fetched successfully"
+        else:
+            response["error"] = result.error
+            response["message"] = f"Failed to fetch page: {result.error}"
+
+        return response
+
+    except ScraperError as e:
+        raise HTTPException(status_code=502, detail=str(e))
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Unexpected error: {str(e)}")
+
+
+@api_router.post("/test/scraper/fetch-async", tags=["Scraper"])
+async def test_scraper_fetch_async(request: ScraperFetchRequest):
+    """
+    Test endpoint for async-fetching a single page from poedb.tw.
+
+    Uses the async HTTPClient to fetch a page and return structured
+    information including parsed HTML metadata.
+
+    Args:
+        request: Contains the path to fetch.
+
+    Returns:
+        dict: Contains fetch result with timing, page title, HTML length,
+              and HTTP client configuration details.
+    """
+    try:
+        async with HTTPClient() as client:
+            html = await client.get(request.path)
+            from bs4 import BeautifulSoup
+            soup = BeautifulSoup(html, "lxml")
+            title_tag = soup.find("title")
+
+            return {
+                "success": True,
+                "url": f"{DEFAULT_BASE_URL}{request.path}",
+                "page_title": title_tag.get_text(strip=True) if title_tag else None,
+                "html_length": len(html),
+                "message": "Page fetched successfully with async client",
+                "client_config": {
+                    "base_url": client.base_url,
+                    "timeout": client.timeout,
+                    "max_retries": client.max_retries,
+                    "rate_limit_delay": client.rate_limit_delay,
+                    "user_agent": client.user_agent,
+                },
+            }
+    except ScraperError as e:
+        raise HTTPException(status_code=502, detail=str(e))
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Unexpected error: {str(e)}")
+
+
+@api_router.get("/test/scraper/config", tags=["Scraper"])
+async def test_scraper_config():
+    """
+    Get the scraper configuration from application settings.
+
+    Returns:
+        dict: Current scraper configuration values.
+    """
+    settings = get_settings()
+    return {
+        "success": True,
+        "scraper_config": {
+            "base_url": DEFAULT_BASE_URL,
+            "rate_limit_delay": settings.scraper.rate_limit_delay,
+            "max_retries": settings.scraper.max_retries,
+            "timeout": settings.scraper.timeout,
+            "user_agent": settings.scraper.user_agent,
+            "concurrent_requests": settings.scraper.concurrent_requests,
+        },
+        "message": "Scraper configuration retrieved successfully",
     }
 
 
