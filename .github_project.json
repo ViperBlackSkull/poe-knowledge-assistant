@@ -401,7 +401,7 @@
         "title": "Create API client with axios and streaming support",
         "feature": "Frontend Foundation",
         "dependencies": ["task-32"],
-        "status": "todo"
+        "status": "done"
       },
       {
         "id": "task-34",
