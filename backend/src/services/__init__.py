@@ -103,6 +103,14 @@ from src.services.scrape_timestamps import (
     update_timestamp,
     check_timestamp_storage_health,
 )
+from src.services.conversation_history import (
+    ConversationStore,
+    ConversationHistoryError,
+    ConversationNotFoundError,
+    get_conversation_store,
+    reset_conversation_store,
+    check_conversation_history_health,
+)
 
 __all__ = [
     "ChromaDBManager",
@@ -190,4 +198,11 @@ __all__ = [
     "get_scrape_timestamp",
     "update_timestamp",
     "check_timestamp_storage_health",
+    # Conversation History
+    "ConversationStore",
+    "ConversationHistoryError",
+    "ConversationNotFoundError",
+    "get_conversation_store",
+    "reset_conversation_store",
+    "check_conversation_history_health",
 ]

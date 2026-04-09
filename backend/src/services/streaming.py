@@ -20,6 +20,10 @@ from src.services.llm_provider import (
     get_llm,
 )
 from src.services.rag_chain import RAGChain, RAGChainError, Citation, get_rag_chain
+from src.services.conversation_history import (
+    get_conversation_store,
+    MessageRole,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -140,6 +144,26 @@ def generate_streaming_response(
         conversation_id = f"conv-{uuid.uuid4().hex[:12]}"
 
     settings = get_settings()
+    conv_store = get_conversation_store()
+
+    # Store the user's message in conversation history
+    conv_store.add_message(
+        conversation_id=conversation_id,
+        role=MessageRole.USER,
+        content=query,
+    )
+
+    # If no explicit conversation_history was passed, retrieve from the store
+    if conversation_history is None:
+        conversation_history = conv_store.get_history_messages(
+            conversation_id=conversation_id,
+            max_messages=20,
+        )
+        # Exclude the message we just added (it will be added by _build_messages as
+        # the current query). The store now has the user message as the last entry,
+        # so we take all but the last.
+        if conversation_history and conversation_history[-1]["content"] == query:
+            conversation_history = conversation_history[:-1]
 
     try:
         # Step 1: Retrieve context using RAG chain
@@ -231,7 +255,19 @@ def generate_streaming_response(
             })
             return
 
-        # Step 5: Send completion event
+        # Step 5: Store the assistant response in conversation history
+        if full_response:
+            conv_store.add_message(
+                conversation_id=conversation_id,
+                role=MessageRole.ASSISTANT,
+                content=full_response,
+                metadata={
+                    "sources_count": len(sources_data),
+                    "chunk_count": chunk_count,
+                },
+            )
+
+        # Step 6: Send completion event
         yield _format_sse_event("done", {
             "conversation_id": conversation_id,
             "game": game,

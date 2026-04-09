@@ -101,6 +101,14 @@ from src.services.scrape_timestamps import (
     update_timestamp,
     check_timestamp_storage_health,
 )
+from src.services.conversation_history import (
+    ConversationStore,
+    ConversationHistoryError,
+    ConversationNotFoundError,
+    get_conversation_store,
+    reset_conversation_store,
+    check_conversation_history_health,
+)
 from langchain_core.documents import Document
 
 logger = logging.getLogger(__name__)
@@ -3229,6 +3237,167 @@ async def chat_stream_health():
         raise HTTPException(
             status_code=500,
             detail=f"Streaming service health check failed: {str(e)}",
+        )
+
+
+# ---------------------------------------------------------------------------
+# Conversation History Endpoints
+# ---------------------------------------------------------------------------
+
+
+@api_router.get(
+    "/chat/history/stats",
+    tags=["Chat History"],
+    summary="Get conversation store statistics",
+)
+async def get_conversation_stats():
+    """
+    Get statistics about the conversation history store.
+
+    Returns:
+        dict: Store statistics including total conversations, messages, and
+              configuration limits
+    """
+    try:
+        store = get_conversation_store()
+        stats = store.get_stats()
+        return {
+            "success": True,
+            "data": stats,
+            "message": "Conversation store statistics retrieved",
+        }
+    except Exception as e:
+        raise HTTPException(
+            status_code=500,
+            detail=f"Failed to get conversation stats: {str(e)}",
+        )
+
+
+@api_router.get(
+    "/chat/history",
+    tags=["Chat History"],
+    summary="List all conversations",
+)
+async def list_conversations():
+    """
+    List all conversations stored in memory.
+
+    Returns a summary of each conversation including the conversation ID,
+    message count, timestamps, and metadata.
+
+    Returns:
+        dict: List of conversation summaries
+    """
+    try:
+        store = get_conversation_store()
+        conversations = store.list_conversations()
+        return {
+            "success": True,
+            "data": conversations,
+            "total": len(conversations),
+            "message": "Conversations retrieved successfully",
+        }
+    except Exception as e:
+        raise HTTPException(
+            status_code=500,
+            detail=f"Failed to list conversations: {str(e)}",
+        )
+
+
+@api_router.get(
+    "/chat/history/{conversation_id}",
+    tags=["Chat History"],
+    summary="Get conversation history by ID",
+)
+async def get_conversation_history(conversation_id: str):
+    """
+    Retrieve the full conversation history for a given conversation ID.
+
+    Returns all messages in the conversation including their roles, content,
+    and timestamps.
+
+    Path Parameters:
+        conversation_id: The unique conversation identifier
+
+    Returns:
+        dict: Conversation history with messages and metadata
+
+    Raises:
+        HTTPException 404: If the conversation is not found
+    """
+    try:
+        store = get_conversation_store()
+        conv = store.get_conversation(conversation_id)
+        return {
+            "success": True,
+            "data": {
+                "conversation_id": conv.conversation_id,
+                "messages": [
+                    {
+                        "role": msg.role.value,
+                        "content": msg.content,
+                        "timestamp": msg.timestamp.isoformat(),
+                        "metadata": msg.metadata,
+                    }
+                    for msg in conv.messages
+                ],
+                "created_at": conv.created_at.isoformat(),
+                "updated_at": conv.updated_at.isoformat(),
+                "game_version": conv.game_version.value,
+                "build_context": conv.build_context,
+                "message_count": len(conv.messages),
+            },
+            "message": "Conversation history retrieved successfully",
+        }
+    except ConversationNotFoundError:
+        raise HTTPException(
+            status_code=404,
+            detail=f"Conversation '{conversation_id}' not found",
+        )
+    except Exception as e:
+        raise HTTPException(
+            status_code=500,
+            detail=f"Failed to get conversation history: {str(e)}",
+        )
+
+
+@api_router.delete(
+    "/chat/history/{conversation_id}",
+    tags=["Chat History"],
+    summary="Delete a conversation by ID",
+)
+async def delete_conversation(conversation_id: str):
+    """
+    Delete a conversation and all its messages from the store.
+
+    Path Parameters:
+        conversation_id: The unique conversation identifier
+
+    Returns:
+        dict: Confirmation of deletion
+
+    Raises:
+        HTTPException 404: If the conversation is not found
+    """
+    try:
+        store = get_conversation_store()
+        deleted = store.delete_conversation(conversation_id)
+        if deleted:
+            return {
+                "success": True,
+                "message": f"Conversation '{conversation_id}' deleted successfully",
+            }
+        else:
+            raise HTTPException(
+                status_code=404,
+                detail=f"Conversation '{conversation_id}' not found",
+            )
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(
+            status_code=500,
+            detail=f"Failed to delete conversation: {str(e)}",
         )
 
 
