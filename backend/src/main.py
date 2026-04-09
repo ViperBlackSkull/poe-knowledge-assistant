@@ -1,9 +1,13 @@
 """
 FastAPI application entry point for POE Knowledge Assistant.
 """
+import json
+import logging
 from datetime import datetime, timezone
+from typing import List, Optional
 from fastapi import FastAPI, APIRouter, Response, HTTPException
-from pydantic import BaseModel
+from fastapi.responses import StreamingResponse
+from pydantic import BaseModel, Field, field_validator
 from fastapi.middleware.cors import CORSMiddleware
 from src.config import get_settings
 from src.services.chroma_db import check_chromadb_health
@@ -30,7 +34,14 @@ from src.services.llm_provider import (
     create_llm,
     check_llm_health,
 )
+from src.services.streaming import (
+    StreamingError,
+    generate_streaming_response,
+    check_streaming_health,
+)
 from langchain_core.documents import Document
+
+logger = logging.getLogger(__name__)
 
 # Get settings instance
 settings = get_settings()
@@ -85,6 +96,76 @@ class LLMGenerateRequest(BaseModel):
     model_name: str | None = None
     prompt: str = "Hello! What is Path of Exile?"
     system_prompt: str | None = None
+
+
+class ChatStreamRequest(BaseModel):
+    """
+    Request model for streaming chat endpoint.
+
+    Attributes:
+        message: The user's message / question
+        game_version: Game version to query ('poe1' or 'poe2')
+        build_context: Optional build context for personalized responses
+        conversation_id: Optional conversation ID for context continuity
+        conversation_history: Optional list of previous messages with role and content
+    """
+    message: str = Field(
+        ...,
+        description="User's message content",
+        min_length=1,
+        max_length=10000,
+    )
+    game_version: str = Field(
+        default="poe2",
+        description="Game version to query ('poe1' or 'poe2')",
+    )
+    build_context: Optional[str] = Field(
+        default=None,
+        description="Optional build context (e.g., class, ascendancy)",
+        max_length=500,
+    )
+    conversation_id: Optional[str] = Field(
+        default=None,
+        description="Optional conversation ID for maintaining context",
+        max_length=100,
+    )
+    conversation_history: Optional[List[dict]] = Field(
+        default=None,
+        description="Optional list of previous messages with 'role' and 'content' keys",
+    )
+
+    @field_validator("message")
+    @classmethod
+    def validate_message(cls, v):
+        """Ensure message is not just whitespace."""
+        if not v or not v.strip():
+            raise ValueError("Message cannot be empty or only whitespace")
+        return v.strip()
+
+    @field_validator("game_version")
+    @classmethod
+    def validate_game_version(cls, v):
+        """Validate game version."""
+        if v.lower() not in ["poe1", "poe2"]:
+            raise ValueError("Game version must be 'poe1' or 'poe2'")
+        return v.lower()
+
+    model_config = {
+        "json_schema_extra": {
+            "examples": [
+                {
+                    "message": "What are the best skills for a Witch in PoE2?",
+                    "game_version": "poe2",
+                    "build_context": "Witch - Blood Mage",
+                    "conversation_id": "conv-abc123",
+                    "conversation_history": [
+                        {"role": "user", "content": "Hello!"},
+                        {"role": "assistant", "content": "Hi! How can I help you?"}
+                    ],
+                }
+            ]
+        }
+    }
 
 
 # Create FastAPI app instance
@@ -573,6 +654,98 @@ async def test_llm_providers():
             "lmstudio": settings.llm.lmstudio_model,
         },
     }
+
+
+@api_router.post(
+    "/chat/stream",
+    tags=["Chat"],
+    summary="Stream a chat response via Server-Sent Events",
+    response_class=StreamingResponse,
+)
+async def chat_stream(request: ChatStreamRequest):
+    """
+    Stream a chat response using Server-Sent Events (SSE).
+
+    This endpoint retrieves relevant context via the RAG chain, then streams
+    the LLM-generated response token by token in SSE format.
+
+    SSE Event Types:
+        - **sources**: Sent first, contains retrieved source citations
+        - **token**: Sent for each chunk/token of the LLM response
+        - **done**: Sent when the full response is complete
+        - **error**: Sent if an error occurs at any stage
+
+    Each event follows the format:
+        ```
+        event: <event_type>
+        data: <json_payload>
+        ```
+
+    Example SSE stream:
+        ```
+        event: sources
+        data: {"sources": [...], "conversation_id": "conv-abc", "document_count": 3}
+
+        event: token
+        data: {"token": "Based", "chunk_index": 1}
+
+        event: token
+        data: {"token": " on", "chunk_index": 2}
+
+        event: done
+        data: {"conversation_id": "conv-abc", "game": "poe2", "total_chunks": 42, "timestamp": "..."}
+        ```
+
+    Args:
+        request: ChatStreamRequest with message, game_version, and optional context
+
+    Returns:
+        StreamingResponse with content-type text/event-stream
+    """
+    logger.info(
+        f"Stream chat request: message='{request.message[:50]}...', "
+        f"game={request.game_version}, conversation_id={request.conversation_id}"
+    )
+
+    return StreamingResponse(
+        generate_streaming_response(
+            query=request.message,
+            game=request.game_version,
+            build_context=request.build_context,
+            conversation_id=request.conversation_id,
+            conversation_history=request.conversation_history,
+        ),
+        media_type="text/event-stream",
+        headers={
+            "Cache-Control": "no-cache",
+            "Connection": "keep-alive",
+            "X-Accel-Buffering": "no",
+        },
+    )
+
+
+@api_router.get("/chat/stream/health", tags=["Chat"])
+async def chat_stream_health():
+    """
+    Health check for the streaming chat service.
+
+    Checks that all dependencies (RAG chain, LLM provider) are ready
+    for streaming responses.
+
+    Returns:
+        dict: Streaming service health status
+    """
+    try:
+        health = check_streaming_health()
+        return {
+            "success": True,
+            **health,
+        }
+    except Exception as e:
+        raise HTTPException(
+            status_code=500,
+            detail=f"Streaming service health check failed: {str(e)}",
+        )
 
 
 # Include base router with /api prefix

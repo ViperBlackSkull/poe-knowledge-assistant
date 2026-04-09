@@ -42,6 +42,11 @@ from src.services.llm_provider import (
     get_llm,
     check_llm_health,
 )
+from src.services.streaming import (
+    StreamingError,
+    generate_streaming_response,
+    check_streaming_health,
+)
 
 __all__ = [
     "ChromaDBManager",
@@ -73,4 +78,7 @@ __all__ = [
     "create_llm",
     "get_llm",
     "check_llm_health",
+    "StreamingError",
+    "generate_streaming_response",
+    "check_streaming_health",
 ]
