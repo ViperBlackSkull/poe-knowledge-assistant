@@ -1,0 +1,409 @@
+- generic [ref=e3]:
+  - banner [ref=e4]:
+    - generic [ref=e6]:
+      - generic [ref=e8]:
+        - generic [ref=e9]: P
+        - generic [ref=e10]:
+          - heading "PoE Knowledge Assistant" [level=1] [ref=e11]
+          - paragraph [ref=e12]: Your intelligent assistant for Path of Exile
+      - navigation "Main navigation" [ref=e13]:
+        - link "Chat" [ref=e14] [cursor=pointer]:
+          - /url: /
+        - link "Knowledge Base" [ref=e15] [cursor=pointer]:
+          - /url: /knowledge
+        - link "Admin" [ref=e16] [cursor=pointer]:
+          - /url: /admin
+  - main [ref=e18]:
+    - generic [ref=e19]:
+      - generic [ref=e20]:
+        - heading "PoE Item Card Component" [level=1] [ref=e21]
+        - paragraph [ref=e22]: A reusable component displaying Path of Exile items with rarity-themed styling, influence indicators, and stat displays.
+      - generic [ref=e23]:
+        - generic [ref=e24]: "Variant:"
+        - generic [ref=e25]:
+          - button "compact" [ref=e26] [cursor=pointer]
+          - button "default" [ref=e27] [cursor=pointer]
+          - button "detailed" [active] [ref=e28] [cursor=pointer]
+      - generic [ref=e29]:
+        - heading "All Rarities" [level=2] [ref=e30]
+        - paragraph [ref=e31]: Click a card to select it. Each rarity has a distinct color scheme matching the Path of Exile game style.
+        - generic [ref=e32]:
+          - 'button "Iron Sword One-Handed Sword Normal ilvl 5 A simple iron sword, serviceable but unremarkable. Physical Damage 7-15 Attacks per Second 1.45 Critical Strike Chance 5.00% Range 11 Requires Level: 2, Str: 8, Dex: 8 one_hand sword attack melee" [ref=e413] [cursor=pointer]':
+            - generic [ref=e34]:
+              - generic [ref=e35]:
+                - img [ref=e37]
+                - generic [ref=e39]:
+                  - heading "Iron Sword" [level=3] [ref=e40]
+                  - paragraph [ref=e41]: One-Handed Sword
+                  - generic [ref=e43]: Normal
+                - generic [ref=e45]: ilvl 5
+              - paragraph [ref=e47]: A simple iron sword, serviceable but unremarkable.
+              - generic [ref=e414]:
+                - generic [ref=e415]:
+                  - generic [ref=e416]: Physical Damage
+                  - generic [ref=e417]: 7-15
+                - generic [ref=e418]:
+                  - generic [ref=e419]: Attacks per Second
+                  - generic [ref=e420]: "1.45"
+                - generic [ref=e421]:
+                  - generic [ref=e422]: Critical Strike Chance
+                  - generic [ref=e423]: 5.00%
+                - generic [ref=e424]:
+                  - generic [ref=e425]: Range
+                  - generic [ref=e426]: "11"
+              - generic [ref=e429]: "Requires Level: 2, Str: 8, Dex: 8"
+              - generic [ref=e430]:
+                - generic [ref=e431]: one_hand
+                - generic [ref=e432]: sword
+                - generic [ref=e433]: attack
+                - generic [ref=e434]: melee
+          - 'button "Serpent Fang Viper Wand Magic Q: 12/20 ilvl 32 A wand imbued with venomous energy. Physical Damage 14-27 Chaos Damage 12-24 Attacks per Second 1.30 Critical Strike Chance 7.50% +20% to Chaos Damage Adds 12 to 24 Chaos Damage to Spells +15% to Cast Speed Requires Level: 28, Int: 62 one_hand wand spell chaos" [ref=e435] [cursor=pointer]':
+            - generic [ref=e49]:
+              - generic [ref=e50]:
+                - img [ref=e52]
+                - generic [ref=e54]:
+                  - heading "Serpent Fang" [level=3] [ref=e55]
+                  - paragraph [ref=e56]: Viper Wand
+                  - generic [ref=e57]:
+                    - generic [ref=e58]: Magic
+                    - generic [ref=e59]: "Q: 12/20"
+                - generic [ref=e61]: ilvl 32
+              - paragraph [ref=e63]: A wand imbued with venomous energy.
+              - generic [ref=e436]:
+                - generic [ref=e437]:
+                  - generic [ref=e438]: Physical Damage
+                  - generic [ref=e439]: 14-27
+                - generic [ref=e440]:
+                  - generic [ref=e441]: Chaos Damage
+                  - generic [ref=e442]: 12-24
+                - generic [ref=e443]:
+                  - generic [ref=e444]: Attacks per Second
+                  - generic [ref=e445]: "1.30"
+                - generic [ref=e446]:
+                  - generic [ref=e447]: Critical Strike Chance
+                  - generic [ref=e448]: 7.50%
+              - list [ref=e65]:
+                - listitem [ref=e66]:
+                  - generic [ref=e67]: +20% to Chaos Damage
+              - list [ref=e69]:
+                - listitem [ref=e70]:
+                  - generic [ref=e71]: Adds 12 to 24 Chaos Damage to Spells
+                - listitem [ref=e72]:
+                  - generic [ref=e73]: +15% to Cast Speed
+              - generic [ref=e453]: "Requires Level: 28, Int: 62"
+              - generic [ref=e454]:
+                - generic [ref=e455]: one_hand
+                - generic [ref=e456]: wand
+                - generic [ref=e457]: spell
+                - generic [ref=e458]: chaos
+          - 'button "Doom Cast Sorcerer Gloves Rare ilvl 52 Crafted with forbidden knowledge. Evasion Rating 24 Energy Shield 76 +8 to maximum Energy Shield +68 to maximum Energy Shield +25% to Cold Resistance +18% to Lightning Resistance +12 to Intelligence +5% to Cast Speed Requires Level: 47, Int: 72 gloves intelligence energy_shield armour" [ref=e459] [cursor=pointer]':
+            - generic [ref=e75]:
+              - generic [ref=e76]:
+                - img [ref=e78]
+                - generic [ref=e80]:
+                  - heading "Doom Cast" [level=3] [ref=e81]
+                  - paragraph [ref=e82]: Sorcerer Gloves
+                  - generic [ref=e84]: Rare
+                - generic [ref=e86]: ilvl 52
+              - paragraph [ref=e88]: Crafted with forbidden knowledge.
+              - generic [ref=e460]:
+                - generic [ref=e461]:
+                  - generic [ref=e462]: Evasion Rating
+                  - generic [ref=e463]: "24"
+                - generic [ref=e464]:
+                  - generic [ref=e465]: Energy Shield
+                  - generic [ref=e466]: "76"
+              - list [ref=e90]:
+                - listitem [ref=e91]:
+                  - generic [ref=e92]: +8 to maximum Energy Shield
+              - list [ref=e94]:
+                - listitem [ref=e95]:
+                  - generic [ref=e96]: +68 to maximum Energy Shield
+                - listitem [ref=e97]:
+                  - generic [ref=e98]: +25% to Cold Resistance
+                - listitem [ref=e99]:
+                  - generic [ref=e100]: +18% to Lightning Resistance
+                - listitem [ref=e101]:
+                  - generic [ref=e102]: +12 to Intelligence
+                - listitem [ref=e103]:
+                  - generic [ref=e104]: +5% to Cast Speed
+              - generic [ref=e471]: "Requires Level: 47, Int: 72"
+              - generic [ref=e472]:
+                - generic [ref=e473]: gloves
+                - generic [ref=e474]: intelligence
+                - generic [ref=e475]: energy_shield
+                - generic [ref=e476]: armour
+          - 'button "Heart of the Veil Vaald Caftan Unique shaper ilvl 72 Corrupted The boundary between worlds grows thin. Evasion Rating 58 Energy Shield 245 +15% to all Elemental Resistances +120 to maximum Energy Shield +40% to Chaos Resistance Gain 10% of Physical Damage as Extra Chaos Damage +25 to Intelligence Cannot be Stunned Requires Level: 62, Dex: 60, Int: 120 “She wore the darkness like a bride wears white.” body_armour intelligence unique energy_shield" [ref=e477] [cursor=pointer]':
+            - generic [ref=e106]:
+              - generic [ref=e107]:
+                - img [ref=e109]
+                - generic [ref=e111]:
+                  - heading "Heart of the Veil" [level=3] [ref=e112]
+                  - paragraph [ref=e113]: Vaald Caftan
+                  - generic [ref=e114]:
+                    - generic [ref=e115]: Unique
+                    - generic [ref=e116]: shaper
+                - generic [ref=e118]: ilvl 72
+              - generic [ref=e120]: Corrupted
+              - paragraph [ref=e123]: The boundary between worlds grows thin.
+              - generic [ref=e478]:
+                - generic [ref=e479]:
+                  - generic [ref=e480]: Evasion Rating
+                  - generic [ref=e481]: "58"
+                - generic [ref=e482]:
+                  - generic [ref=e483]: Energy Shield
+                  - generic [ref=e484]: "245"
+              - list [ref=e125]:
+                - listitem [ref=e126]:
+                  - generic [ref=e127]: +15% to all Elemental Resistances
+              - list [ref=e129]:
+                - listitem [ref=e130]:
+                  - generic [ref=e131]: +120 to maximum Energy Shield
+                - listitem [ref=e132]:
+                  - generic [ref=e133]: +40% to Chaos Resistance
+                - listitem [ref=e134]:
+                  - generic [ref=e135]: Gain 10% of Physical Damage as Extra Chaos Damage
+                - listitem [ref=e136]:
+                  - generic [ref=e137]: +25 to Intelligence
+                - listitem [ref=e138]:
+                  - generic [ref=e139]: Cannot be Stunned
+              - generic [ref=e489]: "Requires Level: 62, Dex: 60, Int: 120"
+              - paragraph [ref=e491]: “She wore the darkness like a bride wears white.”
+              - generic [ref=e492]:
+                - generic [ref=e493]: body_armour
+                - generic [ref=e494]: intelligence
+                - generic [ref=e495]: unique
+                - generic [ref=e496]: energy_shield
+          - 'button "Arc Active Skill Gem Gem Q: 20/23 Lv. 20 A chaining lightning spell that deals damage to enemies in a sequence. Deals 18 to 340 Lightning Damage Chains +3 Times 10% chance to Shock enemies +10 to radius Requires Level: 28, Int: 67 spell lightning chaining area" [ref=e497] [cursor=pointer]':
+            - generic [ref=e141]:
+              - generic [ref=e142]:
+                - img [ref=e144]
+                - generic [ref=e146]:
+                  - heading "Arc" [level=3] [ref=e147]
+                  - paragraph [ref=e148]: Active Skill Gem
+                  - generic [ref=e149]:
+                    - generic [ref=e150]: Gem
+                    - generic [ref=e151]: "Q: 20/23"
+                - generic [ref=e153]: Lv. 20
+              - paragraph [ref=e155]: A chaining lightning spell that deals damage to enemies in a sequence.
+              - list [ref=e157]:
+                - listitem [ref=e158]:
+                  - generic [ref=e159]: Deals 18 to 340 Lightning Damage
+                - listitem [ref=e160]:
+                  - generic [ref=e161]: Chains +3 Times
+                - listitem [ref=e162]:
+                  - generic [ref=e163]: 10% chance to Shock enemies
+                - listitem [ref=e164]:
+                  - generic [ref=e165]: +10 to radius
+              - generic [ref=e501]: "Requires Level: 28, Int: 67"
+              - generic [ref=e502]:
+                - generic [ref=e503]: spell
+                - generic [ref=e504]: lightning
+                - generic [ref=e505]: chaining
+                - generic [ref=e506]: area
+          - button "Chaos Orb Currency Currency 7/10 Reforges a rare item with new random modifiers. currency rare reforge" [ref=e507] [cursor=pointer]:
+            - generic [ref=e167]:
+              - generic [ref=e168]:
+                - img [ref=e170]
+                - generic [ref=e172]:
+                  - heading "Chaos Orb" [level=3] [ref=e173]
+                  - paragraph [ref=e174]: Currency
+                  - generic [ref=e176]: Currency
+                - generic [ref=e178]:
+                  - text: "7"
+                  - generic [ref=e179]: /10
+              - paragraph [ref=e181]: Reforges a rare item with new random modifiers.
+              - generic [ref=e508]:
+                - generic [ref=e509]: currency
+                - generic [ref=e510]: rare
+                - generic [ref=e511]: reforge
+          - button "The Porcupine Divination Card Divination Card 3/8 6-Link Short Bow “Bristled with a thousand needles, it dares you to grasp it.” divination_card 6-link weapon" [ref=e512] [cursor=pointer]:
+            - generic [ref=e183]:
+              - generic [ref=e184]:
+                - img [ref=e186]
+                - generic [ref=e188]:
+                  - heading "The Porcupine" [level=3] [ref=e189]
+                  - paragraph [ref=e190]: Divination Card
+                  - generic [ref=e192]: Divination Card
+                - generic [ref=e194]:
+                  - text: "3"
+                  - generic [ref=e195]: /8
+              - paragraph [ref=e197]: 6-Link Short Bow
+              - paragraph [ref=e514]: “Bristled with a thousand needles, it dares you to grasp it.”
+              - generic [ref=e515]:
+                - generic [ref=e516]: divination_card
+                - generic [ref=e517]: 6-link
+                - generic [ref=e518]: weapon
+          - 'button "Eternal Opulence Gold Amulet Relic ilvl 80 Mirrored Synthesized A relic of untold wealth and power. +15% to Quantity of Items found in this Area +30 to all Attributes +50 to maximum Life +25% to all Elemental Resistances Items in this area are Mirrored Requires Level: 40 “Gold tarnishes, but power endures.” amulet relic unique all_attributes" [ref=e519] [cursor=pointer]':
+            - generic [ref=e199]:
+              - generic [ref=e200]:
+                - img [ref=e202]
+                - generic [ref=e204]:
+                  - heading "Eternal Opulence" [level=3] [ref=e205]
+                  - paragraph [ref=e206]: Gold Amulet
+                  - generic [ref=e208]: Relic
+                - generic [ref=e210]: ilvl 80
+              - generic [ref=e211]:
+                - generic [ref=e212]: Mirrored
+                - generic [ref=e214]: Synthesized
+              - paragraph [ref=e217]: A relic of untold wealth and power.
+              - list [ref=e219]:
+                - listitem [ref=e220]:
+                  - generic [ref=e221]: +15% to Quantity of Items found in this Area
+              - list [ref=e223]:
+                - listitem [ref=e224]:
+                  - generic [ref=e225]: +30 to all Attributes
+                - listitem [ref=e226]:
+                  - generic [ref=e227]: +50 to maximum Life
+                - listitem [ref=e228]:
+                  - generic [ref=e229]: +25% to all Elemental Resistances
+                - listitem [ref=e230]:
+                  - generic [ref=e231]: Items in this area are Mirrored
+              - generic [ref=e524]: "Requires Level: 40"
+              - paragraph [ref=e526]: “Gold tarnishes, but power endures.”
+              - generic [ref=e527]:
+                - generic [ref=e528]: amulet
+                - generic [ref=e529]: relic
+                - generic [ref=e530]: unique
+                - generic [ref=e531]: all_attributes
+          - button "The Cursed Choir Prophecy Prophecy A choir of the damned shall sing their final note. “Only the silenced can hear the truth.” prophecy boss challenge" [ref=e532] [cursor=pointer]:
+            - generic [ref=e233]:
+              - generic [ref=e234]:
+                - img [ref=e236]
+                - generic [ref=e238]:
+                  - heading "The Cursed Choir" [level=3] [ref=e239]
+                  - paragraph [ref=e240]: Prophecy
+                  - generic [ref=e242]: Prophecy
+              - paragraph [ref=e244]: A choir of the damned shall sing their final note.
+              - paragraph [ref=e534]: “Only the silenced can hear the truth.”
+              - generic [ref=e535]:
+                - generic [ref=e536]: prophecy
+                - generic [ref=e537]: boss
+                - generic [ref=e538]: challenge
+          - 'button "Kalandra''s Touch Mirrored Ring Unique elder ilvl 60 Corrupted Replica This ring mirrors the properties of your other ring. Has the same implicit Modifiers as your other Ring Has the same explicit Modifiers as your other Ring Requires Level: 55 “In her reflection, all things find their equal.” ring unique mirrored replica" [ref=e539] [cursor=pointer]':
+            - generic [ref=e246]:
+              - generic [ref=e247]:
+                - img [ref=e249]
+                - generic [ref=e251]:
+                  - heading "Kalandra's Touch" [level=3] [ref=e252]
+                  - paragraph [ref=e253]: Mirrored Ring
+                  - generic [ref=e254]:
+                    - generic [ref=e255]: Unique
+                    - generic [ref=e256]: elder
+                - generic [ref=e258]: ilvl 60
+              - generic [ref=e259]:
+                - generic [ref=e260]: Corrupted
+                - generic [ref=e262]: Replica
+              - paragraph [ref=e265]: This ring mirrors the properties of your other ring.
+              - list [ref=e267]:
+                - listitem [ref=e268]:
+                  - generic [ref=e269]: Has the same implicit Modifiers as your other Ring
+                - listitem [ref=e270]:
+                  - generic [ref=e271]: Has the same explicit Modifiers as your other Ring
+              - generic [ref=e543]: "Requires Level: 55"
+              - paragraph [ref=e545]: “In her reflection, all things find their equal.”
+              - generic [ref=e546]:
+                - generic [ref=e547]: ring
+                - generic [ref=e548]: unique
+                - generic [ref=e549]: mirrored
+                - generic [ref=e550]: replica
+          - 'button "Cursed Necropolis Beach Map Magic Q: 15/20 ilvl 78 Tier 14 Travel to this Map by using it in a personal Map Device. Map is occupied by The Brine King +25% Monster Pack Size Monsters have 25% increased Physical Damage map endgame tier_14" [ref=e551] [cursor=pointer]':
+            - generic [ref=e273]:
+              - generic [ref=e274]:
+                - img [ref=e276]
+                - generic [ref=e278]:
+                  - heading "Cursed Necropolis" [level=3] [ref=e279]
+                  - paragraph [ref=e280]: Beach Map
+                  - generic [ref=e281]:
+                    - generic [ref=e282]: Magic
+                    - generic [ref=e283]: "Q: 15/20"
+                - generic [ref=e284]:
+                  - generic [ref=e285]: ilvl 78
+                  - generic [ref=e286]: Tier 14
+              - paragraph [ref=e288]: Travel to this Map by using it in a personal Map Device.
+              - list [ref=e290]:
+                - listitem [ref=e291]:
+                  - generic [ref=e292]: Map is occupied by The Brine King
+              - list [ref=e294]:
+                - listitem [ref=e295]:
+                  - generic [ref=e296]: +25% Monster Pack Size
+                - listitem [ref=e297]:
+                  - generic [ref=e298]: Monsters have 25% increased Physical Damage
+              - generic [ref=e554]:
+                - generic [ref=e555]: map
+                - generic [ref=e556]: endgame
+                - generic [ref=e557]: tier_14
+          - 'button "Catalysing Aqua Divine Life Flask Rare Q: 20/20 ilvl 65 40/40 Restores life over its duration. Recovers 2400 Life over 7 Seconds Consumes 10 of 40 Charges on use +20% to Recovery Speed Removes Curses on use Requires Level: 60 flask life recovery" [ref=e558] [cursor=pointer]':
+            - generic [ref=e300]:
+              - generic [ref=e301]:
+                - img [ref=e303]
+                - generic [ref=e305]:
+                  - heading "Catalysing Aqua" [level=3] [ref=e306]
+                  - paragraph [ref=e307]: Divine Life Flask
+                  - generic [ref=e308]:
+                    - generic [ref=e309]: Rare
+                    - generic [ref=e310]: "Q: 20/20"
+                - generic [ref=e311]:
+                  - generic [ref=e312]: ilvl 65
+                  - generic [ref=e313]:
+                    - text: "40"
+                    - generic [ref=e314]: /40
+              - paragraph [ref=e316]: Restores life over its duration.
+              - list [ref=e318]:
+                - listitem [ref=e319]:
+                  - generic [ref=e320]: Recovers 2400 Life over 7 Seconds
+                - listitem [ref=e321]:
+                  - generic [ref=e322]: Consumes 10 of 40 Charges on use
+                - listitem [ref=e323]:
+                  - generic [ref=e324]: +20% to Recovery Speed
+                - listitem [ref=e325]:
+                  - generic [ref=e326]: Removes Curses on use
+              - generic [ref=e562]: "Requires Level: 60"
+              - generic [ref=e563]:
+                - generic [ref=e564]: flask
+                - generic [ref=e565]: life
+                - generic [ref=e566]: recovery
+      - generic [ref=e362]:
+        - heading "Selected Item (Detailed View)" [level=2] [ref=e363]
+        - generic [ref=e366]:
+          - generic [ref=e367]:
+            - img [ref=e369]
+            - generic [ref=e371]:
+              - heading "Doom Cast" [level=3] [ref=e372]
+              - paragraph [ref=e373]: Sorcerer Gloves
+              - generic [ref=e375]: Rare
+            - generic [ref=e377]: ilvl 52
+          - paragraph [ref=e379]: Crafted with forbidden knowledge.
+          - generic [ref=e380]:
+            - generic [ref=e381]:
+              - generic [ref=e382]: Evasion Rating
+              - generic [ref=e383]: "24"
+            - generic [ref=e384]:
+              - generic [ref=e385]: Energy Shield
+              - generic [ref=e386]: "76"
+          - list [ref=e389]:
+            - listitem [ref=e390]:
+              - generic [ref=e391]: +8 to maximum Energy Shield
+          - list [ref=e394]:
+            - listitem [ref=e395]:
+              - generic [ref=e396]: +68 to maximum Energy Shield
+            - listitem [ref=e397]:
+              - generic [ref=e398]: +25% to Cold Resistance
+            - listitem [ref=e399]:
+              - generic [ref=e400]: +18% to Lightning Resistance
+            - listitem [ref=e401]:
+              - generic [ref=e402]: +12 to Intelligence
+            - listitem [ref=e403]:
+              - generic [ref=e404]: +5% to Cast Speed
+          - generic [ref=e407]: "Requires Level: 47, Int: 72"
+          - generic [ref=e408]:
+            - generic [ref=e409]: gloves
+            - generic [ref=e410]: intelligence
+            - generic [ref=e411]: energy_shield
+            - generic [ref=e412]: armour
+      - generic [ref=e327]:
+        - heading "Loading Skeletons" [level=2] [ref=e328]
+        - generic [ref=e329]:
+          - paragraph [ref=e331]: Compact
+          - paragraph [ref=e338]: Default
+          - paragraph [ref=e346]: Detailed

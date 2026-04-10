@@ -253,3 +253,125 @@ export interface ItemCardGridProps {
   /** Additional CSS class names */
   className?: string;
 }
+
+// ---------------------------------------------------------------------------
+// Enhanced Grid Types (task-40)
+// ---------------------------------------------------------------------------
+
+/** Grid layout mode for the enhanced item card grid. */
+export type GridLayoutMode = 'grid' | 'list';
+
+/** Available sort fields for items. */
+export type ItemSortField =
+  | 'name'
+  | 'rarity'
+  | 'itemLevel'
+  | 'itemType'
+  | 'gemLevel'
+  | 'mapTier';
+
+/** Sort direction. */
+export type SortDirection = 'asc' | 'desc';
+
+/** Sort configuration for the grid. */
+export interface ItemSortConfig {
+  /** Which field to sort by */
+  field: ItemSortField;
+  /** Sort direction */
+  direction: SortDirection;
+}
+
+/** Filter state for the grid. */
+export interface ItemFilterState {
+  /** Text search filter (matches name and baseType) */
+  searchText: string;
+  /** Filter by rarities (empty = show all) */
+  rarities: ItemRarity[];
+  /** Filter by item types (empty = show all) */
+  itemTypes: ItemType[];
+  /** Minimum item level filter */
+  minItemLevel?: number;
+  /** Maximum item level filter */
+  maxItemLevel?: number;
+}
+
+/** Pagination state for the grid. */
+export interface ItemPaginationState {
+  /** Current page number (1-based) */
+  currentPage: number;
+  /** Number of items per page */
+  pageSize: number;
+  /** Total number of items (after filtering) */
+  totalItems: number;
+}
+
+/** Grid configuration options. */
+export interface ItemGridConfig {
+  /** Layout mode (grid or list) */
+  layout: GridLayoutMode;
+  /** Column configuration for responsive grid layout */
+  columns: {
+    sm?: number;
+    md?: number;
+    lg?: number;
+    xl?: number;
+  };
+  /** Number of items per page (0 = no pagination / show all) */
+  pageSize: number;
+  /** Whether to show the filter panel */
+  showFilters: boolean;
+  /** Whether to show the sort controls */
+  showSort: boolean;
+  /** Whether to show the pagination controls */
+  showPagination: boolean;
+  /** Whether to show the item count summary */
+  showItemCount: boolean;
+  /** Whether to show the layout toggle (grid/list) */
+  showLayoutToggle: boolean;
+  /** Empty state message override */
+  emptyMessage?: string;
+  /** Empty state icon (SVG path data) override */
+  emptyIcon?: string;
+  /** Loading skeleton count */
+  skeletonCount: number;
+}
+
+/** Event callbacks for the enhanced grid. */
+export interface ItemGridEvents {
+  /** Fired when filters change */
+  onFilterChange?: (filters: ItemFilterState) => void;
+  /** Fired when sort configuration changes */
+  onSortChange?: (sort: ItemSortConfig) => void;
+  /** Fired when page changes */
+  onPageChange?: (page: number) => void;
+  /** Fired when layout mode changes */
+  onLayoutChange?: (layout: GridLayoutMode) => void;
+  /** Fired when a card is clicked */
+  onCardClick?: (item: ItemDisplayData) => void;
+  /** Fired when a card is hovered */
+  onCardHover?: (item: ItemDisplayData | null) => void;
+}
+
+/** Complete props for the enhanced ItemCardGrid component. */
+export interface EnhancedItemCardGridProps {
+  /** Array of items to display (before filtering/sorting) */
+  items: ItemDisplayData[];
+  /** Display variant for all cards */
+  variant?: ItemCardVariant;
+  /** Selected item ID */
+  selectedId?: string;
+  /** Whether to show icons on cards */
+  showIcons?: boolean;
+  /** Whether the grid is in a loading state */
+  loading?: boolean;
+  /** Grid configuration */
+  config?: Partial<ItemGridConfig>;
+  /** Initial filter state */
+  initialFilters?: Partial<ItemFilterState>;
+  /** Initial sort configuration */
+  initialSort?: ItemSortConfig;
+  /** Event callbacks */
+  events?: ItemGridEvents;
+  /** Additional CSS class names for the outer container */
+  className?: string;
+}

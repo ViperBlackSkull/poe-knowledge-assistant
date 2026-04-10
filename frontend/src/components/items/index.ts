@@ -1,4 +1,4 @@
 export { ItemCard } from './ItemCard';
-export { ItemCardGrid } from './ItemCardGrid';
+export { ItemCardGrid, EnhancedItemCardGrid } from './ItemCardGrid';
 export { ItemCardDemo } from './ItemCardDemo';
-export type { ItemCardProps, ItemCardGridProps } from '@/types/item';
+export type { ItemCardProps, ItemCardGridProps, EnhancedItemCardGridProps } from '@/types/item';

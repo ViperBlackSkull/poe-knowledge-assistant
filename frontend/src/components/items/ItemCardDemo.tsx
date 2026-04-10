@@ -1,6 +1,9 @@
 import { useState } from 'react';
-import { ItemCard, ItemCardGrid } from '@/components/items';
-import type { ItemDisplayData, ItemCardVariant } from '@/types/item';
+import { ItemCard, ItemCardGrid, EnhancedItemCardGrid } from '@/components/items';
+import type {
+  ItemDisplayData,
+  ItemCardVariant,
+} from '@/types/item';
 
 // ---------------------------------------------------------------------------
 // Sample item data covering all rarities
@@ -256,69 +259,96 @@ const SAMPLE_ITEMS: ItemDisplayData[] = [
 
 /**
  * ItemCardDemo renders sample items across all rarities and variants
- * for development and testing of the ItemCard component.
+ * for development and testing of the ItemCard component and the
+ * EnhancedItemCardGrid layout.
  */
 export function ItemCardDemo() {
   const [selectedVariant, setSelectedVariant] = useState<ItemCardVariant>('default');
   const [selectedId, setSelectedId] = useState<string | undefined>(undefined);
+  const [showLoadingDemo, setShowLoadingDemo] = useState(false);
 
   const variants: ItemCardVariant[] = ['compact', 'default', 'detailed'];
 
   return (
-    <div className="p-6 max-w-6xl mx-auto space-y-8">
+    <div className="p-6 max-w-7xl mx-auto space-y-10">
       {/* Page header */}
       <div>
         <h1 className="text-2xl font-poe text-poe-gold mb-1">
-          PoE Item Card Component
+          PoE Item Card Grid
         </h1>
         <p className="text-sm text-poe-text-secondary">
-          A reusable component displaying Path of Exile items with
-          rarity-themed styling, influence indicators, and stat displays.
+          Enhanced item card grid with filtering, sorting, pagination,
+          layout toggle, and infinite scroll. Built for Path of Exile
+          items with rarity-themed styling.
         </p>
       </div>
 
-      {/* Variant selector */}
-      <div className="flex items-center gap-3">
-        <span className="text-sm text-poe-text-secondary">Variant:</span>
-        <div className="flex gap-2">
-          {variants.map((v) => (
-            <button
-              key={v}
-              onClick={() => setSelectedVariant(v)}
-              className={`px-3 py-1.5 rounded text-sm font-medium capitalize transition-colors ${
-                selectedVariant === v
-                  ? 'bg-poe-gold text-white'
-                  : 'bg-poe-bg-tertiary text-poe-text-secondary hover:bg-poe-hover border border-poe-border'
-              }`}
-            >
-              {v}
-            </button>
-          ))}
-        </div>
-      </div>
-
-      {/* Section: All rarities (individual cards) */}
+      {/* ===== Enhanced Grid Section ===== */}
       <section>
-        <h2 className="text-lg font-poe text-poe-gold-light mb-3">
-          All Rarities
+        <h2 className="text-lg font-poe text-poe-gold-light mb-2">
+          Enhanced Item Grid
         </h2>
         <p className="text-xs text-poe-text-muted mb-4">
-          Click a card to select it. Each rarity has a distinct color scheme
-          matching the Path of Exile game style.
+          Full-featured grid with search, rarity/item-type filters, sort controls,
+          pagination, grid/list layout toggle, and infinite scroll mode. Click any
+          card to select it.
         </p>
-        <ItemCardGrid
+
+        {/* Variant + loading toggle controls */}
+        <div className="flex flex-wrap items-center gap-4 mb-4">
+          <div className="flex items-center gap-3">
+            <span className="text-sm text-poe-text-secondary">Variant:</span>
+            <div className="flex gap-2">
+              {variants.map((v) => (
+                <button
+                  key={v}
+                  onClick={() => setSelectedVariant(v)}
+                  className={`px-3 py-1.5 rounded text-sm font-medium capitalize transition-colors ${
+                    selectedVariant === v
+                      ? 'bg-poe-gold text-white'
+                      : 'bg-poe-bg-tertiary text-poe-text-secondary hover:bg-poe-hover border border-poe-border'
+                  }`}
+                >
+                  {v}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <label className="flex items-center gap-2 text-sm text-poe-text-secondary cursor-pointer">
+            <input
+              type="checkbox"
+              checked={showLoadingDemo}
+              onChange={(e) => setShowLoadingDemo(e.target.checked)}
+              className="accent-poe-gold"
+            />
+            Show loading skeleton
+          </label>
+        </div>
+
+        <EnhancedItemCardGrid
           items={SAMPLE_ITEMS}
           variant={selectedVariant}
-          onCardClick={(item) =>
-            setSelectedId((prev) => (prev === item.id ? undefined : item.id))
-          }
           selectedId={selectedId}
           showIcons={true}
-          columns={{ sm: 1, md: 2, lg: 3, xl: 3 }}
+          loading={showLoadingDemo}
+          config={{
+            columns: { sm: 1, md: 2, lg: 3, xl: 3 },
+            pageSize: 6,
+            showFilters: true,
+            showSort: true,
+            showPagination: true,
+            showItemCount: true,
+            showLayoutToggle: true,
+          }}
+          events={{
+            onCardClick: (item) =>
+              setSelectedId((prev) => (prev === item.id ? undefined : item.id)),
+          }}
         />
       </section>
 
-      {/* Section: Selected item detail */}
+      {/* ===== Selected Item Detail ===== */}
       {selectedId && (
         <section>
           <h2 className="text-lg font-poe text-poe-gold-light mb-3">
@@ -336,7 +366,27 @@ export function ItemCardDemo() {
         </section>
       )}
 
-      {/* Section: Loading skeletons */}
+      {/* ===== Basic Grid (backward compat) ===== */}
+      <section>
+        <h2 className="text-lg font-poe text-poe-gold-light mb-3">
+          Basic Grid (Legacy)
+        </h2>
+        <p className="text-xs text-poe-text-muted mb-4">
+          The original simple grid component for backward compatibility.
+        </p>
+        <ItemCardGrid
+          items={SAMPLE_ITEMS.slice(0, 6)}
+          variant="compact"
+          onCardClick={(item) =>
+            setSelectedId((prev) => (prev === item.id ? undefined : item.id))
+          }
+          selectedId={selectedId}
+          showIcons={true}
+          columns={{ sm: 1, md: 2, lg: 3, xl: 3 }}
+        />
+      </section>
+
+      {/* ===== Loading Skeletons ===== */}
       <section>
         <h2 className="text-lg font-poe text-poe-gold-light mb-3">
           Loading Skeletons

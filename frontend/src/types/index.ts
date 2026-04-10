@@ -156,4 +156,13 @@ export type {
   ItemDisplayData,
   ItemCardProps,
   ItemCardGridProps,
+  GridLayoutMode,
+  ItemSortField,
+  SortDirection,
+  ItemSortConfig,
+  ItemFilterState,
+  ItemPaginationState,
+  ItemGridConfig,
+  ItemGridEvents,
+  EnhancedItemCardGridProps,
 } from './item';
