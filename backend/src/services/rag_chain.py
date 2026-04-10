@@ -1,6 +1,7 @@
 """
 RAG retrieval chain for POE Knowledge Assistant.
-Provides retrieval-augmented generation with game version filtering.
+Provides retrieval-augmented generation with game version filtering
+and build context integration.
 """
 import logging
 from typing import Any, Dict, List, Optional
@@ -11,6 +12,29 @@ from src.config import get_settings
 from src.services.vector_store import VectorStore, VectorStoreError, get_vector_store
 
 logger = logging.getLogger(__name__)
+
+
+# ---------------------------------------------------------------------------
+# Build context configuration
+# ---------------------------------------------------------------------------
+
+BUILD_CONTEXT_DESCRIPTIONS: Dict[str, str] = {
+    "standard": "Standard league softcore economy. Focus on general meta builds and strategies.",
+    "budget": "Budget / starter-friendly builds. Prioritize low-cost items and accessible strategies.",
+    "hc": "Hardcore league where death is permanent. Focus on defensive layers, survivability, and safe playstyles.",
+    "ssf": "Solo Self-Found. No trading allowed. Focus on crafting, self-found gear, and independence from trade.",
+    "ruthless": "Ruthless mode with extreme scarcity. Focus on minimal resources and careful itemization.",
+    "pvp": "Player versus player combat. Focus on PvP-oriented builds, skills, and gear.",
+}
+
+BUILD_CONTEXT_QUERY_ENHANCEMENTS: Dict[str, str] = {
+    "standard": "standard softcore meta",
+    "budget": "budget cheap starter low-cost affordable",
+    "hc": "hardcore HC defensive survivable safe tanky",
+    "ssf": "SSF solo self-found self craft non-trade",
+    "ruthless": "ruthless scarce limited minimal",
+    "pvp": "PvP player versus player arena duel",
+}
 
 
 class RAGChainError(Exception):
@@ -200,22 +224,59 @@ class RAGChain:
         """
         Build metadata filter for ChromaDB query.
 
+        Only filters by game version. Build context is handled via query
+        enhancement rather than metadata filtering because documents may
+        not have a build_context metadata field.
+
         Args:
             game: Game version filter
-            build_context: Optional build context
+            build_context: Optional build context (used for logging only)
 
         Returns:
             Metadata filter dictionary
         """
         filter_dict: Dict[str, Any] = {"game": game}
 
-        # Add build context filter if provided
         if build_context:
-            # Build context might include class, ascendancy, etc.
-            # We can search for it in metadata
-            filter_dict["build_context"] = {"$contains": build_context}
+            logger.info(
+                f"Build context '{build_context}' applied via query enhancement "
+                f"(not metadata filter)"
+            )
 
         return filter_dict
+
+    def _enhance_query_with_context(
+        self,
+        query: str,
+        build_context: Optional[str] = None,
+    ) -> str:
+        """
+        Enhance the search query with build context keywords.
+
+        Build context values like 'hc', 'budget', 'ssf' provide semantic
+        hints that improve vector similarity search relevance.
+
+        Args:
+            query: Original user query
+            build_context: Optional build context value
+
+        Returns:
+            Enhanced query string
+        """
+        if not build_context:
+            return query
+
+        enhancement = BUILD_CONTEXT_QUERY_ENHANCEMENTS.get(build_context)
+        if enhancement:
+            enhanced = f"{build_context} {query} {enhancement}"
+            logger.info(
+                f"Query enhanced with build context '{build_context}': "
+                f"'{query[:50]}...' -> '{enhanced[:80]}...'"
+            )
+            return enhanced
+
+        # Fallback for unknown context values
+        return f"{build_context}: {query}"
 
     def _extract_citations(
         self,
@@ -294,13 +355,11 @@ class RAGChain:
         )
 
         try:
-            # Build metadata filter
+            # Build metadata filter (game version only)
             filter_dict = self._build_metadata_filter(game, build_context)
 
-            # Enhance query with build context if provided
-            enhanced_query = query
-            if build_context:
-                enhanced_query = f"{build_context}: {query}"
+            # Enhance query with build context keywords
+            enhanced_query = self._enhance_query_with_context(query, build_context)
 
             # Retrieve documents
             documents: List[Document] = []
@@ -508,6 +567,8 @@ __all__ = [
     "RAGChainError",
     "Citation",
     "RetrievalResult",
+    "BUILD_CONTEXT_DESCRIPTIONS",
+    "BUILD_CONTEXT_QUERY_ENHANCEMENTS",
     "get_rag_chain",
     "check_rag_chain_health",
 ]

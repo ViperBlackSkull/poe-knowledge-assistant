@@ -131,6 +131,95 @@ export function ChatInput({
   );
 
   // ---------------------------------------------------------------------------
+  // Streaming request handler
+  // ---------------------------------------------------------------------------
+
+  const handleStreamingRequest = useCallback(
+    async (message: string) => {
+      abortControllerRef.current = new AbortController();
+
+      const request: ChatStreamRequest = {
+        message,
+        game_version: gameVersion,
+        build_context: buildContext,
+        conversation_id: conversationId,
+      };
+
+      console.log('[ChatInput] Streaming request:', {
+        message: message.substring(0, 50) + (message.length > 50 ? '...' : ''),
+        game_version: gameVersion,
+        build_context: buildContext || '(none)',
+        conversation_id: conversationId || '(new)',
+      });
+
+      await streamChatApi(
+        request,
+        {
+          onToken: (event) => {
+            onStreamingToken?.(event.token);
+          },
+          onSources: (event) => {
+            // Sources received, propagate to parent
+            onSources?.(event.sources);
+          },
+          onDone: (event) => {
+            onStreamingDone?.(event.conversation_id);
+          },
+          onError: (event) => {
+            const errorMessage = event.error || 'An error occurred during streaming.';
+            setError(errorMessage);
+            onError?.(errorMessage);
+          },
+          onPartialComplete: (event) => {
+            // Stream was interrupted but partial content is available
+            if (event.partial_response) {
+              onStreamingToken?.(event.partial_response);
+            }
+          },
+        },
+        abortControllerRef.current.signal,
+      );
+    },
+    [gameVersion, buildContext, conversationId, onStreamingToken, onStreamingDone, onError],
+  );
+
+  // ---------------------------------------------------------------------------
+  // Non-streaming request handler
+  // ---------------------------------------------------------------------------
+
+  const handleNonStreamingRequest = useCallback(
+    async (message: string) => {
+      console.log('[ChatInput] Non-streaming request:', {
+        message: message.substring(0, 50) + (message.length > 50 ? '...' : ''),
+        game_version: gameVersion,
+        build_context: buildContext || '(none)',
+        conversation_id: conversationId || '(new)',
+      });
+
+      const response = await sendChatApi({
+        message,
+        game_version: gameVersion,
+        build_context: buildContext,
+        conversation_id: conversationId,
+        stream: false,
+      });
+
+      // Create assistant message from response
+      const assistantMessage: ChatMessage = {
+        role: 'assistant',
+        content: response.message.content,
+        timestamp: response.message.timestamp,
+        metadata: response.sources.length > 0 ? { sources: response.sources } : null,
+      };
+
+      // Stream the whole response at once via the token callback
+      onStreamingToken?.(assistantMessage.content);
+      onStreamingDone?.(response.conversation_id);
+    },
+    [gameVersion, buildContext, conversationId, onStreamingToken, onStreamingDone],
+  );
+
+  // ---------------------------------------------------------------------------
   // Send message
   // ---------------------------------------------------------------------------
 
@@ -181,82 +270,7 @@ export function ChatInput({
         setIsLoading(false);
       }
     },
-    [isLoading, disabled, maxCharLimit, onSendMessage, onError, useStreaming],
-  );
-
-  // ---------------------------------------------------------------------------
-  // Streaming request handler
-  // ---------------------------------------------------------------------------
-
-  const handleStreamingRequest = useCallback(
-    async (message: string) => {
-      abortControllerRef.current = new AbortController();
-
-      const request: ChatStreamRequest = {
-        message,
-        game_version: gameVersion,
-        build_context: buildContext,
-        conversation_id: conversationId,
-      };
-
-      await streamChatApi(
-        request,
-        {
-          onToken: (event) => {
-            onStreamingToken?.(event.token);
-          },
-          onSources: (event) => {
-            // Sources received, propagate to parent
-            onSources?.(event.sources);
-          },
-          onDone: (event) => {
-            onStreamingDone?.(event.conversation_id);
-          },
-          onError: (event) => {
-            const errorMessage = event.error || 'An error occurred during streaming.';
-            setError(errorMessage);
-            onError?.(errorMessage);
-          },
-          onPartialComplete: (event) => {
-            // Stream was interrupted but partial content is available
-            if (event.partial_response) {
-              onStreamingToken?.(event.partial_response);
-            }
-          },
-        },
-        abortControllerRef.current.signal,
-      );
-    },
-    [gameVersion, buildContext, conversationId, onStreamingToken, onStreamingDone, onError],
-  );
-
-  // ---------------------------------------------------------------------------
-  // Non-streaming request handler
-  // ---------------------------------------------------------------------------
-
-  const handleNonStreamingRequest = useCallback(
-    async (message: string) => {
-      const response = await sendChatApi({
-        message,
-        game_version: gameVersion,
-        build_context: buildContext,
-        conversation_id: conversationId,
-        stream: false,
-      });
-
-      // Create assistant message from response
-      const assistantMessage: ChatMessage = {
-        role: 'assistant',
-        content: response.message.content,
-        timestamp: response.message.timestamp,
-        metadata: response.sources.length > 0 ? { sources: response.sources } : null,
-      };
-
-      // Stream the whole response at once via the token callback
-      onStreamingToken?.(assistantMessage.content);
-      onStreamingDone?.(response.conversation_id);
-    },
-    [gameVersion, buildContext, conversationId, onStreamingToken, onStreamingDone],
+    [isLoading, disabled, maxCharLimit, onSendMessage, onError, useStreaming, handleStreamingRequest, handleNonStreamingRequest],
   );
 
   // ---------------------------------------------------------------------------

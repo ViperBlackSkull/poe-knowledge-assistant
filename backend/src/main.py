@@ -3546,7 +3546,8 @@ async def chat_stream(request: ChatStreamRequest):
     """
     logger.info(
         f"Stream chat request: message='{request.message[:50]}...', "
-        f"game={request.game_version}, conversation_id={request.conversation_id}"
+        f"game={request.game_version}, build_context={request.build_context}, "
+        f"conversation_id={request.conversation_id}"
     )
 
     return StreamingResponse(

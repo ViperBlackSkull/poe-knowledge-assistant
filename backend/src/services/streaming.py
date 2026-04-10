@@ -19,7 +19,7 @@ from src.services.llm_provider import (
     LMStudioLLM,
     get_llm,
 )
-from src.services.rag_chain import RAGChain, RAGChainError, Citation, get_rag_chain
+from src.services.rag_chain import RAGChain, RAGChainError, Citation, get_rag_chain, BUILD_CONTEXT_DESCRIPTIONS
 from src.services.conversation_history import (
     get_conversation_store,
     MessageRole,
@@ -41,9 +41,9 @@ You provide accurate, helpful answers about game mechanics, builds, skills, item
 Use the following retrieved context to answer the user's question. If the context doesn't contain relevant information, say so honestly.
 
 Always specify whether your answer applies to PoE1 or PoE2.
+{build_context_section}
 
 Game Version: {game}
-{build_context_section}
 
 Retrieved Context:
 {context}"""
@@ -86,7 +86,16 @@ def _build_messages(
     """
     build_context_section = ""
     if build_context:
-        build_context_section = f"Build Context: {build_context}"
+        description = BUILD_CONTEXT_DESCRIPTIONS.get(
+            build_context,
+            f"The user is playing with context: {build_context}."
+        )
+        build_context_section = (
+            f"\n\nBuild Context: {build_context}\n"
+            f"Context Description: {description}\n"
+            f"Tailor your response to this build context. For example, "
+            f"prioritize {build_context}-relevant items, skills, and strategies."
+        )
 
     system_prompt = SYSTEM_PROMPT_TEMPLATE.format(
         game=game,
@@ -169,7 +178,8 @@ def generate_streaming_response(
         # Step 1: Retrieve context using RAG chain
         logger.info(
             f"Starting streaming response for query: '{query[:50]}...', "
-            f"game={game}, conversation_id={conversation_id}"
+            f"game={game}, build_context={build_context}, "
+            f"conversation_id={conversation_id}"
         )
 
         rag_chain = get_rag_chain()
