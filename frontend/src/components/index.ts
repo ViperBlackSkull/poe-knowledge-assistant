@@ -29,3 +29,19 @@ export {
   getDefaultModel,
   getLLMProviderLabel,
 } from './common/LLMProviderSelector';
+export {
+  ApiKeyInput,
+  ApiKeyManager,
+  validateApiKey,
+  getProviderKeyRules,
+  saveApiKeyFingerprint,
+  removeApiKeyFingerprint,
+  loadApiKeyFingerprints,
+  hasStoredApiKey,
+  getMaskedKeyDisplay,
+} from './common/ApiKeyInput';
+export type {
+  ApiKeyInputProps,
+  ApiKeyManagerProps,
+  ApiKeyValidationStatus,
+} from './common/ApiKeyInput';

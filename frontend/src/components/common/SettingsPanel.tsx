@@ -6,6 +6,12 @@ import {
   getDefaultModel,
   LLM_PROVIDER_OPTIONS,
 } from './LLMProviderSelector';
+import {
+  ApiKeyInput,
+  saveApiKeyFingerprint,
+  hasStoredApiKey,
+  getMaskedKeyDisplay,
+} from './ApiKeyInput';
 
 // ---------------------------------------------------------------------------
 // LocalStorage helpers
@@ -76,6 +82,8 @@ export interface SettingsPanelProps {
 interface SettingsFormState {
   llmProvider: LLMProvider;
   llmApiKey: string;
+  /** Per-provider API keys for the API key manager */
+  providerApiKeys: Record<string, string>;
   llmModel: string;
   llmTemperature: number;
   llmMaxTokens: number;
@@ -107,6 +115,7 @@ const EMBEDDING_MODELS_BY_PROVIDER: Record<EmbeddingProvider, string[]> = {
 const DEFAULT_FORM_STATE: SettingsFormState = {
   llmProvider: 'openai',
   llmApiKey: '',
+  providerApiKeys: {},
   llmModel: 'gpt-4o',
   llmTemperature: 0.7,
   llmMaxTokens: 2048,
@@ -291,7 +300,6 @@ export function SettingsPanel({
   });
   const [savedState, setSavedState] = useState<SettingsFormState>(formState);
   const [isSaving, setIsSaving] = useState(false);
-  const [showApiKey, setShowApiKey] = useState(false);
   const [saveMessage, setSaveMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
   const panelRef = useRef<HTMLDivElement>(null);
   const firstFocusRef = useRef<HTMLButtonElement>(null);
@@ -305,6 +313,7 @@ export function SettingsPanel({
       const newState: SettingsFormState = {
         llmProvider: initialConfig.llmProvider ?? formState.llmProvider,
         llmApiKey: '',
+        providerApiKeys: {},
         llmModel: initialConfig.llmModel ?? formState.llmModel,
         llmTemperature: initialConfig.llmTemperature ?? formState.llmTemperature,
         llmMaxTokens: initialConfig.llmMaxTokens ?? formState.llmMaxTokens,
@@ -339,6 +348,7 @@ export function SettingsPanel({
   const isDirty =
     formState.llmProvider !== savedState.llmProvider ||
     formState.llmApiKey !== '' ||
+    Object.values(formState.providerApiKeys).some((k) => k && k.length > 0) ||
     formState.llmModel !== savedState.llmModel ||
     formState.llmTemperature !== savedState.llmTemperature ||
     formState.llmMaxTokens !== savedState.llmMaxTokens ||
@@ -431,6 +441,19 @@ export function SettingsPanel({
     setSaveMessage(null);
   }, []);
 
+  const handleProviderApiKeyChange = useCallback((provider: LLMProvider, key: string) => {
+    setFormState((prev) => ({
+      ...prev,
+      providerApiKeys: {
+        ...prev.providerApiKeys,
+        [provider]: key,
+      },
+      // Also sync the legacy llmApiKey for the active provider
+      ...(provider === prev.llmProvider ? { llmApiKey: key } : {}),
+    }));
+    setSaveMessage(null);
+  }, []);
+
   // ---------------------------------------------------------------------------
   // Save / Cancel
   // ---------------------------------------------------------------------------
@@ -471,8 +494,19 @@ export function SettingsPanel({
         await onSave(updates);
       }
 
+      // Save API key fingerprints for all providers that have keys
+      const allApiKeys: Record<string, string> = {
+        ...formState.providerApiKeys,
+        ...(formState.llmApiKey ? { [formState.llmProvider]: formState.llmApiKey } : {}),
+      };
+      for (const [provider, key] of Object.entries(allApiKeys)) {
+        if (key && key.length > 0) {
+          saveApiKeyFingerprint(provider as LLMProvider, key);
+        }
+      }
+
       // Persist to localStorage
-      const newSavedState = { ...formState, llmApiKey: '' };
+      const newSavedState = { ...formState, llmApiKey: '', providerApiKeys: {} };
       persistSettings({
         llmProvider: newSavedState.llmProvider,
         llmModel: newSavedState.llmModel,
@@ -486,7 +520,7 @@ export function SettingsPanel({
       });
 
       setSavedState(newSavedState);
-      setFormState((prev) => ({ ...prev, llmApiKey: '' }));
+      setFormState((prev) => ({ ...prev, llmApiKey: '', providerApiKeys: {} }));
       setSaveMessage({ type: 'success', text: 'Settings saved successfully' });
 
       // Auto-clear success message
@@ -499,7 +533,7 @@ export function SettingsPanel({
   }, [formState, savedState, onSave]);
 
   const handleCancel = useCallback(() => {
-    setFormState({ ...savedState, llmApiKey: '' });
+    setFormState({ ...savedState, llmApiKey: '', providerApiKeys: {} });
     setSaveMessage(null);
     onClose();
   }, [savedState, onClose]);
@@ -692,7 +726,7 @@ export function SettingsPanel({
           </div>
 
           {/* ---------------------------------------------------------------
-              API Key Section
+              API Key Section (with new ApiKeyInput component)
               --------------------------------------------------------------- */}
           <div className="poe-card space-y-3">
             <SectionHeader
@@ -706,7 +740,7 @@ export function SettingsPanel({
             />
 
             {/* API Key status indicator */}
-            {initialConfig?.llmApiKeySet && formState.llmApiKey === '' && (
+            {initialConfig?.llmApiKeySet && formState.llmApiKey === '' && !formState.providerApiKeys[formState.llmProvider] && (
               <div className="flex items-center gap-2 text-xs text-green-400 bg-green-900/20 border border-green-700/30 rounded px-3 py-2">
                 <svg className="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" />
@@ -715,46 +749,69 @@ export function SettingsPanel({
               </div>
             )}
 
-            {/* API Key input with show/hide toggle */}
-            <div>
-              <FormLabel htmlFor="api-key">
-                {!currentProviderOption?.requiresApiKey
-                  ? 'API Key (optional)'
-                  : 'API Key'}
-              </FormLabel>
-              <div className="relative">
-                <input
-                  id="api-key"
-                  type={showApiKey ? 'text' : 'password'}
-                  value={formState.llmApiKey}
-                  onChange={(e) => updateField('llmApiKey', e.target.value)}
-                  placeholder={
-                    !currentProviderOption?.requiresApiKey
-                      ? 'Not required for local providers'
-                      : `Enter your ${currentProviderOption?.label ?? ''} API key`
-                  }
-                  className="poe-input w-full text-sm pr-10"
-                  autoComplete="off"
-                  data-testid="settings-api-key-input"
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowApiKey((prev) => !prev)}
-                  className="absolute right-2 top-1/2 -translate-y-1/2 p-1 text-poe-text-muted hover:text-poe-text-highlight transition-colors"
-                  aria-label={showApiKey ? 'Hide API key' : 'Show API key'}
-                >
-                  {showApiKey ? (
-                    <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M3.98 8.223A10.477 10.477 0 001.934 12C3.226 16.338 7.244 19.5 12 19.5c.993 0 1.953-.138 2.863-.395M6.228 6.228A10.45 10.45 0 0112 4.5c4.756 0 8.773 3.162 10.065 7.498a10.523 10.523 0 01-4.293 5.774M6.228 6.228L3 3m3.228 3.228l3.65 3.65m7.894 7.894L21 21m-3.228-3.228l-3.65-3.65m0 0a3 3 0 10-4.243-4.243m4.242 4.242L9.88 9.88" />
-                    </svg>
-                  ) : (
-                    <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" />
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                    </svg>
-                  )}
-                </button>
+            {/* Primary API Key Input for the current provider */}
+            <ApiKeyInput
+              value={formState.providerApiKeys[formState.llmProvider] ?? formState.llmApiKey}
+              onChange={(key) => handleProviderApiKeyChange(formState.llmProvider, key)}
+              provider={formState.llmProvider}
+              required={currentProviderOption?.requiresApiKey ?? false}
+              previouslySet={
+                !!(initialConfig?.llmApiKeySet) ||
+                hasStoredApiKey(formState.llmProvider)
+              }
+              id="settings-api-key"
+              testId="settings-api-key-input"
+            />
+
+            {/* Masked display of stored key if available */}
+            {!formState.llmApiKey && !formState.providerApiKeys[formState.llmProvider] && getMaskedKeyDisplay(formState.llmProvider) && (
+              <div className="flex items-center gap-2 px-3 py-2 rounded bg-poe-bg-primary/50 border border-poe-border/50">
+                <svg className="w-3.5 h-3.5 text-poe-gold shrink-0" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
+                </svg>
+                <span className="text-[11px] text-poe-text-muted font-mono">
+                  Stored: {getMaskedKeyDisplay(formState.llmProvider)}
+                </span>
               </div>
+            )}
+
+            {/* Other provider API keys section */}
+            {(() => {
+              const otherProviders = LLM_PROVIDER_OPTIONS.filter(
+                (opt) => opt.value !== formState.llmProvider && opt.requiresApiKey,
+              );
+              if (otherProviders.length === 0) return null;
+              return (
+                <div className="mt-3 pt-3 border-t border-poe-border/50">
+                  <div className="text-[11px] text-poe-text-muted mb-2">
+                    Other provider keys
+                  </div>
+                  <div className="space-y-3">
+                    {otherProviders.map((opt) => (
+                      <ApiKeyInput
+                        key={opt.value}
+                        value={formState.providerApiKeys[opt.value] ?? ''}
+                        onChange={(key) => handleProviderApiKeyChange(opt.value, key)}
+                        provider={opt.value}
+                        required={false}
+                        previouslySet={hasStoredApiKey(opt.value)}
+                        id={`settings-api-key-${opt.value}`}
+                        testId={`settings-api-key-input-${opt.value}`}
+                      />
+                    ))}
+                  </div>
+                </div>
+              );
+            })()}
+
+            {/* Security notice */}
+            <div className="flex items-start gap-2 px-3 py-2 rounded bg-poe-bg-primary/30 border border-poe-border/30">
+              <svg className="w-3.5 h-3.5 shrink-0 text-poe-gold mt-0.5" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" />
+              </svg>
+              <p className="text-[10px] text-poe-text-muted leading-tight">
+                API keys are stored securely. Only a fingerprint is saved locally to remember your configuration.
+              </p>
             </div>
           </div>
 

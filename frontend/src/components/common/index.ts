@@ -19,3 +19,19 @@ export {
   getLLMProviderLabel,
   getProviderConfigFields,
 } from './LLMProviderSelector';
+export {
+  ApiKeyInput,
+  ApiKeyManager,
+  validateApiKey,
+  getProviderKeyRules,
+  saveApiKeyFingerprint,
+  removeApiKeyFingerprint,
+  loadApiKeyFingerprints,
+  hasStoredApiKey,
+  getMaskedKeyDisplay,
+} from './ApiKeyInput';
+export type {
+  ApiKeyInputProps,
+  ApiKeyManagerProps,
+  ApiKeyValidationStatus,
+} from './ApiKeyInput';
