@@ -641,7 +641,7 @@
         "title": "Create configuration management test",
         "feature": "Testing",
         "dependencies": ["task-29", "task-48"],
-        "status": "todo"
+        "status": "done"
       },
       {
         "id": "task-64",
