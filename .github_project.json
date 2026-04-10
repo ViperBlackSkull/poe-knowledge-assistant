@@ -545,7 +545,7 @@
         "title": "Integrate build context with chat API",
         "feature": "Build Context",
         "dependencies": ["task-50"],
-        "status": "todo"
+        "status": "done"
       },
       {
         "id": "task-52",
