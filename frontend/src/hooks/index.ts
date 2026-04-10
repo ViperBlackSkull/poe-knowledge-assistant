@@ -28,3 +28,14 @@ export type {
   UseChatOptions,
   UseChatReturn,
 } from './useChat';
+
+export {
+  useConfig,
+} from './useConfig';
+export type {
+  ConfigLoadingState,
+  ConfigError,
+  ConfigState,
+  UseConfigOptions,
+  UseConfigReturn,
+} from './useConfig';

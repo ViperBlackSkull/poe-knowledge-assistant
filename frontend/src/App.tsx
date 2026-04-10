@@ -1,10 +1,10 @@
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback, useEffect, useMemo } from 'react';
 import { MainLayout, ChatMessageList, ChatInput, ItemCardDemo, CitationDemo, GameVersionSelector, getGameVersionLabel, ClearConversationButton, SettingsPanel, BuildContextSelector, BuildContextDisplay, DataFreshnessIndicator } from '@/components';
 import type { ChatMessage } from '@/types/chat';
 import type { SSESource } from '@/types/streaming';
 import type { ConfigUpdateRequest } from '@/types/config';
-import { updateConfig, setApiKey } from '@/lib/api-client';
-import { useBuildContext, useChat } from '@/hooks';
+import { setApiKey } from '@/lib/api-client';
+import { useBuildContext, useChat, useConfig } from '@/hooks';
 import type { BuildContextValue } from '@/hooks';
 
 /**
@@ -25,6 +25,13 @@ function App() {
 
   // Build context state (persisted to localStorage)
   const { buildContext, setBuildContext } = useBuildContext();
+
+  // Configuration state management via centralized hook
+  const config = useConfig({
+    onConfigUpdated: (response) => {
+      console.log('[Config] Updated fields:', response.updated_fields);
+    },
+  });
 
   // Chat state management via centralized hook
   const chat = useChat({
@@ -97,14 +104,18 @@ function App() {
 
   /**
    * Handle settings save.
-   * Calls the backend PUT /api/config endpoint with the updated settings,
+   * Uses the useConfig hook's save method which calls PUT /api/config,
    * then applies the new API key to the api-client if one was provided.
    */
   const handleSaveSettings = useCallback(async (settings: ConfigUpdateRequest) => {
     console.log('[Settings] Saving settings:', settings);
 
-    // Call the backend API to update configuration
-    const response = await updateConfig(settings);
+    // Use the config hook's centralized save method
+    const response = await config.save(settings);
+
+    if (!response) {
+      throw new Error('Failed to save settings');
+    }
 
     if (!response.success) {
       throw new Error(response.message || 'Failed to save settings');
@@ -121,7 +132,7 @@ function App() {
     }
 
     return response;
-  }, []);
+  }, [config]);
 
   // Header actions with game version selector, build context selector, version display badge, and settings button
   const headerActions = (
@@ -182,6 +193,18 @@ function App() {
     <BuildContextDisplay context={buildContext} />
   );
 
+  // Derive initialConfig for the SettingsPanel from the config hook
+  const initialConfig = useMemo(() => {
+    if (!config.config) return undefined;
+    return {
+      llmProvider: config.config.llmProvider,
+      embeddingProvider: config.config.embeddingProvider,
+      ragTopK: config.config.ragTopK,
+      ragScoreThreshold: 0.7, // default; server may not expose this directly
+      llmApiKeySet: false, // will be updated when server provides this info
+    };
+  }, [config.config]);
+
   // Item card demo page
   if (showItemDemo) {
     return (
@@ -193,6 +216,7 @@ function App() {
           isOpen={isSettingsOpen}
           onClose={() => setIsSettingsOpen(false)}
           onSave={handleSaveSettings}
+          initialConfig={initialConfig}
         />
       </>
     );
@@ -209,6 +233,7 @@ function App() {
           isOpen={isSettingsOpen}
           onClose={() => setIsSettingsOpen(false)}
           onSave={handleSaveSettings}
+          initialConfig={initialConfig}
         />
       </>
     );
@@ -257,6 +282,7 @@ function App() {
         isOpen={isSettingsOpen}
         onClose={() => setIsSettingsOpen(false)}
         onSave={handleSaveSettings}
+        initialConfig={initialConfig}
       />
     </>
   );
