@@ -553,7 +553,7 @@
         "title": "Create data freshness indicator component",
         "feature": "Data Freshness",
         "dependencies": ["task-34"],
-        "status": "todo"
+        "status": "done"
       },
       {
         "id": "task-53",
