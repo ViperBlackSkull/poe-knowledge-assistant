@@ -62,10 +62,12 @@ poe_knowledge_assistant/
 
 ```bash
 cd backend
+python -m venv venv
+source venv/bin/activate
 pip install -r requirements.txt
 cp .env.example .env
 # Edit .env with your API keys
-uvicorn main:app --reload
+uvicorn src.main:app --reload --host 0.0.0.0 --port 8460
 ```
 
 ### Frontend Setup
@@ -76,6 +78,12 @@ npm install
 npm run dev
 ```
 
+### Access the Application
+
+- Frontend: http://localhost:9460
+- Backend API: http://localhost:8460
+- API Documentation: http://localhost:8460/docs
+
 ## Configuration
 
 The application supports multiple LLM and embedding providers:
@@ -83,7 +91,22 @@ The application supports multiple LLM and embedding providers:
 - **LLM Providers**: OpenAI, Anthropic, Ollama, LM Studio
 - **Embedding Providers**: Local (sentence-transformers), OpenAI, Ollama, LM Studio
 
-See `.env.example` for all configuration options.
+See `backend/.env.example` for all configuration options. For the complete environment variable reference, see the [Environment Management documentation](docs/environment-management.md).
+
+## Documentation
+
+Comprehensive deployment and operations documentation is available in the `docs/` directory:
+
+| Document | Description |
+|----------|-------------|
+| [Deployment Guide](docs/deployment.md) | Main deployment overview and quick start |
+| [Local Development](docs/local-development.md) | Setting up a local development environment |
+| [Production Deployment](docs/production-deployment.md) | Deploying to production servers |
+| [Docker Configuration](docs/docker.md) | Docker and Docker Compose setup |
+| [Environment Management](docs/environment-management.md) | Complete environment variable reference |
+| [Reverse Proxy Setup](docs/reverse-proxy.md) | Nginx reverse proxy configuration |
+| [Monitoring and Logging](docs/monitoring.md) | Health checks, logging, and alerting |
+| [Troubleshooting](docs/troubleshooting.md) | Common issues and solutions |
 
 ## Development
 
@@ -93,7 +116,7 @@ This project uses a task-based development system. See `.task_breakdown.json` fo
 
 ### API Documentation
 
-Once running, visit `http://localhost:8000/docs` for interactive API documentation.
+Once running, visit `http://localhost:8460/docs` for interactive Swagger API documentation, or `http://localhost:8460/redoc` for ReDoc documentation.
 
 ## License
 
