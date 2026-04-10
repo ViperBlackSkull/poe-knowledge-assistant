@@ -35,3 +35,18 @@ export type {
   ApiKeyManagerProps,
   ApiKeyValidationStatus,
 } from './ApiKeyInput';
+export { EmbeddingProviderSelector, EmbeddingProviderConfigSection } from './EmbeddingProviderSelector';
+export type {
+  EmbeddingProviderSelectorProps,
+  EmbeddingProviderOption,
+  EmbeddingModelOption,
+  EmbeddingProviderConfigProps,
+  EmbeddingProviderConfigField,
+} from './EmbeddingProviderSelector';
+export {
+  EMBEDDING_PROVIDER_OPTIONS,
+  EMBEDDING_MODELS_BY_PROVIDER,
+  getDefaultEmbeddingModel,
+  getEmbeddingProviderLabel,
+  getEmbeddingProviderConfigFields,
+} from './EmbeddingProviderSelector';

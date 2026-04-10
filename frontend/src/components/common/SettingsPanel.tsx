@@ -7,6 +7,11 @@ import {
   LLM_PROVIDER_OPTIONS,
 } from './LLMProviderSelector';
 import {
+  EmbeddingProviderSelector,
+  EmbeddingProviderConfigSection,
+  EMBEDDING_MODELS_BY_PROVIDER,
+} from './EmbeddingProviderSelector';
+import {
   ApiKeyInput,
   saveApiKeyFingerprint,
   hasStoredApiKey,
@@ -29,6 +34,7 @@ interface PersistedSettings {
   ragTopK: number;
   ragScoreThreshold: number;
   providerConfig: Record<string, Record<string, string>>;
+  embeddingProviderConfig: Record<string, Record<string, string>>;
 }
 
 function loadPersistedSettings(): PersistedSettings | null {
@@ -92,25 +98,12 @@ interface SettingsFormState {
   ragTopK: number;
   ragScoreThreshold: number;
   providerConfig: Record<string, Record<string, string>>;
+  embeddingProviderConfig: Record<string, Record<string, string>>;
 }
 
 // ---------------------------------------------------------------------------
 // Constants
 // ---------------------------------------------------------------------------
-
-const EMBEDDING_PROVIDER_OPTIONS: { value: EmbeddingProvider; label: string; description: string }[] = [
-  { value: 'local', label: 'Local', description: 'Built-in embeddings' },
-  { value: 'openai', label: 'OpenAI', description: 'OpenAI embeddings API' },
-  { value: 'ollama', label: 'Ollama', description: 'Local embeddings' },
-  { value: 'lmstudio', label: 'LM Studio', description: 'Local embeddings server' },
-];
-
-const EMBEDDING_MODELS_BY_PROVIDER: Record<EmbeddingProvider, string[]> = {
-  local: ['all-MiniLM-L6-v2', 'all-mpnet-base-v2'],
-  openai: ['text-embedding-3-small', 'text-embedding-3-large', 'text-embedding-ada-002'],
-  ollama: ['nomic-embed-text', 'mxbai-embed-large'],
-  lmstudio: ['text-embedding-model'],
-};
 
 const DEFAULT_FORM_STATE: SettingsFormState = {
   llmProvider: 'openai',
@@ -124,6 +117,7 @@ const DEFAULT_FORM_STATE: SettingsFormState = {
   ragTopK: 5,
   ragScoreThreshold: 0.7,
   providerConfig: {},
+  embeddingProviderConfig: {},
 };
 
 // ---------------------------------------------------------------------------
@@ -153,33 +147,6 @@ function FormLabel({ children, htmlFor }: { children: React.ReactNode; htmlFor?:
     <label htmlFor={htmlFor} className="block text-xs text-poe-text-secondary font-medium mb-1.5">
       {children}
     </label>
-  );
-}
-
-function FormSelect<T extends string>({
-  id,
-  value,
-  options,
-  onChange,
-}: {
-  id: string;
-  value: T;
-  options: { value: T; label: string; description?: string }[];
-  onChange: (value: T) => void;
-}) {
-  return (
-    <select
-      id={id}
-      value={value}
-      onChange={(e) => onChange(e.target.value as T)}
-      className="poe-input w-full text-sm"
-    >
-      {options.map((opt) => (
-        <option key={opt.value} value={opt.value}>
-          {opt.label}
-        </option>
-      ))}
-    </select>
   );
 }
 
@@ -294,6 +261,7 @@ export function SettingsPanel({
         ragTopK: persisted.ragTopK,
         ragScoreThreshold: persisted.ragScoreThreshold,
         providerConfig: persisted.providerConfig ?? {},
+        embeddingProviderConfig: persisted.embeddingProviderConfig ?? {},
       };
     }
     return DEFAULT_FORM_STATE;
@@ -322,6 +290,7 @@ export function SettingsPanel({
         ragTopK: initialConfig.ragTopK ?? formState.ragTopK,
         ragScoreThreshold: initialConfig.ragScoreThreshold ?? formState.ragScoreThreshold,
         providerConfig: formState.providerConfig,
+        embeddingProviderConfig: formState.embeddingProviderConfig,
       };
       setFormState(newState);
       setSavedState(newState);
@@ -355,7 +324,8 @@ export function SettingsPanel({
     formState.embeddingProvider !== savedState.embeddingProvider ||
     formState.embeddingModel !== savedState.embeddingModel ||
     formState.ragTopK !== savedState.ragTopK ||
-    formState.ragScoreThreshold !== savedState.ragScoreThreshold;
+    formState.ragScoreThreshold !== savedState.ragScoreThreshold ||
+    JSON.stringify(formState.embeddingProviderConfig) !== JSON.stringify(savedState.embeddingProviderConfig);
 
   // ---------------------------------------------------------------------------
   // Keyboard handling
@@ -422,7 +392,7 @@ export function SettingsPanel({
     setFormState((prev) => ({
       ...prev,
       embeddingProvider: provider,
-      embeddingModel: EMBEDDING_MODELS_BY_PROVIDER[provider][0],
+      embeddingModel: EMBEDDING_MODELS_BY_PROVIDER[provider]?.[0]?.value ?? '',
     }));
     setSaveMessage(null);
   }, []);
@@ -434,6 +404,20 @@ export function SettingsPanel({
         ...prev.providerConfig,
         [prev.llmProvider]: {
           ...(prev.providerConfig[prev.llmProvider] ?? {}),
+          [key]: value,
+        },
+      },
+    }));
+    setSaveMessage(null);
+  }, []);
+
+  const handleEmbeddingProviderConfigChange = useCallback((key: string, value: string) => {
+    setFormState((prev) => ({
+      ...prev,
+      embeddingProviderConfig: {
+        ...prev.embeddingProviderConfig,
+        [prev.embeddingProvider]: {
+          ...(prev.embeddingProviderConfig[prev.embeddingProvider] ?? {}),
           [key]: value,
         },
       },
@@ -517,6 +501,7 @@ export function SettingsPanel({
         ragTopK: newSavedState.ragTopK,
         ragScoreThreshold: newSavedState.ragScoreThreshold,
         providerConfig: newSavedState.providerConfig,
+        embeddingProviderConfig: newSavedState.embeddingProviderConfig,
       });
 
       setSavedState(newSavedState);
@@ -542,7 +527,6 @@ export function SettingsPanel({
   // Get model options for current embedding provider
   // ---------------------------------------------------------------------------
 
-  const currentEmbeddingModels = EMBEDDING_MODELS_BY_PROVIDER[formState.embeddingProvider] ?? [];
   const currentProviderOption = LLM_PROVIDER_OPTIONS.find((o) => o.value === formState.llmProvider);
   const currentProviderConfig = formState.providerConfig[formState.llmProvider] ?? {};
 
@@ -816,7 +800,7 @@ export function SettingsPanel({
           </div>
 
           {/* ---------------------------------------------------------------
-              Embedding Provider Section
+              Embedding Provider Section (with PoE-styled custom dropdown)
               --------------------------------------------------------------- */}
           <div className="poe-card space-y-3">
             <SectionHeader
@@ -829,36 +813,20 @@ export function SettingsPanel({
               description="Configure how text embeddings are generated"
             />
 
-            {/* Embedding provider select */}
-            <div>
-              <FormLabel htmlFor="embedding-provider">Provider</FormLabel>
-              <FormSelect
-                id="embedding-provider"
-                value={formState.embeddingProvider}
-                options={EMBEDDING_PROVIDER_OPTIONS}
-                onChange={handleEmbeddingProviderChange}
-              />
-            </div>
+            {/* PoE-styled Embedding Provider and Model selector */}
+            <EmbeddingProviderSelector
+              provider={formState.embeddingProvider}
+              model={formState.embeddingModel}
+              onProviderChange={handleEmbeddingProviderChange}
+              onModelChange={(model) => updateField('embeddingModel', model)}
+            />
 
-            {/* Embedding model select */}
-            <div>
-              <FormLabel htmlFor="embedding-model">Model</FormLabel>
-              <select
-                id="embedding-model"
-                value={formState.embeddingModel}
-                onChange={(e) => updateField('embeddingModel', e.target.value)}
-                className="poe-input w-full text-sm"
-              >
-                {currentEmbeddingModels.map((model) => (
-                  <option key={model} value={model}>
-                    {model}
-                  </option>
-                ))}
-                {!currentEmbeddingModels.includes(formState.embeddingModel) && (
-                  <option value={formState.embeddingModel}>{formState.embeddingModel}</option>
-                )}
-              </select>
-            </div>
+            {/* Embedding provider-specific configuration */}
+            <EmbeddingProviderConfigSection
+              provider={formState.embeddingProvider}
+              config={formState.embeddingProviderConfig[formState.embeddingProvider] ?? {}}
+              onConfigChange={handleEmbeddingProviderConfigChange}
+            />
           </div>
 
           {/* ---------------------------------------------------------------
