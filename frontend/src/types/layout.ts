@@ -35,6 +35,8 @@ export interface HeaderProps {
   navItems?: NavItem[];
   /** Optional actions/controls to render on the right side */
   actions?: ReactNode;
+  /** Optional context display element (e.g. build context badge) shown between nav and actions */
+  contextDisplay?: ReactNode;
   /** Whether to show the mobile menu (controlled externally or internal state) */
   isMobileMenuOpen?: boolean;
   /** Callback when mobile menu toggle is clicked */
@@ -53,6 +55,8 @@ export interface MainLayoutProps {
   className?: string;
   /** Optional header actions to render alongside the settings button */
   actions?: ReactNode;
+  /** Optional context display element (e.g. build context badge) shown in header */
+  contextDisplay?: ReactNode;
 }
 
 /** Props for the content area wrapper. */

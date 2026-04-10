@@ -59,3 +59,5 @@ export {
   BUILD_CONTEXT_OPTIONS,
   getBuildContextOptionLabel,
 } from './BuildContextSelector';
+export { BuildContextDisplay } from './BuildContextDisplay';
+export type { BuildContextDisplayProps } from './BuildContextDisplay';

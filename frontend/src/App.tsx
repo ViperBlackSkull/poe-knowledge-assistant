@@ -1,5 +1,5 @@
 import { useState, useCallback, useRef, useEffect } from 'react';
-import { MainLayout, ChatMessageList, ChatInput, ItemCardDemo, CitationDemo, GameVersionSelector, getGameVersionLabel, ClearConversationButton, SettingsPanel, BuildContextSelector } from '@/components';
+import { MainLayout, ChatMessageList, ChatInput, ItemCardDemo, CitationDemo, GameVersionSelector, getGameVersionLabel, ClearConversationButton, SettingsPanel, BuildContextSelector, BuildContextDisplay } from '@/components';
 import type { ChatMessage } from '@/types/chat';
 import type { GameVersion } from '@/types/chat';
 import type { SSESource } from '@/types/streaming';
@@ -29,7 +29,7 @@ function App() {
   const streamingBufferRef = useRef<string>('');
 
   // Build context state (persisted to localStorage)
-  const { buildContext, setBuildContext, buildContextLabel } = useBuildContext();
+  const { buildContext, setBuildContext } = useBuildContext();
 
   // Simple hash-based routing for demo pages
   const [currentHash, setCurrentHash] = useState(window.location.hash);
@@ -205,14 +205,6 @@ function App() {
         {getGameVersionLabel(gameVersion)}
       </span>
 
-      {/* Current build context badge */}
-      {buildContext && (
-        <span className="hidden lg:inline-flex items-center gap-1.5 px-2 py-1 rounded text-xs bg-poe-bg-tertiary border border-poe-gold/30 text-poe-gold">
-          <span className="w-1.5 h-1.5 rounded-full bg-poe-gold" />
-          {buildContextLabel}
-        </span>
-      )}
-
       {/* Game version selector dropdown */}
       <GameVersionSelector
         value={gameVersion}
@@ -255,11 +247,16 @@ function App() {
     </div>
   );
 
+  // Build context display shown in the header center area
+  const contextDisplay = (
+    <BuildContextDisplay context={buildContext} />
+  );
+
   // Item card demo page
   if (showItemDemo) {
     return (
       <>
-        <MainLayout actions={headerActions}>
+        <MainLayout actions={headerActions} contextDisplay={contextDisplay}>
           <ItemCardDemo />
         </MainLayout>
         <SettingsPanel
@@ -275,7 +272,7 @@ function App() {
   if (showCitationDemo) {
     return (
       <>
-        <MainLayout actions={headerActions}>
+        <MainLayout actions={headerActions} contextDisplay={contextDisplay}>
           <CitationDemo />
         </MainLayout>
         <SettingsPanel
@@ -289,7 +286,7 @@ function App() {
 
   return (
     <>
-      <MainLayout showSidebar actions={headerActions}>
+      <MainLayout showSidebar actions={headerActions} contextDisplay={contextDisplay}>
         <div className="flex flex-col h-full">
           {/* Chat toolbar */}
           {messages.length > 0 && (

@@ -20,6 +20,7 @@ export function MainLayout({
   showSidebar = false,
   className = '',
   actions,
+  contextDisplay,
 }: MainLayoutProps) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -74,6 +75,7 @@ export function MainLayout({
         subtitle="Your intelligent assistant for Path of Exile"
         navItems={navItems}
         actions={headerActions}
+        contextDisplay={contextDisplay}
         isMobileMenuOpen={isMobileMenuOpen}
         onMobileMenuToggle={() => setIsMobileMenuOpen((prev) => !prev)}
       />

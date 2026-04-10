@@ -11,6 +11,7 @@ export function Header({
   subtitle,
   navItems = [],
   actions,
+  contextDisplay,
   isMobileMenuOpen = false,
   onMobileMenuToggle,
 }: HeaderProps) {
@@ -38,25 +39,36 @@ export function Header({
             </div>
           </div>
 
-          {/* Center: Desktop navigation */}
-          {navItems.length > 0 && (
-            <nav className="hidden md:flex items-center gap-1" aria-label="Main navigation">
-              {navItems.map((item) => (
-                <a
-                  key={item.href}
-                  href={item.href}
-                  className={`px-3 py-2 rounded text-sm font-medium transition-colors duration-200 ${
-                    item.active
-                      ? 'text-poe-gold bg-poe-bg-tertiary border border-poe-border'
-                      : 'text-poe-text-secondary hover:text-poe-text-highlight hover:bg-poe-hover'
-                  }`}
-                  aria-current={item.active ? 'page' : undefined}
-                >
-                  {item.label}
-                </a>
-              ))}
-            </nav>
-          )}
+          {/* Center: Desktop navigation + Context display */}
+          <div className="hidden md:flex items-center gap-3">
+            {navItems.length > 0 && (
+              <nav className="flex items-center gap-1" aria-label="Main navigation">
+                {navItems.map((item) => (
+                  <a
+                    key={item.href}
+                    href={item.href}
+                    className={`px-3 py-2 rounded text-sm font-medium transition-colors duration-200 ${
+                      item.active
+                        ? 'text-poe-gold bg-poe-bg-tertiary border border-poe-border'
+                        : 'text-poe-text-secondary hover:text-poe-text-highlight hover:bg-poe-hover'
+                    }`}
+                    aria-current={item.active ? 'page' : undefined}
+                  >
+                    {item.label}
+                  </a>
+                ))}
+              </nav>
+            )}
+
+            {/* Context display area (e.g. build context badge) */}
+            {contextDisplay && (
+              <div className="flex items-center">
+                {/* Separator line */}
+                <div className="w-px h-5 bg-poe-border mx-2" />
+                {contextDisplay}
+              </div>
+            )}
+          </div>
 
           {/* Right: Action controls + mobile menu toggle */}
           <div className="flex items-center gap-3">

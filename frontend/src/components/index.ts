@@ -48,3 +48,5 @@ export type {
 export { BuildContextSelector } from './common/BuildContextSelector';
 export { BUILD_CONTEXT_OPTIONS, getBuildContextOptionLabel } from './common/BuildContextSelector';
 export type { BuildContextSelectorProps, BuildContextOption } from './common/BuildContextSelector';
+export { BuildContextDisplay } from './common/BuildContextDisplay';
+export type { BuildContextDisplayProps } from './common/BuildContextDisplay';
