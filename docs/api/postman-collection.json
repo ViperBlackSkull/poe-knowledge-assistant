@@ -1,0 +1,1258 @@
+{
+  "info": {
+    "name": "POE Knowledge Assistant API",
+    "description": "Complete API collection for the POE Knowledge Assistant backend service. Covers all endpoints including chat, configuration, scraping, jobs, indexing, and data freshness.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "version": "1.0.0"
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:8460/api",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Root",
+      "item": [
+        {
+          "name": "Get API Info",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/",
+              "host": ["{{base_url}}"],
+              "path": [""]
+            },
+            "description": "Returns basic API information including name, version, and status."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Health",
+      "item": [
+        {
+          "name": "Health Check",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/health",
+              "host": ["{{base_url}}"],
+              "path": ["health"]
+            },
+            "description": "Returns health status of all services (ChromaDB, embeddings, vector store). Returns 200 when healthy, 503 when degraded."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Configuration",
+      "item": [
+        {
+          "name": "Get Configuration",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/config",
+              "host": ["{{base_url}}"],
+              "path": ["config"]
+            },
+            "description": "Get the current application configuration with sensitive data (API keys) masked."
+          },
+          "response": []
+        },
+        {
+          "name": "Update Configuration",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"llm_provider\": \"openai\",\n  \"llm_model\": \"gpt-4\",\n  \"llm_temperature\": 0.7,\n  \"rag_top_k\": 5\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/config",
+              "host": ["{{base_url}}"],
+              "path": ["config"]
+            },
+            "description": "Update application configuration at runtime. Only provided fields are modified. Hot-reloadable settings take effect immediately."
+          },
+          "response": []
+        },
+        {
+          "name": "Set OpenAI API Key",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"openai_api_key\": \"sk-your-openai-api-key-here\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/config",
+              "host": ["{{base_url}}"],
+              "path": ["config"]
+            },
+            "description": "Set the OpenAI API key. The key is stored securely and never returned in responses."
+          },
+          "response": []
+        },
+        {
+          "name": "Switch to Anthropic",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"llm_provider\": \"anthropic\",\n  \"llm_model\": \"claude-3-sonnet-20240229\",\n  \"anthropic_api_key\": \"sk-ant-your-key-here\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/config",
+              "host": ["{{base_url}}"],
+              "path": ["config"]
+            },
+            "description": "Switch to Anthropic as the LLM provider."
+          },
+          "response": []
+        },
+        {
+          "name": "Switch to Ollama (local)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"llm_provider\": \"ollama\",\n  \"llm_model\": \"llama2\",\n  \"ollama_base_url\": \"http://localhost:11434\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/config",
+              "host": ["{{base_url}}"],
+              "path": ["config"]
+            },
+            "description": "Switch to Ollama for local LLM inference."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Chat",
+      "item": [
+        {
+          "name": "Chat (SSE Stream)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "text/event-stream"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"question\": \"What are the best skills for a Witch in PoE2?\",\n  \"game_version\": \"poe2\",\n  \"build_context\": \"Witch - Blood Mage\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/chat",
+              "host": ["{{base_url}}"],
+              "path": ["chat"]
+            },
+            "description": "Main chat endpoint. Returns SSE stream with sources, tokens, and done events."
+          },
+          "response": []
+        },
+        {
+          "name": "Chat Stream (SSE)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "text/event-stream"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"message\": \"Tell me about the Fireball skill\",\n  \"game_version\": \"poe1\",\n  \"conversation_id\": \"conv-test-001\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/chat/stream",
+              "host": ["{{base_url}}"],
+              "path": ["chat", "stream"]
+            },
+            "description": "Alternative streaming chat endpoint with identical SSE behavior."
+          },
+          "response": []
+        },
+        {
+          "name": "Streaming Health",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/chat/stream/health",
+              "host": ["{{base_url}}"],
+              "path": ["chat", "stream", "health"]
+            },
+            "description": "Health check for the streaming service dependencies."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Chat History",
+      "item": [
+        {
+          "name": "Get Conversation Stats",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/chat/history/stats",
+              "host": ["{{base_url}}"],
+              "path": ["chat", "history", "stats"]
+            },
+            "description": "Get statistics about the conversation history store."
+          },
+          "response": []
+        },
+        {
+          "name": "List Conversations",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/chat/history",
+              "host": ["{{base_url}}"],
+              "path": ["chat", "history"]
+            },
+            "description": "List all stored conversations with summaries."
+          },
+          "response": []
+        },
+        {
+          "name": "Get Conversation",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/chat/history/conv-test-001",
+              "host": ["{{base_url}}"],
+              "path": ["chat", "history", "conv-test-001"]
+            },
+            "description": "Get full conversation history by ID."
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Conversation",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/chat/history/conv-test-001",
+              "host": ["{{base_url}}"],
+              "path": ["chat", "history", "conv-test-001"]
+            },
+            "description": "Delete a conversation and all its messages."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Jobs",
+      "item": [
+        {
+          "name": "Job Manager Health",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/jobs/health",
+              "host": ["{{base_url}}"],
+              "path": ["jobs", "health"]
+            },
+            "description": "Job manager health check."
+          },
+          "response": []
+        },
+        {
+          "name": "Get Job Stats",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/jobs/stats",
+              "host": ["{{base_url}}"],
+              "path": ["jobs", "stats"]
+            },
+            "description": "Get comprehensive job manager statistics."
+          },
+          "response": []
+        },
+        {
+          "name": "Add Job",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Scrape Unique Weapons\",\n  \"job_type\": \"category\",\n  \"url\": \"https://poedb.tw/us/Unique_Weapon\",\n  \"priority\": 5,\n  \"game\": \"poe1\",\n  \"category\": \"Unique Weapon\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/jobs/add",
+              "host": ["{{base_url}}"],
+              "path": ["jobs", "add"]
+            },
+            "description": "Add a new scraping job to the queue."
+          },
+          "response": []
+        },
+        {
+          "name": "Get Job Status",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/jobs/job-category-abc123",
+              "host": ["{{base_url}}"],
+              "path": ["jobs", "job-category-abc123"]
+            },
+            "description": "Get the status of a specific job."
+          },
+          "response": []
+        },
+        {
+          "name": "List Jobs",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"completed\",\n  \"limit\": 50,\n  \"offset\": 0\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/jobs/list",
+              "host": ["{{base_url}}"],
+              "path": ["jobs", "list"]
+            },
+            "description": "List jobs with optional filters and pagination."
+          },
+          "response": []
+        },
+        {
+          "name": "Cancel Job",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/jobs/job-category-abc123/cancel",
+              "host": ["{{base_url}}"],
+              "path": ["jobs", "job-category-abc123", "cancel"]
+            },
+            "description": "Cancel a pending or running job."
+          },
+          "response": []
+        },
+        {
+          "name": "Start Processing",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/jobs/start",
+              "host": ["{{base_url}}"],
+              "path": ["jobs", "start"]
+            },
+            "description": "Start the job processing loop."
+          },
+          "response": []
+        },
+        {
+          "name": "Stop Processing",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/jobs/stop",
+              "host": ["{{base_url}}"],
+              "path": ["jobs", "stop"]
+            },
+            "description": "Stop the job processing loop gracefully."
+          },
+          "response": []
+        },
+        {
+          "name": "Clear Finished Jobs",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/jobs/clear",
+              "host": ["{{base_url}}"],
+              "path": ["jobs", "clear"]
+            },
+            "description": "Clear completed, failed, and cancelled jobs."
+          },
+          "response": []
+        },
+        {
+          "name": "Get Job Config",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/jobs/config/info",
+              "host": ["{{base_url}}"],
+              "path": ["jobs", "config", "info"]
+            },
+            "description": "Get job manager configuration including supported types and statuses."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Scraper",
+      "item": [
+        {
+          "name": "Scraper Health",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/test/scraper/health",
+              "host": ["{{base_url}}"],
+              "path": ["test", "scraper", "health"]
+            },
+            "description": "Verify connectivity to poedb.tw."
+          },
+          "response": []
+        },
+        {
+          "name": "Fetch Page (Sync)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"path\": \"/us/Unique_Weapon\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/test/scraper/fetch",
+              "host": ["{{base_url}}"],
+              "path": ["test", "scraper", "fetch"]
+            },
+            "description": "Fetch a page synchronously from poedb.tw."
+          },
+          "response": []
+        },
+        {
+          "name": "Fetch Page (Async)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"path\": \"/us/Gem\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/test/scraper/fetch-async",
+              "host": ["{{base_url}}"],
+              "path": ["test", "scraper", "fetch-async"]
+            },
+            "description": "Fetch a page asynchronously with structured response."
+          },
+          "response": []
+        },
+        {
+          "name": "Get Scraper Config",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/test/scraper/config",
+              "host": ["{{base_url}}"],
+              "path": ["test", "scraper", "config"]
+            },
+            "description": "Get current scraper configuration."
+          },
+          "response": []
+        },
+        {
+          "name": "List Scraper Modules",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/test/scraper/modules",
+              "host": ["{{base_url}}"],
+              "path": ["test", "scraper", "modules"]
+            },
+            "description": "List all scraper sub-modules and their exports."
+          },
+          "response": []
+        },
+        {
+          "name": "Fetch and Parse Page",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"path\": \"/us/Tabula_Rasa\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/test/scraper/parse",
+              "host": ["{{base_url}}"],
+              "path": ["test", "scraper", "parse"]
+            },
+            "description": "Fetch and parse a page with DOM extraction."
+          },
+          "response": []
+        },
+        {
+          "name": "Scrape Category",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"category_name\": \"Unique Weapon\",\n  \"url\": \"https://poedb.tw/us/Unique_Weapon\",\n  \"follow_pagination\": true,\n  \"max_pages\": 5\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/test/scraper/category",
+              "host": ["{{base_url}}"],
+              "path": ["test", "scraper", "category"]
+            },
+            "description": "Scrape a category index page for item links."
+          },
+          "response": []
+        },
+        {
+          "name": "List Known Categories",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/test/scraper/category/categories",
+              "host": ["{{base_url}}"],
+              "path": ["test", "scraper", "category", "categories"]
+            },
+            "description": "List known poedb.tw category pages."
+          },
+          "response": []
+        },
+        {
+          "name": "Scrape Item Detail",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"url\": \"https://poedb.tw/us/Tabula_Rasa\",\n  \"category\": \"Unique Body Armour\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/test/scraper/item",
+              "host": ["{{base_url}}"],
+              "path": ["test", "scraper", "item"]
+            },
+            "description": "Scrape a single item detail page."
+          },
+          "response": []
+        },
+        {
+          "name": "Batch Scrape Items",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"urls\": [\n    \"https://poedb.tw/us/Tabula_Rasa\",\n    \"https://poedb.tw/us/Headhunter\"\n  ],\n  \"category\": \"Unique Items\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/test/scraper/item/batch",
+              "host": ["{{base_url}}"],
+              "path": ["test", "scraper", "item", "batch"]
+            },
+            "description": "Scrape multiple item detail pages (max 50)."
+          },
+          "response": []
+        },
+        {
+          "name": "List Example Items",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/test/scraper/item/examples",
+              "host": ["{{base_url}}"],
+              "path": ["test", "scraper", "item", "examples"]
+            },
+            "description": "List example item detail page URLs for testing."
+          },
+          "response": []
+        },
+        {
+          "name": "Detect Game Version",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"url\": \"https://poedb.tw/us/Tabula_Rasa\",\n  \"fetch_content\": false\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/test/scraper/game-version",
+              "host": ["{{base_url}}"],
+              "path": ["test", "scraper", "game-version"]
+            },
+            "description": "Detect whether a URL belongs to PoE1 or PoE2."
+          },
+          "response": []
+        },
+        {
+          "name": "Batch Detect Game Versions",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"urls\": [\n    \"https://poedb.tw/us/Tabula_Rasa\",\n    \"https://poe2db.tw/us/Fireball\",\n    \"https://poedb.tw/us/Headhunter\"\n  ]\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/test/scraper/game-version/batch",
+              "host": ["{{base_url}}"],
+              "path": ["test", "scraper", "game-version", "batch"]
+            },
+            "description": "Detect game versions for multiple URLs."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Scrape Timestamps",
+      "item": [
+        {
+          "name": "Timestamp Storage Health",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/scrape-timestamps/health",
+              "host": ["{{base_url}}"],
+              "path": ["scrape-timestamps", "health"]
+            },
+            "description": "Health check for scrape timestamp storage."
+          },
+          "response": []
+        },
+        {
+          "name": "Get All Timestamps",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/scrape-timestamps",
+              "host": ["{{base_url}}"],
+              "path": ["scrape-timestamps"]
+            },
+            "description": "Get last scrape timestamps for all game versions."
+          },
+          "response": []
+        },
+        {
+          "name": "Get PoE1 Timestamp",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/scrape-timestamps/poe1",
+              "host": ["{{base_url}}"],
+              "path": ["scrape-timestamps", "poe1"]
+            },
+            "description": "Get last scrape timestamp for PoE1."
+          },
+          "response": []
+        },
+        {
+          "name": "Get PoE2 Timestamp",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/scrape-timestamps/poe2",
+              "host": ["{{base_url}}"],
+              "path": ["scrape-timestamps", "poe2"]
+            },
+            "description": "Get last scrape timestamp for PoE2."
+          },
+          "response": []
+        },
+        {
+          "name": "Update Timestamp",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"game\": \"poe2\",\n  \"items_scraped\": 50,\n  \"categories_scraped\": 5,\n  \"job_id\": \"job-test-123\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/scrape-timestamps/update",
+              "host": ["{{base_url}}"],
+              "path": ["scrape-timestamps", "update"]
+            },
+            "description": "Manually update the scrape timestamp for a game."
+          },
+          "response": []
+        },
+        {
+          "name": "Reset Timestamps",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"game\": null\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/scrape-timestamps/reset",
+              "host": ["{{base_url}}"],
+              "path": ["scrape-timestamps", "reset"]
+            },
+            "description": "Reset timestamps for a specific game or all games. Set game to null to reset both."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Data Freshness",
+      "item": [
+        {
+          "name": "Get Data Freshness",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/freshness",
+              "host": ["{{base_url}}"],
+              "path": ["freshness"]
+            },
+            "description": "Get data freshness information with staleness warnings. Data older than 30 days is flagged as stale."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Admin",
+      "item": [
+        {
+          "name": "Trigger Scrape (PoE1 Shallow)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"game\": \"poe1\",\n  \"depth\": \"shallow\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/admin/scrape",
+              "host": ["{{base_url}}"],
+              "path": ["admin", "scrape"]
+            },
+            "description": "Trigger a shallow scrape for PoE1 (category pages only)."
+          },
+          "response": []
+        },
+        {
+          "name": "Trigger Scrape (PoE2 Deep)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"game\": \"poe2\",\n  \"depth\": \"deep\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/admin/scrape",
+              "host": ["{{base_url}}"],
+              "path": ["admin", "scrape"]
+            },
+            "description": "Trigger a deep scrape for PoE2 (categories + item details)."
+          },
+          "response": []
+        },
+        {
+          "name": "Trigger Scrape (Both Games)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"game\": null,\n  \"depth\": \"shallow\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/admin/scrape",
+              "host": ["{{base_url}}"],
+              "path": ["admin", "scrape"]
+            },
+            "description": "Trigger a shallow scrape for both games."
+          },
+          "response": []
+        },
+        {
+          "name": "Get Scrape Status",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/admin/scrape/status?job_id=job-category-abc123",
+              "host": ["{{base_url}}"],
+              "path": ["admin", "scrape", "status"],
+              "query": [
+                {
+                  "key": "job_id",
+                  "value": "job-category-abc123"
+                }
+              ]
+            },
+            "description": "Get the status of a scraping job by job_id."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Testing",
+      "item": [
+        {
+          "name": "Embeddings",
+          "item": [
+            {
+              "name": "Embed Query",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"text\": \"What is the best unique body armour?\"\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/test/embeddings/query",
+                  "host": ["{{base_url}}"],
+                  "path": ["test", "embeddings", "query"]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Embed Documents",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"texts\": [\n    \"Tabula Rasa is a unique simple robe\",\n    \"Headhunter is a unique leather belt\"\n  ]\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/test/embeddings/documents",
+                  "host": ["{{base_url}}"],
+                  "path": ["test", "embeddings", "documents"]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Test Embeddings Factory",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"provider\": \"local\",\n  \"test_text\": \"Path of Exile is an action RPG\"\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/test/embeddings/factory",
+                  "host": ["{{base_url}}"],
+                  "path": ["test", "embeddings", "factory"]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Vector Store",
+          "item": [
+            {
+              "name": "Vector Store Health",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/test/vectorstore/health",
+                  "host": ["{{base_url}}"],
+                  "path": ["test", "vectorstore", "health"]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Add Documents",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"texts\": [\n    \"Tabula Rasa has 6 linked white sockets\",\n    \"Headhunter steals rare monster mods\"\n  ],\n  \"metadatas\": [\n    {\"game\": \"poe1\", \"item_type\": \"armor\"},\n    {\"game\": \"poe1\", \"item_type\": \"accessory\"}\n  ]\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/test/vectorstore/add",
+                  "host": ["{{base_url}}"],
+                  "path": ["test", "vectorstore", "add"]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Search Documents",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"query\": \"unique body armour\",\n  \"k\": 5,\n  \"game\": \"poe1\"\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/test/vectorstore/search",
+                  "host": ["{{base_url}}"],
+                  "path": ["test", "vectorstore", "search"]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "LLM",
+          "item": [
+            {
+              "name": "LLM Health",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/test/llm/health",
+                  "host": ["{{base_url}}"],
+                  "path": ["test", "llm", "health"]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Test LLM Factory",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"provider\": \"openai\",\n  \"model_name\": \"gpt-4\"\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/test/llm/factory",
+                  "host": ["{{base_url}}"],
+                  "path": ["test", "llm", "factory"]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "List LLM Providers",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/test/llm/providers",
+                  "host": ["{{base_url}}"],
+                  "path": ["test", "llm", "providers"]
+                }
+              },
+              "response": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Indexer",
+      "item": [
+        {
+          "name": "Indexer Health",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/test/indexer/health",
+              "host": ["{{base_url}}"],
+              "path": ["test", "indexer", "health"]
+            },
+            "description": "Check ChromaDB indexer health."
+          },
+          "response": []
+        },
+        {
+          "name": "Get Indexer Stats",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/test/indexer/stats",
+              "host": ["{{base_url}}"],
+              "path": ["test", "indexer", "stats"]
+            },
+            "description": "Get indexing statistics."
+          },
+          "response": []
+        },
+        {
+          "name": "Index Items",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"items\": [\n    {\n      \"name\": \"Tabula Rasa\",\n      \"item_type\": \"armor\",\n      \"url\": \"https://poedb.tw/us/Tabula_Rasa\",\n      \"game\": \"poe1\",\n      \"description\": \"Simple Robe with 6 linked white sockets\"\n    }\n  ],\n  \"upsert\": true\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/test/indexer/index",
+              "host": ["{{base_url}}"],
+              "path": ["test", "indexer", "index"]
+            },
+            "description": "Index items into ChromaDB."
+          },
+          "response": []
+        },
+        {
+          "name": "Index Sample Items",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"game\": \"poe2\",\n  \"count\": 5\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/test/indexer/index-samples",
+              "host": ["{{base_url}}"],
+              "path": ["test", "indexer", "index-samples"]
+            },
+            "description": "Generate and index sample items for testing."
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Items",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"urls\": [\n    \"https://poedb.tw/us/Tabula_Rasa\"\n  ]\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/test/indexer/delete",
+              "host": ["{{base_url}}"],
+              "path": ["test", "indexer", "delete"]
+            },
+            "description": "Delete indexed items by URL."
+          },
+          "response": []
+        },
+        {
+          "name": "Search Indexed Items",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"query\": \"unique body armour\",\n  \"k\": 5,\n  \"game\": \"poe1\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/test/indexer/search",
+              "host": ["{{base_url}}"],
+              "path": ["test", "indexer", "search"]
+            },
+            "description": "Search indexed items in ChromaDB."
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}

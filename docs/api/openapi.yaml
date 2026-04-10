@@ -1,0 +1,1910 @@
+openapi: 3.1.0
+info:
+  title: POE Knowledge Assistant API
+  description: >
+    Backend API for POE Knowledge Assistant - A RAG-based chatbot for Path of Exile game knowledge.
+    Provides endpoints for chat, configuration, scraping, job management, indexing, and data freshness.
+  version: 1.0.0
+  contact:
+    name: POE Knowledge Assistant
+  license:
+    name: MIT
+
+servers:
+  - url: http://localhost:8460/api
+    description: Local development server
+  - url: http://localhost:8000/api
+    description: Default backend server
+
+tags:
+  - name: Root
+    description: API root and information
+  - name: Health
+    description: Health check endpoints
+  - name: Configuration
+    description: Application configuration management
+  - name: Chat
+    description: Chat and streaming endpoints
+  - name: Chat History
+    description: Conversation history management
+  - name: Jobs
+    description: Scraping job management
+  - name: Scraper
+    description: Web scraping endpoints
+  - name: Scrape Timestamps
+    description: Scrape timestamp tracking
+  - name: Data Freshness
+    description: Data freshness and staleness information
+  - name: Admin
+    description: Administrative endpoints
+  - name: Indexer
+    description: ChromaDB indexing endpoints
+  - name: Testing
+    description: Test and debugging endpoints
+
+paths:
+  /:
+    get:
+      tags: [Root]
+      summary: API root information
+      description: Returns basic API information including name, version, and status.
+      operationId: getRoot
+      responses:
+        "200":
+          description: API information
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RootResponse"
+              example:
+                message: "POE Knowledge Assistant API"
+                version: "1.0.0"
+                status: "operational"
+
+  /health:
+    get:
+      tags: [Health]
+      summary: Health check
+      description: >
+        Returns the health status of the API and its dependencies (ChromaDB, embeddings, vector store).
+        Returns HTTP 200 when healthy, HTTP 503 when degraded.
+      operationId: healthCheck
+      responses:
+        "200":
+          description: System is healthy
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HealthCheckResponse"
+        "503":
+          description: System is degraded (one or more services not ready)
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HealthCheckResponse"
+
+  /config:
+    get:
+      tags: [Configuration]
+      summary: Get application configuration
+      description: >
+        Returns the complete application configuration with sensitive data (API keys, secrets) masked.
+        API key presence is indicated by a boolean field.
+      operationId: getConfig
+      responses:
+        "200":
+          description: Current application configuration
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AppConfig"
+        "500":
+          description: Internal server error reading configuration
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorDetail"
+
+    put:
+      tags: [Configuration]
+      summary: Update application configuration
+      description: >
+        Update application configuration at runtime. Only provided fields are modified.
+        Hot-reloadable settings take effect immediately without restart.
+      operationId: updateConfig
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ConfigUpdateRequest"
+      responses:
+        "200":
+          description: Configuration updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ConfigUpdateResponse"
+        "400":
+          description: Validation error in configuration update
+        "422":
+          description: Request body validation error
+        "500":
+          description: Internal server error applying configuration
+
+  /chat:
+    post:
+      tags: [Chat]
+      summary: Chat with the assistant (SSE streaming)
+      description: >
+        Main chat endpoint. Accepts a question and returns a streaming SSE response
+        with citations to source documents. Uses RAG (Retrieval-Augmented Generation).
+      operationId: chat
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ChatApiRequest"
+      responses:
+        "200":
+          description: Streaming SSE response
+          content:
+            text/event-stream:
+              schema:
+                type: string
+                description: "SSE stream with events: sources, token, done, error"
+        "400":
+          description: Invalid request body
+        "500":
+          description: Internal server error
+
+  /chat/stream:
+    post:
+      tags: [Chat]
+      summary: Stream chat response via SSE
+      description: >
+        Stream a chat response using Server-Sent Events. Retrieves relevant context
+        via RAG chain, then streams the LLM response token by token.
+      operationId: chatStream
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ChatStreamRequest"
+      responses:
+        "200":
+          description: Streaming SSE response
+          content:
+            text/event-stream:
+              schema:
+                type: string
+        "400":
+          description: Invalid request body
+        "500":
+          description: Internal server error
+
+  /chat/stream/health:
+    get:
+      tags: [Chat]
+      summary: Streaming service health check
+      description: Checks that all dependencies for streaming are ready.
+      operationId: chatStreamHealth
+      responses:
+        "200":
+          description: Streaming service health status
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuccessResponse"
+        "500":
+          description: Streaming service health check failed
+
+  /chat/history:
+    get:
+      tags: [Chat History]
+      summary: List all conversations
+      description: Returns a summary of all stored conversations.
+      operationId: listConversations
+      responses:
+        "200":
+          description: List of conversation summaries
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ConversationListResponse"
+
+  /chat/history/stats:
+    get:
+      tags: [Chat History]
+      summary: Get conversation store statistics
+      description: Returns statistics about the conversation history store.
+      operationId: getConversationStats
+      responses:
+        "200":
+          description: Conversation store statistics
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ConversationStatsResponse"
+
+  /chat/history/{conversation_id}:
+    get:
+      tags: [Chat History]
+      summary: Get conversation by ID
+      description: Retrieve the full conversation history for a given conversation ID.
+      operationId: getConversation
+      parameters:
+        - name: conversation_id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Unique conversation identifier
+      responses:
+        "200":
+          description: Conversation history
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ConversationDetailResponse"
+        "404":
+          description: Conversation not found
+
+    delete:
+      tags: [Chat History]
+      summary: Delete a conversation
+      description: Delete a conversation and all its messages.
+      operationId: deleteConversation
+      parameters:
+        - name: conversation_id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Unique conversation identifier
+      responses:
+        "200":
+          description: Conversation deleted
+        "404":
+          description: Conversation not found
+
+  /jobs/health:
+    get:
+      tags: [Jobs]
+      summary: Job manager health check
+      description: Returns job manager health status and statistics.
+      operationId: jobsHealth
+      responses:
+        "200":
+          description: Job manager health status
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuccessResponse"
+
+  /jobs/stats:
+    get:
+      tags: [Jobs]
+      summary: Get job statistics
+      description: Returns queue size, running jobs, completed/failed counts, rate limiter status.
+      operationId: jobsStats
+      responses:
+        "200":
+          description: Job statistics
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuccessResponse"
+
+  /jobs/add:
+    post:
+      tags: [Jobs]
+      summary: Add a scraping job
+      description: >
+        Add a new scraping job to the queue. Jobs are processed by priority (lower = higher).
+        The job manager must be started via /jobs/start before processing begins.
+      operationId: jobsAdd
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AddJobRequest"
+      responses:
+        "200":
+          description: Job added successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuccessResponse"
+        "400":
+          description: Validation error
+        "500":
+          description: Failed to add job
+
+  /jobs/{job_id}:
+    get:
+      tags: [Jobs]
+      summary: Get job status
+      description: Returns all job details including status, progress, result, and errors.
+      operationId: jobsGetStatus
+      parameters:
+        - name: job_id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Unique job identifier
+      responses:
+        "200":
+          description: Job status details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuccessResponse"
+        "404":
+          description: Job not found
+
+  /jobs/list:
+    post:
+      tags: [Jobs]
+      summary: List jobs with filters
+      description: Returns a paginated list of jobs with optional filtering by status and type.
+      operationId: jobsList
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ListJobsRequest"
+      responses:
+        "200":
+          description: Filtered job list
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuccessResponse"
+
+  /jobs/{job_id}/cancel:
+    post:
+      tags: [Jobs]
+      summary: Cancel a job
+      description: >
+        Cancel a pending or running job. Pending jobs are cancelled immediately.
+        Running jobs are signalled to stop at the next checkpoint.
+      operationId: jobsCancel
+      parameters:
+        - name: job_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Job cancelled
+        "400":
+          description: Validation error
+        "500":
+          description: Failed to cancel job
+
+  /jobs/start:
+    post:
+      tags: [Jobs]
+      summary: Start job processing
+      description: Start the background job processing loop.
+      operationId: jobsStart
+      responses:
+        "200":
+          description: Job processing started
+        "500":
+          description: Failed to start
+
+  /jobs/stop:
+    post:
+      tags: [Jobs]
+      summary: Stop job processing
+      description: Stop the job processing loop gracefully. Running jobs complete.
+      operationId: jobsStop
+      responses:
+        "200":
+          description: Job processing stopped
+        "500":
+          description: Failed to stop
+
+  /jobs/clear:
+    post:
+      tags: [Jobs]
+      summary: Clear finished jobs
+      description: Clear completed, failed, and cancelled jobs from history.
+      operationId: jobsClear
+      responses:
+        "200":
+          description: Finished jobs cleared
+        "500":
+          description: Failed to clear
+
+  /jobs/config/info:
+    get:
+      tags: [Jobs]
+      summary: Get job manager configuration
+      description: Returns concurrency limits, rate limiting settings, supported types and statuses.
+      operationId: jobsConfigInfo
+      responses:
+        "200":
+          description: Job manager configuration
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuccessResponse"
+
+  /test/scraper/health:
+    get:
+      tags: [Scraper]
+      summary: Scraper health check
+      description: Verifies connectivity to poedb.tw.
+      operationId: scraperHealth
+      responses:
+        "200":
+          description: Scraper health status
+        "500":
+          description: Scraper health check failed
+
+  /test/scraper/fetch:
+    post:
+      tags: [Scraper]
+      summary: Fetch a page from poedb.tw
+      description: Fetch a single page using the synchronous scraper.
+      operationId: scraperFetch
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                path:
+                  type: string
+                  default: "/"
+                  description: Relative URL path to fetch
+                  maxLength: 500
+      responses:
+        "200":
+          description: Page fetched successfully
+        "502":
+          description: Failed to fetch page
+        "500":
+          description: Unexpected error
+
+  /test/scraper/fetch-async:
+    post:
+      tags: [Scraper]
+      summary: Async fetch a page from poedb.tw
+      description: Fetch a page using the async HTTP client with structured response.
+      operationId: scraperFetchAsync
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                path:
+                  type: string
+                  default: "/"
+                  maxLength: 500
+      responses:
+        "200":
+          description: Page fetched successfully
+        "502":
+          description: Failed to fetch page
+        "500":
+          description: Unexpected error
+
+  /test/scraper/config:
+    get:
+      tags: [Scraper]
+      summary: Get scraper configuration
+      description: Returns current scraper settings from application config.
+      operationId: scraperConfig
+      responses:
+        "200":
+          description: Scraper configuration
+
+  /test/scraper/modules:
+    get:
+      tags: [Scraper]
+      summary: List scraper modules
+      description: Lists all scraper sub-modules and their exported components.
+      operationId: scraperModules
+      responses:
+        "200":
+          description: Scraper module structure
+
+  /test/scraper/parse:
+    post:
+      tags: [Scraper]
+      summary: Fetch and parse a page
+      description: Fetch a page and run DOM parsing utilities to extract structured data.
+      operationId: scraperParse
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [path]
+              properties:
+                path:
+                  type: string
+                  maxLength: 500
+      responses:
+        "200":
+          description: Parsed page data
+        "502":
+          description: Failed to fetch page
+        "500":
+          description: Unexpected error
+
+  /test/scraper/category:
+    post:
+      tags: [Scraper]
+      summary: Scrape a category page
+      description: Scrape a category index page and extract item/skill links.
+      operationId: scraperCategory
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CategoryScrapeRequest"
+      responses:
+        "200":
+          description: Category scrape results
+        "502":
+          description: Scraper error
+        "500":
+          description: Unexpected error
+
+  /test/scraper/category/categories:
+    get:
+      tags: [Scraper]
+      summary: List known categories
+      description: Returns known poedb.tw category names and URLs.
+      operationId: scraperCategoryList
+      responses:
+        "200":
+          description: Known categories list
+
+  /test/scraper/item:
+    post:
+      tags: [Scraper]
+      summary: Scrape an item detail page
+      description: Scrape a single item detail page for comprehensive structured data.
+      operationId: scraperItemDetail
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ItemDetailScrapeRequest"
+      responses:
+        "200":
+          description: Item detail data
+        "502":
+          description: Scraper error
+        "500":
+          description: Unexpected error
+
+  /test/scraper/item/batch:
+    post:
+      tags: [Scraper]
+      summary: Batch scrape item details
+      description: Scrape multiple item detail pages sequentially (max 50).
+      operationId: scraperItemDetailBatch
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [urls]
+              properties:
+                urls:
+                  type: array
+                  items:
+                    type: string
+                  minItems: 1
+                  maxItems: 50
+                category:
+                  type: string
+                  nullable: true
+                  maxLength: 200
+      responses:
+        "200":
+          description: Batch scrape results
+        "502":
+          description: Scraper error
+        "500":
+          description: Unexpected error
+
+  /test/scraper/item/examples:
+    get:
+      tags: [Scraper]
+      summary: List example item URLs
+      description: Returns example item detail page URLs for testing.
+      operationId: scraperItemExamples
+      responses:
+        "200":
+          description: Example item URLs
+
+  /test/scraper/game-version:
+    post:
+      tags: [Scraper]
+      summary: Detect game version
+      description: Detect whether a URL belongs to PoE1 or PoE2 based on URL and/or content.
+      operationId: detectGameVersion
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [url]
+              properties:
+                url:
+                  type: string
+                fetch_content:
+                  type: boolean
+                  default: false
+                  description: If true, fetch page for content-based detection
+      responses:
+        "200":
+          description: Game version detection result
+        "500":
+          description: Detection failed
+
+  /test/scraper/game-version/batch:
+    post:
+      tags: [Scraper]
+      summary: Batch detect game versions
+      description: Detect game versions for multiple URLs at once (URL-based only).
+      operationId: detectGameVersionBatch
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [urls]
+              properties:
+                urls:
+                  type: array
+                  items:
+                    type: string
+                  minItems: 1
+                  maxItems: 100
+      responses:
+        "200":
+          description: Batch detection results
+        "500":
+          description: Detection failed
+
+  /scrape-timestamps/health:
+    get:
+      tags: [Scrape Timestamps]
+      summary: Scrape timestamp storage health
+      operationId: scrapeTimestampsHealth
+      responses:
+        "200":
+          description: Health status
+        "500":
+          description: Health check failed
+
+  /scrape-timestamps:
+    get:
+      tags: [Scrape Timestamps]
+      summary: Get all scrape timestamps
+      description: Get last scrape timestamps for all game versions.
+      operationId: scrapeTimestampsGetAll
+      responses:
+        "200":
+          description: Timestamp data for all game versions
+        "500":
+          description: Failed to retrieve timestamps
+
+  /scrape-timestamps/{game}:
+    get:
+      tags: [Scrape Timestamps]
+      summary: Get scrape timestamp for a game
+      description: Get the last scrape timestamp for a specific game version.
+      operationId: scrapeTimestampsGetGame
+      parameters:
+        - name: game
+          in: path
+          required: true
+          schema:
+            type: string
+            enum: [poe1, poe2]
+          description: Game version
+      responses:
+        "200":
+          description: Timestamp data
+        "400":
+          description: Invalid game version
+        "500":
+          description: Failed to retrieve timestamp
+
+  /scrape-timestamps/update:
+    post:
+      tags: [Scrape Timestamps]
+      summary: Update scrape timestamp
+      description: Manually update the scrape timestamp for a game version.
+      operationId: scrapeTimestampsUpdate
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ScrapeTimestampUpdateRequest"
+      responses:
+        "200":
+          description: Timestamp updated
+        "400":
+          description: Validation error
+        "500":
+          description: Failed to update
+
+  /scrape-timestamps/reset:
+    post:
+      tags: [Scrape Timestamps]
+      summary: Reset scrape timestamps
+      description: Reset timestamps for a specific game or all games.
+      operationId: scrapeTimestampsReset
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                game:
+                  type: string
+                  nullable: true
+                  enum: [poe1, poe2]
+                  description: Game version to reset, or null for both
+      responses:
+        "200":
+          description: Timestamps reset
+        "400":
+          description: Validation error
+        "500":
+          description: Failed to reset
+
+  /freshness:
+    get:
+      tags: [Data Freshness]
+      summary: Get data freshness
+      description: >
+        Returns data freshness information including last scrape timestamps,
+        human-readable relative times, and staleness warnings (>30 days).
+      operationId: dataFreshness
+      responses:
+        "200":
+          description: Data freshness information
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DataFreshnessResponse"
+        "500":
+          description: Failed to compute freshness
+
+  /admin/scrape:
+    post:
+      tags: [Admin]
+      summary: Trigger a scrape operation
+      description: >
+        Creates scraping jobs for the specified game(s) and depth level.
+        Games: poe1, poe2, or null for both. Depth: shallow (categories only) or deep (categories + items).
+      operationId: adminScrapeTrigger
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ScrapeTriggerRequest"
+      responses:
+        "200":
+          description: Scrape triggered successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ScrapeTriggerResponse"
+        "400":
+          description: Validation error
+        "500":
+          description: Failed to trigger scrape
+
+  /admin/scrape/status:
+    get:
+      tags: [Admin]
+      summary: Get scrape job status
+      description: Get detailed status of a scraping job by job_id query parameter.
+      operationId: adminScrapeStatus
+      parameters:
+        - name: job_id
+          in: query
+          required: true
+          schema:
+            type: string
+          description: Job identifier returned by POST /api/admin/scrape
+      responses:
+        "200":
+          description: Scrape job status
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ScrapeStatusResponse"
+        "400":
+          description: Missing job_id parameter
+        "404":
+          description: Job not found
+        "500":
+          description: Failed to get status
+
+  /test/embeddings/query:
+    post:
+      tags: [Testing]
+      summary: Test embedding a single query
+      operationId: testEmbedQuery
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [text]
+              properties:
+                text:
+                  type: string
+      responses:
+        "200":
+          description: Embedding generated
+        "500":
+          description: Embedding error
+
+  /test/embeddings/documents:
+    post:
+      tags: [Testing]
+      summary: Test embedding multiple documents
+      operationId: testEmbedDocuments
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [texts]
+              properties:
+                texts:
+                  type: array
+                  items:
+                    type: string
+      responses:
+        "200":
+          description: Embeddings generated
+        "500":
+          description: Embedding error
+
+  /test/embeddings/factory:
+    post:
+      tags: [Testing]
+      summary: Test embeddings factory
+      description: Test the create_embeddings factory function with different providers.
+      operationId: testEmbeddingsFactory
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                provider:
+                  type: string
+                  default: "local"
+                api_key:
+                  type: string
+                  nullable: true
+                model_name:
+                  type: string
+                  nullable: true
+                test_text:
+                  type: string
+                  default: "This is a test query"
+      responses:
+        "200":
+          description: Factory test result
+        "400":
+          description: Invalid provider
+        "500":
+          description: Embedding error
+
+  /test/embeddings/openai:
+    post:
+      tags: [Testing]
+      summary: Test OpenAI embeddings
+      description: Test OpenAI embeddings directly. Requires OPENAI_API_KEY.
+      operationId: testOpenAIEmbeddings
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [text]
+              properties:
+                text:
+                  type: string
+      responses:
+        "200":
+          description: OpenAI embedding test result
+        "400":
+          description: API key missing
+        "500":
+          description: Embedding error
+
+  /test/vectorstore/health:
+    get:
+      tags: [Testing]
+      summary: Vector store health check
+      operationId: testVectorStoreHealth
+      responses:
+        "200":
+          description: Vector store health status
+        "500":
+          description: Health check failed
+
+  /test/vectorstore/add:
+    post:
+      tags: [Testing]
+      summary: Add documents to vector store
+      operationId: testVectorStoreAdd
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [texts]
+              properties:
+                texts:
+                  type: array
+                  items:
+                    type: string
+                metadatas:
+                  type: array
+                  items:
+                    type: object
+                  nullable: true
+      responses:
+        "200":
+          description: Documents added
+        "400":
+          description: Vector store error
+        "500":
+          description: Unexpected error
+
+  /test/vectorstore/search:
+    post:
+      tags: [Testing]
+      summary: Search vector store
+      operationId: testVectorStoreSearch
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [query]
+              properties:
+                query:
+                  type: string
+                k:
+                  type: integer
+                  default: 4
+                game:
+                  type: string
+                  nullable: true
+      responses:
+        "200":
+          description: Search results
+        "400":
+          description: Vector store error
+        "500":
+          description: Unexpected error
+
+  /test/llm/health:
+    get:
+      tags: [Testing]
+      summary: LLM provider health check
+      operationId: testLLMHealth
+      responses:
+        "200":
+          description: LLM health status
+        "500":
+          description: Health check failed
+
+  /test/llm/factory:
+    post:
+      tags: [Testing]
+      summary: Test LLM factory
+      description: Test the create_llm factory function with different providers.
+      operationId: testLLMFactory
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                provider:
+                  type: string
+                  default: "openai"
+                api_key:
+                  type: string
+                  nullable: true
+                model_name:
+                  type: string
+                  nullable: true
+                temperature:
+                  type: number
+                  nullable: true
+                max_tokens:
+                  type: integer
+                  nullable: true
+                base_url:
+                  type: string
+                  nullable: true
+      responses:
+        "200":
+          description: LLM factory test result
+        "400":
+          description: Invalid provider
+        "500":
+          description: Unexpected error
+
+  /test/llm/providers:
+    post:
+      tags: [Testing]
+      summary: List available LLM providers
+      operationId: testLLMProviders
+      responses:
+        "200":
+          description: Available providers list
+
+  /test/indexer/health:
+    get:
+      tags: [Indexer]
+      summary: Indexer health check
+      description: Check ChromaDB indexer health and document count.
+      operationId: testIndexerHealth
+      responses:
+        "200":
+          description: Indexer health status
+        "500":
+          description: Health check failed
+
+  /test/indexer/stats:
+    get:
+      tags: [Indexer]
+      summary: Get indexer statistics
+      description: Get total documents, collection name, and vector store status.
+      operationId: testIndexerStats
+      responses:
+        "200":
+          description: Indexer statistics
+        "500":
+          description: Failed to get stats
+
+  /test/indexer/index:
+    post:
+      tags: [Indexer]
+      summary: Index items into ChromaDB
+      description: Index a list of scraped item dictionaries into ChromaDB with upsert support.
+      operationId: testIndexerIndex
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/IndexItemsRequest"
+      responses:
+        "200":
+          description: Indexing results
+        "400":
+          description: Indexer error
+        "500":
+          description: Indexing failed
+
+  /test/indexer/index-samples:
+    post:
+      tags: [Indexer]
+      summary: Index sample items
+      description: Generate and index sample PoE items for testing.
+      operationId: testIndexerIndexSamples
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                game:
+                  type: string
+                  default: "poe2"
+                  enum: [poe1, poe2]
+                count:
+                  type: integer
+                  default: 5
+                  minimum: 1
+                  maximum: 50
+      responses:
+        "200":
+          description: Sample items indexed
+        "400":
+          description: Indexer error
+        "500":
+          description: Indexing failed
+
+  /test/indexer/delete:
+    post:
+      tags: [Indexer]
+      summary: Delete indexed items
+      description: Delete indexed items by their source URLs.
+      operationId: testIndexerDelete
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [urls]
+              properties:
+                urls:
+                  type: array
+                  items:
+                    type: string
+                  minItems: 1
+                  maxItems: 500
+      responses:
+        "200":
+          description: Items deleted
+        "500":
+          description: Deletion failed
+
+  /test/indexer/search:
+    post:
+      tags: [Indexer]
+      summary: Search indexed items
+      description: Search the ChromaDB collection with optional game version filtering.
+      operationId: testIndexerSearch
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [query]
+              properties:
+                query:
+                  type: string
+                k:
+                  type: integer
+                  default: 4
+                game:
+                  type: string
+                  nullable: true
+      responses:
+        "200":
+          description: Search results
+        "400":
+          description: Vector store error
+        "500":
+          description: Search failed
+
+components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: X-API-Key
+      description: Optional API key for authentication
+
+  schemas:
+    RootResponse:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "POE Knowledge Assistant API"
+        version:
+          type: string
+          example: "1.0.0"
+        status:
+          type: string
+          example: "operational"
+
+    HealthCheckResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          enum: [healthy, degraded]
+        chromadb_status:
+          type: string
+          enum: [connected, disconnected]
+        embeddings_status:
+          type: string
+          enum: [ready, error]
+        vectorstore_status:
+          type: string
+          enum: [ready, error]
+        version:
+          type: string
+        chromadb_message:
+          type: string
+        embeddings_message:
+          type: string
+        vectorstore_message:
+          type: string
+        timestamp:
+          type: string
+          format: date-time
+
+    AppConfig:
+      type: object
+      properties:
+        app_name:
+          type: string
+          example: "POE Knowledge Assistant"
+        app_version:
+          type: string
+          example: "1.0.0"
+        environment:
+          type: string
+          enum: [development, production, testing]
+        server:
+          $ref: "#/components/schemas/ServerConfig"
+        database:
+          $ref: "#/components/schemas/DatabaseConfig"
+        chromadb:
+          $ref: "#/components/schemas/ChromaDBConfig"
+        rag:
+          $ref: "#/components/schemas/RAGConfig"
+        cors:
+          $ref: "#/components/schemas/CORSConfig"
+        llm:
+          $ref: "#/components/schemas/LLMConfigResponse"
+        embedding:
+          $ref: "#/components/schemas/EmbeddingConfigResponse"
+        scraper:
+          $ref: "#/components/schemas/ScraperConfig"
+
+    ServerConfig:
+      type: object
+      properties:
+        host:
+          type: string
+          default: "0.0.0.0"
+        port:
+          type: integer
+          default: 8000
+          minimum: 1
+          maximum: 65535
+        debug:
+          type: boolean
+          default: true
+        workers:
+          type: integer
+          default: 1
+
+    DatabaseConfig:
+      type: object
+      properties:
+        database_url:
+          type: string
+        pool_size:
+          type: integer
+          default: 5
+        max_overflow:
+          type: integer
+          default: 10
+
+    ChromaDBConfig:
+      type: object
+      properties:
+        persist_directory:
+          type: string
+          default: "./data/chroma"
+        collection_name:
+          type: string
+          default: "poe_knowledge"
+
+    RAGConfig:
+      type: object
+      properties:
+        top_k_results:
+          type: integer
+          default: 3
+          minimum: 1
+          maximum: 20
+        chunk_size:
+          type: integer
+          default: 1000
+        chunk_overlap:
+          type: integer
+          default: 200
+        score_threshold:
+          type: number
+          default: 0.7
+
+    CORSConfig:
+      type: object
+      properties:
+        origins:
+          type: array
+          items:
+            type: string
+        allow_credentials:
+          type: boolean
+        allow_methods:
+          type: array
+          items:
+            type: string
+        allow_headers:
+          type: array
+          items:
+            type: string
+
+    LLMConfigResponse:
+      type: object
+      properties:
+        provider:
+          type: string
+          enum: [openai, anthropic, ollama, lmstudio]
+        model:
+          type: string
+        temperature:
+          type: number
+          default: 0.7
+        max_tokens:
+          type: integer
+          default: 2000
+        api_key_set:
+          type: boolean
+
+    EmbeddingConfigResponse:
+      type: object
+      properties:
+        provider:
+          type: string
+          enum: [local, ollama, lmstudio, openai]
+        model:
+          type: string
+        dimension:
+          type: integer
+          default: 384
+        batch_size:
+          type: integer
+          default: 32
+
+    ScraperConfig:
+      type: object
+      properties:
+        rate_limit_delay:
+          type: number
+          default: 2.0
+        max_retries:
+          type: integer
+          default: 3
+        timeout:
+          type: integer
+          default: 30
+        concurrent_requests:
+          type: integer
+          default: 5
+
+    ConfigUpdateRequest:
+      type: object
+      description: Partial configuration update. Only provided fields are modified.
+      properties:
+        llm_provider:
+          type: string
+          nullable: true
+          enum: [openai, anthropic, ollama, lmstudio]
+        llm_model:
+          type: string
+          nullable: true
+        llm_temperature:
+          type: number
+          nullable: true
+          minimum: 0.0
+          maximum: 2.0
+        llm_max_tokens:
+          type: integer
+          nullable: true
+          minimum: 1
+          maximum: 32000
+        openai_api_key:
+          type: string
+          nullable: true
+          description: Stored securely, never returned in responses
+        anthropic_api_key:
+          type: string
+          nullable: true
+          description: Stored securely, never returned in responses
+        embedding_provider:
+          type: string
+          nullable: true
+          enum: [local, ollama, lmstudio, openai]
+        embedding_model:
+          type: string
+          nullable: true
+        openai_embedding_api_key:
+          type: string
+          nullable: true
+          description: Stored securely
+        rag_top_k:
+          type: integer
+          nullable: true
+          minimum: 1
+          maximum: 20
+        rag_score_threshold:
+          type: number
+          nullable: true
+          minimum: 0.0
+          maximum: 1.0
+        rag_chunk_size:
+          type: integer
+          nullable: true
+          minimum: 100
+          maximum: 4000
+        rag_chunk_overlap:
+          type: integer
+          nullable: true
+          minimum: 0
+          maximum: 1000
+        ollama_base_url:
+          type: string
+          nullable: true
+        lmstudio_base_url:
+          type: string
+          nullable: true
+
+    ConfigUpdateResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        message:
+          type: string
+        updated_fields:
+          type: array
+          items:
+            type: string
+        requires_restart:
+          type: boolean
+        config:
+          $ref: "#/components/schemas/AppConfig"
+
+    ChatApiRequest:
+      type: object
+      required: [question]
+      properties:
+        question:
+          type: string
+          minLength: 1
+          maxLength: 10000
+        game_version:
+          type: string
+          enum: [poe1, poe2]
+          default: poe2
+        build_context:
+          type: string
+          nullable: true
+          maxLength: 500
+        conversation_id:
+          type: string
+          nullable: true
+          maxLength: 100
+        conversation_history:
+          type: array
+          nullable: true
+          items:
+            type: object
+            properties:
+              role:
+                type: string
+              content:
+                type: string
+
+    ChatStreamRequest:
+      type: object
+      required: [message]
+      properties:
+        message:
+          type: string
+          minLength: 1
+          maxLength: 10000
+        game_version:
+          type: string
+          enum: [poe1, poe2]
+          default: poe2
+        build_context:
+          type: string
+          nullable: true
+          maxLength: 500
+        conversation_id:
+          type: string
+          nullable: true
+          maxLength: 100
+        conversation_history:
+          type: array
+          nullable: true
+          items:
+            type: object
+            properties:
+              role:
+                type: string
+              content:
+                type: string
+
+    AddJobRequest:
+      type: object
+      required: [name]
+      properties:
+        name:
+          type: string
+          minLength: 1
+          maxLength: 200
+        job_type:
+          type: string
+          default: "category"
+          enum: [category, item_detail, batch_items, full_category]
+        url:
+          type: string
+          nullable: true
+          maxLength: 2000
+        priority:
+          type: integer
+          default: 5
+          minimum: 1
+          maximum: 10
+          description: "1=critical, 3=high, 5=normal, 7=low, 10=background"
+        max_retries:
+          type: integer
+          nullable: true
+          minimum: 0
+          maximum: 10
+        metadata:
+          type: object
+          nullable: true
+        urls:
+          type: array
+          nullable: true
+          items:
+            type: string
+          maxItems: 500
+        game:
+          type: string
+          nullable: true
+          enum: [poe1, poe2]
+        category:
+          type: string
+          nullable: true
+          maxLength: 200
+
+    ListJobsRequest:
+      type: object
+      properties:
+        status:
+          type: string
+          nullable: true
+          enum: [pending, running, completed, failed, cancelled]
+        job_type:
+          type: string
+          nullable: true
+          enum: [category, item_detail, batch_items, full_category]
+        limit:
+          type: integer
+          default: 100
+          minimum: 1
+          maximum: 500
+        offset:
+          type: integer
+          default: 0
+          minimum: 0
+
+    CategoryScrapeRequest:
+      type: object
+      required: [category_name, url]
+      properties:
+        category_name:
+          type: string
+          minLength: 1
+          maxLength: 200
+        url:
+          type: string
+        follow_pagination:
+          type: boolean
+          default: true
+        max_pages:
+          type: integer
+          default: 10
+          minimum: 1
+          maximum: 50
+
+    ItemDetailScrapeRequest:
+      type: object
+      required: [url]
+      properties:
+        url:
+          type: string
+        category:
+          type: string
+          nullable: true
+          maxLength: 200
+
+    ScrapeTimestampUpdateRequest:
+      type: object
+      required: [game]
+      properties:
+        game:
+          type: string
+          enum: [poe1, poe2]
+        job_id:
+          type: string
+          nullable: true
+        items_scraped:
+          type: integer
+          default: 0
+          minimum: 0
+        categories_scraped:
+          type: integer
+          default: 0
+          minimum: 0
+
+    ScrapeTriggerRequest:
+      type: object
+      properties:
+        game:
+          type: string
+          nullable: true
+          enum: [poe1, poe2]
+          description: "null/omit for both games"
+        depth:
+          type: string
+          default: "shallow"
+          enum: [shallow, deep]
+
+    ScrapeTriggerResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        job_ids:
+          type: array
+          items:
+            type: string
+        games:
+          type: array
+          items:
+            type: string
+        depth:
+          type: string
+        total_jobs:
+          type: integer
+        status:
+          type: string
+        message:
+          type: string
+
+    ScrapeStatusResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        job_id:
+          type: string
+        status:
+          type: string
+          enum: [pending, running, completed, failed, cancelled]
+        name:
+          type: string
+        job_type:
+          type: string
+        game:
+          type: string
+          nullable: true
+        category:
+          type: string
+          nullable: true
+        url:
+          type: string
+          nullable: true
+        pages_scraped:
+          type: integer
+        documents_indexed:
+          type: integer
+        items_scraped:
+          type: integer
+        categories_scraped:
+          type: integer
+        progress:
+          type: number
+        error:
+          type: string
+          nullable: true
+        created_at:
+          type: string
+          nullable: true
+        started_at:
+          type: string
+          nullable: true
+        completed_at:
+          type: string
+          nullable: true
+        retries:
+          type: integer
+        max_retries:
+          type: integer
+        message:
+          type: string
+
+    IndexItemsRequest:
+      type: object
+      required: [items]
+      properties:
+        items:
+          type: array
+          items:
+            type: object
+          minItems: 1
+          maxItems: 500
+        batch_size:
+          type: integer
+          nullable: true
+          minimum: 1
+          maximum: 500
+        upsert:
+          type: boolean
+          default: true
+
+    DataFreshnessResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        freshness:
+          type: object
+          properties:
+            poe1:
+              $ref: "#/components/schemas/FreshnessEntry"
+            poe2:
+              $ref: "#/components/schemas/FreshnessEntry"
+        summary:
+          type: object
+          properties:
+            any_stale:
+              type: boolean
+            any_data_available:
+              type: boolean
+            staleness_threshold_days:
+              type: integer
+        message:
+          type: string
+
+    FreshnessEntry:
+      type: object
+      properties:
+        game:
+          type: string
+        last_scraped_at:
+          type: string
+          nullable: true
+        relative_time:
+          type: string
+          nullable: true
+        is_stale:
+          type: boolean
+        staleness_warning:
+          type: string
+          nullable: true
+        has_data:
+          type: boolean
+        items_scraped:
+          type: integer
+        categories_scraped:
+          type: integer
+        last_successful_job_id:
+          type: string
+          nullable: true
+
+    ConversationListResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        data:
+          type: array
+          items:
+            type: object
+        total:
+          type: integer
+        message:
+          type: string
+
+    ConversationDetailResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        data:
+          type: object
+          properties:
+            conversation_id:
+              type: string
+            messages:
+              type: array
+              items:
+                type: object
+                properties:
+                  role:
+                    type: string
+                  content:
+                    type: string
+                  timestamp:
+                    type: string
+                  metadata:
+                    type: object
+                    nullable: true
+            created_at:
+              type: string
+            updated_at:
+              type: string
+            game_version:
+              type: string
+            build_context:
+              type: string
+              nullable: true
+            message_count:
+              type: integer
+        message:
+          type: string
+
+    ConversationStatsResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        data:
+          type: object
+        message:
+          type: string
+
+    SuccessResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        message:
+          type: string
+
+    ErrorDetail:
+      type: object
+      properties:
+        detail:
+          type: string
+
+security: []
