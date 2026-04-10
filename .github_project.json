@@ -465,7 +465,7 @@
         "title": "Create citation component",
         "feature": "Chat Interface",
         "dependencies": ["task-34"],
-        "status": "todo"
+        "status": "done"
       },
       {
         "id": "task-42",
