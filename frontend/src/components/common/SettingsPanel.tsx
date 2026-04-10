@@ -600,9 +600,11 @@ export function SettingsPanel({
           ${className}
         `}
         role="dialog"
-        aria-modal="true"
+        aria-modal={isOpen ? "true" : undefined}
+        aria-hidden={isOpen ? undefined : "true"}
         aria-label="Settings panel"
         data-testid="settings-panel"
+        style={{ pointerEvents: isOpen ? 'auto' : 'none' }}
       >
         {/* Decorative top accent line with shimmer animation */}
         <div className="h-0.5 w-full animate-poe-accent-shimmer shrink-0" />
