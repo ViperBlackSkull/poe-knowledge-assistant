@@ -1,5 +1,18 @@
 import { useState, useCallback, useEffect, useMemo } from 'react';
-import { MainLayout, ChatMessageList, ChatInput, ItemCardDemo, CitationDemo, GameVersionSelector, getGameVersionLabel, ClearConversationButton, SettingsPanel, BuildContextSelector, BuildContextDisplay, DataFreshnessIndicator } from '@/components';
+import {
+  MainLayout,
+  ChatMessageList,
+  ChatInput,
+  ItemCardDemo,
+  CitationDemo,
+  GameVersionSelector,
+  getGameVersionLabel,
+  ClearConversationButton,
+  SettingsPanel,
+  BuildContextSelector,
+  BuildContextDisplay,
+  DataFreshnessIndicator,
+} from '@/components';
 import type { ChatMessage } from '@/types/chat';
 import type { SSESource } from '@/types/streaming';
 import type { ConfigUpdateRequest } from '@/types/config';
@@ -10,35 +23,39 @@ import type { BuildContextValue } from '@/hooks';
 /**
  * Root application component.
  *
- * Provides the full chat interface with:
- * - MainLayout wrapping (header, sidebar)
- * - ChatMessageList for displaying conversation messages
- * - ChatInput for composing and sending messages
- * - Streaming response support via SSE
- * - Game version selector for choosing which PoE version to query
- * - Centralized chat state management via useChat hook
+ * Provides the full chat interface integrating all components via
+ * centralized state management hooks:
  *
- * Navigate to /#/items to see the Item Card demo page.
+ *   - useChat:    Chat messages, loading/error states, streaming, game version
+ *   - useConfig:  Server-side configuration (LLM/embedding providers, RAG settings)
+ *   - useBuildContext: Build context selection persisted to localStorage
+ *
+ * Component hierarchy:
+ *   MainLayout
+ *     Header (title, nav, game version, build context, freshness, settings)
+ *     ChatMessageList (messages + typing indicator)
+ *     ChatInput (textarea + send/cancel + streaming SSE)
+ *   SettingsPanel (slide-over with LLM, API key, embedding, RAG config)
  */
 function App() {
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
 
-  // Build context state (persisted to localStorage)
+  // -- Build context state (persisted to localStorage) -----------------------
   const { buildContext, setBuildContext } = useBuildContext();
 
-  // Configuration state management via centralized hook
+  // -- Configuration state management via centralized hook -------------------
   const config = useConfig({
     onConfigUpdated: (response) => {
       console.log('[Config] Updated fields:', response.updated_fields);
     },
   });
 
-  // Chat state management via centralized hook
+  // -- Chat state management via centralized hook ----------------------------
   const chat = useChat({
     buildContext: buildContext || undefined,
   });
 
-  // Simple hash-based routing for demo pages
+  // -- Hash-based routing for demo pages ------------------------------------
   const [currentHash, setCurrentHash] = useState(window.location.hash);
   useEffect(() => {
     const handleHashChange = () => setCurrentHash(window.location.hash);
@@ -49,92 +66,91 @@ function App() {
   const showItemDemo = currentHash === '#/items';
   const showCitationDemo = currentHash === '#/citations';
 
-  /**
-   * Handle game version change.
-   * Delegates to the useChat hook which clears conversation on version change.
-   */
-  const handleGameVersionChange = useCallback((version: Parameters<typeof chat.setGameVersion>[0]) => {
-    chat.setGameVersion(version);
-  }, [chat.setGameVersion]);
+  // -- Game version handler -------------------------------------------------
+  const handleGameVersionChange = useCallback(
+    (version: Parameters<typeof chat.setGameVersion>[0]) => {
+      chat.setGameVersion(version);
+    },
+    [chat.setGameVersion],
+  );
 
-  /**
-   * Handle build context change.
-   * Updates the selected build context for tailored responses.
-   */
-  const handleBuildContextChange = useCallback((context: BuildContextValue) => {
-    setBuildContext(context);
-    chat.setBuildContext(context || undefined);
-  }, [setBuildContext, chat.setBuildContext]);
+  // -- Build context handler ------------------------------------------------
+  const handleBuildContextChange = useCallback(
+    (context: BuildContextValue) => {
+      setBuildContext(context);
+      chat.setBuildContext(context || undefined);
+    },
+    [setBuildContext, chat.setBuildContext],
+  );
 
-  /**
-   * Handle a new user message being sent.
-   * Adds the user message and prepares the streaming placeholder via the hook.
-   */
-  const handleSendMessage = useCallback((message: ChatMessage) => {
-    chat.addUserMessage(message.content);
-  }, [chat.addUserMessage]);
+  // -- Chat message handlers ------------------------------------------------
+  const handleSendMessage = useCallback(
+    (message: ChatMessage) => {
+      chat.addUserMessage(message.content);
+    },
+    [chat.addUserMessage],
+  );
 
-  /**
-   * Handle streaming tokens arriving from the SSE response.
-   */
-  const handleStreamingToken = useCallback((token: string) => {
-    chat.appendStreamingToken(token);
-  }, [chat.appendStreamingToken]);
+  const handleStreamingToken = useCallback(
+    (token: string) => {
+      chat.appendStreamingToken(token);
+    },
+    [chat.appendStreamingToken],
+  );
 
-  /**
-   * Handle streaming completion.
-   */
-  const handleStreamingDone = useCallback((convId: string) => {
-    chat.completeStreaming(convId);
-  }, [chat.completeStreaming]);
+  const handleStreamingDone = useCallback(
+    (convId: string) => {
+      chat.completeStreaming(convId);
+    },
+    [chat.completeStreaming],
+  );
 
-  /**
-   * Handle sources received from the streaming response.
-   */
-  const handleSources = useCallback((sources: SSESource[]) => {
-    chat.attachSources(sources);
-  }, [chat.attachSources]);
+  const handleSources = useCallback(
+    (sources: SSESource[]) => {
+      chat.attachSources(sources);
+    },
+    [chat.attachSources],
+  );
 
-  /**
-   * Handle errors from the chat API.
-   */
-  const handleError = useCallback((errorMessage: string) => {
-    chat.handleError(errorMessage);
-  }, [chat.handleError]);
+  const handleError = useCallback(
+    (errorMessage: string) => {
+      chat.handleError(errorMessage);
+    },
+    [chat.handleError],
+  );
 
-  /**
-   * Handle settings save.
-   * Uses the useConfig hook's save method which calls PUT /api/config,
-   * then applies the new API key to the api-client if one was provided.
-   */
-  const handleSaveSettings = useCallback(async (settings: ConfigUpdateRequest) => {
-    console.log('[Settings] Saving settings:', settings);
+  // -- Settings save handler ------------------------------------------------
+  const handleSaveSettings = useCallback(
+    async (settings: ConfigUpdateRequest) => {
+      console.log('[Settings] Saving settings:', settings);
 
-    // Use the config hook's centralized save method
-    const response = await config.save(settings);
+      // Delegate to the config hook's centralized save method (PUT /api/config)
+      const response = await config.save(settings);
 
-    if (!response) {
-      throw new Error('Failed to save settings');
-    }
+      if (!response) {
+        throw new Error('Failed to save settings');
+      }
 
-    if (!response.success) {
-      throw new Error(response.message || 'Failed to save settings');
-    }
+      if (!response.success) {
+        throw new Error(response.message || 'Failed to save settings');
+      }
 
-    console.log('[Settings] Save successful:', response.message);
-    console.log('[Settings] Updated fields:', response.updated_fields);
+      console.log('[Settings] Save successful:', response.message);
+      console.log('[Settings] Updated fields:', response.updated_fields);
 
-    // Apply the API key to the api-client if one was provided for the current provider
-    if (settings.openai_api_key) {
-      setApiKey(settings.openai_api_key);
-    } else if (settings.anthropic_api_key) {
-      setApiKey(settings.anthropic_api_key);
-    }
+      // Apply the API key to the api-client for subsequent requests
+      if (settings.openai_api_key) {
+        setApiKey(settings.openai_api_key);
+      } else if (settings.anthropic_api_key) {
+        setApiKey(settings.anthropic_api_key);
+      }
 
-    return response;
-  }, [config]);
+      return response;
+    },
+    [config],
+  );
 
-  // Header actions with game version selector, build context selector, version display badge, and settings button
+  // -- Header actions -------------------------------------------------------
   const headerActions = (
     <div className="flex items-center gap-3">
       {/* Current version badge */}
@@ -188,62 +204,67 @@ function App() {
     </div>
   );
 
-  // Build context display shown in the header center area
+  // -- Build context display shown in the header center area -----------------
   const contextDisplay = (
     <BuildContextDisplay context={buildContext} />
   );
 
-  // Derive initialConfig for the SettingsPanel from the config hook
+  // -- Derive initialConfig for the SettingsPanel from the config hook -------
+  //
+  // Maps the flattened ConfigState from useConfig into the shape expected by
+  // SettingsPanel's initialConfig prop.  The SettingsPanel uses this to
+  // pre-populate its form when the server configuration is loaded.
   const initialConfig = useMemo(() => {
     if (!config.config) return undefined;
     return {
       llmProvider: config.config.llmProvider,
       embeddingProvider: config.config.embeddingProvider,
       ragTopK: config.config.ragTopK,
-      ragScoreThreshold: 0.7, // default; server may not expose this directly
-      llmApiKeySet: false, // will be updated when server provides this info
+      ragScoreThreshold: 0.7, // default; server GET /config does not expose this
+      llmApiKeySet: false,     // will be true when server confirms a key is set
     };
   }, [config.config]);
 
-  // Item card demo page
+  // -- Shared SettingsPanel (rendered once, reused across all routes) --------
+  const settingsPanel = (
+    <SettingsPanel
+      isOpen={isSettingsOpen}
+      onClose={() => setIsSettingsOpen(false)}
+      onSave={handleSaveSettings}
+      initialConfig={initialConfig}
+    />
+  );
+
+  // -- Route: Item card demo page -------------------------------------------
   if (showItemDemo) {
     return (
       <>
         <MainLayout actions={headerActions} contextDisplay={contextDisplay}>
           <ItemCardDemo />
         </MainLayout>
-        <SettingsPanel
-          isOpen={isSettingsOpen}
-          onClose={() => setIsSettingsOpen(false)}
-          onSave={handleSaveSettings}
-          initialConfig={initialConfig}
-        />
+        {settingsPanel}
       </>
     );
   }
 
-  // Citation component demo page
+  // -- Route: Citation component demo page ----------------------------------
   if (showCitationDemo) {
     return (
       <>
         <MainLayout actions={headerActions} contextDisplay={contextDisplay}>
           <CitationDemo />
         </MainLayout>
-        <SettingsPanel
-          isOpen={isSettingsOpen}
-          onClose={() => setIsSettingsOpen(false)}
-          onSave={handleSaveSettings}
-          initialConfig={initialConfig}
-        />
+        {settingsPanel}
       </>
     );
   }
 
+  // -- Route: Main chat interface -------------------------------------------
   return (
     <>
       <MainLayout showSidebar actions={headerActions} contextDisplay={contextDisplay}>
         <div className="flex flex-col h-full">
-          {/* Chat toolbar */}
+          {/* Chat toolbar (clear button, shown when messages exist) */}
           {chat.messageCount > 0 && (
             <div className="flex items-center justify-end px-4 py-2 sm:px-6 lg:px-8 border-b border-[#2A2A32] bg-[#141418]/50">
               <div className="max-w-3xl w-full flex items-center justify-end">
@@ -256,14 +277,14 @@ function App() {
             </div>
           )}
 
-          {/* Chat message list */}
+          {/* Chat message list connected to useChat state */}
           <ChatMessageList
             messages={chat.messages}
             conversationId={chat.conversationId}
             isStreaming={chat.isStreaming}
           />
 
-          {/* Chat input */}
+          {/* Chat input connected to useChat actions */}
           <ChatInput
             onSendMessage={handleSendMessage}
             onStreamingToken={handleStreamingToken}
@@ -278,12 +299,7 @@ function App() {
           />
         </div>
       </MainLayout>
-      <SettingsPanel
-        isOpen={isSettingsOpen}
-        onClose={() => setIsSettingsOpen(false)}
-        onSave={handleSaveSettings}
-        initialConfig={initialConfig}
-      />
+      {settingsPanel}
     </>
   );
 }
