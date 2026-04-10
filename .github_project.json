@@ -449,7 +449,7 @@
         "title": "Create item card component with PoE styling",
         "feature": "Item Display Cards",
         "dependencies": ["task-34"],
-        "status": "todo"
+        "status": "done"
       },
       {
         "id": "task-40",
