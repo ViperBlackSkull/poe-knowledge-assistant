@@ -529,7 +529,7 @@
         "title": "Create build context selector component",
         "feature": "Build Context",
         "dependencies": ["task-34"],
-        "status": "todo"
+        "status": "done"
       },
       {
         "id": "task-50",
