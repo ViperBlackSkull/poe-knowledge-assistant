@@ -45,3 +45,6 @@ export type {
   ApiKeyManagerProps,
   ApiKeyValidationStatus,
 } from './common/ApiKeyInput';
+export { BuildContextSelector } from './common/BuildContextSelector';
+export { BUILD_CONTEXT_OPTIONS, getBuildContextOptionLabel } from './common/BuildContextSelector';
+export type { BuildContextSelectorProps, BuildContextOption } from './common/BuildContextSelector';

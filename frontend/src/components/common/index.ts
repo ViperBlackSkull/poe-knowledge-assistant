@@ -50,3 +50,12 @@ export {
   getEmbeddingProviderLabel,
   getEmbeddingProviderConfigFields,
 } from './EmbeddingProviderSelector';
+export { BuildContextSelector } from './BuildContextSelector';
+export type {
+  BuildContextSelectorProps,
+  BuildContextOption,
+} from './BuildContextSelector';
+export {
+  BUILD_CONTEXT_OPTIONS,
+  getBuildContextOptionLabel,
+} from './BuildContextSelector';

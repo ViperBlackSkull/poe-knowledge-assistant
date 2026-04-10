@@ -1,10 +1,12 @@
 import { useState, useCallback, useRef, useEffect } from 'react';
-import { MainLayout, ChatMessageList, ChatInput, ItemCardDemo, CitationDemo, GameVersionSelector, getGameVersionLabel, ClearConversationButton, SettingsPanel } from '@/components';
+import { MainLayout, ChatMessageList, ChatInput, ItemCardDemo, CitationDemo, GameVersionSelector, getGameVersionLabel, ClearConversationButton, SettingsPanel, BuildContextSelector } from '@/components';
 import type { ChatMessage } from '@/types/chat';
 import type { GameVersion } from '@/types/chat';
 import type { SSESource } from '@/types/streaming';
 import type { ConfigUpdateRequest } from '@/types/config';
 import { updateConfig, setApiKey } from '@/lib/api-client';
+import { useBuildContext } from '@/hooks';
+import type { BuildContextValue } from '@/hooks';
 
 /**
  * Root application component.
@@ -25,6 +27,9 @@ function App() {
   const [gameVersion, setGameVersion] = useState<GameVersion>('poe2');
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const streamingBufferRef = useRef<string>('');
+
+  // Build context state (persisted to localStorage)
+  const { buildContext, setBuildContext, buildContextLabel } = useBuildContext();
 
   // Simple hash-based routing for demo pages
   const [currentHash, setCurrentHash] = useState(window.location.hash);
@@ -48,6 +53,14 @@ function App() {
     setConversationId(undefined);
     streamingBufferRef.current = '';
   }, []);
+
+  /**
+   * Handle build context change.
+   * Updates the selected build context for tailored responses.
+   */
+  const handleBuildContextChange = useCallback((context: BuildContextValue) => {
+    setBuildContext(context);
+  }, [setBuildContext]);
 
   /**
    * Handle clearing the conversation.
@@ -183,7 +196,7 @@ function App() {
     return response;
   }, []);
 
-  // Header actions with game version selector, version display badge, and settings button
+  // Header actions with game version selector, build context selector, version display badge, and settings button
   const headerActions = (
     <div className="flex items-center gap-3">
       {/* Current version badge */}
@@ -192,10 +205,24 @@ function App() {
         {getGameVersionLabel(gameVersion)}
       </span>
 
+      {/* Current build context badge */}
+      {buildContext && (
+        <span className="hidden lg:inline-flex items-center gap-1.5 px-2 py-1 rounded text-xs bg-poe-bg-tertiary border border-poe-gold/30 text-poe-gold">
+          <span className="w-1.5 h-1.5 rounded-full bg-poe-gold" />
+          {buildContextLabel}
+        </span>
+      )}
+
       {/* Game version selector dropdown */}
       <GameVersionSelector
         value={gameVersion}
         onChange={handleGameVersionChange}
+      />
+
+      {/* Build context selector dropdown */}
+      <BuildContextSelector
+        value={buildContext}
+        onChange={handleBuildContextChange}
       />
 
       {/* Settings button */}
@@ -294,6 +321,7 @@ function App() {
             disabled={isStreaming}
             conversationId={conversationId}
             gameVersion={gameVersion}
+            buildContext={buildContext}
             useStreaming={true}
           />
         </div>
