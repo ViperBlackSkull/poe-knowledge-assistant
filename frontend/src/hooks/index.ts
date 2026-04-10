@@ -18,3 +18,13 @@ export {
 export type {
   UseDataFreshnessReturn,
 } from './useDataFreshness';
+
+export {
+  useChat,
+} from './useChat';
+export type {
+  ChatLoadingState,
+  ChatError,
+  UseChatOptions,
+  UseChatReturn,
+} from './useChat';
