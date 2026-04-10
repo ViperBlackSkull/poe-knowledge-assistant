@@ -585,7 +585,7 @@
         "title": "Add loading states to all async operations",
         "feature": "Frontend Polish",
         "dependencies": ["task-55"],
-        "status": "todo"
+        "status": "done"
       },
       {
         "id": "task-57",
