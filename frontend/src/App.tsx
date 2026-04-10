@@ -1,5 +1,5 @@
-import { useState, useCallback, useRef } from 'react';
-import { MainLayout, ChatMessageList, ChatInput } from '@/components';
+import { useState, useCallback, useRef, useEffect } from 'react';
+import { MainLayout, ChatMessageList, ChatInput, ItemCardDemo } from '@/components';
 import type { ChatMessage } from '@/types/chat';
 
 /**
@@ -10,12 +10,24 @@ import type { ChatMessage } from '@/types/chat';
  * - ChatMessageList for displaying conversation messages
  * - ChatInput for composing and sending messages
  * - Streaming response support via SSE
+ *
+ * Navigate to /#/items to see the Item Card demo page.
  */
 function App() {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [conversationId, setConversationId] = useState<string | undefined>(undefined);
   const [isStreaming, setIsStreaming] = useState(false);
   const streamingBufferRef = useRef<string>('');
+
+  // Simple hash-based routing for demo pages
+  const [currentHash, setCurrentHash] = useState(window.location.hash);
+  useEffect(() => {
+    const handleHashChange = () => setCurrentHash(window.location.hash);
+    window.addEventListener('hashchange', handleHashChange);
+    return () => window.removeEventListener('hashchange', handleHashChange);
+  }, []);
+
+  const showItemDemo = currentHash === '#/items';
 
   /**
    * Handle a new user message being sent.
@@ -94,6 +106,15 @@ function App() {
     };
     setMessages((prev) => [...prev, systemMessage]);
   }, []);
+
+  // Item card demo page
+  if (showItemDemo) {
+    return (
+      <MainLayout>
+        <ItemCardDemo />
+      </MainLayout>
+    );
+  }
 
   return (
     <MainLayout showSidebar>

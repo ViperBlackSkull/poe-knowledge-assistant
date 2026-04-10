@@ -10,6 +10,7 @@
  *   streaming.ts -- SSE streaming events for real-time chat
  *   endpoints.ts -- Per-endpoint request/response shapes for the live API routes
  *   layout.ts    -- Layout component props (header, sidebar, main layout)
+ *   item.ts      -- Item display types (item card, rarity, stats)
  *
  * Usage:
  *   import { ChatRequest, ChatResponse } from '@/types';
@@ -140,3 +141,19 @@ export type {
   TableColumnAlignment,
   MarkdownStyleConfig,
 } from './markdown';
+
+// ---------------------------------------------------------------------------
+// Item display types
+// ---------------------------------------------------------------------------
+export type {
+  ItemRarity,
+  ItemSlot,
+  ItemInfluence,
+  ItemCardVariant,
+  ItemStat,
+  ItemRequirements,
+  ItemQuality,
+  ItemDisplayData,
+  ItemCardProps,
+  ItemCardGridProps,
+} from './item';

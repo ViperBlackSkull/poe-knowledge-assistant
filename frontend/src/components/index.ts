@@ -5,5 +5,9 @@ export { Header, Sidebar, MainLayout } from './layout';
 export { ChatMessageList, ChatMessageBubble, MarkdownRenderer, ChatInput, TypingIndicator } from './chat';
 export type { ChatMessageListProps, ChatMessageBubbleProps, ChatInputProps, TypingIndicatorProps, TypingIndicatorVariant, TypingIndicatorSize } from './chat';
 
+// Item display components
+export { ItemCard, ItemCardGrid, ItemCardDemo } from './items';
+export type { ItemCardProps, ItemCardGridProps } from './items';
+
 // Standalone reusable components
 export { MarkdownRenderer as EnhancedMarkdownRenderer } from './common/MarkdownRenderer';
