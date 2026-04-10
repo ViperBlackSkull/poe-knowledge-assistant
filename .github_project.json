@@ -673,7 +673,7 @@
         "title": "Perform end-to-end system testing",
         "feature": "Testing",
         "dependencies": ["task-60", "task-61", "task-62", "task-63", "task-64"],
-        "status": "todo"
+        "status": "done"
       },
       {
         "id": "task-68",
