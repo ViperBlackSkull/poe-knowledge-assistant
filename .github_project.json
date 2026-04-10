@@ -521,7 +521,7 @@
         "title": "Implement settings save functionality",
         "feature": "Configuration Panel",
         "dependencies": ["task-45", "task-46", "task-47"],
-        "status": "todo"
+        "status": "done"
       },
       {
         "id": "task-49",
