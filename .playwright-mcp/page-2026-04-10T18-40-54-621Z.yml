@@ -1,0 +1,235 @@
+- generic [ref=e2]:
+  - generic [ref=e3]:
+    - banner [ref=e4]:
+      - generic [ref=e7]:
+        - generic [ref=e9]:
+          - generic [ref=e10]: P
+          - generic [ref=e11]:
+            - heading "PoE Knowledge Assistant" [level=1] [ref=e12]
+            - paragraph [ref=e13]: Your intelligent assistant for Path of Exile
+        - navigation "Main navigation" [ref=e15]:
+          - link "Chat" [ref=e16] [cursor=pointer]:
+            - /url: /
+          - link "Knowledge Base" [ref=e17] [cursor=pointer]:
+            - /url: /knowledge
+          - link "Admin" [ref=e18] [cursor=pointer]:
+            - /url: /admin
+        - generic [ref=e22]:
+          - generic [ref=e23]:
+            - generic [ref=e24]: Path of Exile 2
+            - button "Select game version, currently Path of Exile 2" [ref=e27] [cursor=pointer]:
+              - img [ref=e28]
+              - generic [ref=e31]: Path of Exile 2
+              - img [ref=e32]
+            - button "Select build context" [ref=e36] [cursor=pointer]:
+              - img [ref=e37]
+              - generic [ref=e39]: Build Context
+              - img [ref=e40]
+            - 'status "Data freshness: Fresh. Knowledge base is up to date" [ref=e43]':
+              - generic [ref=e44]:
+                - generic [ref=e48]: Fresh
+                - generic [ref=e49]: "|"
+                - generic [ref=e50]: 22 hours ago
+              - button "Refresh freshness data" [ref=e84] [cursor=pointer]:
+                - img [ref=e85]
+            - button "Open settings" [ref=e54] [cursor=pointer]:
+              - img [ref=e55]
+          - button "Toggle configuration panel" [ref=e58] [cursor=pointer]:
+            - img [ref=e59]
+    - main [ref=e63]:
+      - generic [ref=e64]:
+        - button "Clear conversation (2 messages)" [ref=e90] [cursor=pointer]:
+          - img [ref=e91]
+          - generic [ref=e93]: Clear
+          - generic [ref=e94]: "2"
+        - log "Chat messages" [ref=e65]:
+          - generic [ref=e66]:
+            - generic [ref=e96]:
+              - generic [ref=e97]:
+                - generic [ref=e98]:
+                  - generic [ref=e99]: You
+                  - generic [ref=e100]: 06:40 PM
+                - paragraph [ref=e101]: What are the best starter builds?
+              - generic "user avatar" [ref=e102]:
+                - generic [ref=e103]: U
+            - generic [ref=e106]:
+              - paragraph [ref=e107]: "Error: Streaming interrupted: Error code: 401 - {'error': {'message': 'Incorrect API key provided: sk-test-**********************cdef. You can find your API key at https://platform.openai.com/account/api-keys.', 'type': 'invalid_request_error', 'code': 'invalid_api_key', 'param': None}, 'status': 401}"
+              - generic [ref=e109]: 06:40 PM
+        - generic [ref=e76]:
+          - alert [ref=e110]:
+            - img [ref=e111]
+            - generic [ref=e113]: "Streaming interrupted: Error code: 401 - {'error': {'message': 'Incorrect API key provided: sk-test-**********************cdef. You can find your API key at https://platform.openai.com/account/api-keys.', 'type': 'invalid_request_error', 'code': 'invalid_api_key', 'param': None}, 'status': 401}"
+            - button "Dismiss error" [ref=e114] [cursor=pointer]:
+              - img [ref=e115]
+          - generic [ref=e77]:
+            - textbox "Chat message input" [ref=e79]:
+              - /placeholder: Ask about items, builds, mechanics...
+            - button "Send message" [disabled] [ref=e80]:
+              - img [ref=e81]
+              - generic [ref=e83]: Send
+  - dialog:
+    - generic:
+      - generic:
+        - img
+        - heading [level=2]: Settings
+      - button:
+        - img
+    - generic:
+      - generic:
+        - generic:
+          - generic:
+            - img
+          - generic:
+            - heading [level=3]: LLM Provider
+            - paragraph: Configure the language model for generating responses
+        - generic:
+          - generic:
+            - generic: LLM Provider
+            - generic:
+              - button:
+                - img
+                - generic: OpenAI
+                - img
+          - generic:
+            - img
+            - generic: Cloud provider - requires API key
+          - generic:
+            - generic: Model
+            - generic:
+              - button:
+                - generic: GPT-4o
+                - img
+            - generic:
+              - generic: gpt-4o
+              - generic: Recommended
+        - generic:
+          - generic: Provider Settings
+          - generic:
+            - generic: Base URL(optional)
+            - textbox:
+              - /placeholder: https://api.openai.com/v1
+        - generic:
+          - generic:
+            - generic: Temperature
+            - generic: "0.7"
+          - slider: "0.7"
+          - generic:
+            - generic: "0"
+            - generic: "2"
+        - generic:
+          - generic:
+            - generic: Max Tokens
+            - generic: "2048"
+          - slider: "2048"
+          - generic:
+            - generic: "256"
+            - generic: "32000"
+      - generic:
+        - generic:
+          - generic:
+            - img
+          - generic:
+            - heading [level=3]: API Key
+            - paragraph: Configure your API key for the selected provider
+        - generic:
+          - generic:
+            - generic: OpenAI API Key*
+            - generic:
+              - img
+              - generic: Not set
+          - generic:
+            - textbox:
+              - /placeholder: Enter your OpenAI API Key
+            - generic:
+              - button:
+                - img
+          - paragraph: Starts with "sk-" followed by at least 20 characters
+        - generic:
+          - generic: Other provider keys
+          - generic:
+            - generic:
+              - generic:
+                - generic: Anthropic API Key
+                - generic:
+                  - img
+                  - generic: Not set
+              - generic:
+                - textbox:
+                  - /placeholder: Enter your Anthropic API Key
+                - generic:
+                  - button:
+                    - img
+              - paragraph: Starts with "sk-ant-" followed by at least 20 characters
+        - generic:
+          - img
+          - paragraph: API keys are stored securely. Only a fingerprint is saved locally to remember your configuration.
+      - generic:
+        - generic:
+          - generic:
+            - img
+          - generic:
+            - heading [level=3]: Embedding Provider
+            - paragraph: Configure how text embeddings are generated
+        - generic:
+          - generic:
+            - generic: Embedding Provider
+            - generic:
+              - button:
+                - img
+                - generic: Local
+                - img
+          - generic:
+            - img
+            - generic: Local provider - runs on your machine
+          - generic:
+            - generic: Embedding Model
+            - generic:
+              - button:
+                - generic: all-MiniLM-L6-v2
+                - img
+            - generic:
+              - generic: all-MiniLM-L6-v2
+              - generic: 384 dimensions
+              - generic: Recommended
+        - generic:
+          - generic: Embedding Provider Settings
+          - generic:
+            - generic: Cache Directory(optional)
+            - textbox:
+              - /placeholder: ~/.cache/embeddings
+      - generic:
+        - generic:
+          - generic:
+            - img
+          - generic:
+            - heading [level=3]: RAG Configuration
+            - paragraph: Fine-tune retrieval-augmented generation parameters
+        - generic:
+          - generic:
+            - generic: Top K Results
+            - generic: "5"
+          - slider: "5"
+          - generic:
+            - generic: "1"
+            - generic: "20"
+        - generic:
+          - generic:
+            - generic: Score Threshold
+            - generic: "0.7"
+          - slider: "0.7"
+          - generic:
+            - generic: "0"
+            - generic: "1"
+    - generic:
+      - generic:
+        - button: Cancel
+        - button [disabled]: Save Settings
+  - region "Notifications":
+    - alert [ref=e117]:
+      - generic [ref=e120]:
+        - img [ref=e121]
+        - generic [ref=e123]:
+          - paragraph [ref=e124]: Chat Error
+          - paragraph [ref=e125]: "Streaming interrupted: Error code: 401 - {'error': {'message': 'Incorrect API key provided: sk-test-**********************cdef. You can find your API key at https://platform.openai.com/account/api-keys.', 'type': 'invalid_request_error', 'code': 'invalid_api_key', 'param': None}, 'status': 401}"
+        - button "Dismiss notification" [ref=e126] [cursor=pointer]:
+          - img [ref=e127]
