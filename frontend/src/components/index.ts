@@ -69,3 +69,4 @@ export type {
   ToastProviderProps,
   ErrorToastProps,
 } from './common/ErrorToast';
+export { PerformanceDashboard } from './common/PerformanceDashboard';

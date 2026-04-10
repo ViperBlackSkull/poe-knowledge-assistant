@@ -9,6 +9,18 @@ from fastapi import FastAPI, APIRouter, Response, HTTPException
 from fastapi.responses import StreamingResponse
 from pydantic import BaseModel, Field, field_validator
 from fastapi.middleware.cors import CORSMiddleware
+from src.services.cache import get_cache_manager, check_cache_health
+from src.services.rate_limiter import (
+    RateLimitMiddleware,
+    set_rate_limit_middleware,
+    check_rate_limiter_health,
+)
+from src.services.performance_monitor import (
+    PerformanceMonitorMiddleware,
+    get_metrics_collector,
+    check_performance_monitor_health,
+)
+from src.api.performance import performance_router
 from src.config import get_settings, LLMProvider, EmbeddingProvider
 from src.models.config import (
     AppConfig,
@@ -275,8 +287,24 @@ app.add_middleware(
     allow_headers=[settings.cors.allow_headers],
 )
 
+# Performance monitoring middleware (tracks request durations and system metrics)
+_perf_collector = get_metrics_collector()
+_perf_mw = PerformanceMonitorMiddleware(app, collector=_perf_collector)
+app.add_middleware(PerformanceMonitorMiddleware, collector=_perf_collector)
+
+# Rate limiting middleware (applies per-client rate limits to API endpoints)
+_rate_limit_mw = RateLimitMiddleware(app)
+app.add_middleware(RateLimitMiddleware)
+set_rate_limit_middleware(_rate_limit_mw)
+
 # Create base router
 api_router = APIRouter()
+
+# Register performance monitoring router
+api_router.include_router(
+    performance_router,
+    prefix="/performance",
+)
 
 
 @api_router.get("/", tags=["Root"])
@@ -347,6 +375,9 @@ async def health_check(response: Response):
         "chromadb_message": chromadb_message,
         "embeddings_message": embeddings_message,
         "vectorstore_message": vectorstore_health.get("message", "Unknown status"),
+        "performance": check_performance_monitor_health(),
+        "cache": check_cache_health(),
+        "rate_limiting": check_rate_limiter_health(),
         "timestamp": datetime.now(timezone.utc).isoformat(),
     }
 

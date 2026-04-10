@@ -80,3 +80,4 @@ export type {
   ToastProviderProps,
   ErrorToastProps,
 } from './ErrorToast';
+export { PerformanceDashboard } from './PerformanceDashboard';

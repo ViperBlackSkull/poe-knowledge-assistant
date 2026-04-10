@@ -137,6 +137,9 @@ passlib[bcrypt]==1.7.4
 # Structured logging
 structlog==24.1.0
 
+# System resource monitoring (CPU, memory, disk)
+psutil>=5.9.0
+
 # -------------------------------------------
 # Development Dependencies
 # -------------------------------------------

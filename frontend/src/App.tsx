@@ -14,6 +14,7 @@ import {
   DataFreshnessIndicator,
   ErrorBoundary,
   useToast,
+  PerformanceDashboard,
 } from '@/components';
 import type { ChatMessage } from '@/types/chat';
 import type { SSESource } from '@/types/streaming';
@@ -43,6 +44,7 @@ import type { BuildContextValue } from '@/hooks';
  */
 function App() {
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+  const [showPerformance, setShowPerformance] = useState(false);
   const toast = useToast();
   const errorHandling = useErrorHandling();
 
@@ -238,6 +240,19 @@ function App() {
         <DataFreshnessIndicator compact />
       </div>
 
+      {/* Performance dashboard toggle */}
+      <button
+        type="button"
+        onClick={() => setShowPerformance(!showPerformance)}
+        className={`p-2 rounded transition-colors touch-manipulation ${showPerformance ? 'text-poe-gold bg-poe-hover' : 'text-poe-text-secondary hover:text-poe-text-highlight hover:bg-poe-hover'}`}
+        aria-label="Toggle performance dashboard"
+        data-testid="performance-toggle"
+      >
+        <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z" />
+        </svg>
+      </button>
+
       {/* Settings button */}
       <button
         type="button"
@@ -372,6 +387,17 @@ function App() {
             />
           </ErrorBoundary>
         </div>
+
+        {/* Performance Dashboard - collapsible panel */}
+        {showPerformance && (
+          <div className="border-t border-[#2A2A32] bg-[#0a0a0f]">
+            <div className="max-w-5xl mx-auto px-4 py-3">
+              <ErrorBoundary name="PerformanceDashboard">
+                <PerformanceDashboard apiUrl="/api" refreshInterval={5000} />
+              </ErrorBoundary>
+            </div>
+          </div>
+        )}
       </MainLayout>
       {settingsPanel}
     </>
