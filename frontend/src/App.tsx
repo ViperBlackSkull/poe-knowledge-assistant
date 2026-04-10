@@ -1,5 +1,5 @@
 import { useState, useCallback, useRef, useEffect } from 'react';
-import { MainLayout, ChatMessageList, ChatInput, ItemCardDemo, CitationDemo, GameVersionSelector, getGameVersionLabel } from '@/components';
+import { MainLayout, ChatMessageList, ChatInput, ItemCardDemo, CitationDemo, GameVersionSelector, getGameVersionLabel, ClearConversationButton } from '@/components';
 import type { ChatMessage } from '@/types/chat';
 import type { GameVersion } from '@/types/chat';
 import type { SSESource } from '@/types/streaming';
@@ -41,6 +41,16 @@ function App() {
   const handleGameVersionChange = useCallback((version: GameVersion) => {
     setGameVersion(version);
     // Clear conversation when changing game version for a fresh context
+    setMessages([]);
+    setConversationId(undefined);
+    streamingBufferRef.current = '';
+  }, []);
+
+  /**
+   * Handle clearing the conversation.
+   * Resets all chat state: messages, conversation ID, and streaming buffer.
+   */
+  const handleClearConversation = useCallback(() => {
     setMessages([]);
     setConversationId(undefined);
     streamingBufferRef.current = '';
@@ -179,6 +189,19 @@ function App() {
   return (
     <MainLayout showSidebar actions={headerActions}>
       <div className="flex flex-col h-full">
+        {/* Chat toolbar */}
+        {messages.length > 0 && (
+          <div className="flex items-center justify-end px-4 py-2 sm:px-6 lg:px-8 border-b border-[#2A2A32] bg-[#141418]/50">
+            <div className="max-w-3xl w-full flex items-center justify-end">
+              <ClearConversationButton
+                onClear={handleClearConversation}
+                messageCount={messages.length}
+                disabled={isStreaming}
+              />
+            </div>
+          </div>
+        )}
+
         {/* Chat message list */}
         <ChatMessageList
           messages={messages}

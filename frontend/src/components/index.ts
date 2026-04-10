@@ -2,8 +2,8 @@
 // This file contains reusable UI components
 
 export { Header, Sidebar, MainLayout } from './layout';
-export { ChatMessageList, ChatMessageBubble, MarkdownRenderer, ChatInput, TypingIndicator, CitationCard, CitationList, CitationDemo } from './chat';
-export type { ChatMessageListProps, ChatMessageBubbleProps, ChatInputProps, TypingIndicatorProps, TypingIndicatorVariant, TypingIndicatorSize } from './chat';
+export { ChatMessageList, ChatMessageBubble, MarkdownRenderer, ChatInput, TypingIndicator, CitationCard, CitationList, CitationDemo, ClearConversationButton } from './chat';
+export type { ChatMessageListProps, ChatMessageBubbleProps, ChatInputProps, TypingIndicatorProps, TypingIndicatorVariant, TypingIndicatorSize, ClearConversationButtonProps } from './chat';
 
 // Item display components
 export { ItemCard, ItemCardGrid, EnhancedItemCardGrid, ItemCardDemo } from './items';
