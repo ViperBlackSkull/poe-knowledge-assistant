@@ -681,7 +681,7 @@
         "title": "Performance optimization and load testing",
         "feature": "Polish",
         "dependencies": ["task-67"],
-        "status": "todo"
+        "status": "done"
       }
     ],
     "execution_order": [
