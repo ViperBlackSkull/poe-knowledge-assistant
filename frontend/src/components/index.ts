@@ -10,6 +10,8 @@ export { ItemCard, ItemCardGrid, EnhancedItemCardGrid, ItemCardDemo } from './it
 export type { ItemCardProps, ItemCardGridProps, EnhancedItemCardGridProps } from './items';
 
 // Standalone reusable components
+export { LoadingSpinner } from './common/LoadingSpinner';
+export type { LoadingSpinnerProps, LoadingSpinnerSize } from './common/LoadingSpinner';
 export { MarkdownRenderer as EnhancedMarkdownRenderer } from './common/MarkdownRenderer';
 export { GameVersionSelector } from './common/GameVersionSelector';
 export { GAME_VERSION_OPTIONS, getGameVersionLabel } from './common/GameVersionSelector';

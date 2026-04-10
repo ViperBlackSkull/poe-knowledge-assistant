@@ -17,6 +17,8 @@ export interface ChatMessageListProps {
   autoScroll?: boolean;
   /** Whether the assistant is currently generating a response */
   isStreaming?: boolean;
+  /** Whether a request is currently in progress (sending or receiving) */
+  isLoading?: boolean;
 }
 
 /**
@@ -54,6 +56,7 @@ export function ChatMessageList({
   className = '',
   autoScroll = true,
   isStreaming = false,
+  isLoading = false,
 }: ChatMessageListProps) {
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const previousMessageCountRef = useRef(messages.length);
@@ -68,13 +71,13 @@ export function ChatMessageList({
     }
   }, []);
 
-  // Auto-scroll when new messages are added or streaming state changes
+  // Auto-scroll when new messages are added or loading state changes
   useEffect(() => {
-    if (autoScroll && (messages.length > previousMessageCountRef.current || isStreaming)) {
+    if (autoScroll && (messages.length > previousMessageCountRef.current || isStreaming || isLoading)) {
       scrollToBottom();
     }
     previousMessageCountRef.current = messages.length;
-  }, [messages.length, autoScroll, scrollToBottom, isStreaming]);
+  }, [messages.length, autoScroll, scrollToBottom, isStreaming, isLoading]);
 
   // Scroll to bottom on initial mount if there are existing messages
   useEffect(() => {
@@ -93,7 +96,7 @@ export function ChatMessageList({
       aria-live="polite"
     >
       <div className="max-w-3xl mx-auto">
-        {messages.length === 0 && !isStreaming ? (
+        {messages.length === 0 && !isLoading ? (
           <WelcomeBanner />
         ) : (
           <>
@@ -104,13 +107,22 @@ export function ChatMessageList({
                 conversationId={conversationId}
               />
             ))}
-            {/* Typing indicator shown when streaming and last message is an empty assistant placeholder */}
+            {/* Typing indicator shown when streaming (receiving tokens) */}
             <TypingIndicator
               isVisible={isStreaming}
               label="Assistant is thinking..."
               variant="dots"
               size="md"
               display="bubble"
+            />
+            {/* Sending indicator shown when isLoading but not yet streaming */}
+            <TypingIndicator
+              isVisible={isLoading && !isStreaming}
+              label="Sending..."
+              variant="wave"
+              size="md"
+              display="bubble"
+              ariaLabel="Sending message"
             />
           </>
         )}

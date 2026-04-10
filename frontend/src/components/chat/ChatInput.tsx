@@ -331,9 +331,18 @@ export function ChatInput({
 
   return (
     <div
-      className={`border-t border-poe-border bg-poe-bg-secondary px-4 py-4 sm:px-6 lg:px-8 ${className}`}
+      className={`border-t border-poe-border bg-poe-bg-secondary px-4 py-4 sm:px-6 lg:px-8 relative ${className}`}
       data-testid="chat-input-container"
     >
+      {/* Loading overlay bar at top */}
+      {isLoading && (
+        <div
+          className="absolute top-0 left-0 right-0 h-0.5 bg-poe-gold/60 overflow-hidden"
+          data-testid="chat-input-loading-bar"
+        >
+          <div className="h-full bg-poe-gold animate-[loading-progress_1.5s_ease-in-out_infinite]" />
+        </div>
+      )}
       <div className="max-w-3xl mx-auto">
         {/* Error message display */}
         {error && (

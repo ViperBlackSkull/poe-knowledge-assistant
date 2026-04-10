@@ -1,3 +1,5 @@
+export { LoadingSpinner } from './LoadingSpinner';
+export type { LoadingSpinnerProps, LoadingSpinnerSize } from './LoadingSpinner';
 export { MarkdownRenderer } from './MarkdownRenderer';
 export { GameVersionSelector } from './GameVersionSelector';
 export type { GameVersionSelectorProps, GameVersionOption } from './GameVersionSelector';
@@ -61,3 +63,5 @@ export {
 } from './BuildContextSelector';
 export { BuildContextDisplay } from './BuildContextDisplay';
 export type { BuildContextDisplayProps } from './BuildContextDisplay';
+export { DataFreshnessIndicator } from './DataFreshnessIndicator';
+export type { DataFreshnessIndicatorProps } from './DataFreshnessIndicator';

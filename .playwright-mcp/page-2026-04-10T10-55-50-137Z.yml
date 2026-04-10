@@ -1,0 +1,203 @@
+- generic [ref=e2]:
+  - generic [ref=e3]:
+    - banner [ref=e4]:
+      - generic [ref=e6]:
+        - generic [ref=e8]:
+          - generic [ref=e9]: P
+          - generic [ref=e10]:
+            - heading "PoE Knowledge Assistant" [level=1] [ref=e11]
+            - paragraph [ref=e12]: Your intelligent assistant for Path of Exile
+        - generic [ref=e13]:
+          - navigation "Main navigation" [ref=e14]:
+            - link "Chat" [ref=e15] [cursor=pointer]:
+              - /url: /
+            - link "Knowledge Base" [ref=e16] [cursor=pointer]:
+              - /url: /knowledge
+            - link "Admin" [ref=e17] [cursor=pointer]:
+              - /url: /admin
+          - 'generic "Build context: Budget" [ref=e20]':
+            - img [ref=e21]
+            - generic [ref=e24]: Budget
+        - generic [ref=e26]:
+          - generic [ref=e27]:
+            - generic [ref=e28]: Path of Exile 1
+            - button "Select game version, currently Path of Exile 1" [ref=e277] [cursor=pointer]:
+              - img [ref=e32]
+              - generic [ref=e35]: Path of Exile 1
+              - img [ref=e36]
+            - generic [ref=e39]:
+              - button "Select build context, currently Budget" [ref=e40] [cursor=pointer]:
+                - img [ref=e41]
+                - generic [ref=e43]: Budget
+              - button "Clear build context" [ref=e44] [cursor=pointer]:
+                - img [ref=e45]
+            - 'status "Data freshness: Fresh. Knowledge base is up to date" [ref=e47]':
+              - generic [ref=e48]:
+                - generic [ref=e52]: Fresh
+                - generic [ref=e53]: "|"
+                - generic [ref=e54]: 14 hours ago
+            - button "Open settings" [ref=e55] [cursor=pointer]:
+              - img [ref=e56]
+          - button "Toggle configuration panel" [ref=e59] [cursor=pointer]:
+            - img [ref=e60]
+    - main [ref=e64]:
+      - generic [ref=e65]:
+        - log "Chat messages" [ref=e66]:
+          - generic [ref=e68]:
+            - generic [ref=e70]: "?"
+            - heading "Welcome, Exile" [level=2] [ref=e71]
+            - paragraph [ref=e72]: Ask me anything about Path of Exile - items, builds, mechanics, and more.
+        - generic [ref=e75]:
+          - generic [ref=e76]:
+            - textbox "Chat message input" [ref=e77]:
+              - /placeholder: Ask about items, builds, mechanics...
+              - text: What are the best unique items for a build?
+            - generic [ref=e258]: 43/10,000
+          - button "Send message" [ref=e78] [cursor=pointer]:
+            - img [ref=e79]
+            - generic [ref=e81]: Send
+  - dialog "Settings panel" [ref=e82]:
+    - generic [ref=e84]:
+      - generic [ref=e85]:
+        - img [ref=e86]
+        - heading "Settings" [level=2] [ref=e89]
+      - button "Close settings panel" [ref=e90] [cursor=pointer]:
+        - img [ref=e91]
+    - generic [ref=e93]:
+      - generic [ref=e94]:
+        - generic [ref=e95]:
+          - img [ref=e97]
+          - generic [ref=e99]:
+            - heading "LLM Provider" [level=3] [ref=e100]
+            - paragraph [ref=e101]: Configure the language model for generating responses
+        - generic [ref=e102]:
+          - generic [ref=e103]:
+            - generic [ref=e104]: LLM Provider
+            - button "Select LLM Provider, currently OpenAI" [ref=e106] [cursor=pointer]:
+              - img [ref=e107]
+              - generic [ref=e109]: OpenAI
+              - img [ref=e110]
+          - generic [ref=e112]:
+            - img [ref=e113]
+            - generic [ref=e115]: Cloud provider - requires API key
+          - generic [ref=e116]:
+            - generic [ref=e117]: Model
+            - button "Select OpenAI Models, currently GPT-4o" [ref=e119] [cursor=pointer]:
+              - generic [ref=e120]: GPT-4o
+              - img [ref=e121]
+            - generic [ref=e123]:
+              - generic [ref=e124]: gpt-4o
+              - generic [ref=e125]: Recommended
+        - generic [ref=e126]:
+          - generic [ref=e127]: Provider Settings
+          - generic [ref=e128]:
+            - generic [ref=e129]: Base URL(optional)
+            - textbox "Base URL(optional)" [ref=e130]:
+              - /placeholder: https://api.openai.com/v1
+        - generic [ref=e131]:
+          - generic [ref=e132]:
+            - generic [ref=e133]: Temperature
+            - generic [ref=e134]: "0.7"
+          - slider "Temperature" [ref=e135] [cursor=pointer]: "0.7"
+          - generic [ref=e136]:
+            - generic [ref=e137]: "0"
+            - generic [ref=e138]: "2"
+        - generic [ref=e139]:
+          - generic [ref=e140]:
+            - generic [ref=e141]: Max Tokens
+            - generic [ref=e142]: "2048"
+          - slider "Max Tokens" [ref=e143] [cursor=pointer]: "2048"
+          - generic [ref=e144]:
+            - generic [ref=e145]: "256"
+            - generic [ref=e146]: "32000"
+      - generic [ref=e147]:
+        - generic [ref=e148]:
+          - img [ref=e150]
+          - generic [ref=e152]:
+            - heading "API Key" [level=3] [ref=e153]
+            - paragraph [ref=e154]: Configure your API key for the selected provider
+        - generic [ref=e155]:
+          - generic [ref=e156]:
+            - generic [ref=e157]: OpenAI API Key*
+            - generic "Starts with \"sk-\" followed by at least 20 characters" [ref=e158]:
+              - img [ref=e159]
+              - generic [ref=e161]: Not set
+          - generic [ref=e162]:
+            - textbox "OpenAI API Key input" [ref=e163]:
+              - /placeholder: Enter your OpenAI API Key
+            - button "Show API key" [ref=e165] [cursor=pointer]:
+              - img [ref=e166]
+          - paragraph [ref=e169]: Starts with "sk-" followed by at least 20 characters
+        - generic [ref=e170]:
+          - generic [ref=e171]: Other provider keys
+          - generic [ref=e173]:
+            - generic [ref=e174]:
+              - generic [ref=e175]: Anthropic API Key
+              - generic "Starts with \"sk-ant-\" followed by at least 20 characters" [ref=e176]:
+                - img [ref=e177]
+                - generic [ref=e179]: Not set
+            - generic [ref=e180]:
+              - textbox "Anthropic API Key input" [ref=e181]:
+                - /placeholder: Enter your Anthropic API Key
+              - button "Show API key" [ref=e183] [cursor=pointer]:
+                - img [ref=e184]
+            - paragraph [ref=e187]: Starts with "sk-ant-" followed by at least 20 characters
+        - generic [ref=e188]:
+          - img [ref=e189]
+          - paragraph [ref=e191]: API keys are stored securely. Only a fingerprint is saved locally to remember your configuration.
+      - generic [ref=e192]:
+        - generic [ref=e193]:
+          - img [ref=e195]
+          - generic [ref=e197]:
+            - heading "Embedding Provider" [level=3] [ref=e198]
+            - paragraph [ref=e199]: Configure how text embeddings are generated
+        - generic [ref=e200]:
+          - generic [ref=e201]:
+            - generic [ref=e202]: Embedding Provider
+            - button "Select Embedding Provider, currently Local" [ref=e204] [cursor=pointer]:
+              - img [ref=e205]
+              - generic [ref=e207]: Local
+              - img [ref=e208]
+          - generic [ref=e210]:
+            - img [ref=e211]
+            - generic [ref=e213]: Local provider - runs on your machine
+          - generic [ref=e214]:
+            - generic [ref=e215]: Embedding Model
+            - button "Select Local Embedding Models, currently all-MiniLM-L6-v2" [ref=e217] [cursor=pointer]:
+              - generic [ref=e218]: all-MiniLM-L6-v2
+              - img [ref=e219]
+            - generic [ref=e221]:
+              - generic [ref=e222]: all-MiniLM-L6-v2
+              - generic [ref=e223]: 384 dimensions
+              - generic [ref=e224]: Recommended
+        - generic [ref=e225]:
+          - generic [ref=e226]: Embedding Provider Settings
+          - generic [ref=e227]:
+            - generic [ref=e228]: Cache Directory(optional)
+            - textbox "Cache Directory(optional)" [ref=e229]:
+              - /placeholder: ~/.cache/embeddings
+      - generic [ref=e230]:
+        - generic [ref=e231]:
+          - img [ref=e233]
+          - generic [ref=e235]:
+            - heading "RAG Configuration" [level=3] [ref=e236]
+            - paragraph [ref=e237]: Fine-tune retrieval-augmented generation parameters
+        - generic [ref=e238]:
+          - generic [ref=e239]:
+            - generic [ref=e240]: Top K Results
+            - generic [ref=e241]: "3"
+          - slider "Top K Results" [ref=e242] [cursor=pointer]: "3"
+          - generic [ref=e243]:
+            - generic [ref=e244]: "1"
+            - generic [ref=e245]: "20"
+        - generic [ref=e246]:
+          - generic [ref=e247]:
+            - generic [ref=e248]: Score Threshold
+            - generic [ref=e249]: "0.7"
+          - slider "Score Threshold" [ref=e250] [cursor=pointer]: "0.7"
+          - generic [ref=e251]:
+            - generic [ref=e252]: "0"
+            - generic [ref=e253]: "1"
+    - generic [ref=e255]:
+      - button "Cancel" [ref=e256] [cursor=pointer]
+      - button "Save Settings" [disabled] [ref=e257]

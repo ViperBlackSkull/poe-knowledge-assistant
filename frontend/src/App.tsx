@@ -232,6 +232,7 @@ function App() {
       onClose={() => setIsSettingsOpen(false)}
       onSave={handleSaveSettings}
       initialConfig={initialConfig}
+      isConfigLoading={config.isLoading}
     />
   );
 
@@ -282,6 +283,7 @@ function App() {
             messages={chat.messages}
             conversationId={chat.conversationId}
             isStreaming={chat.isStreaming}
+            isLoading={chat.isLoading}
           />
 
           {/* Chat input connected to useChat actions */}
