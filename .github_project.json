@@ -457,7 +457,7 @@
         "title": "Create item card grid layout",
         "feature": "Item Display Cards",
         "dependencies": ["task-39"],
-        "status": "todo"
+        "status": "done"
       },
       {
         "id": "task-41",
