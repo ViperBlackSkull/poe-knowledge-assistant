@@ -1,5 +1,49 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import type { LLMProvider, EmbeddingProvider, ConfigUpdateRequest } from '@/types';
+import {
+  LLMProviderSelector,
+  ProviderConfigSection,
+  getDefaultModel,
+  LLM_PROVIDER_OPTIONS,
+} from './LLMProviderSelector';
+
+// ---------------------------------------------------------------------------
+// LocalStorage helpers
+// ---------------------------------------------------------------------------
+
+const STORAGE_KEY = 'poe-knowledge-assistant-settings';
+
+interface PersistedSettings {
+  llmProvider: LLMProvider;
+  llmModel: string;
+  llmTemperature: number;
+  llmMaxTokens: number;
+  embeddingProvider: EmbeddingProvider;
+  embeddingModel: string;
+  ragTopK: number;
+  ragScoreThreshold: number;
+  providerConfig: Record<string, Record<string, string>>;
+}
+
+function loadPersistedSettings(): PersistedSettings | null {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) {
+      return JSON.parse(raw) as PersistedSettings;
+    }
+  } catch {
+    // Ignore parse errors
+  }
+  return null;
+}
+
+function persistSettings(settings: PersistedSettings): void {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(settings));
+  } catch {
+    // Ignore storage errors
+  }
+}
 
 // ---------------------------------------------------------------------------
 // Types
@@ -39,18 +83,12 @@ interface SettingsFormState {
   embeddingModel: string;
   ragTopK: number;
   ragScoreThreshold: number;
+  providerConfig: Record<string, Record<string, string>>;
 }
 
 // ---------------------------------------------------------------------------
 // Constants
 // ---------------------------------------------------------------------------
-
-const LLM_PROVIDER_OPTIONS: { value: LLMProvider; label: string; description: string }[] = [
-  { value: 'openai', label: 'OpenAI', description: 'GPT-4, GPT-3.5 Turbo' },
-  { value: 'anthropic', label: 'Anthropic', description: 'Claude models' },
-  { value: 'ollama', label: 'Ollama', description: 'Local LLM runtime' },
-  { value: 'lmstudio', label: 'LM Studio', description: 'Local LLM server' },
-];
 
 const EMBEDDING_PROVIDER_OPTIONS: { value: EmbeddingProvider; label: string; description: string }[] = [
   { value: 'local', label: 'Local', description: 'Built-in embeddings' },
@@ -58,13 +96,6 @@ const EMBEDDING_PROVIDER_OPTIONS: { value: EmbeddingProvider; label: string; des
   { value: 'ollama', label: 'Ollama', description: 'Local embeddings' },
   { value: 'lmstudio', label: 'LM Studio', description: 'Local embeddings server' },
 ];
-
-const LLM_MODELS_BY_PROVIDER: Record<LLMProvider, string[]> = {
-  openai: ['gpt-4', 'gpt-4-turbo', 'gpt-3.5-turbo', 'gpt-4o', 'gpt-4o-mini'],
-  anthropic: ['claude-3-opus-20240229', 'claude-3-sonnet-20240229', 'claude-3-haiku-20240307', 'claude-3.5-sonnet-20241022'],
-  ollama: ['llama3', 'mistral', 'codellama', 'phi3', 'gemma2'],
-  lmstudio: ['TheBloke/Mistral-7B-Instruct', 'local-model'],
-};
 
 const EMBEDDING_MODELS_BY_PROVIDER: Record<EmbeddingProvider, string[]> = {
   local: ['all-MiniLM-L6-v2', 'all-mpnet-base-v2'],
@@ -76,13 +107,14 @@ const EMBEDDING_MODELS_BY_PROVIDER: Record<EmbeddingProvider, string[]> = {
 const DEFAULT_FORM_STATE: SettingsFormState = {
   llmProvider: 'openai',
   llmApiKey: '',
-  llmModel: 'gpt-4',
+  llmModel: 'gpt-4o',
   llmTemperature: 0.7,
   llmMaxTokens: 2048,
   embeddingProvider: 'local',
   embeddingModel: 'all-MiniLM-L6-v2',
   ragTopK: 5,
   ragScoreThreshold: 0.7,
+  providerConfig: {},
 };
 
 // ---------------------------------------------------------------------------
@@ -215,7 +247,10 @@ function FormSlider({
  *
  * Features:
  *  - Slide-in animation from the right side of the screen
- *  - LLM provider selection and configuration (model, temperature, tokens)
+ *  - LLM provider selection with PoE-styled custom dropdown
+ *  - Dynamic model selection based on provider
+ *  - Provider-specific configuration options
+ *  - Save/restore provider selection via localStorage
  *  - API key input with show/hide toggle
  *  - Embedding provider configuration
  *  - RAG configuration (top-K results, score threshold)
@@ -235,8 +270,26 @@ export function SettingsPanel({
   // State
   // ---------------------------------------------------------------------------
 
-  const [formState, setFormState] = useState<SettingsFormState>(DEFAULT_FORM_STATE);
-  const [savedState, setSavedState] = useState<SettingsFormState>(DEFAULT_FORM_STATE);
+  const [formState, setFormState] = useState<SettingsFormState>(() => {
+    // Initialize from localStorage first, then fall back to defaults
+    const persisted = loadPersistedSettings();
+    if (persisted) {
+      return {
+        ...DEFAULT_FORM_STATE,
+        llmProvider: persisted.llmProvider,
+        llmModel: persisted.llmModel,
+        llmTemperature: persisted.llmTemperature,
+        llmMaxTokens: persisted.llmMaxTokens,
+        embeddingProvider: persisted.embeddingProvider,
+        embeddingModel: persisted.embeddingModel,
+        ragTopK: persisted.ragTopK,
+        ragScoreThreshold: persisted.ragScoreThreshold,
+        providerConfig: persisted.providerConfig ?? {},
+      };
+    }
+    return DEFAULT_FORM_STATE;
+  });
+  const [savedState, setSavedState] = useState<SettingsFormState>(formState);
   const [isSaving, setIsSaving] = useState(false);
   const [showApiKey, setShowApiKey] = useState(false);
   const [saveMessage, setSaveMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
@@ -250,19 +303,22 @@ export function SettingsPanel({
   useEffect(() => {
     if (initialConfig) {
       const newState: SettingsFormState = {
-        llmProvider: initialConfig.llmProvider ?? DEFAULT_FORM_STATE.llmProvider,
+        llmProvider: initialConfig.llmProvider ?? formState.llmProvider,
         llmApiKey: '',
-        llmModel: initialConfig.llmModel ?? DEFAULT_FORM_STATE.llmModel,
-        llmTemperature: initialConfig.llmTemperature ?? DEFAULT_FORM_STATE.llmTemperature,
-        llmMaxTokens: initialConfig.llmMaxTokens ?? DEFAULT_FORM_STATE.llmMaxTokens,
-        embeddingProvider: initialConfig.embeddingProvider ?? DEFAULT_FORM_STATE.embeddingProvider,
-        embeddingModel: initialConfig.embeddingModel ?? DEFAULT_FORM_STATE.embeddingModel,
-        ragTopK: initialConfig.ragTopK ?? DEFAULT_FORM_STATE.ragTopK,
-        ragScoreThreshold: initialConfig.ragScoreThreshold ?? DEFAULT_FORM_STATE.ragScoreThreshold,
+        llmModel: initialConfig.llmModel ?? formState.llmModel,
+        llmTemperature: initialConfig.llmTemperature ?? formState.llmTemperature,
+        llmMaxTokens: initialConfig.llmMaxTokens ?? formState.llmMaxTokens,
+        embeddingProvider: initialConfig.embeddingProvider ?? formState.embeddingProvider,
+        embeddingModel: initialConfig.embeddingModel ?? formState.embeddingModel,
+        ragTopK: initialConfig.ragTopK ?? formState.ragTopK,
+        ragScoreThreshold: initialConfig.ragScoreThreshold ?? formState.ragScoreThreshold,
+        providerConfig: formState.providerConfig,
       };
       setFormState(newState);
       setSavedState(newState);
     }
+    // Only run when initialConfig changes, not on every formState change
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [initialConfig]);
 
   // ---------------------------------------------------------------------------
@@ -335,10 +391,19 @@ export function SettingsPanel({
   }, []);
 
   const handleLlmProviderChange = useCallback((provider: LLMProvider) => {
+    const defaultModel = getDefaultModel(provider);
     setFormState((prev) => ({
       ...prev,
       llmProvider: provider,
-      llmModel: LLM_MODELS_BY_PROVIDER[provider][0],
+      llmModel: defaultModel,
+    }));
+    setSaveMessage(null);
+  }, []);
+
+  const handleLlmModelChange = useCallback((model: string) => {
+    setFormState((prev) => ({
+      ...prev,
+      llmModel: model,
     }));
     setSaveMessage(null);
   }, []);
@@ -348,6 +413,20 @@ export function SettingsPanel({
       ...prev,
       embeddingProvider: provider,
       embeddingModel: EMBEDDING_MODELS_BY_PROVIDER[provider][0],
+    }));
+    setSaveMessage(null);
+  }, []);
+
+  const handleProviderConfigChange = useCallback((key: string, value: string) => {
+    setFormState((prev) => ({
+      ...prev,
+      providerConfig: {
+        ...prev.providerConfig,
+        [prev.llmProvider]: {
+          ...(prev.providerConfig[prev.llmProvider] ?? {}),
+          [key]: value,
+        },
+      },
     }));
     setSaveMessage(null);
   }, []);
@@ -391,7 +470,22 @@ export function SettingsPanel({
       if (onSave) {
         await onSave(updates);
       }
-      setSavedState({ ...formState, llmApiKey: '' });
+
+      // Persist to localStorage
+      const newSavedState = { ...formState, llmApiKey: '' };
+      persistSettings({
+        llmProvider: newSavedState.llmProvider,
+        llmModel: newSavedState.llmModel,
+        llmTemperature: newSavedState.llmTemperature,
+        llmMaxTokens: newSavedState.llmMaxTokens,
+        embeddingProvider: newSavedState.embeddingProvider,
+        embeddingModel: newSavedState.embeddingModel,
+        ragTopK: newSavedState.ragTopK,
+        ragScoreThreshold: newSavedState.ragScoreThreshold,
+        providerConfig: newSavedState.providerConfig,
+      });
+
+      setSavedState(newSavedState);
       setFormState((prev) => ({ ...prev, llmApiKey: '' }));
       setSaveMessage({ type: 'success', text: 'Settings saved successfully' });
 
@@ -411,11 +505,12 @@ export function SettingsPanel({
   }, [savedState, onClose]);
 
   // ---------------------------------------------------------------------------
-  // Get model options for current providers
+  // Get model options for current embedding provider
   // ---------------------------------------------------------------------------
 
-  const currentLlmModels = LLM_MODELS_BY_PROVIDER[formState.llmProvider] ?? [];
   const currentEmbeddingModels = EMBEDDING_MODELS_BY_PROVIDER[formState.embeddingProvider] ?? [];
+  const currentProviderOption = LLM_PROVIDER_OPTIONS.find((o) => o.value === formState.llmProvider);
+  const currentProviderConfig = formState.providerConfig[formState.llmProvider] ?? {};
 
   // ---------------------------------------------------------------------------
   // Render
@@ -440,7 +535,7 @@ export function SettingsPanel({
         onKeyDown={handleKeyDown}
         className={`
           fixed top-0 right-0 bottom-0 z-50
-          w-full sm:w-96 max-w-full
+          w-full sm:w-[28rem] max-w-full
           bg-poe-bg-secondary border-l border-poe-border
           transform transition-transform duration-300 ease-in-out
           flex flex-col
@@ -545,7 +640,7 @@ export function SettingsPanel({
           )}
 
           {/* ---------------------------------------------------------------
-              LLM Provider Section
+              LLM Provider Section (with PoE-styled custom dropdown)
               --------------------------------------------------------------- */}
           <div className="poe-card space-y-3">
             <SectionHeader
@@ -558,36 +653,20 @@ export function SettingsPanel({
               description="Configure the language model for generating responses"
             />
 
-            {/* LLM Provider select */}
-            <div>
-              <FormLabel htmlFor="llm-provider">Provider</FormLabel>
-              <FormSelect
-                id="llm-provider"
-                value={formState.llmProvider}
-                options={LLM_PROVIDER_OPTIONS}
-                onChange={handleLlmProviderChange}
-              />
-            </div>
+            {/* PoE-styled LLM Provider and Model selector */}
+            <LLMProviderSelector
+              provider={formState.llmProvider}
+              model={formState.llmModel}
+              onProviderChange={handleLlmProviderChange}
+              onModelChange={handleLlmModelChange}
+            />
 
-            {/* LLM Model select */}
-            <div>
-              <FormLabel htmlFor="llm-model">Model</FormLabel>
-              <select
-                id="llm-model"
-                value={formState.llmModel}
-                onChange={(e) => updateField('llmModel', e.target.value)}
-                className="poe-input w-full text-sm"
-              >
-                {currentLlmModels.map((model) => (
-                  <option key={model} value={model}>
-                    {model}
-                  </option>
-                ))}
-                {!currentLlmModels.includes(formState.llmModel) && (
-                  <option value={formState.llmModel}>{formState.llmModel}</option>
-                )}
-              </select>
-            </div>
+            {/* Provider-specific configuration */}
+            <ProviderConfigSection
+              provider={formState.llmProvider}
+              config={currentProviderConfig}
+              onConfigChange={handleProviderConfigChange}
+            />
 
             {/* Temperature slider */}
             <FormSlider
@@ -639,7 +718,7 @@ export function SettingsPanel({
             {/* API Key input with show/hide toggle */}
             <div>
               <FormLabel htmlFor="api-key">
-                {formState.llmProvider === 'ollama' || formState.llmProvider === 'lmstudio'
+                {!currentProviderOption?.requiresApiKey
                   ? 'API Key (optional)'
                   : 'API Key'}
               </FormLabel>
@@ -650,9 +729,9 @@ export function SettingsPanel({
                   value={formState.llmApiKey}
                   onChange={(e) => updateField('llmApiKey', e.target.value)}
                   placeholder={
-                    formState.llmProvider === 'ollama' || formState.llmProvider === 'lmstudio'
+                    !currentProviderOption?.requiresApiKey
                       ? 'Not required for local providers'
-                      : `Enter your ${LLM_PROVIDER_OPTIONS.find(o => o.value === formState.llmProvider)?.label ?? ''} API key`
+                      : `Enter your ${currentProviderOption?.label ?? ''} API key`
                   }
                   className="poe-input w-full text-sm pr-10"
                   autoComplete="off"

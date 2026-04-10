@@ -16,3 +16,16 @@ export { GAME_VERSION_OPTIONS, getGameVersionLabel } from './common/GameVersionS
 export type { GameVersionSelectorProps, GameVersionOption } from './common/GameVersionSelector';
 export { SettingsPanel } from './common/SettingsPanel';
 export type { SettingsPanelProps } from './common/SettingsPanel';
+export { LLMProviderSelector, ProviderConfigSection } from './common/LLMProviderSelector';
+export type {
+  LLMProviderSelectorProps,
+  LLMProviderOption,
+  LLMModelOption,
+  ProviderConfigProps,
+} from './common/LLMProviderSelector';
+export {
+  LLM_PROVIDER_OPTIONS,
+  LLM_MODELS_BY_PROVIDER,
+  getDefaultModel,
+  getLLMProviderLabel,
+} from './common/LLMProviderSelector';
