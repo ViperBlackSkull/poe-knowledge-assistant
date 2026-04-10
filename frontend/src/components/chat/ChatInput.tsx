@@ -2,6 +2,7 @@ import { useState, useRef, useCallback, useEffect, type KeyboardEvent, type Form
 import type { ChatMessage, GameVersion } from '@/types/chat';
 import type { ChatStreamRequest, SSESource } from '@/types/streaming';
 import { streamChat as streamChatApi, sendChat as sendChatApi } from '@/lib/api-client';
+import { classifyError } from '@/hooks/useErrorHandling';
 import { TypingIndicator } from './TypingIndicator';
 
 // ---------------------------------------------------------------------------
@@ -262,8 +263,21 @@ export function ChatInput({
           await handleNonStreamingRequest(trimmed);
         }
       } catch (err) {
-        const errorMessage =
-          err instanceof Error ? err.message : 'An unexpected error occurred. Please try again.';
+        // Classify the error for a better user message
+        const classified = classifyError(err);
+        let errorMessage = classified.message;
+
+        // Add specific guidance based on error category
+        if (classified.category === 'network') {
+          errorMessage = 'Unable to reach the server. Please check your connection and try again.';
+        } else if (classified.category === 'authentication') {
+          errorMessage = 'Authentication failed. Please check your API key in Settings.';
+        } else if (classified.category === 'streaming') {
+          errorMessage = 'The response was interrupted. Please try sending your message again.';
+        } else if (classified.category === 'api' && (classified.statusCode ?? 0) >= 500) {
+          errorMessage = 'The server encountered an error. Please try again in a moment.';
+        }
+
         setError(errorMessage);
         onError?.(errorMessage);
       } finally {
@@ -364,11 +378,15 @@ export function ChatInput({
                 d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z"
               />
             </svg>
-            <span>{error}</span>
+            <span className="flex-1">{error}</span>
             <button
               type="button"
-              onClick={() => setError(null)}
-              className="ml-auto text-red-400 hover:text-red-300"
+              onClick={() => {
+                setError(null);
+                // Refocus the textarea so the user can retry
+                textareaRef.current?.focus();
+              }}
+              className="text-red-400 hover:text-red-300"
               aria-label="Dismiss error"
             >
               <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">

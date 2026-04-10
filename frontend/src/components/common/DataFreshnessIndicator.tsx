@@ -1,6 +1,7 @@
 import { useDataFreshness, deriveFreshnessStatus } from '@/hooks/useDataFreshness';
 import type { FreshnessStatus, FreshnessEntry } from '@/types/freshness';
 import type { DataFreshnessIndicatorProps } from '@/types/freshness';
+import { classifyError } from '@/hooks/useErrorHandling';
 
 // Re-export the props type for convenient importing
 export type { DataFreshnessIndicatorProps } from '@/types/freshness';
@@ -178,22 +179,32 @@ export function DataFreshnessIndicator({
 
   // Show error state
   if (error && !data) {
+    // Classify the error for better messaging
+    const classified = classifyError(new Error(error));
+    const errorLabel = classified.category === 'network'
+      ? 'Connection failed'
+      : classified.category === 'authentication'
+        ? 'Auth error'
+        : 'Freshness unavailable';
+
     return (
       <div
         className={`inline-flex items-center gap-2 ${
           compact ? 'px-2 py-0.5' : 'px-3 py-1.5'
         } rounded bg-poe-bg-tertiary border border-red-400/30 ${className}`}
         data-testid="data-freshness-error"
+        role="alert"
       >
         <span className="w-2 h-2 rounded-full bg-red-400 shrink-0" />
         <span className={`${compact ? 'text-xs' : 'text-sm'} text-red-400`}>
-          Freshness unavailable
+          {errorLabel}
         </span>
         <button
           type="button"
           onClick={refresh}
           className="text-xs text-poe-text-muted hover:text-poe-text-highlight transition-colors underline"
           aria-label="Retry fetching freshness data"
+          data-testid="data-freshness-error-retry"
         >
           Retry
         </button>

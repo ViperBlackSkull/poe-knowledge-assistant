@@ -54,3 +54,18 @@ export { BuildContextDisplay } from './common/BuildContextDisplay';
 export type { BuildContextDisplayProps } from './common/BuildContextDisplay';
 export { DataFreshnessIndicator } from './common/DataFreshnessIndicator';
 export type { DataFreshnessIndicatorProps } from './common/DataFreshnessIndicator';
+export { ErrorBoundary } from './common/ErrorBoundary';
+export type { ErrorBoundaryProps, ErrorBoundaryState } from './common/ErrorBoundary';
+export {
+  ErrorToast,
+  ToastProvider,
+  useToast,
+} from './common/ErrorToast';
+export type {
+  ToastSeverity,
+  ToastEntry,
+  AddToastOptions,
+  ToastContextValue,
+  ToastProviderProps,
+  ErrorToastProps,
+} from './common/ErrorToast';

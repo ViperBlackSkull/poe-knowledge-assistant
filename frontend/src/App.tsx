@@ -12,23 +12,27 @@ import {
   BuildContextSelector,
   BuildContextDisplay,
   DataFreshnessIndicator,
+  ErrorBoundary,
+  useToast,
 } from '@/components';
 import type { ChatMessage } from '@/types/chat';
 import type { SSESource } from '@/types/streaming';
 import type { ConfigUpdateRequest } from '@/types/config';
-import { setApiKey } from '@/lib/api-client';
-import { useBuildContext, useChat, useConfig } from '@/hooks';
+import { setApiKey, APIClientError } from '@/lib/api-client';
+import { useBuildContext, useChat, useConfig, useErrorHandling } from '@/hooks';
 import type { BuildContextValue } from '@/hooks';
 
 /**
- * Root application component.
+ * Inner application component (wrapped by ErrorBoundary and ToastProvider in main.tsx).
  *
  * Provides the full chat interface integrating all components via
  * centralized state management hooks:
  *
- *   - useChat:    Chat messages, loading/error states, streaming, game version
- *   - useConfig:  Server-side configuration (LLM/embedding providers, RAG settings)
- *   - useBuildContext: Build context selection persisted to localStorage
+ *   - useChat:           Chat messages, loading/error states, streaming, game version
+ *   - useConfig:         Server-side configuration (LLM/embedding providers, RAG settings)
+ *   - useBuildContext:   Build context selection persisted to localStorage
+ *   - useErrorHandling:  Error classification, retry logic, and toast integration
+ *   - useToast:          Global toast notifications for user feedback
  *
  * Component hierarchy:
  *   MainLayout
@@ -39,6 +43,8 @@ import type { BuildContextValue } from '@/hooks';
  */
 function App() {
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+  const toast = useToast();
+  const errorHandling = useErrorHandling();
 
   // -- Build context state (persisted to localStorage) -----------------------
   const { buildContext, setBuildContext } = useBuildContext();
@@ -47,6 +53,14 @@ function App() {
   const config = useConfig({
     onConfigUpdated: (response) => {
       console.log('[Config] Updated fields:', response.updated_fields);
+      toast.addSuccess('Settings saved successfully');
+    },
+    onError: (configError) => {
+      console.error('[Config] Error:', configError.message);
+      toast.addError(configError.message, {
+        title: 'Configuration Error',
+        retryable: true,
+      });
     },
   });
 
@@ -112,42 +126,88 @@ function App() {
     [chat.attachSources],
   );
 
+  // -- Error handler with toast integration and classification ---------------
   const handleError = useCallback(
     (errorMessage: string) => {
       chat.handleError(errorMessage);
+
+      // Classify and show toast for the error
+      const classified = errorHandling.classifyError(
+        new Error(errorMessage),
+      );
+
+      toast.addError(errorMessage, {
+        title: classified.category === 'network'
+          ? 'Connection Error'
+          : classified.category === 'authentication'
+            ? 'Authentication Error'
+            : 'Chat Error',
+        retryable: classified.retryable,
+        duration: classified.category === 'network' ? 8000 : 5000,
+      });
     },
-    [chat.handleError],
+    [chat.handleError, errorHandling.classifyError, toast],
   );
 
-  // -- Settings save handler ------------------------------------------------
+  // -- Settings save handler with error handling -----------------------------
   const handleSaveSettings = useCallback(
     async (settings: ConfigUpdateRequest) => {
       console.log('[Settings] Saving settings:', settings);
 
-      // Delegate to the config hook's centralized save method (PUT /api/config)
-      const response = await config.save(settings);
+      try {
+        // Use withRetry for network resilience
+        const response = await errorHandling.withRetry(
+          async () => {
+            const resp = await config.save(settings);
 
-      if (!response) {
-        throw new Error('Failed to save settings');
+            if (!resp) {
+              throw new APIClientError(0, 'Failed to save settings. No response received from server.');
+            }
+
+            if (!resp.success) {
+              throw new APIClientError(400, resp.message || 'Failed to save settings.');
+            }
+
+            return resp;
+          },
+          {
+            maxRetries: 2,
+            baseDelay: 500,
+            exponentialBackoff: true,
+          },
+        );
+
+        console.log('[Settings] Save successful:', response.message);
+        console.log('[Settings] Updated fields:', response.updated_fields);
+
+        // Apply the API key to the api-client for subsequent requests
+        if (settings.openai_api_key) {
+          setApiKey(settings.openai_api_key);
+        } else if (settings.anthropic_api_key) {
+          setApiKey(settings.anthropic_api_key);
+        }
+
+        return response;
+      } catch (err) {
+        // Let SettingsPanel handle its own save message display,
+        // but also show a toast for network/auth errors
+        const classified = errorHandling.classifyError(err);
+
+        if (classified.category === 'network') {
+          toast.addError('Unable to reach the server. Your settings were not saved.', {
+            title: 'Network Error',
+            retryable: true,
+          });
+        } else if (classified.category === 'authentication') {
+          toast.addError(classified.message, {
+            title: 'Authentication Error',
+          });
+        }
+
+        throw err;
       }
-
-      if (!response.success) {
-        throw new Error(response.message || 'Failed to save settings');
-      }
-
-      console.log('[Settings] Save successful:', response.message);
-      console.log('[Settings] Updated fields:', response.updated_fields);
-
-      // Apply the API key to the api-client for subsequent requests
-      if (settings.openai_api_key) {
-        setApiKey(settings.openai_api_key);
-      } else if (settings.anthropic_api_key) {
-        setApiKey(settings.anthropic_api_key);
-      }
-
-      return response;
     },
-    [config],
+    [config, errorHandling, toast],
   );
 
   // -- Header actions -------------------------------------------------------
@@ -192,7 +252,7 @@ function App() {
           <path
             strokeLinecap="round"
             strokeLinejoin="round"
-            d="M9.594 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.645.87.074.04.147.083.22.127.325.196.72.257 1.075.124l1.217-.456a1.125 1.125 0 011.37.49l1.296 2.247a1.125 1.125 0 01-.26 1.431l-1.003.827c-.293.241-.438.613-.43.992a7.723 7.723 0 010 .255c-.008.378.137.75.43.991l1.004.827c.424.35.534.955.26 1.43l-1.298 2.247a1.125 1.125 0 01-1.369.491l-1.217-.456c-.355-.133-.75-.072-1.076.124a6.47 6.47 0 01-.22.128c-.331.183-.581.495-.644.869l-.213 1.281c-.09.543-.56.94-1.11.94h-2.594c-.55 0-1.019-.398-1.11-.94l-.213-1.281c-.062-.374-.312-.686-.644-.87a6.52 6.52 0 01-.22-.127c-.325-.196-.72-.257-1.076-.124l-1.217.456a1.125 1.125 0 01-1.369-.49l-1.297-2.247a1.125 1.125 0 01.26-1.431l1.004-.827c.292-.24.437-.613.43-.991a6.932 6.932 0 010-.255c.007-.38-.138-.751-.43-.992l-1.004-.827a1.125 1.125 0 01-.26-1.43l1.297-2.247a1.125 1.125 0 011.37-.491l1.216.456c.356.133.751.072 1.076-.124.072-.044.146-.086.22-.128.332-.183.582-.495.644-.869l.214-1.28z"
+            d="M9.594 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.645.87.074.04.147.083.22.127.325.196.72.257 1.075.124l1.217-.456a1.125 1.125 0 011.37.49l1.296 2.247a1.125 1.125 0 01-.26 1.431l-1.003.827c-.293.241-.438.613-.43.992a7.723 7.723 0 010 .255c-.008.378.137.75.43.991l1.004.827c.424.35.534.955.26 1.43l-1.298 2.247a1.125 1.125 0 01-1.369.491l-1.217-.456c-.355.133-.75.072-1.076.124a6.47 6.47 0 01-.22.128c-.331.183-.581.495-.644.869l-.213 1.281c-.09.543-.56.94-1.11.94h-2.594c-.55 0-1.019-.398-1.11-.94l-.213-1.281c-.062-.374-.312-.686-.644-.87a6.52 6.52 0 01-.22-.127c-.325-.196-.72-.257-1.076-.124l-1.217.456a1.125 1.125 0 01-1.369-.49l-1.297-2.247a1.125 1.125 0 01.26-1.431l1.004-.827c.292-.24.437-.613.43-.991a6.932 6.932 0 010-.255c.007-.38-.138-.751-.43-.992l-1.004-.827a1.125 1.125 0 01-.26-1.43l1.297-2.247a1.125 1.125 0 011.37-.491l1.216.456c.356.133.751.072 1.076-.124.072-.044.146-.086.22-.128.332-.183.582-.495.644-.869l.214-1.28z"
           />
           <path
             strokeLinecap="round"
@@ -241,7 +301,9 @@ function App() {
     return (
       <>
         <MainLayout actions={headerActions} contextDisplay={contextDisplay}>
-          <ItemCardDemo />
+          <ErrorBoundary name="ItemCardDemo">
+            <ItemCardDemo />
+          </ErrorBoundary>
         </MainLayout>
         {settingsPanel}
       </>
@@ -253,7 +315,9 @@ function App() {
     return (
       <>
         <MainLayout actions={headerActions} contextDisplay={contextDisplay}>
-          <CitationDemo />
+          <ErrorBoundary name="CitationDemo">
+            <CitationDemo />
+          </ErrorBoundary>
         </MainLayout>
         {settingsPanel}
       </>
@@ -279,26 +343,30 @@ function App() {
           )}
 
           {/* Chat message list connected to useChat state */}
-          <ChatMessageList
-            messages={chat.messages}
-            conversationId={chat.conversationId}
-            isStreaming={chat.isStreaming}
-            isLoading={chat.isLoading}
-          />
+          <ErrorBoundary name="ChatMessageList">
+            <ChatMessageList
+              messages={chat.messages}
+              conversationId={chat.conversationId}
+              isStreaming={chat.isStreaming}
+              isLoading={chat.isLoading}
+            />
+          </ErrorBoundary>
 
           {/* Chat input connected to useChat actions */}
-          <ChatInput
-            onSendMessage={handleSendMessage}
-            onStreamingToken={handleStreamingToken}
-            onStreamingDone={handleStreamingDone}
-            onSources={handleSources}
-            onError={handleError}
-            disabled={chat.isLoading}
-            conversationId={chat.conversationId}
-            gameVersion={chat.gameVersion}
-            buildContext={chat.buildContext}
-            useStreaming={true}
-          />
+          <ErrorBoundary name="ChatInput">
+            <ChatInput
+              onSendMessage={handleSendMessage}
+              onStreamingToken={handleStreamingToken}
+              onStreamingDone={handleStreamingDone}
+              onSources={handleSources}
+              onError={handleError}
+              disabled={chat.isLoading}
+              conversationId={chat.conversationId}
+              gameVersion={chat.gameVersion}
+              buildContext={chat.buildContext}
+              useStreaming={true}
+            />
+          </ErrorBoundary>
         </div>
       </MainLayout>
       {settingsPanel}

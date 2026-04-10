@@ -39,3 +39,15 @@ export type {
   UseConfigOptions,
   UseConfigReturn,
 } from './useConfig';
+
+export {
+  useErrorHandling,
+  classifyError,
+  getUserMessage,
+} from './useErrorHandling';
+export type {
+  ErrorCategory,
+  ClassifiedError,
+  RetryOptions,
+  UseErrorHandlingReturn,
+} from './useErrorHandling';

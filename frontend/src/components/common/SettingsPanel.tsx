@@ -531,7 +531,25 @@ export function SettingsPanel({
       // Auto-clear success message
       setTimeout(() => setSaveMessage(null), 3000);
     } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'Failed to save settings';
+      // Classify the error for a better message
+      let errorMessage = err instanceof Error ? err.message : 'Failed to save settings';
+
+      // Provide more specific messages for common error types
+      if (err instanceof Error) {
+        const msg = err.message.toLowerCase();
+        if (msg.includes('network') || msg.includes('fetch') || msg.includes('connection')) {
+          errorMessage = 'Unable to reach the server. Please check your connection and try again.';
+        } else if (msg.includes('401') || msg.includes('403') || msg.includes('auth')) {
+          errorMessage = 'Authentication failed. Please verify your API key.';
+        } else if (msg.includes('422') || msg.includes('validation')) {
+          errorMessage = 'Invalid settings values. Please review your configuration.';
+        } else if (msg.includes('500') || msg.includes('internal')) {
+          errorMessage = 'A server error occurred. Please try again later.';
+        } else if (msg.includes('timeout')) {
+          errorMessage = 'The request timed out. Please try again.';
+        }
+      }
+
       setSaveMessage({ type: 'error', text: errorMessage });
     } finally {
       setIsSaving(false);
@@ -694,7 +712,28 @@ export function SettingsPanel({
                   />
                 )}
               </svg>
-              {saveMessage.text}
+              <span className="flex-1">{saveMessage.text}</span>
+              {saveMessage.type === 'error' && (
+                <button
+                  type="button"
+                  onClick={() => handleSave()}
+                  disabled={isSaving}
+                  className="text-xs text-red-400 hover:text-red-300 underline transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                  data-testid="settings-error-retry"
+                >
+                  Retry
+                </button>
+              )}
+              <button
+                type="button"
+                onClick={() => setSaveMessage(null)}
+                className="text-poe-text-muted hover:text-poe-text-highlight transition-colors"
+                aria-label="Dismiss message"
+              >
+                <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
             </div>
           )}
 
