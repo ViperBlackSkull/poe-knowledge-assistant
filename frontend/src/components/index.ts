@@ -11,3 +11,6 @@ export type { ItemCardProps, ItemCardGridProps, EnhancedItemCardGridProps } from
 
 // Standalone reusable components
 export { MarkdownRenderer as EnhancedMarkdownRenderer } from './common/MarkdownRenderer';
+export { GameVersionSelector } from './common/GameVersionSelector';
+export { GAME_VERSION_OPTIONS, getGameVersionLabel } from './common/GameVersionSelector';
+export type { GameVersionSelectorProps, GameVersionOption } from './common/GameVersionSelector';

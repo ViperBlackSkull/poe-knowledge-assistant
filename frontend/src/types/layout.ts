@@ -51,6 +51,8 @@ export interface MainLayoutProps {
   showSidebar?: boolean;
   /** Optional class names for the main content area */
   className?: string;
+  /** Optional header actions to render alongside the settings button */
+  actions?: ReactNode;
 }
 
 /** Props for the content area wrapper. */

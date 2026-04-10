@@ -1,6 +1,7 @@
 import { useState, useCallback, useRef, useEffect } from 'react';
-import { MainLayout, ChatMessageList, ChatInput, ItemCardDemo, CitationDemo } from '@/components';
+import { MainLayout, ChatMessageList, ChatInput, ItemCardDemo, CitationDemo, GameVersionSelector, getGameVersionLabel } from '@/components';
 import type { ChatMessage } from '@/types/chat';
+import type { GameVersion } from '@/types/chat';
 import type { SSESource } from '@/types/streaming';
 
 /**
@@ -11,6 +12,7 @@ import type { SSESource } from '@/types/streaming';
  * - ChatMessageList for displaying conversation messages
  * - ChatInput for composing and sending messages
  * - Streaming response support via SSE
+ * - Game version selector for choosing which PoE version to query
  *
  * Navigate to /#/items to see the Item Card demo page.
  */
@@ -18,6 +20,7 @@ function App() {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [conversationId, setConversationId] = useState<string | undefined>(undefined);
   const [isStreaming, setIsStreaming] = useState(false);
+  const [gameVersion, setGameVersion] = useState<GameVersion>('poe2');
   const streamingBufferRef = useRef<string>('');
 
   // Simple hash-based routing for demo pages
@@ -30,6 +33,18 @@ function App() {
 
   const showItemDemo = currentHash === '#/items';
   const showCitationDemo = currentHash === '#/citations';
+
+  /**
+   * Handle game version change.
+   * Updates the selected version and clears the conversation to start fresh.
+   */
+  const handleGameVersionChange = useCallback((version: GameVersion) => {
+    setGameVersion(version);
+    // Clear conversation when changing game version for a fresh context
+    setMessages([]);
+    setConversationId(undefined);
+    streamingBufferRef.current = '';
+  }, []);
 
   /**
    * Handle a new user message being sent.
@@ -126,10 +141,27 @@ function App() {
     setMessages((prev) => [...prev, systemMessage]);
   }, []);
 
+  // Header actions with game version selector and version display badge
+  const headerActions = (
+    <div className="flex items-center gap-3">
+      {/* Current version badge */}
+      <span className="hidden lg:inline-flex items-center gap-1.5 px-2 py-1 rounded text-xs bg-poe-bg-tertiary border border-poe-border text-poe-text-muted">
+        <span className="w-1.5 h-1.5 rounded-full bg-poe-gold" />
+        {getGameVersionLabel(gameVersion)}
+      </span>
+
+      {/* Game version selector dropdown */}
+      <GameVersionSelector
+        value={gameVersion}
+        onChange={handleGameVersionChange}
+      />
+    </div>
+  );
+
   // Item card demo page
   if (showItemDemo) {
     return (
-      <MainLayout>
+      <MainLayout actions={headerActions}>
         <ItemCardDemo />
       </MainLayout>
     );
@@ -138,14 +170,14 @@ function App() {
   // Citation component demo page
   if (showCitationDemo) {
     return (
-      <MainLayout>
+      <MainLayout actions={headerActions}>
         <CitationDemo />
       </MainLayout>
     );
   }
 
   return (
-    <MainLayout showSidebar>
+    <MainLayout showSidebar actions={headerActions}>
       <div className="flex flex-col h-full">
         {/* Chat message list */}
         <ChatMessageList
@@ -163,7 +195,7 @@ function App() {
           onError={handleError}
           disabled={isStreaming}
           conversationId={conversationId}
-          gameVersion="poe2"
+          gameVersion={gameVersion}
           useStreaming={true}
         />
       </div>

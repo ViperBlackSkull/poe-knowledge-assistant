@@ -19,6 +19,7 @@ export function MainLayout({
   sidebar,
   showSidebar = false,
   className = '',
+  actions,
 }: MainLayoutProps) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -31,6 +32,9 @@ export function MainLayout({
 
   const headerActions: ReactNode = (
     <>
+      {/* External actions (e.g. game version selector) */}
+      {actions}
+
       {/* Settings / config toggle button */}
       {showSidebar && (
         <button
