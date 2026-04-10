@@ -1,0 +1,818 @@
+import { useState, useEffect, useCallback, useRef } from 'react';
+import type { LLMProvider, EmbeddingProvider, ConfigUpdateRequest } from '@/types';
+
+// ---------------------------------------------------------------------------
+// Types
+// ---------------------------------------------------------------------------
+
+export interface SettingsPanelProps {
+  /** Whether the settings panel is currently open */
+  isOpen: boolean;
+  /** Callback to close the panel */
+  onClose: () => void;
+  /** Optional callback when settings are saved successfully */
+  onSave?: (settings: ConfigUpdateRequest) => void | Promise<void>;
+  /** Optional initial/fetched config values to pre-populate */
+  initialConfig?: {
+    llmProvider?: LLMProvider;
+    llmModel?: string;
+    llmTemperature?: number;
+    llmMaxTokens?: number;
+    llmApiKeySet?: boolean;
+    embeddingProvider?: EmbeddingProvider;
+    embeddingModel?: string;
+    ragTopK?: number;
+    ragScoreThreshold?: number;
+  };
+  /** Optional additional CSS class names */
+  className?: string;
+}
+
+/** Internal form state for the settings panel. */
+interface SettingsFormState {
+  llmProvider: LLMProvider;
+  llmApiKey: string;
+  llmModel: string;
+  llmTemperature: number;
+  llmMaxTokens: number;
+  embeddingProvider: EmbeddingProvider;
+  embeddingModel: string;
+  ragTopK: number;
+  ragScoreThreshold: number;
+}
+
+// ---------------------------------------------------------------------------
+// Constants
+// ---------------------------------------------------------------------------
+
+const LLM_PROVIDER_OPTIONS: { value: LLMProvider; label: string; description: string }[] = [
+  { value: 'openai', label: 'OpenAI', description: 'GPT-4, GPT-3.5 Turbo' },
+  { value: 'anthropic', label: 'Anthropic', description: 'Claude models' },
+  { value: 'ollama', label: 'Ollama', description: 'Local LLM runtime' },
+  { value: 'lmstudio', label: 'LM Studio', description: 'Local LLM server' },
+];
+
+const EMBEDDING_PROVIDER_OPTIONS: { value: EmbeddingProvider; label: string; description: string }[] = [
+  { value: 'local', label: 'Local', description: 'Built-in embeddings' },
+  { value: 'openai', label: 'OpenAI', description: 'OpenAI embeddings API' },
+  { value: 'ollama', label: 'Ollama', description: 'Local embeddings' },
+  { value: 'lmstudio', label: 'LM Studio', description: 'Local embeddings server' },
+];
+
+const LLM_MODELS_BY_PROVIDER: Record<LLMProvider, string[]> = {
+  openai: ['gpt-4', 'gpt-4-turbo', 'gpt-3.5-turbo', 'gpt-4o', 'gpt-4o-mini'],
+  anthropic: ['claude-3-opus-20240229', 'claude-3-sonnet-20240229', 'claude-3-haiku-20240307', 'claude-3.5-sonnet-20241022'],
+  ollama: ['llama3', 'mistral', 'codellama', 'phi3', 'gemma2'],
+  lmstudio: ['TheBloke/Mistral-7B-Instruct', 'local-model'],
+};
+
+const EMBEDDING_MODELS_BY_PROVIDER: Record<EmbeddingProvider, string[]> = {
+  local: ['all-MiniLM-L6-v2', 'all-mpnet-base-v2'],
+  openai: ['text-embedding-3-small', 'text-embedding-3-large', 'text-embedding-ada-002'],
+  ollama: ['nomic-embed-text', 'mxbai-embed-large'],
+  lmstudio: ['text-embedding-model'],
+};
+
+const DEFAULT_FORM_STATE: SettingsFormState = {
+  llmProvider: 'openai',
+  llmApiKey: '',
+  llmModel: 'gpt-4',
+  llmTemperature: 0.7,
+  llmMaxTokens: 2048,
+  embeddingProvider: 'local',
+  embeddingModel: 'all-MiniLM-L6-v2',
+  ragTopK: 5,
+  ragScoreThreshold: 0.7,
+};
+
+// ---------------------------------------------------------------------------
+// Sub-components
+// ---------------------------------------------------------------------------
+
+function SectionHeader({ icon, title, description }: {
+  icon: React.ReactNode;
+  title: string;
+  description: string;
+}) {
+  return (
+    <div className="flex items-start gap-3 mb-3">
+      <div className="shrink-0 w-8 h-8 rounded bg-poe-bg-primary border border-poe-border flex items-center justify-center text-poe-gold">
+        {icon}
+      </div>
+      <div>
+        <h3 className="poe-header text-sm font-semibold tracking-wide">{title}</h3>
+        <p className="text-[11px] text-poe-text-muted mt-0.5 leading-tight">{description}</p>
+      </div>
+    </div>
+  );
+}
+
+function FormLabel({ children, htmlFor }: { children: React.ReactNode; htmlFor?: string }) {
+  return (
+    <label htmlFor={htmlFor} className="block text-xs text-poe-text-secondary font-medium mb-1.5">
+      {children}
+    </label>
+  );
+}
+
+function FormSelect<T extends string>({
+  id,
+  value,
+  options,
+  onChange,
+}: {
+  id: string;
+  value: T;
+  options: { value: T; label: string; description?: string }[];
+  onChange: (value: T) => void;
+}) {
+  return (
+    <select
+      id={id}
+      value={value}
+      onChange={(e) => onChange(e.target.value as T)}
+      className="poe-input w-full text-sm"
+    >
+      {options.map((opt) => (
+        <option key={opt.value} value={opt.value}>
+          {opt.label}
+        </option>
+      ))}
+    </select>
+  );
+}
+
+function FormSlider({
+  id,
+  label,
+  value,
+  min,
+  max,
+  step,
+  unit,
+  onChange,
+}: {
+  id: string;
+  label: string;
+  value: number;
+  min: number;
+  max: number;
+  step: number;
+  unit?: string;
+  onChange: (value: number) => void;
+}) {
+  return (
+    <div>
+      <div className="flex items-center justify-between mb-1.5">
+        <FormLabel htmlFor={id}>{label}</FormLabel>
+        <span className="text-xs text-poe-gold font-mono">
+          {typeof value === 'number' ? value.toFixed(step < 1 ? 1 : 0) : value}
+          {unit ?? ''}
+        </span>
+      </div>
+      <input
+        id={id}
+        type="range"
+        min={min}
+        max={max}
+        step={step}
+        value={value}
+        onChange={(e) => onChange(parseFloat(e.target.value))}
+        className="w-full h-1.5 rounded-full appearance-none cursor-pointer
+          bg-poe-bg-primary border border-poe-border
+          [&::-webkit-slider-thumb]:appearance-none
+          [&::-webkit-slider-thumb]:w-4
+          [&::-webkit-slider-thumb]:h-4
+          [&::-webkit-slider-thumb]:rounded-full
+          [&::-webkit-slider-thumb]:bg-poe-gold
+          [&::-webkit-slider-thumb]:border-2
+          [&::-webkit-slider-thumb]:border-poe-gold-dark
+          [&::-webkit-slider-thumb]:cursor-pointer
+          [&::-webkit-slider-thumb]:shadow-poe-glow
+          [&::-moz-range-thumb]:w-4
+          [&::-moz-range-thumb]:h-4
+          [&::-moz-range-thumb]:rounded-full
+          [&::-moz-range-thumb]:bg-poe-gold
+          [&::-moz-range-thumb]:border-2
+          [&::-moz-range-thumb]:border-poe-gold-dark
+          [&::-moz-range-thumb]:cursor-pointer"
+      />
+      <div className="flex justify-between text-[10px] text-poe-text-muted mt-0.5">
+        <span>{min}{unit ?? ''}</span>
+        <span>{max}{unit ?? ''}</span>
+      </div>
+    </div>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// Main SettingsPanel component
+// ---------------------------------------------------------------------------
+
+/**
+ * SettingsPanel is a slide-in panel that provides configuration options
+ * for the PoE Knowledge Assistant chat interface.
+ *
+ * Features:
+ *  - Slide-in animation from the right side of the screen
+ *  - LLM provider selection and configuration (model, temperature, tokens)
+ *  - API key input with show/hide toggle
+ *  - Embedding provider configuration
+ *  - RAG configuration (top-K results, score threshold)
+ *  - Save/Cancel buttons with proper dirty-state management
+ *  - PoE-themed styling consistent with the application theme
+ *  - Keyboard accessible (Escape to close, focus trapping)
+ *  - Responsive overlay backdrop
+ */
+export function SettingsPanel({
+  isOpen,
+  onClose,
+  onSave,
+  initialConfig,
+  className = '',
+}: SettingsPanelProps) {
+  // ---------------------------------------------------------------------------
+  // State
+  // ---------------------------------------------------------------------------
+
+  const [formState, setFormState] = useState<SettingsFormState>(DEFAULT_FORM_STATE);
+  const [savedState, setSavedState] = useState<SettingsFormState>(DEFAULT_FORM_STATE);
+  const [isSaving, setIsSaving] = useState(false);
+  const [showApiKey, setShowApiKey] = useState(false);
+  const [saveMessage, setSaveMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
+  const panelRef = useRef<HTMLDivElement>(null);
+  const firstFocusRef = useRef<HTMLButtonElement>(null);
+
+  // ---------------------------------------------------------------------------
+  // Sync with initial config
+  // ---------------------------------------------------------------------------
+
+  useEffect(() => {
+    if (initialConfig) {
+      const newState: SettingsFormState = {
+        llmProvider: initialConfig.llmProvider ?? DEFAULT_FORM_STATE.llmProvider,
+        llmApiKey: '',
+        llmModel: initialConfig.llmModel ?? DEFAULT_FORM_STATE.llmModel,
+        llmTemperature: initialConfig.llmTemperature ?? DEFAULT_FORM_STATE.llmTemperature,
+        llmMaxTokens: initialConfig.llmMaxTokens ?? DEFAULT_FORM_STATE.llmMaxTokens,
+        embeddingProvider: initialConfig.embeddingProvider ?? DEFAULT_FORM_STATE.embeddingProvider,
+        embeddingModel: initialConfig.embeddingModel ?? DEFAULT_FORM_STATE.embeddingModel,
+        ragTopK: initialConfig.ragTopK ?? DEFAULT_FORM_STATE.ragTopK,
+        ragScoreThreshold: initialConfig.ragScoreThreshold ?? DEFAULT_FORM_STATE.ragScoreThreshold,
+      };
+      setFormState(newState);
+      setSavedState(newState);
+    }
+  }, [initialConfig]);
+
+  // ---------------------------------------------------------------------------
+  // Focus management
+  // ---------------------------------------------------------------------------
+
+  useEffect(() => {
+    if (isOpen) {
+      // Focus the close button when panel opens
+      setTimeout(() => firstFocusRef.current?.focus(), 100);
+    }
+  }, [isOpen]);
+
+  // ---------------------------------------------------------------------------
+  // Dirty state detection
+  // ---------------------------------------------------------------------------
+
+  const isDirty =
+    formState.llmProvider !== savedState.llmProvider ||
+    formState.llmApiKey !== '' ||
+    formState.llmModel !== savedState.llmModel ||
+    formState.llmTemperature !== savedState.llmTemperature ||
+    formState.llmMaxTokens !== savedState.llmMaxTokens ||
+    formState.embeddingProvider !== savedState.embeddingProvider ||
+    formState.embeddingModel !== savedState.embeddingModel ||
+    formState.ragTopK !== savedState.ragTopK ||
+    formState.ragScoreThreshold !== savedState.ragScoreThreshold;
+
+  // ---------------------------------------------------------------------------
+  // Keyboard handling
+  // ---------------------------------------------------------------------------
+
+  const handleKeyDown = useCallback(
+    (e: React.KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        e.preventDefault();
+        onClose();
+      }
+
+      // Trap focus inside the panel
+      if (e.key === 'Tab' && panelRef.current) {
+        const focusableElements = panelRef.current.querySelectorAll<HTMLElement>(
+          'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])',
+        );
+        const firstEl = focusableElements[0];
+        const lastEl = focusableElements[focusableElements.length - 1];
+
+        if (e.shiftKey && document.activeElement === firstEl) {
+          e.preventDefault();
+          lastEl?.focus();
+        } else if (!e.shiftKey && document.activeElement === lastEl) {
+          e.preventDefault();
+          firstEl?.focus();
+        }
+      }
+    },
+    [onClose],
+  );
+
+  // ---------------------------------------------------------------------------
+  // State updaters
+  // ---------------------------------------------------------------------------
+
+  const updateField = useCallback(<K extends keyof SettingsFormState>(
+    field: K,
+    value: SettingsFormState[K],
+  ) => {
+    setFormState((prev) => ({ ...prev, [field]: value }));
+    setSaveMessage(null);
+  }, []);
+
+  const handleLlmProviderChange = useCallback((provider: LLMProvider) => {
+    setFormState((prev) => ({
+      ...prev,
+      llmProvider: provider,
+      llmModel: LLM_MODELS_BY_PROVIDER[provider][0],
+    }));
+    setSaveMessage(null);
+  }, []);
+
+  const handleEmbeddingProviderChange = useCallback((provider: EmbeddingProvider) => {
+    setFormState((prev) => ({
+      ...prev,
+      embeddingProvider: provider,
+      embeddingModel: EMBEDDING_MODELS_BY_PROVIDER[provider][0],
+    }));
+    setSaveMessage(null);
+  }, []);
+
+  // ---------------------------------------------------------------------------
+  // Save / Cancel
+  // ---------------------------------------------------------------------------
+
+  const handleSave = useCallback(async () => {
+    setIsSaving(true);
+    setSaveMessage(null);
+
+    const updates: ConfigUpdateRequest = {};
+
+    if (formState.llmProvider !== savedState.llmProvider) {
+      updates.llm_provider = formState.llmProvider;
+    }
+    if (formState.llmModel !== savedState.llmModel) {
+      updates.llm_model = formState.llmModel;
+    }
+    if (formState.llmTemperature !== savedState.llmTemperature) {
+      updates.llm_temperature = formState.llmTemperature;
+    }
+    if (formState.llmMaxTokens !== savedState.llmMaxTokens) {
+      updates.llm_max_tokens = formState.llmMaxTokens;
+    }
+    if (formState.embeddingProvider !== savedState.embeddingProvider) {
+      updates.embedding_provider = formState.embeddingProvider;
+    }
+    if (formState.embeddingModel !== savedState.embeddingModel) {
+      updates.embedding_model = formState.embeddingModel;
+    }
+    if (formState.ragTopK !== savedState.ragTopK) {
+      updates.rag_top_k = formState.ragTopK;
+    }
+    if (formState.ragScoreThreshold !== savedState.ragScoreThreshold) {
+      updates.rag_score_threshold = formState.ragScoreThreshold;
+    }
+
+    try {
+      if (onSave) {
+        await onSave(updates);
+      }
+      setSavedState({ ...formState, llmApiKey: '' });
+      setFormState((prev) => ({ ...prev, llmApiKey: '' }));
+      setSaveMessage({ type: 'success', text: 'Settings saved successfully' });
+
+      // Auto-clear success message
+      setTimeout(() => setSaveMessage(null), 3000);
+    } catch {
+      setSaveMessage({ type: 'error', text: 'Failed to save settings' });
+    } finally {
+      setIsSaving(false);
+    }
+  }, [formState, savedState, onSave]);
+
+  const handleCancel = useCallback(() => {
+    setFormState({ ...savedState, llmApiKey: '' });
+    setSaveMessage(null);
+    onClose();
+  }, [savedState, onClose]);
+
+  // ---------------------------------------------------------------------------
+  // Get model options for current providers
+  // ---------------------------------------------------------------------------
+
+  const currentLlmModels = LLM_MODELS_BY_PROVIDER[formState.llmProvider] ?? [];
+  const currentEmbeddingModels = EMBEDDING_MODELS_BY_PROVIDER[formState.embeddingProvider] ?? [];
+
+  // ---------------------------------------------------------------------------
+  // Render
+  // ---------------------------------------------------------------------------
+
+  return (
+    <>
+      {/* Backdrop overlay */}
+      <div
+        className={`
+          fixed inset-0 bg-black/60 backdrop-blur-sm z-40
+          transition-opacity duration-300 ease-in-out
+          ${isOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}
+        `}
+        onClick={handleCancel}
+        aria-hidden="true"
+      />
+
+      {/* Slide-in panel */}
+      <div
+        ref={panelRef}
+        onKeyDown={handleKeyDown}
+        className={`
+          fixed top-0 right-0 bottom-0 z-50
+          w-full sm:w-96 max-w-full
+          bg-poe-bg-secondary border-l border-poe-border
+          transform transition-transform duration-300 ease-in-out
+          flex flex-col
+          ${isOpen ? 'translate-x-0' : 'translate-x-full'}
+          ${className}
+        `}
+        role="dialog"
+        aria-modal="true"
+        aria-label="Settings panel"
+        data-testid="settings-panel"
+      >
+        {/* Decorative top accent line */}
+        <div className="h-0.5 w-full bg-gradient-to-r from-poe-gold/80 via-poe-gold-light to-poe-gold/80 shrink-0" />
+
+        {/* Panel header */}
+        <div className="flex items-center justify-between px-4 py-3 border-b border-poe-border shrink-0">
+          <div className="flex items-center gap-2">
+            {/* Settings icon */}
+            <svg
+              className="w-5 h-5 text-poe-gold"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth={1.5}
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M9.594 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.645.87.074.04.147.083.22.127.325.196.72.257 1.075.124l1.217-.456a1.125 1.125 0 011.37.49l1.296 2.247a1.125 1.125 0 01-.26 1.431l-1.003.827c-.293.241-.438.613-.43.992a7.723 7.723 0 010 .255c-.008.378.137.75.43.991l1.004.827c.424.35.534.955.26 1.43l-1.298 2.247a1.125 1.125 0 01-1.369.491l-1.217-.456c-.355-.133-.75-.072-1.076.124a6.47 6.47 0 01-.22.128c-.331.183-.581.495-.644.869l-.213 1.281c-.09.543-.56.94-1.11.94h-2.594c-.55 0-1.019-.398-1.11-.94l-.213-1.281c-.062-.374-.312-.686-.644-.87a6.52 6.52 0 01-.22-.127c-.325-.196-.72-.257-1.076-.124l-1.217.456a1.125 1.125 0 01-1.369-.49l-1.297-2.247a1.125 1.125 0 01.26-1.431l1.004-.827c.292-.24.437-.613.43-.991a6.932 6.932 0 010-.255c.007-.38-.138-.751-.43-.992l-1.004-.827a1.125 1.125 0 01-.26-1.43l1.297-2.247a1.125 1.125 0 011.37-.491l1.216.456c.356.133.751.072 1.076-.124.072-.044.146-.086.22-.128.332-.183.582-.495.644-.869l.214-1.28z"
+              />
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+              />
+            </svg>
+            <h2 className="poe-header text-sm font-semibold tracking-wide">Settings</h2>
+          </div>
+
+          {/* Close button */}
+          <button
+            ref={firstFocusRef}
+            type="button"
+            onClick={handleCancel}
+            className="p-1.5 rounded text-poe-text-muted hover:text-poe-text-highlight hover:bg-poe-hover transition-colors"
+            aria-label="Close settings panel"
+            data-testid="settings-panel-close"
+          >
+            <svg
+              className="w-5 h-5"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth={1.5}
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M6 18L18 6M6 6l12 12"
+              />
+            </svg>
+          </button>
+        </div>
+
+        {/* Scrollable content */}
+        <div className="flex-1 overflow-y-auto px-4 py-4 space-y-5">
+
+          {/* Save status message */}
+          {saveMessage && (
+            <div
+              className={`flex items-center gap-2 px-3 py-2 rounded text-xs border ${
+                saveMessage.type === 'success'
+                  ? 'bg-green-900/20 border-green-700/30 text-green-400'
+                  : 'bg-red-900/20 border-red-700/30 text-red-400'
+              }`}
+              role="alert"
+              data-testid="settings-save-message"
+            >
+              <svg
+                className="w-4 h-4 shrink-0"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth={2}
+                stroke="currentColor"
+              >
+                {saveMessage.type === 'success' ? (
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                  />
+                ) : (
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z"
+                  />
+                )}
+              </svg>
+              {saveMessage.text}
+            </div>
+          )}
+
+          {/* ---------------------------------------------------------------
+              LLM Provider Section
+              --------------------------------------------------------------- */}
+          <div className="poe-card space-y-3">
+            <SectionHeader
+              icon={
+                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09zM18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.455 2.456L21.75 6l-1.036.259a3.375 3.375 0 00-2.455 2.456z" />
+                </svg>
+              }
+              title="LLM Provider"
+              description="Configure the language model for generating responses"
+            />
+
+            {/* LLM Provider select */}
+            <div>
+              <FormLabel htmlFor="llm-provider">Provider</FormLabel>
+              <FormSelect
+                id="llm-provider"
+                value={formState.llmProvider}
+                options={LLM_PROVIDER_OPTIONS}
+                onChange={handleLlmProviderChange}
+              />
+            </div>
+
+            {/* LLM Model select */}
+            <div>
+              <FormLabel htmlFor="llm-model">Model</FormLabel>
+              <select
+                id="llm-model"
+                value={formState.llmModel}
+                onChange={(e) => updateField('llmModel', e.target.value)}
+                className="poe-input w-full text-sm"
+              >
+                {currentLlmModels.map((model) => (
+                  <option key={model} value={model}>
+                    {model}
+                  </option>
+                ))}
+                {!currentLlmModels.includes(formState.llmModel) && (
+                  <option value={formState.llmModel}>{formState.llmModel}</option>
+                )}
+              </select>
+            </div>
+
+            {/* Temperature slider */}
+            <FormSlider
+              id="llm-temperature"
+              label="Temperature"
+              value={formState.llmTemperature}
+              min={0}
+              max={2}
+              step={0.1}
+              onChange={(v) => updateField('llmTemperature', v)}
+            />
+
+            {/* Max Tokens slider */}
+            <FormSlider
+              id="llm-max-tokens"
+              label="Max Tokens"
+              value={formState.llmMaxTokens}
+              min={256}
+              max={32000}
+              step={256}
+              onChange={(v) => updateField('llmMaxTokens', v)}
+            />
+          </div>
+
+          {/* ---------------------------------------------------------------
+              API Key Section
+              --------------------------------------------------------------- */}
+          <div className="poe-card space-y-3">
+            <SectionHeader
+              icon={
+                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 5.25a3 3 0 013 3m3 0a6 6 0 01-7.029 5.912c-.563-.097-1.159.026-1.563.43L10.5 17.25H8.25v2.25H6v2.25H2.25v-2.818c0-.597.237-1.17.659-1.591l6.499-6.499c.404-.404.527-1 .43-1.563A6 6 0 1121.75 8.25z" />
+                </svg>
+              }
+              title="API Key"
+              description="Configure your API key for the selected provider"
+            />
+
+            {/* API Key status indicator */}
+            {initialConfig?.llmApiKeySet && formState.llmApiKey === '' && (
+              <div className="flex items-center gap-2 text-xs text-green-400 bg-green-900/20 border border-green-700/30 rounded px-3 py-2">
+                <svg className="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" />
+                </svg>
+                API key is configured
+              </div>
+            )}
+
+            {/* API Key input with show/hide toggle */}
+            <div>
+              <FormLabel htmlFor="api-key">
+                {formState.llmProvider === 'ollama' || formState.llmProvider === 'lmstudio'
+                  ? 'API Key (optional)'
+                  : 'API Key'}
+              </FormLabel>
+              <div className="relative">
+                <input
+                  id="api-key"
+                  type={showApiKey ? 'text' : 'password'}
+                  value={formState.llmApiKey}
+                  onChange={(e) => updateField('llmApiKey', e.target.value)}
+                  placeholder={
+                    formState.llmProvider === 'ollama' || formState.llmProvider === 'lmstudio'
+                      ? 'Not required for local providers'
+                      : `Enter your ${LLM_PROVIDER_OPTIONS.find(o => o.value === formState.llmProvider)?.label ?? ''} API key`
+                  }
+                  className="poe-input w-full text-sm pr-10"
+                  autoComplete="off"
+                  data-testid="settings-api-key-input"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowApiKey((prev) => !prev)}
+                  className="absolute right-2 top-1/2 -translate-y-1/2 p-1 text-poe-text-muted hover:text-poe-text-highlight transition-colors"
+                  aria-label={showApiKey ? 'Hide API key' : 'Show API key'}
+                >
+                  {showApiKey ? (
+                    <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M3.98 8.223A10.477 10.477 0 001.934 12C3.226 16.338 7.244 19.5 12 19.5c.993 0 1.953-.138 2.863-.395M6.228 6.228A10.45 10.45 0 0112 4.5c4.756 0 8.773 3.162 10.065 7.498a10.523 10.523 0 01-4.293 5.774M6.228 6.228L3 3m3.228 3.228l3.65 3.65m7.894 7.894L21 21m-3.228-3.228l-3.65-3.65m0 0a3 3 0 10-4.243-4.243m4.242 4.242L9.88 9.88" />
+                    </svg>
+                  ) : (
+                    <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" />
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                    </svg>
+                  )}
+                </button>
+              </div>
+            </div>
+          </div>
+
+          {/* ---------------------------------------------------------------
+              Embedding Provider Section
+              --------------------------------------------------------------- */}
+          <div className="poe-card space-y-3">
+            <SectionHeader
+              icon={
+                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 3v11.25A2.25 2.25 0 006 16.5h2.25M3.75 3h-1.5m1.5 0h16.5m0 0h1.5m-1.5 0v11.25A2.25 2.25 0 0118 16.5h-2.25m-7.5 0h7.5m-7.5 0l-1 3m8.5-3l1 3m0 0l.5 1.5m-.5-1.5h-9.5m0 0l-.5 1.5" />
+                </svg>
+              }
+              title="Embedding Provider"
+              description="Configure how text embeddings are generated"
+            />
+
+            {/* Embedding provider select */}
+            <div>
+              <FormLabel htmlFor="embedding-provider">Provider</FormLabel>
+              <FormSelect
+                id="embedding-provider"
+                value={formState.embeddingProvider}
+                options={EMBEDDING_PROVIDER_OPTIONS}
+                onChange={handleEmbeddingProviderChange}
+              />
+            </div>
+
+            {/* Embedding model select */}
+            <div>
+              <FormLabel htmlFor="embedding-model">Model</FormLabel>
+              <select
+                id="embedding-model"
+                value={formState.embeddingModel}
+                onChange={(e) => updateField('embeddingModel', e.target.value)}
+                className="poe-input w-full text-sm"
+              >
+                {currentEmbeddingModels.map((model) => (
+                  <option key={model} value={model}>
+                    {model}
+                  </option>
+                ))}
+                {!currentEmbeddingModels.includes(formState.embeddingModel) && (
+                  <option value={formState.embeddingModel}>{formState.embeddingModel}</option>
+                )}
+              </select>
+            </div>
+          </div>
+
+          {/* ---------------------------------------------------------------
+              RAG Configuration Section
+              --------------------------------------------------------------- */}
+          <div className="poe-card space-y-3">
+            <SectionHeader
+              icon={
+                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 3v2.25m6.364.386l-1.591 1.591M21 12h-2.25m-.386 6.364l-1.591-1.591M12 18.75V21m-4.773-4.227l-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z" />
+                </svg>
+              }
+              title="RAG Configuration"
+              description="Fine-tune retrieval-augmented generation parameters"
+            />
+
+            {/* Top K results slider */}
+            <FormSlider
+              id="rag-top-k"
+              label="Top K Results"
+              value={formState.ragTopK}
+              min={1}
+              max={20}
+              step={1}
+              onChange={(v) => updateField('ragTopK', v)}
+            />
+
+            {/* Score threshold slider */}
+            <FormSlider
+              id="rag-score-threshold"
+              label="Score Threshold"
+              value={formState.ragScoreThreshold}
+              min={0}
+              max={1}
+              step={0.05}
+              onChange={(v) => updateField('ragScoreThreshold', v)}
+            />
+          </div>
+        </div>
+
+        {/* Footer with action buttons */}
+        <div className="shrink-0 border-t border-poe-border px-4 py-3 bg-poe-bg-tertiary/50">
+          {/* Dirty indicator */}
+          {isDirty && (
+            <p className="text-[11px] text-poe-gold mb-2 text-center">
+              Unsaved changes detected
+            </p>
+          )}
+
+          <div className="flex items-center gap-3">
+            {/* Cancel button */}
+            <button
+              type="button"
+              onClick={handleCancel}
+              className="poe-button-secondary flex-1 px-4 py-2 text-sm rounded transition-all"
+              data-testid="settings-cancel-button"
+            >
+              Cancel
+            </button>
+
+            {/* Save button */}
+            <button
+              type="button"
+              onClick={handleSave}
+              disabled={isSaving || !isDirty}
+              className={`
+                flex-1 px-4 py-2 text-sm rounded border transition-all
+                ${
+                  isSaving || !isDirty
+                    ? 'opacity-50 cursor-not-allowed bg-poe-bg-tertiary border-poe-border text-poe-text-muted'
+                    : 'bg-poe-gold hover:bg-poe-gold-light border-poe-gold-dark text-white hover:shadow-poe-glow'
+                }
+              `}
+              data-testid="settings-save-button"
+            >
+              {isSaving ? (
+                <span className="flex items-center justify-center gap-2">
+                  <svg className="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                  </svg>
+                  Saving...
+                </span>
+              ) : (
+                'Save Settings'
+              )}
+            </button>
+          </div>
+        </div>
+      </div>
+    </>
+  );
+}

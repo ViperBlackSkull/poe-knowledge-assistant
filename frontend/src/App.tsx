@@ -1,8 +1,9 @@
 import { useState, useCallback, useRef, useEffect } from 'react';
-import { MainLayout, ChatMessageList, ChatInput, ItemCardDemo, CitationDemo, GameVersionSelector, getGameVersionLabel, ClearConversationButton } from '@/components';
+import { MainLayout, ChatMessageList, ChatInput, ItemCardDemo, CitationDemo, GameVersionSelector, getGameVersionLabel, ClearConversationButton, SettingsPanel } from '@/components';
 import type { ChatMessage } from '@/types/chat';
 import type { GameVersion } from '@/types/chat';
 import type { SSESource } from '@/types/streaming';
+import type { ConfigUpdateRequest } from '@/types/config';
 
 /**
  * Root application component.
@@ -21,6 +22,7 @@ function App() {
   const [conversationId, setConversationId] = useState<string | undefined>(undefined);
   const [isStreaming, setIsStreaming] = useState(false);
   const [gameVersion, setGameVersion] = useState<GameVersion>('poe2');
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const streamingBufferRef = useRef<string>('');
 
   // Simple hash-based routing for demo pages
@@ -151,7 +153,17 @@ function App() {
     setMessages((prev) => [...prev, systemMessage]);
   }, []);
 
-  // Header actions with game version selector and version display badge
+  /**
+   * Handle settings save.
+   * Currently logs the changes; in production this would call the backend API.
+   */
+  const handleSaveSettings = useCallback(async (_settings: ConfigUpdateRequest) => {
+    // In production, this would call the config update endpoint
+    // e.g. await patch<GetConfigResponse, ConfigUpdateRequest>('/config', settings);
+    console.log('[Settings] Saving settings:', _settings);
+  }, []);
+
+  // Header actions with game version selector, version display badge, and settings button
   const headerActions = (
     <div className="flex items-center gap-3">
       {/* Current version badge */}
@@ -165,64 +177,113 @@ function App() {
         value={gameVersion}
         onChange={handleGameVersionChange}
       />
+
+      {/* Settings button */}
+      <button
+        type="button"
+        onClick={() => setIsSettingsOpen(true)}
+        className="p-2 rounded text-poe-text-secondary hover:text-poe-text-highlight hover:bg-poe-hover transition-colors"
+        aria-label="Open settings"
+        data-testid="settings-open-button"
+      >
+        <svg
+          className="w-5 h-5"
+          fill="none"
+          viewBox="0 0 24 24"
+          strokeWidth={1.5}
+          stroke="currentColor"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            d="M9.594 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.645.87.074.04.147.083.22.127.325.196.72.257 1.075.124l1.217-.456a1.125 1.125 0 011.37.49l1.296 2.247a1.125 1.125 0 01-.26 1.431l-1.003.827c-.293.241-.438.613-.43.992a7.723 7.723 0 010 .255c-.008.378.137.75.43.991l1.004.827c.424.35.534.955.26 1.43l-1.298 2.247a1.125 1.125 0 01-1.369.491l-1.217-.456c-.355-.133-.75-.072-1.076.124a6.47 6.47 0 01-.22.128c-.331.183-.581.495-.644.869l-.213 1.281c-.09.543-.56.94-1.11.94h-2.594c-.55 0-1.019-.398-1.11-.94l-.213-1.281c-.062-.374-.312-.686-.644-.87a6.52 6.52 0 01-.22-.127c-.325-.196-.72-.257-1.076-.124l-1.217.456a1.125 1.125 0 01-1.369-.49l-1.297-2.247a1.125 1.125 0 01.26-1.431l1.004-.827c.292-.24.437-.613.43-.991a6.932 6.932 0 010-.255c.007-.38-.138-.751-.43-.992l-1.004-.827a1.125 1.125 0 01-.26-1.43l1.297-2.247a1.125 1.125 0 011.37-.491l1.216.456c.356.133.751.072 1.076-.124.072-.044.146-.086.22-.128.332-.183.582-.495.644-.869l.214-1.28z"
+          />
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+          />
+        </svg>
+      </button>
     </div>
   );
 
   // Item card demo page
   if (showItemDemo) {
     return (
-      <MainLayout actions={headerActions}>
-        <ItemCardDemo />
-      </MainLayout>
+      <>
+        <MainLayout actions={headerActions}>
+          <ItemCardDemo />
+        </MainLayout>
+        <SettingsPanel
+          isOpen={isSettingsOpen}
+          onClose={() => setIsSettingsOpen(false)}
+          onSave={handleSaveSettings}
+        />
+      </>
     );
   }
 
   // Citation component demo page
   if (showCitationDemo) {
     return (
-      <MainLayout actions={headerActions}>
-        <CitationDemo />
-      </MainLayout>
+      <>
+        <MainLayout actions={headerActions}>
+          <CitationDemo />
+        </MainLayout>
+        <SettingsPanel
+          isOpen={isSettingsOpen}
+          onClose={() => setIsSettingsOpen(false)}
+          onSave={handleSaveSettings}
+        />
+      </>
     );
   }
 
   return (
-    <MainLayout showSidebar actions={headerActions}>
-      <div className="flex flex-col h-full">
-        {/* Chat toolbar */}
-        {messages.length > 0 && (
-          <div className="flex items-center justify-end px-4 py-2 sm:px-6 lg:px-8 border-b border-[#2A2A32] bg-[#141418]/50">
-            <div className="max-w-3xl w-full flex items-center justify-end">
-              <ClearConversationButton
-                onClear={handleClearConversation}
-                messageCount={messages.length}
-                disabled={isStreaming}
-              />
+    <>
+      <MainLayout showSidebar actions={headerActions}>
+        <div className="flex flex-col h-full">
+          {/* Chat toolbar */}
+          {messages.length > 0 && (
+            <div className="flex items-center justify-end px-4 py-2 sm:px-6 lg:px-8 border-b border-[#2A2A32] bg-[#141418]/50">
+              <div className="max-w-3xl w-full flex items-center justify-end">
+                <ClearConversationButton
+                  onClear={handleClearConversation}
+                  messageCount={messages.length}
+                  disabled={isStreaming}
+                />
+              </div>
             </div>
-          </div>
-        )}
+          )}
 
-        {/* Chat message list */}
-        <ChatMessageList
-          messages={messages}
-          conversationId={conversationId}
-          isStreaming={isStreaming}
-        />
+          {/* Chat message list */}
+          <ChatMessageList
+            messages={messages}
+            conversationId={conversationId}
+            isStreaming={isStreaming}
+          />
 
-        {/* Chat input */}
-        <ChatInput
-          onSendMessage={handleSendMessage}
-          onStreamingToken={handleStreamingToken}
-          onStreamingDone={handleStreamingDone}
-          onSources={handleSources}
-          onError={handleError}
-          disabled={isStreaming}
-          conversationId={conversationId}
-          gameVersion={gameVersion}
-          useStreaming={true}
-        />
-      </div>
-    </MainLayout>
+          {/* Chat input */}
+          <ChatInput
+            onSendMessage={handleSendMessage}
+            onStreamingToken={handleStreamingToken}
+            onStreamingDone={handleStreamingDone}
+            onSources={handleSources}
+            onError={handleError}
+            disabled={isStreaming}
+            conversationId={conversationId}
+            gameVersion={gameVersion}
+            useStreaming={true}
+          />
+        </div>
+      </MainLayout>
+      <SettingsPanel
+        isOpen={isSettingsOpen}
+        onClose={() => setIsSettingsOpen(false)}
+        onSave={handleSaveSettings}
+      />
+    </>
   );
 }
 

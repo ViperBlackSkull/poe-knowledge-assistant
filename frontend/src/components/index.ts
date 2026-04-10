@@ -14,3 +14,5 @@ export { MarkdownRenderer as EnhancedMarkdownRenderer } from './common/MarkdownR
 export { GameVersionSelector } from './common/GameVersionSelector';
 export { GAME_VERSION_OPTIONS, getGameVersionLabel } from './common/GameVersionSelector';
 export type { GameVersionSelectorProps, GameVersionOption } from './common/GameVersionSelector';
+export { SettingsPanel } from './common/SettingsPanel';
+export type { SettingsPanelProps } from './common/SettingsPanel';
