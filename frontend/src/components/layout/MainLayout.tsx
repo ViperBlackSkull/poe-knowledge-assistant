@@ -80,8 +80,13 @@ export function MainLayout({
         onMobileMenuToggle={() => setIsMobileMenuOpen((prev) => !prev)}
       />
 
-      {/* Main content area with optional sidebar */}
-      <div className="flex flex-1 overflow-hidden">
+      {/* Close mobile menu when main content is tapped */}
+      <div
+        className="flex flex-1 overflow-hidden"
+        onClick={() => {
+          if (isMobileMenuOpen) setIsMobileMenuOpen(false);
+        }}
+      >
         {/* Content */}
         <main
           className={`flex-1 overflow-y-auto ${className}`}

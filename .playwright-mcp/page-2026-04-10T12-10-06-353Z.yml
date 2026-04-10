@@ -1,0 +1,221 @@
+- generic [ref=e2]:
+  - generic [ref=e3]:
+    - banner [ref=e4]:
+      - generic [ref=e6]:
+        - generic [ref=e8]:
+          - generic [ref=e9]: P
+          - generic [ref=e10]:
+            - heading "PoE Knowledge Assistant" [level=1] [ref=e11]
+            - paragraph [ref=e12]: Your intelligent assistant for Path of Exile
+        - generic [ref=e13]:
+          - navigation "Main navigation" [ref=e14]:
+            - link "Chat" [ref=e15] [cursor=pointer]:
+              - /url: /
+            - link "Knowledge Base" [ref=e16] [cursor=pointer]:
+              - /url: /knowledge
+            - link "Admin" [ref=e17] [cursor=pointer]:
+              - /url: /admin
+          - 'generic "Build context: Hardcore" [ref=e20]':
+            - img [ref=e21]
+            - generic [ref=e24]: Hardcore
+            - generic [ref=e25]: HC
+        - generic [ref=e27]:
+          - generic [ref=e28]:
+            - generic [ref=e29]: Path of Exile 2
+            - button "Select game version, currently Path of Exile 2" [ref=e32] [cursor=pointer]:
+              - img [ref=e33]
+              - generic [ref=e36]: Path of Exile 2
+              - img [ref=e37]
+            - generic [ref=e40]:
+              - button "Select build context, currently Hardcore" [ref=e41] [cursor=pointer]:
+                - img [ref=e42]
+                - generic [ref=e44]: Hardcore
+              - button "Clear build context" [ref=e45] [cursor=pointer]:
+                - img [ref=e46]
+            - 'status "Data freshness: Fresh. Knowledge base is up to date" [ref=e48]':
+              - generic [ref=e49]:
+                - generic [ref=e53]: Fresh
+                - generic [ref=e54]: "|"
+                - generic [ref=e55]: 15 hours ago
+              - button "Refresh freshness data" [ref=e266] [cursor=pointer]:
+                - img [ref=e267]
+            - button "Open settings" [ref=e59] [cursor=pointer]:
+              - img [ref=e60]
+          - button "Toggle configuration panel" [ref=e63] [cursor=pointer]:
+            - img [ref=e64]
+    - main [ref=e68]:
+      - generic [ref=e69]:
+        - button "Clear conversation (2 messages)" [ref=e271] [cursor=pointer]:
+          - img [ref=e272]
+          - generic [ref=e274]: Clear
+          - generic [ref=e275]: "2"
+        - log "Chat messages" [ref=e70]:
+          - generic [ref=e71]:
+            - generic [ref=e276]:
+              - generic [ref=e277]:
+                - generic [ref=e278]:
+                  - generic [ref=e279]: You
+                  - generic [ref=e280]: 12:09 PM
+                - paragraph [ref=e281]: test
+              - generic "user avatar" [ref=e282]:
+                - generic [ref=e283]: U
+            - generic [ref=e285]:
+              - paragraph [ref=e286]: "Error: Failed to retrieve context: Vector store error during retrieval: Similarity search with score failed: Expected where to have exactly one operator, got {'game': 'poe2', 'build_context': {'$contains': 'hc'}} in query."
+              - generic [ref=e288]: 12:09 PM
+        - generic [ref=e78]:
+          - alert [ref=e289]:
+            - img [ref=e290]
+            - generic [ref=e292]: "Failed to retrieve context: Vector store error during retrieval: Similarity search with score failed: Expected where to have exactly one operator, got {'game': 'poe2', 'build_context': {'$contains': 'hc'}} in query."
+            - button "Dismiss error" [ref=e293] [cursor=pointer]:
+              - img [ref=e294]
+          - generic [ref=e79]:
+            - textbox "Chat message input" [ref=e81]:
+              - /placeholder: Ask about items, builds, mechanics...
+            - button "Send message" [disabled] [ref=e82]:
+              - img [ref=e83]
+              - generic [ref=e85]: Send
+  - dialog "Settings panel" [ref=e86]:
+    - generic [ref=e88]:
+      - generic [ref=e89]:
+        - img [ref=e90]
+        - heading "Settings" [level=2] [ref=e93]
+      - button "Close settings panel" [ref=e94] [cursor=pointer]:
+        - img [ref=e95]
+    - generic [ref=e97]:
+      - generic [ref=e98]:
+        - generic [ref=e99]:
+          - img [ref=e101]
+          - generic [ref=e103]:
+            - heading "LLM Provider" [level=3] [ref=e104]
+            - paragraph [ref=e105]: Configure the language model for generating responses
+        - generic [ref=e106]:
+          - generic [ref=e107]:
+            - generic [ref=e108]: LLM Provider
+            - button "Select LLM Provider, currently OpenAI" [ref=e110] [cursor=pointer]:
+              - img [ref=e111]
+              - generic [ref=e113]: OpenAI
+              - img [ref=e114]
+          - generic [ref=e116]:
+            - img [ref=e117]
+            - generic [ref=e119]: Cloud provider - requires API key
+          - generic [ref=e120]:
+            - generic [ref=e121]: Model
+            - button "Select OpenAI Models, currently GPT-4o" [ref=e123] [cursor=pointer]:
+              - generic [ref=e124]: GPT-4o
+              - img [ref=e125]
+            - generic [ref=e127]:
+              - generic [ref=e128]: gpt-4o
+              - generic [ref=e129]: Recommended
+        - generic [ref=e130]:
+          - generic [ref=e131]: Provider Settings
+          - generic [ref=e132]:
+            - generic [ref=e133]: Base URL(optional)
+            - textbox "Base URL(optional)" [ref=e134]:
+              - /placeholder: https://api.openai.com/v1
+        - generic [ref=e135]:
+          - generic [ref=e136]:
+            - generic [ref=e137]: Temperature
+            - generic [ref=e138]: "0.7"
+          - slider "Temperature" [ref=e139] [cursor=pointer]: "0.7"
+          - generic [ref=e140]:
+            - generic [ref=e141]: "0"
+            - generic [ref=e142]: "2"
+        - generic [ref=e143]:
+          - generic [ref=e144]:
+            - generic [ref=e145]: Max Tokens
+            - generic [ref=e146]: "2048"
+          - slider "Max Tokens" [ref=e147] [cursor=pointer]: "2048"
+          - generic [ref=e148]:
+            - generic [ref=e149]: "256"
+            - generic [ref=e150]: "32000"
+      - generic [ref=e151]:
+        - generic [ref=e152]:
+          - img [ref=e154]
+          - generic [ref=e156]:
+            - heading "API Key" [level=3] [ref=e157]
+            - paragraph [ref=e158]: Configure your API key for the selected provider
+        - generic [ref=e159]:
+          - generic [ref=e160]:
+            - generic [ref=e161]: OpenAI API Key*
+            - generic "Starts with \"sk-\" followed by at least 20 characters" [ref=e162]:
+              - img [ref=e163]
+              - generic [ref=e165]: Not set
+          - generic [ref=e166]:
+            - textbox "OpenAI API Key input" [ref=e167]:
+              - /placeholder: Enter your OpenAI API Key
+            - button "Show API key" [ref=e169] [cursor=pointer]:
+              - img [ref=e170]
+          - paragraph [ref=e173]: Starts with "sk-" followed by at least 20 characters
+        - generic [ref=e174]:
+          - generic [ref=e175]: Other provider keys
+          - generic [ref=e177]:
+            - generic [ref=e178]:
+              - generic [ref=e179]: Anthropic API Key
+              - generic "Starts with \"sk-ant-\" followed by at least 20 characters" [ref=e180]:
+                - img [ref=e181]
+                - generic [ref=e183]: Not set
+            - generic [ref=e184]:
+              - textbox "Anthropic API Key input" [ref=e185]:
+                - /placeholder: Enter your Anthropic API Key
+              - button "Show API key" [ref=e187] [cursor=pointer]:
+                - img [ref=e188]
+            - paragraph [ref=e191]: Starts with "sk-ant-" followed by at least 20 characters
+        - generic [ref=e192]:
+          - img [ref=e193]
+          - paragraph [ref=e195]: API keys are stored securely. Only a fingerprint is saved locally to remember your configuration.
+      - generic [ref=e196]:
+        - generic [ref=e197]:
+          - img [ref=e199]
+          - generic [ref=e201]:
+            - heading "Embedding Provider" [level=3] [ref=e202]
+            - paragraph [ref=e203]: Configure how text embeddings are generated
+        - generic [ref=e204]:
+          - generic [ref=e205]:
+            - generic [ref=e206]: Embedding Provider
+            - button "Select Embedding Provider, currently Local" [ref=e208] [cursor=pointer]:
+              - img [ref=e209]
+              - generic [ref=e211]: Local
+              - img [ref=e212]
+          - generic [ref=e214]:
+            - img [ref=e215]
+            - generic [ref=e217]: Local provider - runs on your machine
+          - generic [ref=e218]:
+            - generic [ref=e219]: Embedding Model
+            - button "Select Local Embedding Models, currently all-MiniLM-L6-v2" [ref=e221] [cursor=pointer]:
+              - generic [ref=e222]: all-MiniLM-L6-v2
+              - img [ref=e223]
+            - generic [ref=e225]:
+              - generic [ref=e226]: all-MiniLM-L6-v2
+              - generic [ref=e227]: 384 dimensions
+              - generic [ref=e228]: Recommended
+        - generic [ref=e229]:
+          - generic [ref=e230]: Embedding Provider Settings
+          - generic [ref=e231]:
+            - generic [ref=e232]: Cache Directory(optional)
+            - textbox "Cache Directory(optional)" [ref=e233]:
+              - /placeholder: ~/.cache/embeddings
+      - generic [ref=e234]:
+        - generic [ref=e235]:
+          - img [ref=e237]
+          - generic [ref=e239]:
+            - heading "RAG Configuration" [level=3] [ref=e240]
+            - paragraph [ref=e241]: Fine-tune retrieval-augmented generation parameters
+        - generic [ref=e242]:
+          - generic [ref=e243]:
+            - generic [ref=e244]: Top K Results
+            - generic [ref=e245]: "3"
+          - slider "Top K Results" [ref=e246] [cursor=pointer]: "3"
+          - generic [ref=e247]:
+            - generic [ref=e248]: "1"
+            - generic [ref=e249]: "20"
+        - generic [ref=e250]:
+          - generic [ref=e251]:
+            - generic [ref=e252]: Score Threshold
+            - generic [ref=e253]: "0.7"
+          - slider "Score Threshold" [ref=e254] [cursor=pointer]: "0.7"
+          - generic [ref=e255]:
+            - generic [ref=e256]: "0"
+            - generic [ref=e257]: "1"
+    - generic [ref=e259]:
+      - button "Cancel" [ref=e260] [cursor=pointer]
+      - button "Save Settings" [disabled] [ref=e261]

@@ -212,33 +212,37 @@ function App() {
 
   // -- Header actions -------------------------------------------------------
   const headerActions = (
-    <div className="flex items-center gap-3">
-      {/* Current version badge */}
+    <div className="flex items-center gap-2 sm:gap-3">
+      {/* Current version badge - hidden on small screens */}
       <span className="hidden lg:inline-flex items-center gap-1.5 px-2 py-1 rounded text-xs bg-poe-bg-tertiary border border-poe-border text-poe-text-muted">
         <span className="w-1.5 h-1.5 rounded-full bg-poe-gold" />
         {getGameVersionLabel(chat.gameVersion)}
       </span>
 
-      {/* Game version selector dropdown */}
+      {/* Game version selector dropdown - hidden on mobile, shown in hamburger menu */}
       <GameVersionSelector
         value={chat.gameVersion}
         onChange={handleGameVersionChange}
+        className="hidden md:block"
       />
 
-      {/* Build context selector dropdown */}
+      {/* Build context selector dropdown - hidden on mobile, shown in hamburger menu */}
       <BuildContextSelector
         value={buildContext}
         onChange={handleBuildContextChange}
+        className="hidden md:block"
       />
 
-      {/* Data freshness indicator */}
-      <DataFreshnessIndicator compact />
+      {/* Data freshness indicator - hidden on small screens */}
+      <div className="hidden md:block">
+        <DataFreshnessIndicator compact />
+      </div>
 
       {/* Settings button */}
       <button
         type="button"
         onClick={() => setIsSettingsOpen(true)}
-        className="p-2 rounded text-poe-text-secondary hover:text-poe-text-highlight hover:bg-poe-hover transition-colors"
+        className="p-2 rounded text-poe-text-secondary hover:text-poe-text-highlight hover:bg-poe-hover transition-colors touch-manipulation"
         aria-label="Open settings"
         data-testid="settings-open-button"
       >
@@ -331,7 +335,7 @@ function App() {
         <div className="flex flex-col h-full">
           {/* Chat toolbar (clear button, shown when messages exist) */}
           {chat.messageCount > 0 && (
-            <div className="flex items-center justify-end px-4 py-2 sm:px-6 lg:px-8 border-b border-[#2A2A32] bg-[#141418]/50">
+            <div className="flex items-center justify-end px-3 py-1.5 sm:px-6 sm:py-2 lg:px-8 border-b border-[#2A2A32] bg-[#141418]/50">
               <div className="max-w-3xl w-full flex items-center justify-end">
                 <ClearConversationButton
                   onClear={chat.clearConversation}

@@ -608,7 +608,7 @@ export function SettingsPanel({
         <div className="h-0.5 w-full bg-gradient-to-r from-poe-gold/80 via-poe-gold-light to-poe-gold/80 shrink-0" />
 
         {/* Panel header */}
-        <div className="flex items-center justify-between px-4 py-3 border-b border-poe-border shrink-0">
+        <div className="flex items-center justify-between px-3 sm:px-4 py-3 border-b border-poe-border shrink-0">
           <div className="flex items-center gap-2">
             {/* Settings icon */}
             <svg
@@ -658,7 +658,7 @@ export function SettingsPanel({
         </div>
 
         {/* Scrollable content */}
-        <div className="flex-1 overflow-y-auto px-4 py-4 space-y-5 relative">
+        <div className="flex-1 overflow-y-auto overscroll-contain px-3 sm:px-4 py-4 space-y-5 relative">
           {/* Config loading overlay */}
           {isConfigLoading && !formState.llmProvider && (
             <div className="absolute inset-0 z-10 flex flex-col items-center justify-center bg-poe-bg-secondary/80 backdrop-blur-sm" data-testid="settings-loading-overlay">
@@ -948,7 +948,7 @@ export function SettingsPanel({
         </div>
 
         {/* Footer with action buttons */}
-        <div className="shrink-0 border-t border-poe-border px-4 py-3 bg-poe-bg-tertiary/50">
+        <div className="shrink-0 border-t border-poe-border px-3 sm:px-4 py-3 bg-poe-bg-tertiary/50">
           {/* Dirty indicator */}
           {isDirty && (
             <p className="text-[11px] text-poe-gold mb-2 text-center">

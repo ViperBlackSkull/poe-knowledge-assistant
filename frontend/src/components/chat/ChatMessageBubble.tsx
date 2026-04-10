@@ -113,16 +113,16 @@ export function ChatMessageBubble({
 
   return (
     <div
-      className={`flex gap-3 mb-4 ${isUser ? 'justify-end' : 'justify-start'}`}
+      className={`flex gap-2 sm:gap-3 mb-3 sm:mb-4 ${isUser ? 'justify-end' : 'justify-start'}`}
       data-message-role={message.role}
     >
       {/* Avatar - left side for assistant */}
       {!isUser && (
         <div
-          className={`shrink-0 w-8 h-8 rounded border flex items-center justify-center ${getAvatarClasses(message.role)}`}
+          className={`shrink-0 w-7 h-7 sm:w-8 sm:h-8 rounded border flex items-center justify-center ${getAvatarClasses(message.role)}`}
           aria-label={`${message.role} avatar`}
         >
-          <span className={`text-xs font-bold ${getAvatarTextClass(message.role)}`}>
+          <span className={`text-[10px] sm:text-xs font-bold ${getAvatarTextClass(message.role)}`}>
             {getAvatarInitial(message.role)}
           </span>
         </div>
@@ -130,7 +130,7 @@ export function ChatMessageBubble({
 
       {/* Message content */}
       <div
-        className={`flex-1 max-w-[80%] ${
+        className={`flex-1 max-w-[85%] sm:max-w-[80%] ${
           isUser
             ? 'poe-card bg-poe-bg-tertiary border-poe-gold/30'
             : 'poe-card'
@@ -181,10 +181,10 @@ export function ChatMessageBubble({
       {/* Avatar - right side for user */}
       {isUser && (
         <div
-          className={`shrink-0 w-8 h-8 rounded border flex items-center justify-center ${getAvatarClasses(message.role)}`}
+          className={`shrink-0 w-7 h-7 sm:w-8 sm:h-8 rounded border flex items-center justify-center ${getAvatarClasses(message.role)}`}
           aria-label={`${message.role} avatar`}
         >
-          <span className={`text-xs font-bold ${getAvatarTextClass(message.role)}`}>
+          <span className={`text-[10px] sm:text-xs font-bold ${getAvatarTextClass(message.role)}`}>
             {getAvatarInitial(message.role)}
           </span>
         </div>

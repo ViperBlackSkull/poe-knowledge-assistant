@@ -120,7 +120,7 @@ export function ConfirmationDialog({
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 animate-in fade-in duration-200"
+      className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 animate-in fade-in duration-200"
       role="dialog"
       aria-modal="true"
       aria-labelledby="confirmation-dialog-title"
@@ -144,9 +144,9 @@ export function ConfirmationDialog({
         {/* Decorative top border accent */}
         <div className="h-0.5 w-full rounded-t-lg bg-gradient-to-r from-transparent via-[#AF6025] to-transparent" />
 
-        <div className="p-6">
+        <div className="p-4 sm:p-6">
           {/* Icon and title */}
-          <div className="flex items-start gap-4 mb-4">
+          <div className="flex items-start gap-3 sm:gap-4 mb-4">
             {/* Warning icon */}
             <div
               className={`shrink-0 w-10 h-10 rounded-full flex items-center justify-center ${
@@ -196,11 +196,11 @@ export function ConfirmationDialog({
           </div>
 
           {/* Action buttons */}
-          <div className="flex items-center justify-end gap-3 mt-6">
+          <div className="flex items-center justify-end gap-2 sm:gap-3 mt-4 sm:mt-6">
             <button
               type="button"
               onClick={onCancel}
-              className="poe-button-secondary px-4 py-2 text-sm rounded transition-all"
+              className="poe-button-secondary px-3 sm:px-4 py-2 text-sm rounded transition-all touch-manipulation min-h-[40px]"
               aria-label={cancelLabel}
               data-testid="confirmation-dialog-cancel"
             >
@@ -210,7 +210,7 @@ export function ConfirmationDialog({
               ref={confirmButtonRef}
               type="button"
               onClick={onConfirm}
-              className={`poe-button px-4 py-2 text-sm rounded border transition-all ${confirmButtonStyles[variant]}`}
+              className={`poe-button px-3 sm:px-4 py-2 text-sm rounded border transition-all touch-manipulation min-h-[40px] ${confirmButtonStyles[variant]}`}
               aria-label={confirmLabel}
               data-testid="confirmation-dialog-confirm"
             >

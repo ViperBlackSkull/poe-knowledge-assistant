@@ -345,7 +345,7 @@ export function ChatInput({
 
   return (
     <div
-      className={`border-t border-poe-border bg-poe-bg-secondary px-4 py-4 sm:px-6 lg:px-8 relative ${className}`}
+      className={`border-t border-poe-border bg-poe-bg-secondary px-3 py-3 sm:px-6 sm:py-4 lg:px-8 relative ${className}`}
       data-testid="chat-input-container"
     >
       {/* Loading overlay bar at top */}
@@ -422,7 +422,7 @@ export function ChatInput({
               placeholder={placeholder}
               rows={MIN_ROWS}
               disabled={disabled || isLoading}
-              className={`poe-input w-full resize-none text-sm pr-10 ${
+              className={`poe-input w-full resize-none text-sm sm:text-sm pr-10 py-2.5 sm:py-2 ${
                 disabled || isLoading ? 'opacity-50 cursor-not-allowed' : ''
               }`}
               aria-label="Chat message input"
@@ -444,7 +444,7 @@ export function ChatInput({
             <button
               type="button"
               onClick={handleCancel}
-              className="poe-button shrink-0 flex items-center gap-2 bg-red-700 hover:bg-red-600 border-red-500"
+              className="poe-button shrink-0 flex items-center gap-2 bg-red-700 hover:bg-red-600 border-red-500 min-h-[40px] min-w-[40px] sm:min-w-0 touch-manipulation"
               aria-label="Cancel request"
               data-testid="chat-cancel-button"
             >
@@ -463,7 +463,7 @@ export function ChatInput({
             <button
               type="submit"
               disabled={isSendDisabled}
-              className={`poe-button shrink-0 flex items-center gap-2 ${
+              className={`poe-button shrink-0 flex items-center gap-2 min-h-[40px] min-w-[40px] sm:min-w-0 touch-manipulation ${
                 isSendDisabled
                   ? 'opacity-40 cursor-not-allowed'
                   : 'hover:scale-[1.02] active:scale-[0.98]'

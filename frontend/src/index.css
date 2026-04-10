@@ -49,6 +49,33 @@
   ::-webkit-scrollbar-thumb:hover {
     background: #4A4A52;
   }
+
+  /* Mobile-specific scrollbar - thinner */
+  @media (max-width: 640px) {
+    ::-webkit-scrollbar {
+      width: 4px;
+      height: 4px;
+    }
+  }
+
+  /* Prevent iOS bounce overscroll on body */
+  @supports (-webkit-touch-callout: none) {
+    body {
+      overscroll-behavior: none;
+    }
+  }
+
+  /* Prevent text selection issues on touch */
+  @media (pointer: coarse) {
+    button, a, [role="button"] {
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    /* Larger touch targets */
+    input, select, textarea {
+      font-size: 16px; /* Prevents iOS zoom on focus */
+    }
+  }
 }
 
 @layer components {
@@ -365,5 +392,39 @@
   .markdown-compact blockquote {
     margin: 0.375rem 0;
     padding: 0.25rem 0.5rem;
+  }
+}
+
+/* =============================================================================
+   Mobile Responsive Utilities
+   ============================================================================= */
+
+@layer utilities {
+  /* Safe area padding for notched devices */
+  .safe-bottom {
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+
+  .safe-top {
+    padding-top: env(safe-area-inset-top, 0px);
+  }
+
+  .safe-left {
+    padding-left: env(safe-area-inset-left, 0px);
+  }
+
+  .safe-right {
+    padding-right: env(safe-area-inset-right, 0px);
+  }
+
+  /* Prevent overscroll bounce on mobile */
+  .overscroll-contain {
+    overscroll-behavior: contain;
+  }
+
+  /* Touch-optimized interaction class */
+  .touch-manipulation {
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
   }
 }
