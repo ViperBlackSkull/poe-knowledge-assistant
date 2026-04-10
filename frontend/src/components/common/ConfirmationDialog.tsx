@@ -120,7 +120,7 @@ export function ConfirmationDialog({
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 animate-in fade-in duration-200"
+      className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 animate-poe-fade-in"
       role="dialog"
       aria-modal="true"
       aria-labelledby="confirmation-dialog-title"
@@ -138,11 +138,11 @@ export function ConfirmationDialog({
       {/* Dialog card */}
       <div
         ref={dialogRef}
-        className={`relative w-full max-w-md bg-[#1A1A1F] border border-[#3D3D44] rounded-lg shadow-2xl ${className}`}
+        className={`relative w-full max-w-md bg-[#1A1A1F] border border-[#3D3D44] rounded-lg shadow-2xl animate-poe-scale-in ${className}`}
         data-testid="confirmation-dialog-card"
       >
-        {/* Decorative top border accent */}
-        <div className="h-0.5 w-full rounded-t-lg bg-gradient-to-r from-transparent via-[#AF6025] to-transparent" />
+        {/* Decorative top border accent with shimmer */}
+        <div className="h-0.5 w-full rounded-t-lg animate-poe-accent-shimmer" />
 
         <div className="p-4 sm:p-6">
           {/* Icon and title */}

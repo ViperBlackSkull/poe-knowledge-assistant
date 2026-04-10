@@ -86,10 +86,12 @@
     border-radius: 0.5rem;
     padding: 1rem;
     box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.5);
+    transition: border-color 0.3s ease, box-shadow 0.3s ease, transform 0.2s ease;
   }
 
   .poe-card:hover {
     border-color: #4A4A52;
+    box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.5), 0 0 8px rgba(175, 96, 37, 0.08);
   }
 
   /* PoE Button Component */
@@ -100,16 +102,21 @@
     padding: 0.5rem 1.5rem;
     border: 1px solid #7D4A1C;
     border-radius: 0.25rem;
-    transition: all 0.2s;
+    transition: all 0.2s ease;
+    position: relative;
+    overflow: hidden;
   }
 
   .poe-button:hover {
     background-color: #D4A85A;
     box-shadow: 0 0 10px rgba(175, 96, 37, 0.5);
+    transform: translateY(-1px);
   }
 
   .poe-button:active {
     background-color: #7D4A1C;
+    transform: translateY(0);
+    box-shadow: 0 0 4px rgba(175, 96, 37, 0.3);
   }
 
   .poe-button-secondary {
@@ -119,16 +126,20 @@
     padding: 0.5rem 1.5rem;
     border: 1px solid #3D3D44;
     border-radius: 0.25rem;
-    transition: all 0.2s;
+    transition: all 0.2s ease;
+    position: relative;
+    overflow: hidden;
   }
 
   .poe-button-secondary:hover {
     background-color: #2A2A32;
     border-color: #4A4A52;
+    box-shadow: 0 0 6px rgba(175, 96, 37, 0.1);
   }
 
   .poe-button-secondary:active {
     background-color: #3A3A44;
+    transform: scale(0.98);
   }
 
   /* PoE Input Component */
@@ -139,17 +150,22 @@
     padding: 0.5rem 1rem;
     border: 1px solid #3D3D44;
     border-radius: 0.25rem;
-    transition: all 0.2s;
+    transition: border-color 0.25s ease, box-shadow 0.25s ease;
   }
 
   .poe-input:focus {
     border-color: #AF6025;
     outline: none;
-    box-shadow: 0 0 10px rgba(175, 96, 37, 0.5);
+    box-shadow: 0 0 10px rgba(175, 96, 37, 0.5), 0 0 4px rgba(175, 96, 37, 0.2);
   }
 
   .poe-input::placeholder {
     color: #6B6B6B;
+  }
+
+  /* PoE input hover state (before focus) */
+  .poe-input:not(:focus):hover {
+    border-color: #4A4A52;
   }
 
   /* PoE Header Styles */
@@ -216,6 +232,139 @@
   .text-chaos {
     color: #D02090;
   }
+
+  /* -- PoE Animation Utilities ----------------------------------------------- */
+
+  /* Content reveal animation */
+  .animate-poe-fade-in-up {
+    animation: poe-fade-in-up 0.4s ease-out forwards;
+  }
+
+  /* General fade-in */
+  .animate-poe-fade-in {
+    animation: poe-fade-in 0.3s ease-out forwards;
+  }
+
+  /* Scale-in for interactive feedback */
+  .animate-poe-scale-in {
+    animation: poe-scale-in 0.25s ease-out forwards;
+  }
+
+  /* Slide-in from top */
+  .animate-poe-slide-in-top {
+    animation: poe-slide-in-top 0.25s ease-out forwards;
+  }
+
+  /* Toast entrance */
+  .animate-poe-toast-in {
+    animation: poe-toast-in 0.35s ease-out forwards;
+  }
+
+  /* Toast exit */
+  .animate-poe-toast-out {
+    animation: poe-toast-out 0.3s ease-in forwards;
+  }
+
+  /* Chat message entrance */
+  .animate-poe-message {
+    animation: poe-message-appear 0.35s ease-out forwards;
+  }
+
+  /* Shimmer loading effect */
+  .animate-poe-shimmer {
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      rgba(175, 96, 37, 0.08) 50%,
+      transparent 100%
+    );
+    background-size: 200% 100%;
+    animation: poe-shimmer 2s infinite;
+  }
+
+  /* Ambient glow pulse for decorative elements */
+  .animate-poe-ambient-pulse {
+    animation: poe-ambient-pulse 3s ease-in-out infinite;
+  }
+
+  /* Badge pulse notification */
+  .animate-poe-badge-pulse {
+    animation: poe-badge-pulse 2s ease-in-out infinite;
+  }
+
+  /* Orb spin for enhanced loading */
+  .animate-poe-orb-spin {
+    animation: poe-orb-spin 8s linear infinite;
+  }
+
+  /* Glow flicker for unique/rare items */
+  .animate-poe-glow-flicker {
+    animation: poe-glow-flicker 3s ease-in-out infinite;
+  }
+
+  /* Welcome banner floating */
+  .animate-poe-float {
+    animation: poe-float 4s ease-in-out infinite;
+  }
+
+  /* Accent line shimmer for decorative borders */
+  .animate-poe-accent-shimmer {
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      rgba(175, 96, 37, 0.6) 25%,
+      rgba(212, 168, 90, 0.8) 50%,
+      rgba(175, 96, 37, 0.6) 75%,
+      transparent 100%
+    );
+    background-size: 200% 100%;
+    animation: poe-accent-shimmer 3s linear infinite;
+  }
+
+  /* Staggered children animation delays */
+  .poe-stagger-1 { animation-delay: 0.05s; }
+  .poe-stagger-2 { animation-delay: 0.1s; }
+  .poe-stagger-3 { animation-delay: 0.15s; }
+  .poe-stagger-4 { animation-delay: 0.2s; }
+  .poe-stagger-5 { animation-delay: 0.25s; }
+
+  /* Hover transform utilities */
+  .poe-hover-lift {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  .poe-hover-lift:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4), 0 0 8px rgba(175, 96, 37, 0.15);
+  }
+  .poe-hover-lift:active {
+    transform: translateY(0);
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+  }
+
+  /* Subtle glow on hover */
+  .poe-hover-glow {
+    transition: box-shadow 0.3s ease;
+  }
+  .poe-hover-glow:hover {
+    box-shadow: 0 0 12px rgba(175, 96, 37, 0.3);
+  }
+
+  /* Ripple container for buttons */
+  .poe-ripple-container {
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* Scroll reveal: initially hidden, fades in when visible */
+  .poe-scroll-reveal {
+    opacity: 0;
+    transform: translateY(12px);
+    transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+  }
+  .poe-scroll-reveal.poe-revealed {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 /* Typing indicator wave animation keyframes */
@@ -243,6 +392,204 @@
   100% {
     width: 0%;
     margin-left: 100%;
+  }
+}
+
+/* =============================================================================
+   PoE Visual Effects and Animations
+   Path of Exile themed effects for enhanced user experience.
+   ============================================================================= */
+
+/* -- PoE Particle-like ambient glow pulse ----------------------------------- */
+@keyframes poe-ambient-pulse {
+  0%, 100% {
+    opacity: 0.4;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.8;
+    transform: scale(1.05);
+  }
+}
+
+/* -- Shimmer effect for loading states -------------------------------------- */
+@keyframes poe-shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+/* -- Gold border sweep on hover --------------------------------------------- */
+@keyframes poe-border-sweep {
+  0% {
+    background-position: 0% 50%;
+  }
+  100% {
+    background-position: 200% 50%;
+  }
+}
+
+/* -- Fade-in-up for content reveal ------------------------------------------ */
+@keyframes poe-fade-in-up {
+  0% {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* -- Fade-in for general state transitions ---------------------------------- */
+@keyframes poe-fade-in {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+/* -- Scale-in for button press feedback ------------------------------------- */
+@keyframes poe-scale-in {
+  0% {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* -- Slide-in from right (settings panel, sidebar) -------------------------- */
+@keyframes poe-slide-in-right {
+  0% {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  100% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+/* -- Slide-in from top (mobile nav) ----------------------------------------- */
+@keyframes poe-slide-in-top {
+  0% {
+    transform: translateY(-8px);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* -- Badge pulse for notifications ------------------------------------------ */
+@keyframes poe-badge-pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.15);
+  }
+}
+
+/* -- Orb rotation for loading spinner enhancement --------------------------- */
+@keyframes poe-orb-spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* -- Glow flicker for unique items ------------------------------------------ */
+@keyframes poe-glow-flicker {
+  0%, 100% {
+    box-shadow: 0 0 8px rgba(175, 96, 37, 0.3);
+  }
+  25% {
+    box-shadow: 0 0 14px rgba(175, 96, 37, 0.5);
+  }
+  50% {
+    box-shadow: 0 0 10px rgba(212, 168, 90, 0.4);
+  }
+  75% {
+    box-shadow: 0 0 16px rgba(175, 96, 37, 0.6);
+  }
+}
+
+/* -- Chat message appear animation ------------------------------------------ */
+@keyframes poe-message-appear {
+  0% {
+    opacity: 0;
+    transform: translateY(8px) scale(0.98);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* -- Toast notification slide-in from right --------------------------------- */
+@keyframes poe-toast-in {
+  0% {
+    opacity: 0;
+    transform: translateX(100%) scale(0.95);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+  }
+}
+
+@keyframes poe-toast-out {
+  0% {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translateX(100%) scale(0.95);
+  }
+}
+
+/* -- Ripple effect for buttons ---------------------------------------------- */
+@keyframes poe-ripple {
+  0% {
+    transform: scale(0);
+    opacity: 0.5;
+  }
+  100% {
+    transform: scale(4);
+    opacity: 0;
+  }
+}
+
+/* -- Welcome banner float --------------------------------------------------- */
+@keyframes poe-float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+}
+
+/* -- Accent line shimmer for headers ---------------------------------------- */
+@keyframes poe-accent-shimmer {
+  0% {
+    background-position: -100% 0;
+  }
+  100% {
+    background-position: 200% 0;
   }
 }
 

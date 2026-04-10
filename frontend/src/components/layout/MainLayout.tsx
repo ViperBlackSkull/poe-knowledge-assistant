@@ -68,7 +68,7 @@ export function MainLayout({
   );
 
   return (
-    <div className="min-h-screen flex flex-col bg-poe-gradient">
+    <div className="min-h-screen flex flex-col bg-poe-gradient transition-colors duration-300">
       {/* Header */}
       <Header
         title="PoE Knowledge Assistant"

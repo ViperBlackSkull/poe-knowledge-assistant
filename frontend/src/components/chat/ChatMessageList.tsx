@@ -23,19 +23,28 @@ export interface ChatMessageListProps {
 
 /**
  * Welcome banner shown when there are no messages yet.
+ * Features PoE-themed floating animation and staggered reveal.
  */
 function WelcomeBanner() {
   return (
-    <div className="text-center py-8" data-testid="welcome-banner">
-      <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-poe-bg-tertiary border border-poe-border mb-4">
+    <div className="text-center py-8 animate-poe-fade-in-up" data-testid="welcome-banner">
+      <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-poe-bg-tertiary border border-poe-gold/30 mb-4 animate-poe-float animate-poe-ambient-pulse shadow-[0_0_16px_rgba(175,96,37,0.15)]">
         <span className="text-2xl text-poe-gold">?</span>
       </div>
-      <h2 className="poe-header text-xl mb-2">
+      <h2 className="poe-header text-xl mb-2 animate-poe-fade-in-up poe-stagger-1">
         Welcome, Exile
       </h2>
-      <p className="text-poe-text-secondary text-sm">
+      <p className="text-poe-text-secondary text-sm animate-poe-fade-in-up poe-stagger-2">
         Ask me anything about Path of Exile - items, builds, mechanics, and more.
       </p>
+      <div className="mt-6 flex justify-center gap-4 animate-poe-fade-in-up poe-stagger-3">
+        <span className="px-3 py-1.5 rounded text-xs text-poe-text-muted bg-poe-bg-tertiary border border-poe-border/50 transition-colors duration-200 hover:border-poe-gold/30 hover:text-poe-text-secondary">
+          "What are the best starter builds?"
+        </span>
+        <span className="px-3 py-1.5 rounded text-xs text-poe-text-muted bg-poe-bg-tertiary border border-poe-border/50 transition-colors duration-200 hover:border-poe-gold/30 hover:text-poe-text-secondary">
+          "How does crafting work?"
+        </span>
+      </div>
     </div>
   );
 }
@@ -101,11 +110,16 @@ export function ChatMessageList({
         ) : (
           <>
             {messages.map((message, index) => (
-              <ChatMessageBubble
+              <div
                 key={`${message.timestamp}-${index}`}
-                message={message}
-                conversationId={conversationId}
-              />
+                className="animate-poe-message"
+                style={{ animationDelay: `${Math.min(index * 30, 150)}ms`, animationFillMode: 'both' }}
+              >
+                <ChatMessageBubble
+                  message={message}
+                  conversationId={conversationId}
+                />
+              </div>
             ))}
             {/* Typing indicator shown when streaming (receiving tokens) */}
             <TypingIndicator

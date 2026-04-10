@@ -73,10 +73,10 @@ export function ClearConversationButton({
         type="button"
         onClick={handleOpenDialog}
         disabled={isButtonDisabled}
-        className={`group relative flex items-center gap-1.5 px-3 py-1.5 rounded text-sm font-medium transition-all ${
+        className={`group relative flex items-center gap-1.5 px-3 py-1.5 rounded text-sm font-medium transition-all duration-200 ${
           isButtonDisabled
             ? 'text-[#4A4A52] cursor-not-allowed opacity-50'
-            : 'text-[#9E9EA8] hover:text-[#C8C8C8] hover:bg-[#2A2A32] border border-transparent hover:border-[#3D3D44]'
+            : 'text-[#9E9EA8] hover:text-[#C8C8C8] hover:bg-[#2A2A32] border border-transparent hover:border-[#3D3D44] hover:scale-[1.02] active:scale-[0.98]'
         } ${className}`}
         aria-label={`Clear conversation${messageCount > 0 ? ` (${messageCount} messages)` : ''}`}
         title={isButtonDisabled ? 'No messages to clear' : 'Clear conversation'}
@@ -102,7 +102,7 @@ export function ClearConversationButton({
 
         {/* Message count badge */}
         {messageCount > 0 && (
-          <span className="inline-flex items-center justify-center min-w-[1.25rem] h-5 px-1 rounded-full text-[0.625rem] font-semibold bg-[#AF6025]/20 text-[#AF6025] border border-[#AF6025]/30">
+          <span className="inline-flex items-center justify-center min-w-[1.25rem] h-5 px-1 rounded-full text-[0.625rem] font-semibold bg-[#AF6025]/20 text-[#AF6025] border border-[#AF6025]/30 transition-transform duration-200 group-hover:scale-110">
             {messageCount}
           </span>
         )}

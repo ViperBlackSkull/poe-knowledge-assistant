@@ -17,13 +17,16 @@ export function Header({
 }: HeaderProps) {
   return (
     <header className="bg-poe-header-gradient border-b border-poe-border sticky top-0 z-50 shadow-lg">
+      {/* Animated accent line at the top of the header */}
+      <div className="h-0.5 w-full animate-poe-accent-shimmer" />
+
       <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-14 sm:h-16">
           {/* Left: App title and subtitle */}
           <div className="flex items-center gap-2 sm:gap-4 shrink-0 min-w-0">
             <div className="flex items-center gap-2 sm:gap-3">
-              {/* PoE-style icon/logo */}
-              <div className="w-7 h-7 sm:w-8 sm:h-8 rounded bg-poe-gold flex items-center justify-center text-poe-bg-primary font-bold text-xs sm:text-sm shrink-0">
+              {/* PoE-style icon/logo with glow effect */}
+              <div className="w-7 h-7 sm:w-8 sm:h-8 rounded bg-poe-gold flex items-center justify-center text-poe-bg-primary font-bold text-xs sm:text-sm shrink-0 transition-shadow duration-300 hover:shadow-[0_0_12px_rgba(175,96,37,0.6)] animate-poe-ambient-pulse">
                 P
               </div>
               <div className="min-w-0">
@@ -47,10 +50,10 @@ export function Header({
                   <a
                     key={item.href}
                     href={item.href}
-                    className={`px-3 py-2 rounded text-sm font-medium transition-colors duration-200 ${
+                    className={`px-3 py-2 rounded text-sm font-medium transition-all duration-200 ${
                       item.active
-                        ? 'text-poe-gold bg-poe-bg-tertiary border border-poe-border'
-                        : 'text-poe-text-secondary hover:text-poe-text-highlight hover:bg-poe-hover'
+                        ? 'text-poe-gold bg-poe-bg-tertiary border border-poe-border shadow-sm'
+                        : 'text-poe-text-secondary hover:text-poe-text-highlight hover:bg-poe-hover poe-hover-lift'
                     }`}
                     aria-current={item.active ? 'page' : undefined}
                   >
@@ -83,12 +86,12 @@ export function Header({
             <button
               type="button"
               onClick={onMobileMenuToggle}
-              className="sm:hidden p-2 rounded text-poe-text-secondary hover:text-poe-text-highlight hover:bg-poe-hover transition-colors touch-manipulation"
+              className="sm:hidden p-2 rounded text-poe-text-secondary hover:text-poe-text-highlight hover:bg-poe-hover transition-all duration-200 touch-manipulation hover:scale-105 active:scale-95"
               aria-label="Toggle navigation menu"
               aria-expanded={isMobileMenuOpen}
             >
               <svg
-                className="w-6 h-6"
+                className="w-6 h-6 transition-transform duration-200"
                 fill="none"
                 viewBox="0 0 24 24"
                 strokeWidth={1.5}
@@ -113,20 +116,21 @@ export function Header({
         </div>
       </div>
 
-      {/* Mobile navigation dropdown */}
+      {/* Mobile navigation dropdown with animation */}
       {isMobileMenuOpen && (
-        <div className="sm:hidden border-t border-poe-border bg-poe-bg-secondary animate-in slide-in-from-top-2 duration-200">
+        <div className="sm:hidden border-t border-poe-border bg-poe-bg-secondary animate-poe-slide-in-top">
           {navItems.length > 0 && (
             <nav className="px-3 py-2 space-y-0.5" aria-label="Mobile navigation">
-              {navItems.map((item) => (
+              {navItems.map((item, index) => (
                 <a
                   key={item.href}
                   href={item.href}
-                  className={`block px-3 py-2.5 rounded text-sm font-medium transition-colors duration-200 touch-manipulation ${
+                  className={`block px-3 py-2.5 rounded text-sm font-medium transition-all duration-200 touch-manipulation animate-poe-fade-in-up ${
                     item.active
                       ? 'text-poe-gold bg-poe-bg-tertiary'
                       : 'text-poe-text-secondary hover:text-poe-text-highlight hover:bg-poe-hover active:bg-poe-active'
                   }`}
+                  style={{ animationDelay: `${index * 50}ms` }}
                   aria-current={item.active ? 'page' : undefined}
                 >
                   {item.label}
@@ -136,13 +140,13 @@ export function Header({
           )}
           {/* Mobile actions - always show when menu is open */}
           {actions && (
-            <div className="px-3 py-3 flex flex-wrap items-center gap-2 border-t border-poe-border">
+            <div className="px-3 py-3 flex flex-wrap items-center gap-2 border-t border-poe-border animate-poe-fade-in-up" style={{ animationDelay: '100ms' }}>
               {actions}
             </div>
           )}
           {/* Context display for mobile */}
           {contextDisplay && (
-            <div className="px-3 py-2 border-t border-poe-border">
+            <div className="px-3 py-2 border-t border-poe-border animate-poe-fade-in-up" style={{ animationDelay: '150ms' }}>
               {contextDisplay}
             </div>
           )}

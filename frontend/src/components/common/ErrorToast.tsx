@@ -365,8 +365,8 @@ export function ErrorToast({ className = '' }: ErrorToastProps) {
               rounded-lg shadow-xl
               transition-all duration-300 ease-in-out
               ${toast.isDismissing
-                ? 'opacity-0 translate-x-4'
-                : 'opacity-100 translate-x-0'
+                ? 'animate-poe-toast-out'
+                : 'animate-poe-toast-in'
               }
             `}
             role="alert"

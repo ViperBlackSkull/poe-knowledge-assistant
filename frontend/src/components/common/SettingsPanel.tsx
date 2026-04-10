@@ -604,8 +604,8 @@ export function SettingsPanel({
         aria-label="Settings panel"
         data-testid="settings-panel"
       >
-        {/* Decorative top accent line */}
-        <div className="h-0.5 w-full bg-gradient-to-r from-poe-gold/80 via-poe-gold-light to-poe-gold/80 shrink-0" />
+        {/* Decorative top accent line with shimmer animation */}
+        <div className="h-0.5 w-full animate-poe-accent-shimmer shrink-0" />
 
         {/* Panel header */}
         <div className="flex items-center justify-between px-3 sm:px-4 py-3 border-b border-poe-border shrink-0">
@@ -740,7 +740,7 @@ export function SettingsPanel({
           {/* ---------------------------------------------------------------
               LLM Provider Section (with PoE-styled custom dropdown)
               --------------------------------------------------------------- */}
-          <div className="poe-card space-y-3">
+          <div className="poe-card space-y-3 poe-hover-glow animate-poe-fade-in-up" style={{ animationDelay: '50ms' }}>
             <SectionHeader
               icon={
                 <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
@@ -792,7 +792,7 @@ export function SettingsPanel({
           {/* ---------------------------------------------------------------
               API Key Section (with new ApiKeyInput component)
               --------------------------------------------------------------- */}
-          <div className="poe-card space-y-3">
+          <div className="poe-card space-y-3 poe-hover-glow animate-poe-fade-in-up" style={{ animationDelay: '100ms' }}>
             <SectionHeader
               icon={
                 <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
@@ -882,7 +882,7 @@ export function SettingsPanel({
           {/* ---------------------------------------------------------------
               Embedding Provider Section (with PoE-styled custom dropdown)
               --------------------------------------------------------------- */}
-          <div className="poe-card space-y-3">
+          <div className="poe-card space-y-3 poe-hover-glow animate-poe-fade-in-up" style={{ animationDelay: '150ms' }}>
             <SectionHeader
               icon={
                 <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
@@ -912,7 +912,7 @@ export function SettingsPanel({
           {/* ---------------------------------------------------------------
               RAG Configuration Section
               --------------------------------------------------------------- */}
-          <div className="poe-card space-y-3">
+          <div className="poe-card space-y-3 poe-hover-glow animate-poe-fade-in-up" style={{ animationDelay: '200ms' }}>
             <SectionHeader
               icon={
                 <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
@@ -951,7 +951,7 @@ export function SettingsPanel({
         <div className="shrink-0 border-t border-poe-border px-3 sm:px-4 py-3 bg-poe-bg-tertiary/50">
           {/* Dirty indicator */}
           {isDirty && (
-            <p className="text-[11px] text-poe-gold mb-2 text-center">
+            <p className="text-[11px] text-poe-gold mb-2 text-center animate-poe-fade-in">
               Unsaved changes detected
             </p>
           )}
@@ -961,7 +961,7 @@ export function SettingsPanel({
             <button
               type="button"
               onClick={handleCancel}
-              className="poe-button-secondary flex-1 px-4 py-2 text-sm rounded transition-all"
+              className="poe-button-secondary flex-1 px-4 py-2 text-sm rounded transition-all hover:scale-[1.02] active:scale-[0.98]"
               data-testid="settings-cancel-button"
             >
               Cancel
@@ -973,11 +973,11 @@ export function SettingsPanel({
               onClick={handleSave}
               disabled={isSaving || !isDirty}
               className={`
-                flex-1 px-4 py-2 text-sm rounded border transition-all
+                flex-1 px-4 py-2 text-sm rounded border transition-all duration-200
                 ${
                   isSaving || !isDirty
                     ? 'opacity-50 cursor-not-allowed bg-poe-bg-tertiary border-poe-border text-poe-text-muted'
-                    : 'bg-poe-gold hover:bg-poe-gold-light border-poe-gold-dark text-white hover:shadow-poe-glow'
+                    : 'bg-poe-gold hover:bg-poe-gold-light border-poe-gold-dark text-white hover:shadow-poe-glow hover:scale-[1.02] active:scale-[0.98]'
                 }
               `}
               data-testid="settings-save-button"

@@ -307,7 +307,7 @@ export function ItemCard({
           poe-card flex items-center gap-3 p-3 cursor-default
           border ${colors.border} ${colors.glow}
           ${selected ? 'ring-2 ring-poe-gold/50' : ''}
-          ${isClickable ? 'cursor-pointer hover:bg-poe-hover transition-colors' : ''}
+          ${isClickable ? 'cursor-pointer hover:bg-poe-hover poe-hover-lift' : ''}
           ${className}
         `}
         onClick={handleClick}
@@ -366,7 +366,7 @@ export function ItemCard({
         poe-card relative overflow-hidden
         border ${colors.border} ${colors.glow}
         ${selected ? 'ring-2 ring-poe-gold/50' : ''}
-        ${isClickable ? 'cursor-pointer hover:bg-poe-hover transition-colors' : ''}
+        ${isClickable ? 'cursor-pointer hover:bg-poe-hover poe-hover-lift' : ''}
         ${className}
       `}
       onClick={handleClick}

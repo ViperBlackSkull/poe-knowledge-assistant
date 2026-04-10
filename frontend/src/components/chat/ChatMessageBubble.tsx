@@ -113,13 +113,13 @@ export function ChatMessageBubble({
 
   return (
     <div
-      className={`flex gap-2 sm:gap-3 mb-3 sm:mb-4 ${isUser ? 'justify-end' : 'justify-start'}`}
+      className={`flex gap-2 sm:gap-3 mb-3 sm:mb-4 group ${isUser ? 'justify-end' : 'justify-start'}`}
       data-message-role={message.role}
     >
       {/* Avatar - left side for assistant */}
       {!isUser && (
         <div
-          className={`shrink-0 w-7 h-7 sm:w-8 sm:h-8 rounded border flex items-center justify-center ${getAvatarClasses(message.role)}`}
+          className={`shrink-0 w-7 h-7 sm:w-8 sm:h-8 rounded border flex items-center justify-center transition-all duration-200 ${getAvatarClasses(message.role)} group-hover:shadow-[0_0_8px_rgba(175,96,37,0.2)]`}
           aria-label={`${message.role} avatar`}
         >
           <span className={`text-[10px] sm:text-xs font-bold ${getAvatarTextClass(message.role)}`}>
@@ -130,10 +130,10 @@ export function ChatMessageBubble({
 
       {/* Message content */}
       <div
-        className={`flex-1 max-w-[85%] sm:max-w-[80%] ${
+        className={`flex-1 max-w-[85%] sm:max-w-[80%] transition-all duration-200 ${
           isUser
             ? 'poe-card bg-poe-bg-tertiary border-poe-gold/30'
-            : 'poe-card'
+            : 'poe-card hover:border-poe-gold/20'
         }`}
       >
         {/* Role label */}

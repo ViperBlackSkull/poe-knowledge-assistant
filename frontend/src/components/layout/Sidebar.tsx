@@ -17,7 +17,7 @@ export function Sidebar({
       {/* Overlay for mobile when sidebar is open */}
       {isOpen && (
         <div
-          className="fixed inset-0 bg-black/50 z-30 lg:hidden"
+          className="fixed inset-0 bg-black/50 z-30 lg:hidden animate-poe-fade-in transition-opacity duration-300"
           onClick={onToggle}
           aria-hidden="true"
         />

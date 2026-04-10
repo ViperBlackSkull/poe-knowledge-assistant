@@ -345,23 +345,23 @@ export function ChatInput({
 
   return (
     <div
-      className={`border-t border-poe-border bg-poe-bg-secondary px-3 py-3 sm:px-6 sm:py-4 lg:px-8 relative ${className}`}
+      className={`border-t border-poe-border bg-poe-bg-secondary px-3 py-3 sm:px-6 sm:py-4 lg:px-8 relative transition-all duration-300 ${isLoading ? 'border-poe-gold/30' : ''} ${className}`}
       data-testid="chat-input-container"
     >
-      {/* Loading overlay bar at top */}
+      {/* Loading overlay bar at top with enhanced animation */}
       {isLoading && (
         <div
-          className="absolute top-0 left-0 right-0 h-0.5 bg-poe-gold/60 overflow-hidden"
+          className="absolute top-0 left-0 right-0 h-0.5 overflow-hidden animate-poe-fade-in"
           data-testid="chat-input-loading-bar"
         >
-          <div className="h-full bg-poe-gold animate-[loading-progress_1.5s_ease-in-out_infinite]" />
+          <div className="h-full bg-gradient-to-r from-transparent via-poe-gold to-transparent animate-[loading-progress_1.5s_ease-in-out_infinite]" />
         </div>
       )}
       <div className="max-w-3xl mx-auto">
         {/* Error message display */}
         {error && (
           <div
-            className="mb-3 px-4 py-2 bg-red-900/20 border border-red-500/30 rounded-lg text-red-300 text-sm flex items-center gap-2"
+            className="mb-3 px-4 py-2 bg-red-900/20 border border-red-500/30 rounded-lg text-red-300 text-sm flex items-center gap-2 animate-poe-fade-in-up"
             role="alert"
             data-testid="chat-error-message"
           >
