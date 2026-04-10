@@ -8,3 +8,12 @@ export function formatDate(date: Date): string {
     day: 'numeric',
   });
 }
+
+// Citation utility functions
+export {
+  sourceToCitation,
+  sseSourceToCitation,
+  sourcesToCitations,
+  sseSourcesToCitations,
+  extractCitationsFromMetadata,
+} from './citation';

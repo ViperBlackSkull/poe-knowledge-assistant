@@ -143,6 +143,17 @@ export type {
 } from './markdown';
 
 // ---------------------------------------------------------------------------
+// Citation types
+// ---------------------------------------------------------------------------
+export type {
+  CitationData,
+  CitationDocType,
+  CitationDisplayFormat,
+  CitationCardProps,
+  CitationListProps,
+} from './citation';
+
+// ---------------------------------------------------------------------------
 // Item display types
 // ---------------------------------------------------------------------------
 export type {

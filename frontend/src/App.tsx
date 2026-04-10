@@ -1,6 +1,7 @@
 import { useState, useCallback, useRef, useEffect } from 'react';
-import { MainLayout, ChatMessageList, ChatInput, ItemCardDemo } from '@/components';
+import { MainLayout, ChatMessageList, ChatInput, ItemCardDemo, CitationDemo } from '@/components';
 import type { ChatMessage } from '@/types/chat';
+import type { SSESource } from '@/types/streaming';
 
 /**
  * Root application component.
@@ -28,6 +29,7 @@ function App() {
   }, []);
 
   const showItemDemo = currentHash === '#/items';
+  const showCitationDemo = currentHash === '#/citations';
 
   /**
    * Handle a new user message being sent.
@@ -78,6 +80,23 @@ function App() {
   }, []);
 
   /**
+   * Handle sources received from the streaming response.
+   * Stores the sources in the last assistant message's metadata.
+   */
+  const handleSources = useCallback((sources: SSESource[]) => {
+    setMessages((prev) => {
+      const updated = [...prev];
+      if (updated.length > 0 && updated[updated.length - 1].role === 'assistant') {
+        updated[updated.length - 1] = {
+          ...updated[updated.length - 1],
+          metadata: { sources },
+        };
+      }
+      return updated;
+    });
+  }, []);
+
+  /**
    * Handle errors from the chat API.
    * Adds an error system message to the chat.
    */
@@ -116,6 +135,15 @@ function App() {
     );
   }
 
+  // Citation component demo page
+  if (showCitationDemo) {
+    return (
+      <MainLayout>
+        <CitationDemo />
+      </MainLayout>
+    );
+  }
+
   return (
     <MainLayout showSidebar>
       <div className="flex flex-col h-full">
@@ -131,6 +159,7 @@ function App() {
           onSendMessage={handleSendMessage}
           onStreamingToken={handleStreamingToken}
           onStreamingDone={handleStreamingDone}
+          onSources={handleSources}
           onError={handleError}
           disabled={isStreaming}
           conversationId={conversationId}

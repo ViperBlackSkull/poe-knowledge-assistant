@@ -1,5 +1,7 @@
 import type { ChatMessage, MessageRole } from '@/types/chat';
 import { MarkdownRenderer } from '../common/MarkdownRenderer';
+import { CitationList } from './CitationList';
+import { extractCitationsFromMetadata } from '@/utils/citation';
 
 /**
  * Props for the ChatMessageBubble component.
@@ -155,6 +157,15 @@ export function ChatMessageBubble({
           </p>
         ) : (
           <MarkdownRenderer content={message.content} variant="chat" showCodeCopyButton />
+        )}
+
+        {/* Citations (assistant messages only) */}
+        {!isUser && message.metadata && (
+          <CitationList
+            citations={extractCitationsFromMetadata(message.metadata)}
+            format="compact"
+            className="mt-3 pt-2 border-t border-poe-border"
+          />
         )}
 
         {/* Metadata footer */}
