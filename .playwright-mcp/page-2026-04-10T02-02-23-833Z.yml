@@ -1,0 +1,37 @@
+- generic [ref=e3]:
+  - banner [ref=e4]:
+    - generic [ref=e6]:
+      - generic [ref=e8]:
+        - generic [ref=e9]: P
+        - generic [ref=e10]:
+          - heading "PoE Knowledge Assistant" [level=1] [ref=e11]
+          - paragraph [ref=e12]: Your intelligent assistant for Path of Exile
+      - navigation "Main navigation" [ref=e13]:
+        - link "Chat" [ref=e14] [cursor=pointer]:
+          - /url: /
+        - link "Knowledge Base" [ref=e15] [cursor=pointer]:
+          - /url: /knowledge
+        - link "Admin" [ref=e16] [cursor=pointer]:
+          - /url: /admin
+      - generic [ref=e18]:
+        - generic [ref=e19]:
+          - generic [ref=e20]: Path of Exile 1
+          - button "Select game version, currently Path of Exile 1" [ref=e71] [cursor=pointer]:
+            - img [ref=e24]
+            - generic [ref=e27]: Path of Exile 1
+            - img [ref=e28]
+        - button "Toggle configuration panel" [ref=e30] [cursor=pointer]:
+          - img [ref=e31]
+  - main [ref=e35]:
+    - generic [ref=e36]:
+      - log "Chat messages" [ref=e37]:
+        - generic [ref=e39]:
+          - generic [ref=e41]: "?"
+          - heading "Welcome, Exile" [level=2] [ref=e42]
+          - paragraph [ref=e43]: Ask me anything about Path of Exile - items, builds, mechanics, and more.
+      - generic [ref=e46]:
+        - textbox "Chat message input" [ref=e48]:
+          - /placeholder: Ask about items, builds, mechanics...
+        - button "Send message" [disabled] [ref=e49]:
+          - img [ref=e50]
+          - generic [ref=e52]: Send

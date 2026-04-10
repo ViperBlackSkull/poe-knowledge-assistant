@@ -171,12 +171,48 @@ export interface ConfigUpdateRequest {
   llm_temperature?: number | null;
   /** New max tokens setting (1 - 32000) */
   llm_max_tokens?: number | null;
+  /** New OpenAI API key (stored securely on server, never returned in responses) */
+  openai_api_key?: string | null;
+  /** New Anthropic API key (stored securely on server, never returned in responses) */
+  anthropic_api_key?: string | null;
   /** New embedding provider */
   embedding_provider?: EmbeddingProvider | null;
   /** New embedding model */
   embedding_model?: string | null;
+  /** New OpenAI API key for embeddings */
+  openai_embedding_api_key?: string | null;
   /** New top-k results setting (1 - 20) */
   rag_top_k?: number | null;
   /** New score threshold (0.0 - 1.0) */
   rag_score_threshold?: number | null;
+  /** New chunk size setting */
+  rag_chunk_size?: number | null;
+  /** New chunk overlap setting */
+  rag_chunk_overlap?: number | null;
+  /** New Ollama base URL */
+  ollama_base_url?: string | null;
+  /** New LM Studio base URL */
+  lmstudio_base_url?: string | null;
+}
+
+// ---------------------------------------------------------------------------
+// Config update response model
+// ---------------------------------------------------------------------------
+
+/**
+ * Response from `PUT /api/config`.
+ *
+ * Backend model: ConfigUpdateResponse (config.py)
+ */
+export interface ConfigUpdateResponse {
+  /** Whether the update was successful */
+  success: boolean;
+  /** Human-readable status message */
+  message: string;
+  /** List of field names that were updated */
+  updated_fields: string[];
+  /** Whether changes require a restart to take effect */
+  requires_restart: boolean;
+  /** Updated configuration (with sensitive data masked) */
+  config: AppConfig | null;
 }

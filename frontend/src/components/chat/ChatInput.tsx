@@ -1,6 +1,6 @@
 import { useState, useRef, useCallback, useEffect, type KeyboardEvent, type FormEvent } from 'react';
 import type { ChatMessage, GameVersion } from '@/types/chat';
-import type { ChatStreamRequest } from '@/types/streaming';
+import type { ChatStreamRequest, SSESource } from '@/types/streaming';
 import { streamChat as streamChatApi, sendChat as sendChatApi } from '@/lib/api-client';
 import { TypingIndicator } from './TypingIndicator';
 
@@ -18,6 +18,8 @@ export interface ChatInputProps {
   onStreamingToken?: (token: string) => void;
   /** Callback invoked when the streaming response completes */
   onStreamingDone?: (conversationId: string) => void;
+  /** Callback invoked when sources are received from the streaming response */
+  onSources?: (sources: SSESource[]) => void;
   /** Callback invoked when an error occurs during the chat request */
   onError?: (error: string) => void;
   /** Whether the input is currently disabled (e.g. during streaming) */
@@ -67,6 +69,7 @@ export function ChatInput({
   onSendMessage,
   onStreamingToken,
   onStreamingDone,
+  onSources,
   onError,
   disabled = false,
   conversationId,
@@ -202,8 +205,9 @@ export function ChatInput({
           onToken: (event) => {
             onStreamingToken?.(event.token);
           },
-          onSources: () => {
-            // Sources received, streaming will follow
+          onSources: (event) => {
+            // Sources received, propagate to parent
+            onSources?.(event.sources);
           },
           onDone: (event) => {
             onStreamingDone?.(event.conversation_id);

@@ -45,6 +45,7 @@ export type {
   EmbeddingConfigResponse,
   AppConfig,
   ConfigUpdateRequest,
+  ConfigUpdateResponse,
 } from './config';
 
 // ---------------------------------------------------------------------------

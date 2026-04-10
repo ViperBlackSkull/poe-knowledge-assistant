@@ -1,0 +1,295 @@
+- generic [ref=e3]:
+  - banner [ref=e4]:
+    - generic [ref=e6]:
+      - generic [ref=e8]:
+        - generic [ref=e9]: P
+        - generic [ref=e10]:
+          - heading "PoE Knowledge Assistant" [level=1] [ref=e11]
+          - paragraph [ref=e12]: Your intelligent assistant for Path of Exile
+      - navigation "Main navigation" [ref=e13]:
+        - link "Chat" [ref=e14] [cursor=pointer]:
+          - /url: /
+        - link "Knowledge Base" [ref=e15] [cursor=pointer]:
+          - /url: /knowledge
+        - link "Admin" [ref=e16] [cursor=pointer]:
+          - /url: /admin
+      - generic [ref=e19]:
+        - generic [ref=e20]: Path of Exile 2
+        - button "Select game version, currently Path of Exile 2" [ref=e23] [cursor=pointer]:
+          - img [ref=e24]
+          - generic [ref=e27]: Path of Exile 2
+          - img [ref=e28]
+  - main [ref=e35]:
+    - generic [ref=e53]:
+      - generic [ref=e54]:
+        - heading "PoE Item Card Grid" [level=1] [ref=e55]
+        - paragraph [ref=e56]: Enhanced item card grid with filtering, sorting, pagination, layout toggle, and infinite scroll. Built for Path of Exile items with rarity-themed styling.
+      - generic [ref=e57]:
+        - heading "Enhanced Item Grid" [level=2] [ref=e58]
+        - paragraph [ref=e59]: Full-featured grid with search, rarity/item-type filters, sort controls, pagination, grid/list layout toggle, and infinite scroll mode. Click any card to select it.
+        - generic [ref=e60]:
+          - generic [ref=e61]:
+            - generic [ref=e62]: "Variant:"
+            - generic [ref=e63]:
+              - button "compact" [ref=e64] [cursor=pointer]
+              - button "default" [ref=e65] [cursor=pointer]
+              - button "detailed" [ref=e66] [cursor=pointer]
+          - generic [ref=e67] [cursor=pointer]:
+            - checkbox "Show loading skeleton" [ref=e68]
+            - text: Show loading skeleton
+        - generic [ref=e69]:
+          - generic [ref=e70]:
+            - generic [ref=e71]:
+              - generic [ref=e73]:
+                - img
+                - textbox "Search items" [ref=e74]:
+                  - /placeholder: Search items...
+              - generic [ref=e75]:
+                - generic [ref=e76]: 12 items
+                - generic [ref=e77]:
+                  - button "Grid layout" [pressed] [ref=e78] [cursor=pointer]:
+                    - img [ref=e79]
+                  - button "List layout" [ref=e81] [cursor=pointer]:
+                    - img [ref=e82]
+            - generic [ref=e84]:
+              - generic [ref=e85]:
+                - button "Filters" [expanded] [ref=e87] [cursor=pointer]:
+                  - img [ref=e88]
+                  - text: Filters
+                - generic [ref=e90] [cursor=pointer]:
+                  - checkbox "Infinite scroll" [ref=e91]
+                  - text: Infinite scroll
+              - generic [ref=e92]:
+                - generic [ref=e93]: "Rarity:"
+                - generic [ref=e94]:
+                  - button "Normal" [ref=e95] [cursor=pointer]
+                  - button "Magic" [ref=e96] [cursor=pointer]
+                  - button "Rare" [ref=e97] [cursor=pointer]
+                  - button "Unique" [ref=e98] [cursor=pointer]
+                  - button "Gem" [ref=e99] [cursor=pointer]
+                  - button "Currency" [ref=e100] [cursor=pointer]
+                  - button "Divination Card" [ref=e101] [cursor=pointer]
+                  - button "Prophecy" [ref=e102] [cursor=pointer]
+                  - button "Relic" [ref=e103] [cursor=pointer]
+              - generic [ref=e104]:
+                - generic [ref=e105]: "Item Type:"
+                - generic [ref=e106]:
+                  - button "Weapon" [ref=e107] [cursor=pointer]
+                  - button "Armor" [ref=e108] [cursor=pointer]
+                  - button "Accessory" [ref=e109] [cursor=pointer]
+                  - button "Flask" [ref=e110] [cursor=pointer]
+                  - button "Gem" [ref=e111] [cursor=pointer]
+                  - button "Jewel" [ref=e112] [cursor=pointer]
+                  - button "Currency" [ref=e113] [cursor=pointer]
+                  - button "Map" [ref=e114] [cursor=pointer]
+                  - button "Divination Card" [ref=e115] [cursor=pointer]
+                  - button "Unique" [ref=e116] [cursor=pointer]
+                  - button "Other" [ref=e117] [cursor=pointer]
+              - generic [ref=e118]:
+                - generic [ref=e119]: "Item Level:"
+                - spinbutton "Minimum item level" [ref=e120]
+                - generic [ref=e121]: to
+                - spinbutton "Maximum item level" [ref=e122]
+            - generic [ref=e123]:
+              - generic [ref=e124]: "Sort:"
+              - combobox "Sort field" [ref=e125]:
+                - option "Name" [selected]
+                - option "Rarity"
+                - option "Item Level"
+                - option "Item Type"
+                - option "Gem Level"
+                - option "Map Tier"
+              - button "Sort descending" [ref=e126] [cursor=pointer]:
+                - img [ref=e127]
+                - text: ASC
+          - list "Item grid" [ref=e129]:
+            - 'button "Arc Active Skill Gem Gem Q: 20/23 Lv. 20 A chaining lightning spell that deals damage to enemies in a sequence. Deals 18 to 340 Lightning Damage Chains +3 Times 10% chance to Shock enemies +10 to radius" [ref=e130] [cursor=pointer]':
+              - generic [ref=e131]:
+                - generic [ref=e132]:
+                  - img [ref=e134]
+                  - generic [ref=e136]:
+                    - heading "Arc" [level=3] [ref=e137]
+                    - paragraph [ref=e138]: Active Skill Gem
+                    - generic [ref=e139]:
+                      - generic [ref=e140]: Gem
+                      - generic [ref=e141]: "Q: 20/23"
+                  - generic [ref=e143]: Lv. 20
+                - paragraph [ref=e145]: A chaining lightning spell that deals damage to enemies in a sequence.
+                - list [ref=e147]:
+                  - listitem [ref=e148]:
+                    - generic [ref=e149]: Deals 18 to 340 Lightning Damage
+                  - listitem [ref=e150]:
+                    - generic [ref=e151]: Chains +3 Times
+                  - listitem [ref=e152]:
+                    - generic [ref=e153]: 10% chance to Shock enemies
+                  - listitem [ref=e154]:
+                    - generic [ref=e155]: +10 to radius
+            - 'button "Catalysing Aqua Divine Life Flask Rare Q: 20/20 ilvl 65 40/40 Restores life over its duration. Recovers 2400 Life over 7 Seconds Consumes 10 of 40 Charges on use +20% to Recovery Speed Removes Curses on use" [ref=e156] [cursor=pointer]':
+              - generic [ref=e157]:
+                - generic [ref=e158]:
+                  - img [ref=e160]
+                  - generic [ref=e162]:
+                    - heading "Catalysing Aqua" [level=3] [ref=e163]
+                    - paragraph [ref=e164]: Divine Life Flask
+                    - generic [ref=e165]:
+                      - generic [ref=e166]: Rare
+                      - generic [ref=e167]: "Q: 20/20"
+                  - generic [ref=e168]:
+                    - generic [ref=e169]: ilvl 65
+                    - generic [ref=e170]:
+                      - text: "40"
+                      - generic [ref=e171]: /40
+                - paragraph [ref=e173]: Restores life over its duration.
+                - list [ref=e175]:
+                  - listitem [ref=e176]:
+                    - generic [ref=e177]: Recovers 2400 Life over 7 Seconds
+                  - listitem [ref=e178]:
+                    - generic [ref=e179]: Consumes 10 of 40 Charges on use
+                  - listitem [ref=e180]:
+                    - generic [ref=e181]: +20% to Recovery Speed
+                  - listitem [ref=e182]:
+                    - generic [ref=e183]: Removes Curses on use
+            - button "Chaos Orb Currency Currency 7/10 Reforges a rare item with new random modifiers." [ref=e184] [cursor=pointer]:
+              - generic [ref=e185]:
+                - generic [ref=e186]:
+                  - img [ref=e188]
+                  - generic [ref=e190]:
+                    - heading "Chaos Orb" [level=3] [ref=e191]
+                    - paragraph [ref=e192]: Currency
+                    - generic [ref=e194]: Currency
+                  - generic [ref=e196]:
+                    - text: "7"
+                    - generic [ref=e197]: /10
+                - paragraph [ref=e199]: Reforges a rare item with new random modifiers.
+            - 'button "Cursed Necropolis Beach Map Magic Q: 15/20 ilvl 78 Tier 14 Travel to this Map by using it in a personal Map Device. Map is occupied by The Brine King +25% Monster Pack Size Monsters have 25% increased Physical Damage" [ref=e200] [cursor=pointer]':
+              - generic [ref=e201]:
+                - generic [ref=e202]:
+                  - img [ref=e204]
+                  - generic [ref=e206]:
+                    - heading "Cursed Necropolis" [level=3] [ref=e207]
+                    - paragraph [ref=e208]: Beach Map
+                    - generic [ref=e209]:
+                      - generic [ref=e210]: Magic
+                      - generic [ref=e211]: "Q: 15/20"
+                  - generic [ref=e212]:
+                    - generic [ref=e213]: ilvl 78
+                    - generic [ref=e214]: Tier 14
+                - paragraph [ref=e216]: Travel to this Map by using it in a personal Map Device.
+                - list [ref=e218]:
+                  - listitem [ref=e219]:
+                    - generic [ref=e220]: Map is occupied by The Brine King
+                - list [ref=e222]:
+                  - listitem [ref=e223]:
+                    - generic [ref=e224]: +25% Monster Pack Size
+                  - listitem [ref=e225]:
+                    - generic [ref=e226]: Monsters have 25% increased Physical Damage
+            - button "Doom Cast Sorcerer Gloves Rare ilvl 52 Crafted with forbidden knowledge. +8 to maximum Energy Shield +68 to maximum Energy Shield +25% to Cold Resistance +18% to Lightning Resistance +12 to Intelligence +5% to Cast Speed" [ref=e227] [cursor=pointer]:
+              - generic [ref=e228]:
+                - generic [ref=e229]:
+                  - img [ref=e231]
+                  - generic [ref=e233]:
+                    - heading "Doom Cast" [level=3] [ref=e234]
+                    - paragraph [ref=e235]: Sorcerer Gloves
+                    - generic [ref=e237]: Rare
+                  - generic [ref=e239]: ilvl 52
+                - paragraph [ref=e241]: Crafted with forbidden knowledge.
+                - list [ref=e243]:
+                  - listitem [ref=e244]:
+                    - generic [ref=e245]: +8 to maximum Energy Shield
+                - list [ref=e247]:
+                  - listitem [ref=e248]:
+                    - generic [ref=e249]: +68 to maximum Energy Shield
+                  - listitem [ref=e250]:
+                    - generic [ref=e251]: +25% to Cold Resistance
+                  - listitem [ref=e252]:
+                    - generic [ref=e253]: +18% to Lightning Resistance
+                  - listitem [ref=e254]:
+                    - generic [ref=e255]: +12 to Intelligence
+                  - listitem [ref=e256]:
+                    - generic [ref=e257]: +5% to Cast Speed
+            - button "Eternal Opulence Gold Amulet Relic ilvl 80 Mirrored Synthesized A relic of untold wealth and power. +15% to Quantity of Items found in this Area +30 to all Attributes +50 to maximum Life +25% to all Elemental Resistances Items in this area are Mirrored" [ref=e258] [cursor=pointer]:
+              - generic [ref=e259]:
+                - generic [ref=e260]:
+                  - img [ref=e262]
+                  - generic [ref=e264]:
+                    - heading "Eternal Opulence" [level=3] [ref=e265]
+                    - paragraph [ref=e266]: Gold Amulet
+                    - generic [ref=e268]: Relic
+                  - generic [ref=e270]: ilvl 80
+                - generic [ref=e271]:
+                  - generic [ref=e272]: Mirrored
+                  - generic [ref=e274]: Synthesized
+                - paragraph [ref=e277]: A relic of untold wealth and power.
+                - list [ref=e279]:
+                  - listitem [ref=e280]:
+                    - generic [ref=e281]: +15% to Quantity of Items found in this Area
+                - list [ref=e283]:
+                  - listitem [ref=e284]:
+                    - generic [ref=e285]: +30 to all Attributes
+                  - listitem [ref=e286]:
+                    - generic [ref=e287]: +50 to maximum Life
+                  - listitem [ref=e288]:
+                    - generic [ref=e289]: +25% to all Elemental Resistances
+                  - listitem [ref=e290]:
+                    - generic [ref=e291]: Items in this area are Mirrored
+          - generic [ref=e292]:
+            - generic [ref=e293]:
+              - generic [ref=e294]: "Show:"
+              - combobox "Items per page" [ref=e295]:
+                - option "6 items" [selected]
+                - option "12 items"
+                - option "24 items"
+                - option "48 items"
+            - generic [ref=e296]:
+              - button "Previous page" [disabled] [ref=e297]:
+                - img [ref=e298]
+              - button "Page 1" [ref=e300] [cursor=pointer]: "1"
+              - button "Page 2" [ref=e301] [cursor=pointer]: "2"
+              - button "Next page" [ref=e302] [cursor=pointer]:
+                - img [ref=e303]
+            - generic [ref=e305]: Page 1 of 2
+      - generic [ref=e306]:
+        - heading "Basic Grid (Legacy)" [level=2] [ref=e307]
+        - paragraph [ref=e308]: The original simple grid component for backward compatibility.
+        - generic [ref=e309]:
+          - button "? Iron Sword One-Handed Sword ilvl 5" [ref=e310] [cursor=pointer]:
+            - generic [ref=e312]: "?"
+            - generic [ref=e313]:
+              - paragraph [ref=e314]: Iron Sword
+              - paragraph [ref=e315]: One-Handed Sword
+            - generic [ref=e317]: ilvl 5
+          - button "? Serpent Fang Viper Wand ilvl 32" [ref=e318] [cursor=pointer]:
+            - generic [ref=e320]: "?"
+            - generic [ref=e321]:
+              - paragraph [ref=e322]: Serpent Fang
+              - paragraph [ref=e323]: Viper Wand
+            - generic [ref=e325]: ilvl 32
+          - button "? Doom Cast Sorcerer Gloves ilvl 52" [ref=e326] [cursor=pointer]:
+            - generic [ref=e328]: "?"
+            - generic [ref=e329]:
+              - paragraph [ref=e330]: Doom Cast
+              - paragraph [ref=e331]: Sorcerer Gloves
+            - generic [ref=e333]: ilvl 52
+          - button "? Heart of the Veil Vaald Caftan ilvl 72" [ref=e334] [cursor=pointer]:
+            - generic [ref=e336]: "?"
+            - generic [ref=e337]:
+              - paragraph [ref=e338]: Heart of the Veil
+              - paragraph [ref=e339]: Vaald Caftan
+            - generic [ref=e341]: ilvl 72
+          - button "? Arc Active Skill Gem Lv. 20" [ref=e342] [cursor=pointer]:
+            - generic [ref=e344]: "?"
+            - generic [ref=e345]:
+              - paragraph [ref=e346]: Arc
+              - paragraph [ref=e347]: Active Skill Gem
+            - generic [ref=e349]: Lv. 20
+          - button "? Chaos Orb Currency" [ref=e350] [cursor=pointer]:
+            - generic [ref=e352]: "?"
+            - generic [ref=e353]:
+              - paragraph [ref=e354]: Chaos Orb
+              - paragraph [ref=e355]: Currency
+      - generic [ref=e356]:
+        - heading "Loading Skeletons" [level=2] [ref=e357]
+        - generic [ref=e358]:
+          - paragraph [ref=e360]: Compact
+          - paragraph [ref=e367]: Default
+          - paragraph [ref=e375]: Detailed

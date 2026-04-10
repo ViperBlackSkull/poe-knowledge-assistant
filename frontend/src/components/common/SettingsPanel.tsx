@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
-import type { LLMProvider, EmbeddingProvider, ConfigUpdateRequest } from '@/types';
+import type { LLMProvider, EmbeddingProvider, ConfigUpdateRequest, ConfigUpdateResponse } from '@/types';
 import {
   LLMProviderSelector,
   ProviderConfigSection,
@@ -67,7 +67,7 @@ export interface SettingsPanelProps {
   /** Callback to close the panel */
   onClose: () => void;
   /** Optional callback when settings are saved successfully */
-  onSave?: (settings: ConfigUpdateRequest) => void | Promise<void>;
+  onSave?: (settings: ConfigUpdateRequest) => void | Promise<void | ConfigUpdateResponse>;
   /** Optional initial/fetched config values to pre-populate */
   initialConfig?: {
     llmProvider?: LLMProvider;
@@ -473,16 +473,33 @@ export function SettingsPanel({
       updates.rag_score_threshold = formState.ragScoreThreshold;
     }
 
+    // Include API keys for providers that have new keys entered
+    const allApiKeys: Record<string, string> = {
+      ...formState.providerApiKeys,
+      ...(formState.llmApiKey ? { [formState.llmProvider]: formState.llmApiKey } : {}),
+    };
+    if (allApiKeys['openai']) {
+      updates.openai_api_key = allApiKeys['openai'];
+    }
+    if (allApiKeys['anthropic']) {
+      updates.anthropic_api_key = allApiKeys['anthropic'];
+    }
+
+    // Include provider-specific base URL configurations
+    const currentLlmConfig = formState.providerConfig[formState.llmProvider] ?? {};
+    if (formState.llmProvider === 'ollama' && currentLlmConfig['baseUrl']) {
+      updates.ollama_base_url = currentLlmConfig['baseUrl'];
+    }
+    if (formState.llmProvider === 'lmstudio' && currentLlmConfig['baseUrl']) {
+      updates.lmstudio_base_url = currentLlmConfig['baseUrl'];
+    }
+
     try {
       if (onSave) {
         await onSave(updates);
       }
 
       // Save API key fingerprints for all providers that have keys
-      const allApiKeys: Record<string, string> = {
-        ...formState.providerApiKeys,
-        ...(formState.llmApiKey ? { [formState.llmProvider]: formState.llmApiKey } : {}),
-      };
       for (const [provider, key] of Object.entries(allApiKeys)) {
         if (key && key.length > 0) {
           saveApiKeyFingerprint(provider as LLMProvider, key);
@@ -510,8 +527,9 @@ export function SettingsPanel({
 
       // Auto-clear success message
       setTimeout(() => setSaveMessage(null), 3000);
-    } catch {
-      setSaveMessage({ type: 'error', text: 'Failed to save settings' });
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : 'Failed to save settings';
+      setSaveMessage({ type: 'error', text: errorMessage });
     } finally {
       setIsSaving(false);
     }

@@ -4,6 +4,7 @@ import type { ChatMessage } from '@/types/chat';
 import type { GameVersion } from '@/types/chat';
 import type { SSESource } from '@/types/streaming';
 import type { ConfigUpdateRequest } from '@/types/config';
+import { updateConfig, setApiKey } from '@/lib/api-client';
 
 /**
  * Root application component.
@@ -155,12 +156,31 @@ function App() {
 
   /**
    * Handle settings save.
-   * Currently logs the changes; in production this would call the backend API.
+   * Calls the backend PUT /api/config endpoint with the updated settings,
+   * then applies the new API key to the api-client if one was provided.
    */
-  const handleSaveSettings = useCallback(async (_settings: ConfigUpdateRequest) => {
-    // In production, this would call the config update endpoint
-    // e.g. await patch<GetConfigResponse, ConfigUpdateRequest>('/config', settings);
-    console.log('[Settings] Saving settings:', _settings);
+  const handleSaveSettings = useCallback(async (settings: ConfigUpdateRequest) => {
+    console.log('[Settings] Saving settings:', settings);
+
+    // Call the backend API to update configuration
+    const response = await updateConfig(settings);
+
+    if (!response.success) {
+      throw new Error(response.message || 'Failed to save settings');
+    }
+
+    console.log('[Settings] Save successful:', response.message);
+    console.log('[Settings] Updated fields:', response.updated_fields);
+
+    // Apply the API key to the api-client if one was provided for the current provider
+    // The settings panel passes provider API keys in the request as openai_api_key / anthropic_api_key
+    if (settings.openai_api_key) {
+      setApiKey(settings.openai_api_key);
+    } else if (settings.anthropic_api_key) {
+      setApiKey(settings.anthropic_api_key);
+    }
+
+    return response;
   }, []);
 
   // Header actions with game version selector, version display badge, and settings button

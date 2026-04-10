@@ -1,0 +1,190 @@
+- generic [ref=e2]:
+  - generic [ref=e3]:
+    - banner [ref=e4]:
+      - generic [ref=e6]:
+        - generic [ref=e8]:
+          - generic [ref=e9]: P
+          - generic [ref=e10]:
+            - heading "PoE Knowledge Assistant" [level=1] [ref=e11]
+            - paragraph [ref=e12]: Your intelligent assistant for Path of Exile
+        - navigation "Main navigation" [ref=e13]:
+          - link "Chat" [ref=e14] [cursor=pointer]:
+            - /url: /
+          - link "Knowledge Base" [ref=e15] [cursor=pointer]:
+            - /url: /knowledge
+          - link "Admin" [ref=e16] [cursor=pointer]:
+            - /url: /admin
+        - generic [ref=e18]:
+          - generic [ref=e19]:
+            - generic [ref=e20]: Path of Exile 2
+            - button "Select game version, currently Path of Exile 2" [ref=e23] [cursor=pointer]:
+              - img [ref=e24]
+              - generic [ref=e27]: Path of Exile 2
+              - img [ref=e28]
+            - button "Open settings" [ref=e30] [cursor=pointer]:
+              - img [ref=e31]
+          - button "Toggle configuration panel" [ref=e34] [cursor=pointer]:
+            - img [ref=e35]
+    - main [ref=e39]:
+      - generic [ref=e40]:
+        - button "Clear conversation (2 messages)" [ref=e212] [cursor=pointer]:
+          - img [ref=e213]
+          - generic [ref=e215]: Clear
+          - generic [ref=e216]: "2"
+        - log "Chat messages" [ref=e41]:
+          - generic [ref=e42]:
+            - generic [ref=e217]:
+              - generic [ref=e218]:
+                - generic [ref=e219]:
+                  - generic [ref=e220]: You
+                  - generic [ref=e221]: 05:12 AM
+                - paragraph [ref=e222]: What is Shavronne's Wrappings?
+              - generic "user avatar" [ref=e223]:
+                - generic [ref=e224]: U
+            - generic [ref=e226]:
+              - paragraph [ref=e227]: "Error: Streaming interrupted: HTTPConnectionPool(host='custom-ollama', port=11434): Max retries exceeded with url: /api/chat (Caused by NameResolutionError(\"HTTPConnection(host='custom-ollama', port=11434): Failed to resolve 'custom-ollama' ([Errno -3] Temporary failure in name resolution)\"))"
+              - generic [ref=e229]: 05:12 AM
+        - generic [ref=e49]:
+          - alert [ref=e230]:
+            - img [ref=e231]
+            - generic [ref=e233]: "Streaming interrupted: HTTPConnectionPool(host='custom-ollama', port=11434): Max retries exceeded with url: /api/chat (Caused by NameResolutionError(\"HTTPConnection(host='custom-ollama', port=11434): Failed to resolve 'custom-ollama' ([Errno -3] Temporary failure in name resolution)\"))"
+            - button "Dismiss error" [ref=e234] [cursor=pointer]:
+              - img [ref=e235]
+          - generic [ref=e50]:
+            - textbox "Chat message input" [ref=e52]:
+              - /placeholder: Ask about items, builds, mechanics...
+            - button "Send message" [disabled] [ref=e53]:
+              - img [ref=e54]
+              - generic [ref=e56]: Send
+  - dialog "Settings panel" [ref=e57]:
+    - generic [ref=e59]:
+      - generic [ref=e60]:
+        - img [ref=e61]
+        - heading "Settings" [level=2] [ref=e64]
+      - button "Close settings panel" [ref=e65] [cursor=pointer]:
+        - img [ref=e66]
+    - generic [ref=e68]:
+      - generic [ref=e69]:
+        - generic [ref=e70]:
+          - img [ref=e72]
+          - generic [ref=e74]:
+            - heading "LLM Provider" [level=3] [ref=e75]
+            - paragraph [ref=e76]: Configure the language model for generating responses
+        - generic [ref=e77]:
+          - generic [ref=e78]:
+            - generic [ref=e79]: LLM Provider
+            - button "Select LLM Provider, currently OpenAI" [ref=e81] [cursor=pointer]:
+              - img [ref=e82]
+              - generic [ref=e84]: OpenAI
+              - img [ref=e85]
+          - generic [ref=e87]:
+            - img [ref=e88]
+            - generic [ref=e90]: Cloud provider - requires API key
+          - generic [ref=e91]:
+            - generic [ref=e92]: Model
+            - button "Select OpenAI Models, currently GPT-4o" [ref=e94] [cursor=pointer]:
+              - generic [ref=e95]: GPT-4o
+              - img [ref=e96]
+            - generic [ref=e98]:
+              - generic [ref=e99]: gpt-4o
+              - generic [ref=e100]: Recommended
+        - generic [ref=e101]:
+          - generic [ref=e102]: Provider Settings
+          - generic [ref=e103]:
+            - generic [ref=e104]: Base URL(optional)
+            - textbox "Base URL(optional)" [ref=e105]:
+              - /placeholder: https://api.openai.com/v1
+        - generic [ref=e106]:
+          - generic [ref=e107]:
+            - generic [ref=e108]: Temperature
+            - generic [ref=e109]: "0.7"
+          - slider "Temperature" [ref=e110] [cursor=pointer]: "0.7"
+          - generic [ref=e111]:
+            - generic [ref=e112]: "0"
+            - generic [ref=e113]: "2"
+        - generic [ref=e114]:
+          - generic [ref=e115]:
+            - generic [ref=e116]: Max Tokens
+            - generic [ref=e117]: "2048"
+          - slider "Max Tokens" [ref=e118] [cursor=pointer]: "2048"
+          - generic [ref=e119]:
+            - generic [ref=e120]: "256"
+            - generic [ref=e121]: "32000"
+      - generic [ref=e122]:
+        - generic [ref=e123]:
+          - img [ref=e125]
+          - generic [ref=e127]:
+            - heading "API Key" [level=3] [ref=e128]
+            - paragraph [ref=e129]: Configure your API key for the selected provider
+        - generic [ref=e130]:
+          - generic [ref=e131]:
+            - generic [ref=e132]: OpenAI API Key*
+            - generic "Starts with \"sk-\" followed by at least 20 characters" [ref=e133]:
+              - img [ref=e134]
+              - generic [ref=e136]: Not set
+          - generic [ref=e137]:
+            - textbox "OpenAI API Key input" [ref=e138]:
+              - /placeholder: Enter your OpenAI API Key
+            - button "Show API key" [ref=e140] [cursor=pointer]:
+              - img [ref=e141]
+          - paragraph [ref=e144]: Starts with "sk-" followed by at least 20 characters
+        - generic [ref=e145]:
+          - generic [ref=e146]: Other provider keys
+          - generic [ref=e148]:
+            - generic [ref=e149]:
+              - generic [ref=e150]: Anthropic API Key
+              - generic "Starts with \"sk-ant-\" followed by at least 20 characters" [ref=e151]:
+                - img [ref=e152]
+                - generic [ref=e154]: Not set
+            - generic [ref=e155]:
+              - textbox "Anthropic API Key input" [ref=e156]:
+                - /placeholder: Enter your Anthropic API Key
+              - button "Show API key" [ref=e158] [cursor=pointer]:
+                - img [ref=e159]
+            - paragraph [ref=e162]: Starts with "sk-ant-" followed by at least 20 characters
+        - generic [ref=e163]:
+          - img [ref=e164]
+          - paragraph [ref=e166]: API keys are stored securely. Only a fingerprint is saved locally to remember your configuration.
+      - generic [ref=e167]:
+        - generic [ref=e168]:
+          - img [ref=e170]
+          - generic [ref=e172]:
+            - heading "Embedding Provider" [level=3] [ref=e173]
+            - paragraph [ref=e174]: Configure how text embeddings are generated
+        - generic [ref=e175]:
+          - generic [ref=e176]: Provider
+          - combobox "Provider" [ref=e177]:
+            - option "Local" [selected]
+            - option "OpenAI"
+            - option "Ollama"
+            - option "LM Studio"
+        - generic [ref=e178]:
+          - generic [ref=e179]: Model
+          - combobox "Model" [ref=e180]:
+            - option "all-MiniLM-L6-v2" [selected]
+            - option "all-mpnet-base-v2"
+      - generic [ref=e181]:
+        - generic [ref=e182]:
+          - img [ref=e184]
+          - generic [ref=e186]:
+            - heading "RAG Configuration" [level=3] [ref=e187]
+            - paragraph [ref=e188]: Fine-tune retrieval-augmented generation parameters
+        - generic [ref=e189]:
+          - generic [ref=e190]:
+            - generic [ref=e191]: Top K Results
+            - generic [ref=e192]: "5"
+          - slider "Top K Results" [ref=e193] [cursor=pointer]: "5"
+          - generic [ref=e194]:
+            - generic [ref=e195]: "1"
+            - generic [ref=e196]: "20"
+        - generic [ref=e197]:
+          - generic [ref=e198]:
+            - generic [ref=e199]: Score Threshold
+            - generic [ref=e200]: "0.7"
+          - slider "Score Threshold" [ref=e201] [cursor=pointer]: "0.7"
+          - generic [ref=e202]:
+            - generic [ref=e203]: "0"
+            - generic [ref=e204]: "1"
+    - generic [ref=e206]:
+      - button "Cancel" [ref=e207] [cursor=pointer]
+      - button "Save Settings" [disabled] [ref=e208]

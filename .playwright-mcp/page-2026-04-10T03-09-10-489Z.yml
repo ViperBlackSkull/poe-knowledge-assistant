@@ -1,0 +1,169 @@
+- generic [ref=e3]:
+  - banner [ref=e4]:
+    - generic [ref=e6]:
+      - generic [ref=e8]:
+        - generic [ref=e9]: P
+        - generic [ref=e10]:
+          - heading "PoE Knowledge Assistant" [level=1] [ref=e11]
+          - paragraph [ref=e12]: Your intelligent assistant for Path of Exile
+      - navigation "Main navigation" [ref=e13]:
+        - link "Chat" [ref=e14] [cursor=pointer]:
+          - /url: /
+        - link "Knowledge Base" [ref=e15] [cursor=pointer]:
+          - /url: /knowledge
+        - link "Admin" [ref=e16] [cursor=pointer]:
+          - /url: /admin
+      - generic [ref=e19]:
+        - generic [ref=e20]: Path of Exile 2
+        - button "Select game version, currently Path of Exile 2" [ref=e23] [cursor=pointer]:
+          - img [ref=e24]
+          - generic [ref=e27]: Path of Exile 2
+          - img [ref=e28]
+  - main [ref=e35]:
+    - generic [ref=e391]:
+      - generic [ref=e392]:
+        - heading "Citation Component Demo" [level=1] [ref=e393]
+        - paragraph [ref=e394]: Demonstrates the citation display component with mock source data from the PoE knowledge base.
+      - generic [ref=e395]:
+        - generic [ref=e396]: Display Format
+        - generic [ref=e397]:
+          - button "compact" [ref=e398] [cursor=pointer]
+          - button "detailed" [ref=e399] [cursor=pointer]
+          - button "list" [ref=e400] [cursor=pointer]
+      - generic [ref=e401]:
+        - heading "Compact Format" [level=2] [ref=e402]
+        - list "5 source citations" [ref=e403]:
+          - generic [ref=e404]:
+            - img [ref=e405]
+            - generic [ref=e407]: Sources (5)
+          - generic [ref=e408]:
+            - link "1" [ref=e409] [cursor=pointer]:
+              - /url: https://poedb.tw/us/Blood_Mage
+              - generic [ref=e410]: "1"
+              - img [ref=e411]
+            - link "2" [ref=e413] [cursor=pointer]:
+              - /url: https://www.pathofexile.com/forum/view-thread/witch-builds-2024
+              - generic [ref=e414]: "2"
+              - img [ref=e415]
+            - link "3" [ref=e417] [cursor=pointer]:
+              - /url: https://www.poe2wiki.com/Necromancer
+              - generic [ref=e418]: "3"
+              - img [ref=e419]
+            - link "4" [ref=e421] [cursor=pointer]:
+              - /url: https://www.pathofexile.com/patch-notes/2.0
+              - generic [ref=e422]: "4"
+              - img [ref=e423]
+            - link "5" [ref=e425] [cursor=pointer]:
+              - /url: https://www.youtube.com/watch?v=example123
+              - generic [ref=e426]: "5"
+              - img [ref=e427]
+      - generic [ref=e429]:
+        - heading "Individual Cards (Expanded)" [level=2] [ref=e430]
+        - generic [ref=e431]:
+          - generic [ref=e432]:
+            - 'button "Citation 1: Blood Mage" [expanded] [ref=e433] [cursor=pointer]':
+              - 'generic "Source type: database" [ref=e434]': D
+              - generic [ref=e435]:
+                - generic [ref=e436]: "1."
+                - text: Blood Mage
+              - 'generic "Relevance: 95%" [ref=e437]': 95%
+              - img [ref=e438]
+            - generic [ref=e440]:
+              - paragraph [ref=e442]: “The Blood Mage ascendancy focuses on life and blood magic, converting skills to use life instead of mana. Key nodes include Sanguimancy and Crimson Ace.”
+              - generic [ref=e443]:
+                - link "poedb.tw/Blood_Mage" [ref=e444] [cursor=pointer]:
+                  - /url: https://poedb.tw/us/Blood_Mage
+                  - img [ref=e445]
+                  - text: poedb.tw/Blood_Mage
+                - generic [ref=e447]: High
+          - generic [ref=e448]:
+            - 'button "Citation 2: witch builds 2024" [expanded] [ref=e449] [cursor=pointer]':
+              - 'generic "Source type: forum" [ref=e450]': F
+              - generic [ref=e451]:
+                - generic [ref=e452]: "2."
+                - text: witch builds 2024
+              - 'generic "Relevance: 82%" [ref=e453]': 82%
+              - img [ref=e454]
+            - generic [ref=e456]:
+              - paragraph [ref=e458]: “For a Witch build in Path of Exile 2, prioritize intelligence and life nodes early, then branch into your chosen ascendancy specializations.”
+              - generic [ref=e459]:
+                - link "www.pathofexile.com/witch-builds-2024" [ref=e460] [cursor=pointer]:
+                  - /url: https://www.pathofexile.com/forum/view-thread/witch-builds-2024
+                  - img [ref=e461]
+                  - text: www.pathofexile.com/witch-builds-2024
+                - generic [ref=e463]: Medium
+          - generic [ref=e464]:
+            - 'button "Citation 3: Necromancer" [expanded] [ref=e465] [cursor=pointer]':
+              - 'generic "Source type: wiki" [ref=e466]': W
+              - generic [ref=e467]:
+                - generic [ref=e468]: "3."
+                - text: Necromancer
+              - 'generic "Relevance: 71%" [ref=e469]': 71%
+              - img [ref=e470]
+            - generic [ref=e472]:
+              - paragraph [ref=e474]: “Skeletal warriors are the primary minion for Necromancer builds, scaling well with minion damage and attack speed support gems.”
+              - generic [ref=e475]:
+                - link "www.poe2wiki.com/Necromancer" [ref=e476] [cursor=pointer]:
+                  - /url: https://www.poe2wiki.com/Necromancer
+                  - img [ref=e477]
+                  - text: www.poe2wiki.com/Necromancer
+                - generic [ref=e479]: Medium
+          - generic [ref=e480]:
+            - 'button "Citation 4: patch notes 2.0" [expanded] [ref=e481] [cursor=pointer]':
+              - 'generic "Source type: official" [ref=e482]': "!"
+              - generic [ref=e483]:
+                - generic [ref=e484]: "4."
+                - text: patch notes 2.0
+              - 'generic "Relevance: 58%" [ref=e485]': 58%
+              - img [ref=e486]
+            - generic [ref=e488]:
+              - paragraph [ref=e490]: “The official Path of Exile 2 patch notes from December 2024 introduced major changes to the passive skill tree.”
+              - generic [ref=e491]:
+                - link "www.pathofexile.com/2.0" [ref=e492] [cursor=pointer]:
+                  - /url: https://www.pathofexile.com/patch-notes/2.0
+                  - img [ref=e493]
+                  - text: www.pathofexile.com/2.0
+                - generic [ref=e495]: Low
+          - generic [ref=e496]:
+            - 'button "Citation 5: watch?v=example123" [expanded] [ref=e497] [cursor=pointer]':
+              - 'generic "Source type: video" [ref=e498]': V
+              - generic [ref=e499]:
+                - generic [ref=e500]: "5."
+                - text: watch?v=example123
+              - 'generic "Relevance: 45%" [ref=e501]': 45%
+              - img [ref=e502]
+            - generic [ref=e504]:
+              - paragraph [ref=e506]: “This video guide covers advanced minion management techniques for PoE2 Witch builds.”
+              - generic [ref=e507]:
+                - link "www.youtube.com/watch" [ref=e508] [cursor=pointer]:
+                  - /url: https://www.youtube.com/watch?v=example123
+                  - img [ref=e509]
+                  - text: www.youtube.com/watch
+                - generic [ref=e511]: Low
+      - generic [ref=e512]:
+        - heading "Chat Message with Citations" [level=2] [ref=e513]
+        - generic [ref=e514]:
+          - generic [ref=e515]:
+            - generic [ref=e516]: Assistant
+            - generic [ref=e517]: 12:34 PM
+          - paragraph [ref=e518]: For a Witch build in PoE2, the Blood Mage ascendancy is currently very strong. It focuses on life and blood magic, converting skills to use life instead of mana. You should prioritize intelligence and life nodes early, then branch into your chosen ascendancy specializations.
+          - list "3 source citations" [ref=e519]:
+            - generic [ref=e520]:
+              - img [ref=e521]
+              - generic [ref=e523]: Sources (3)
+            - generic [ref=e524]:
+              - link "1" [ref=e525] [cursor=pointer]:
+                - /url: https://poedb.tw/us/Blood_Mage
+                - generic [ref=e526]: "1"
+                - img [ref=e527]
+              - link "2" [ref=e529] [cursor=pointer]:
+                - /url: https://www.pathofexile.com/forum/view-thread/witch-builds-2024
+                - generic [ref=e530]: "2"
+                - img [ref=e531]
+              - link "3" [ref=e533] [cursor=pointer]:
+                - /url: https://www.poe2wiki.com/Necromancer
+                - generic [ref=e534]: "3"
+                - img [ref=e535]
+      - generic [ref=e537]:
+        - heading "Empty State (no citations)" [level=2] [ref=e538]
+        - paragraph [ref=e540]: (CitationList returns null when no citations are provided)

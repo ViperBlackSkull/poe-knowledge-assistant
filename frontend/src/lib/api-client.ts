@@ -35,6 +35,8 @@ import type {
   SSEPartialCompleteEvent,
   ErrorResponse,
   APIError,
+  ConfigUpdateRequest,
+  ConfigUpdateResponse,
 } from '@/types';
 
 // ---------------------------------------------------------------------------
@@ -447,6 +449,11 @@ export async function fetchHealth(): Promise<HealthCheckResponse> {
 /** Fetch the current application configuration. */
 export async function fetchConfig(): Promise<GetConfigResponse> {
   return get<GetConfigResponse>('/config');
+}
+
+/** Update application configuration at runtime via PUT /api/config. */
+export async function updateConfig(request: ConfigUpdateRequest): Promise<ConfigUpdateResponse> {
+  return put<ConfigUpdateResponse, ConfigUpdateRequest>('/config', request);
 }
 
 /** Send a non-streaming chat message. */
