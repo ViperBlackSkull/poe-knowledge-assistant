@@ -1,5 +1,5 @@
 import { useState, useCallback, useRef, useEffect } from 'react';
-import { MainLayout, ChatMessageList, ChatInput, ItemCardDemo, CitationDemo, GameVersionSelector, getGameVersionLabel, ClearConversationButton, SettingsPanel, BuildContextSelector, BuildContextDisplay } from '@/components';
+import { MainLayout, ChatMessageList, ChatInput, ItemCardDemo, CitationDemo, GameVersionSelector, getGameVersionLabel, ClearConversationButton, SettingsPanel, BuildContextSelector, BuildContextDisplay, DataFreshnessIndicator } from '@/components';
 import type { ChatMessage } from '@/types/chat';
 import type { GameVersion } from '@/types/chat';
 import type { SSESource } from '@/types/streaming';
@@ -216,6 +216,9 @@ function App() {
         value={buildContext}
         onChange={handleBuildContextChange}
       />
+
+      {/* Data freshness indicator */}
+      <DataFreshnessIndicator compact />
 
       {/* Settings button */}
       <button

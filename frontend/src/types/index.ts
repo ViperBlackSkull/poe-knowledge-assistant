@@ -11,6 +11,7 @@
  *   endpoints.ts -- Per-endpoint request/response shapes for the live API routes
  *   layout.ts    -- Layout component props (header, sidebar, main layout)
  *   item.ts      -- Item display types (item card, rarity, stats)
+ *   freshness.ts -- Data freshness indicator types (scrape timestamps, staleness)
  *
  * Usage:
  *   import { ChatRequest, ChatResponse } from '@/types';
@@ -178,3 +179,14 @@ export type {
   ItemGridEvents,
   EnhancedItemCardGridProps,
 } from './item';
+
+// ---------------------------------------------------------------------------
+// Freshness types
+// ---------------------------------------------------------------------------
+export type {
+  FreshnessEntry,
+  FreshnessSummary,
+  FreshnessResponse,
+  FreshnessStatus,
+  DataFreshnessIndicatorProps,
+} from './freshness';

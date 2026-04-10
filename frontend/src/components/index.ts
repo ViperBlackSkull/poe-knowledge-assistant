@@ -50,3 +50,5 @@ export { BUILD_CONTEXT_OPTIONS, getBuildContextOptionLabel } from './common/Buil
 export type { BuildContextSelectorProps, BuildContextOption } from './common/BuildContextSelector';
 export { BuildContextDisplay } from './common/BuildContextDisplay';
 export type { BuildContextDisplayProps } from './common/BuildContextDisplay';
+export { DataFreshnessIndicator } from './common/DataFreshnessIndicator';
+export type { DataFreshnessIndicatorProps } from './common/DataFreshnessIndicator';
