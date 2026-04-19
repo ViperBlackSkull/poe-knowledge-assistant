@@ -28,16 +28,16 @@ const STYLE_CONFIGS: Record<string, MarkdownStyleConfig> = {
       6: 'text-xs font-medium text-poe-text-muted mt-2 mb-1',
     },
     codeBlock:
-      'bg-[#0a0a0c] border border-poe-border/60 rounded-md my-3 overflow-hidden shadow-[inset_0_0_20px_rgba(0,0,0,0.4)]',
+      'bg-poe-bg-primary border border-poe-border/60 rounded-md my-3 overflow-hidden shadow-[inset_0_0_20px_rgba(0,0,0,0.4)]',
     inlineCode:
-      'bg-[#0e0e11] text-poe-gold px-1.5 py-0.5 rounded text-xs font-mono border border-poe-border/40',
+      'bg-poe-bg-secondary text-poe-gold px-1.5 py-0.5 rounded text-xs font-mono border border-poe-border/40',
     unorderedList:
       'list-none space-y-1 my-2 text-poe-text-primary text-sm pl-2',
     orderedList:
       'list-none space-y-1 my-2 text-poe-text-primary text-sm pl-2',
     listItem: 'text-poe-text-secondary text-sm leading-relaxed',
     blockquote:
-      'border-l-[3px] border-poe-gold bg-[#0e0e11]/60 pl-4 pr-3 py-2 my-3 rounded-r-md',
+      'border-l-[3px] border-poe-gold bg-poe-bg-secondary/60 pl-4 pr-3 py-2 my-3 rounded-r-md',
     blockquoteText: 'text-poe-text-secondary text-sm italic leading-relaxed',
     horizontalRule:
       'border-t border-poe-border my-4 mx-0',
@@ -46,7 +46,7 @@ const STYLE_CONFIGS: Record<string, MarkdownStyleConfig> = {
     tableContainer: 'overflow-x-auto my-3 rounded-md border border-poe-border',
     table: 'w-full text-sm text-left',
     tableHeaderCell:
-      'px-3 py-2.5 bg-[#0e0e11] text-poe-gold font-medium text-xs uppercase tracking-wider border-b border-poe-border',
+      'px-3 py-2.5 bg-poe-bg-secondary text-poe-gold font-medium text-xs uppercase tracking-wider border-b border-poe-border',
     tableBodyCell:
       'px-3 py-2 text-poe-text-secondary border-b border-poe-border/40 hover:bg-poe-bg-secondary/40 transition-colors',
     bold: 'text-poe-text-highlight font-semibold',
@@ -67,16 +67,16 @@ const STYLE_CONFIGS: Record<string, MarkdownStyleConfig> = {
       6: 'text-xs font-medium text-poe-text-muted mt-1.5 mb-0.5',
     },
     codeBlock:
-      'bg-[#0a0a0c] border border-poe-border/60 rounded my-2 overflow-hidden shadow-[inset_0_0_16px_rgba(0,0,0,0.4)]',
+      'bg-poe-bg-primary border border-poe-border/60 rounded my-2 overflow-hidden shadow-[inset_0_0_16px_rgba(0,0,0,0.4)]',
     inlineCode:
-      'bg-[#0e0e11] text-poe-gold px-1 py-0.5 rounded text-xs font-mono border border-poe-border/40',
+      'bg-poe-bg-secondary text-poe-gold px-1 py-0.5 rounded text-xs font-mono border border-poe-border/40',
     unorderedList:
       'list-none space-y-0.5 my-1.5 text-poe-text-primary text-sm pl-2',
     orderedList:
       'list-none space-y-0.5 my-1.5 text-poe-text-primary text-sm pl-2',
     listItem: 'text-poe-text-secondary text-sm leading-relaxed',
     blockquote:
-      'border-l-[3px] border-poe-gold/70 bg-[#0e0e11]/40 pl-3 pr-2 py-1.5 my-2 rounded-r-md',
+      'border-l-[3px] border-poe-gold/70 bg-poe-bg-secondary/40 pl-3 pr-2 py-1.5 my-2 rounded-r-md',
     blockquoteText: 'text-poe-text-secondary text-xs italic leading-relaxed',
     horizontalRule:
       'border-t border-poe-border my-3 mx-0',
@@ -85,7 +85,7 @@ const STYLE_CONFIGS: Record<string, MarkdownStyleConfig> = {
     tableContainer: 'overflow-x-auto my-2 rounded border border-poe-border',
     table: 'w-full text-xs text-left',
     tableHeaderCell:
-      'px-2 py-1.5 bg-[#0e0e11] text-poe-gold font-medium text-xs uppercase tracking-wider border-b border-poe-border',
+      'px-2 py-1.5 bg-poe-bg-secondary text-poe-gold font-medium text-xs uppercase tracking-wider border-b border-poe-border',
     tableBodyCell:
       'px-2 py-1.5 text-poe-text-secondary border-b border-poe-border/40',
     bold: 'text-poe-text-highlight font-semibold',
@@ -106,16 +106,16 @@ const STYLE_CONFIGS: Record<string, MarkdownStyleConfig> = {
       6: 'text-[11px] font-medium text-poe-text-muted mt-1 mb-0.5',
     },
     codeBlock:
-      'bg-[#0a0a0c] border border-poe-border/50 rounded my-1.5 overflow-hidden',
+      'bg-poe-bg-primary border border-poe-border/50 rounded my-1.5 overflow-hidden',
     inlineCode:
-      'bg-[#0e0e11] text-poe-gold px-1 py-px rounded text-[11px] font-mono border border-poe-border/40',
+      'bg-poe-bg-secondary text-poe-gold px-1 py-px rounded text-[11px] font-mono border border-poe-border/40',
     unorderedList:
       'list-none space-y-px my-1 text-poe-text-primary text-xs pl-1.5',
     orderedList:
       'list-none space-y-px my-1 text-poe-text-primary text-xs pl-1.5',
     listItem: 'text-poe-text-secondary text-xs leading-snug',
     blockquote:
-      'border-l-2 border-poe-gold/60 bg-[#0e0e11]/30 pl-2.5 pr-2 py-1 my-1.5 rounded-r',
+      'border-l-2 border-poe-gold/60 bg-poe-bg-secondary/30 pl-2.5 pr-2 py-1 my-1.5 rounded-r',
     blockquoteText: 'text-poe-text-secondary text-[11px] italic leading-snug',
     horizontalRule:
       'border-t border-poe-border my-2 mx-0',
@@ -124,7 +124,7 @@ const STYLE_CONFIGS: Record<string, MarkdownStyleConfig> = {
     tableContainer: 'overflow-x-auto my-1.5 rounded border border-poe-border',
     table: 'w-full text-[11px] text-left',
     tableHeaderCell:
-      'px-1.5 py-1 bg-[#0e0e11] text-poe-gold font-medium text-[11px] uppercase tracking-wider border-b border-poe-border',
+      'px-1.5 py-1 bg-poe-bg-secondary text-poe-gold font-medium text-[11px] uppercase tracking-wider border-b border-poe-border',
     tableBodyCell:
       'px-1.5 py-1 text-poe-text-secondary border-b border-poe-border/40',
     bold: 'text-poe-text-highlight font-semibold',
@@ -499,7 +499,7 @@ function CodeBlock({
     <div className={styles.codeBlock}>
       {/* Header bar with language and copy button */}
       {(language || showCopyButton) && (
-        <div className="flex items-center justify-between px-3 py-1.5 border-b border-poe-border/30 bg-[#080809]">
+        <div className="flex items-center justify-between px-3 py-1.5 border-b border-poe-border/30 bg-poe-bg-primary">
           {language && (
             <span className="text-poe-text-muted text-[11px] font-mono tracking-wide">{language}</span>
           )}
@@ -516,7 +516,7 @@ function CodeBlock({
                   <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
                   </svg>
-                  <span className="text-[#1BA29B]">Copied!</span>
+                  <span className="text-poe-teal">Copied!</span>
                 </>
               ) : (
                 <>
@@ -531,7 +531,7 @@ function CodeBlock({
         </div>
       )}
       <pre className="p-3 overflow-x-auto">
-        <code className="text-[#b0b0b8] text-xs font-mono whitespace-pre leading-relaxed">
+        <code className="text-poe-text-secondary text-xs font-mono whitespace-pre leading-relaxed">
           {content}
         </code>
       </pre>

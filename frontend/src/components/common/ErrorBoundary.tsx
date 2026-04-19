@@ -124,13 +124,13 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
           {/* Dark card with red accent */}
           <div className="bg-poe-bg-card border border-poe-border rounded-lg shadow-[0_4px_24px_rgba(0,0,0,0.5)] max-w-md w-full overflow-hidden">
             {/* Top accent stripe */}
-            <div className="h-[2px] bg-[#cc4444]" />
+            <div className="h-[2px] bg-poe-fire" />
 
             <div className="p-6 flex flex-col items-center text-center">
               {/* Error icon */}
-              <div className="w-14 h-14 rounded-full bg-[#cc4444]/10 border border-[#cc4444]/25 flex items-center justify-center mb-4">
+              <div className="w-14 h-14 rounded-full bg-poe-fire/10 border border-poe-fire/25 flex items-center justify-center mb-4">
                 <svg
-                  className="w-7 h-7 text-[#cc4444]"
+                  className="w-7 h-7 text-poe-fire"
                   fill="none"
                   viewBox="0 0 24 24"
                   strokeWidth={1.5}
@@ -145,7 +145,7 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
               </div>
 
               {/* Error title */}
-              <h3 className="poe-header text-lg font-semibold text-[#cc4444] mb-2">
+              <h3 className="poe-header text-lg font-semibold text-poe-fire mb-2">
                 Something went wrong
               </h3>
 
@@ -163,7 +163,7 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
                   <summary className="text-xs text-poe-text-muted cursor-pointer hover:text-poe-text-highlight transition-colors">
                     Error details (development only)
                   </summary>
-                  <pre className="mt-2 p-3 bg-[#0a0a0c] border border-poe-border/50 rounded text-xs text-[#cc4444]/80 overflow-auto max-h-40 whitespace-pre-wrap">
+                  <pre className="mt-2 p-3 bg-poe-bg-primary border border-poe-border/50 rounded text-xs text-poe-fire/80 overflow-auto max-h-40 whitespace-pre-wrap">
                     {this.state.error.toString()}
                     {this.state.errorInfo?.componentStack && (
                       <>

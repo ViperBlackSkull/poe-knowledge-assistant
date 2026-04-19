@@ -238,8 +238,8 @@ function FormSlider({
 
 function StarIcon() {
   return (
-    <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
-      <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+    <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+      <path strokeLinecap="round" strokeLinejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z" />
     </svg>
   );
 }
@@ -254,10 +254,8 @@ function KeyIcon() {
 
 function YinYangIcon() {
   return (
-    <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
-      <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8c-2.21 0-4 1.79-4 4s1.79 4 4 4 4 1.79 4 4-1.79 4-4 4z"/>
-      <circle cx="12" cy="8" r="1.5" fill="currentColor" />
-      <circle cx="12" cy="16" r="1.5" />
+    <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+      <path strokeLinecap="round" strokeLinejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 11-2.36 3.73l-7.5-4.615A2.25 2.25 0 013 7.493V6.75" />
     </svg>
   );
 }
@@ -862,7 +860,7 @@ export function SettingsPanel({
                         value={currentProviderConfig[field.key] ?? ''}
                         onChange={(e) => handleProviderConfigChange(field.key, e.target.value)}
                         placeholder={field.placeholder}
-                        className="w-full text-sm px-3 py-2 rounded transition-all duration-200 border border-[#3D3D44] focus:border-[#D4A85A] focus:shadow-[0_0_8px_rgba(212,168,90,0.3)] focus:outline-none"
+                        className="w-full text-sm px-3 py-2 rounded transition-all duration-200 border border-[#2A2A30] focus:border-[#D4A85A] focus:shadow-[0_0_8px_rgba(212,168,90,0.3)] focus:outline-none"
                         style={{
                           backgroundColor: '#0C0C0E',
                           color: '#C8C8C8',
@@ -980,7 +978,7 @@ export function SettingsPanel({
                 );
                 if (otherProviders.length === 0) return null;
                 return (
-                  <div className="pt-3 mt-1" style={{ borderTop: '1px solid rgba(42, 42, 48, 0.5)' }}>
+                  <div className="pt-3 mt-1" style={{ borderTop: '1px solid #2A2A30' }}>
                     <div
                       className="text-[11px] text-[#6B6B75] mb-2 uppercase tracking-wider"
                       style={{ fontFamily: "'Inter', system-ui, sans-serif" }}
@@ -1014,7 +1012,7 @@ export function SettingsPanel({
               {/* Security notice */}
               <div
                 className="flex items-start gap-2 px-3 py-2 rounded"
-                style={{ backgroundColor: 'rgba(12, 12, 14, 0.5)', border: '1px solid rgba(42, 42, 48, 0.3)' }}
+                style={{ backgroundColor: 'rgba(12, 12, 14, 0.5)', border: '1px solid #2A2A30' }}
               >
                 <svg className="w-3.5 h-3.5 shrink-0 text-[#6B5530] mt-0.5" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" />
@@ -1121,7 +1119,7 @@ export function SettingsPanel({
             <button
               type="button"
               onClick={handleCancel}
-              className="flex-1 px-4 py-2.5 text-sm rounded transition-all border border-[#3D3D44] text-[#9F9FA8] hover:text-[#C8C8C8] hover:border-[#4A4A52] hover:bg-[#1C1C22]"
+              className="flex-1 px-4 py-2.5 text-sm rounded transition-all border border-[#2A2A30] text-[#9F9FA8] hover:text-[#C8C8C8] hover:border-[#3A3A42] hover:bg-[#1C1C22]"
               style={{ fontFamily: "'Inter', system-ui, sans-serif" }}
               data-testid="settings-cancel-button"
             >
@@ -1137,7 +1135,7 @@ export function SettingsPanel({
                 flex-1 px-4 py-2.5 text-sm rounded transition-all duration-200 uppercase tracking-[0.08em]
                 ${
                   isSaving || !isDirty
-                    ? 'opacity-40 cursor-not-allowed border border-[#3D3D44] text-[#6B6B75]'
+                    ? 'opacity-40 cursor-not-allowed border border-[#2A2A30] text-[#6B6B75]'
                     : 'text-white hover:scale-[1.02] active:scale-[0.98]'
                 }
               `}

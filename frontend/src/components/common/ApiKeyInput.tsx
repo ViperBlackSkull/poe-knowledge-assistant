@@ -277,7 +277,7 @@ export function ApiKeyInput({
     if (validationStatus === 'invalid') {
       return { borderColor: '#cc4444', boxShadow: '0 0 6px rgba(204, 68, 68, 0.3)' };
     }
-    return { borderColor: '#3D3D44', boxShadow: 'none' };
+    return { borderColor: '#2A2A30', boxShadow: 'none' };
   }, [validationStatus, isFocused, isKeySet]);
 
   const handleToggleVisibility = useCallback(() => {

@@ -101,7 +101,7 @@ export function ConfirmationDialog({
 
   const confirmButtonStyles: Record<string, string> = {
     danger:
-      'bg-gradient-to-b from-[#cc4444] to-[#991111] hover:from-[#dd5555] hover:to-[#bb2222] border-[#cc4444]/60 text-white hover:shadow-[0_0_12px_rgba(204,68,68,0.4)]',
+      'bg-gradient-to-b from-poe-fire to-[#991111] hover:from-[#FF6B35] hover:to-[#bb2222] border-poe-fire/60 text-white hover:shadow-[0_0_12px_rgba(255,69,0,0.4)]',
     warning:
       'bg-gradient-to-b from-poe-gold to-poe-gold-dark hover:from-poe-gold-light hover:to-poe-gold border-poe-gold-dark text-white hover:shadow-poe-glow',
     default:
@@ -151,7 +151,7 @@ export function ConfirmationDialog({
             <div
               className={`shrink-0 w-10 h-10 rounded-full flex items-center justify-center ${
                 variant === 'danger'
-                  ? 'bg-[#cc4444]/10 border border-[#cc4444]/25'
+                  ? 'bg-poe-fire/10 border border-poe-fire/25'
                   : variant === 'warning'
                     ? 'bg-poe-gold/10 border border-poe-gold/25'
                     : 'bg-poe-gold/10 border border-poe-gold/25'
@@ -160,7 +160,7 @@ export function ConfirmationDialog({
               <svg
                 className={`w-5 h-5 ${
                   variant === 'danger'
-                    ? 'text-[#cc4444]'
+                    ? 'text-poe-fire'
                     : variant === 'warning'
                       ? 'text-poe-gold'
                       : 'text-poe-gold'
@@ -182,7 +182,7 @@ export function ConfirmationDialog({
             <div className="flex-1 min-w-0">
               <h3
                 id="confirmation-dialog-title"
-                className="font-['Cinzel',_'Fontin',_Georgia,_serif] text-lg font-semibold text-poe-gold-light mb-1 tracking-wide"
+                className="font-poe text-lg font-semibold text-poe-gold-light mb-1 tracking-wide"
               >
                 {title}
               </h3>

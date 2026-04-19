@@ -332,7 +332,7 @@ function PoEEmbeddingSelect<T extends string>({
           backgroundColor: '#0C0C0E',
           fontFamily: "'Inter', system-ui, sans-serif",
           color: isOpen ? '#E0E0E0' : '#9F9FA8',
-          borderColor: isOpen ? '#D4A85A' : '#3D3D44',
+          borderColor: isOpen ? '#D4A85A' : '#2A2A30',
           boxShadow: isOpen ? '0 0 8px rgba(212, 168, 90, 0.3)' : 'none',
         }}
         aria-haspopup="listbox"
@@ -369,7 +369,7 @@ function PoEEmbeddingSelect<T extends string>({
           className="absolute left-0 right-0 mt-1 rounded-lg overflow-hidden z-50"
           style={{
             backgroundColor: '#141418',
-            border: '1px solid #3D3D44',
+            border: '1px solid #2A2A30',
             boxShadow: '0 8px 24px rgba(0, 0, 0, 0.5)',
           }}
           role="listbox"
@@ -504,7 +504,7 @@ export function EmbeddingProviderConfigSection({ provider, config, onConfigChang
               value={config[field.key] ?? ''}
               onChange={(e) => onConfigChange(field.key, e.target.value)}
               placeholder={field.placeholder}
-              className="w-full text-sm px-3 py-2 rounded transition-all duration-200 border border-[#3D3D44] focus:border-[#D4A85A] focus:shadow-[0_0_8px_rgba(212,168,90,0.3)] focus:outline-none"
+              className="w-full text-sm px-3 py-2 rounded transition-all duration-200 border border-[#2A2A30] focus:border-[#D4A85A] focus:shadow-[0_0_8px_rgba(212,168,90,0.3)] focus:outline-none"
               style={{
                 backgroundColor: '#0C0C0E',
                 color: '#C8C8C8',

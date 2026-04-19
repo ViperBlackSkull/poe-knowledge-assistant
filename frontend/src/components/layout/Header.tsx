@@ -36,15 +36,15 @@ export function Header({
         </div>
 
         {/* Nav tabs — desktop only */}
-        <nav className="hidden md:flex items-stretch ml-6" aria-label="Main navigation">
+        <nav className="hidden md:flex items-stretch ml-8" aria-label="Main navigation">
           {navItems.map((item) => (
             <a
               key={item.href}
               href={item.href}
-              className={`flex items-center px-5 text-xs font-medium tracking-[0.8px] uppercase transition-colors duration-200 ${
+              className={`flex items-center px-6 text-xs font-medium tracking-[0.8px] uppercase transition-all duration-200 ${
                 item.active
-                  ? 'text-poe-gold-light border-b-2 border-poe-gold'
-                  : 'text-poe-text-muted border-b-2 border-transparent hover:text-poe-text-secondary'
+                  ? 'text-poe-gold-light border-b-2 border-poe-gold shadow-poe-glow'
+                  : 'text-poe-text-muted border-b-2 border-transparent hover:text-poe-text-secondary hover:border-poe-border/50'
               }`}
               aria-current={item.active ? 'page' : undefined}
             >
@@ -98,14 +98,14 @@ export function Header({
       {isMobileMenuOpen && (
         <div className="sm:hidden border-t border-poe-border bg-poe-bg-secondary animate-poe-slide-in-top">
           {navItems.length > 0 && (
-            <nav className="px-4 py-2 space-y-0.5" aria-label="Mobile navigation">
+            <nav className="px-2 py-3 space-y-1" aria-label="Mobile navigation">
               {navItems.map((item, index) => (
                 <a
                   key={item.href}
                   href={item.href}
-                  className={`block px-3 py-2.5 text-sm font-medium transition-colors touch-manipulation animate-poe-fade-in-up ${
+                  className={`block px-4 py-3 text-sm font-medium rounded-[3px] transition-all touch-manipulation animate-poe-fade-in-up ${
                     item.active
-                      ? 'text-poe-gold-light bg-poe-bg-tertiary'
+                      ? 'text-poe-gold-light bg-poe-gold-muted/20 border border-poe-gold-muted/30'
                       : 'text-poe-text-secondary hover:text-poe-text-highlight hover:bg-poe-hover'
                   }`}
                   style={{ animationDelay: `${index * 50}ms` }}
@@ -117,12 +117,12 @@ export function Header({
             </nav>
           )}
           {actions && (
-            <div className="px-4 py-3 flex flex-wrap items-center gap-2 border-t border-poe-border animate-poe-fade-in-up" style={{ animationDelay: '100ms' }}>
+            <div className="px-4 py-4 flex flex-wrap items-center gap-3 border-t border-poe-border animate-poe-fade-in-up" style={{ animationDelay: '100ms' }}>
               {actions}
             </div>
           )}
           {contextDisplay && (
-            <div className="px-4 py-2 border-t border-poe-border animate-poe-fade-in-up" style={{ animationDelay: '150ms' }}>
+            <div className="px-4 py-3 border-t border-poe-border animate-poe-fade-in-up" style={{ animationDelay: '150ms' }}>
               {contextDisplay}
             </div>
           )}

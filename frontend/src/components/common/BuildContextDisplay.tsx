@@ -96,7 +96,7 @@ export function BuildContextDisplay({
 
       {/* Optional tag badge */}
       {showTag && (
-        <span className="shrink-0 px-1 py-0 rounded-[2px] text-[8px] font-semibold uppercase tracking-wide bg-poe-bg-secondary text-[#6B6B75] border border-poe-border">
+        <span className="shrink-0 px-1 py-0 rounded-[2px] text-[8px] font-semibold uppercase tracking-wide bg-poe-bg-secondary text-poe-text-muted border border-poe-border">
           {tag}
         </span>
       )}

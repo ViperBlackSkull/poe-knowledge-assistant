@@ -197,24 +197,24 @@ export function TypingIndicator({
   if (display === 'bubble') {
     return (
       <div
-        className={`py-4 border-b border-[#2A2A30]/50 ${className}`}
+        className={`py-4 border-b border-poe-border/50 ${className}`}
         data-testid="typing-indicator"
         role="status"
         aria-label={ariaLabel}
         style={style}
       >
         <div className="flex items-center gap-2.5 mb-2">
-          <div className="w-7 h-7 border border-[#1BA29B]/25 rounded-[3px] flex items-center justify-center text-xs shrink-0 text-[#1BA29B] bg-[#1BA29B]/[0.06]">
+          <div className="w-7 h-7 border border-poe-teal/25 rounded-[3px] flex items-center justify-center text-xs shrink-0 text-poe-teal bg-poe-teal/6">
             ♦
           </div>
-          <span className="text-xs font-semibold tracking-[0.5px] uppercase text-[#1BA29B]">
+          <span className="text-xs font-semibold tracking-[0.5px] uppercase text-poe-teal">
             Knowledge Assistant
           </span>
         </div>
         <div className="pl-[38px] flex items-center gap-2 py-1">
           {animationElement}
           {showLabel && (
-            <span className={`text-[#6B6B75] ${sizeConfig.text}`}>
+            <span className={`text-poe-text-muted ${sizeConfig.text}`}>
               {label}
             </span>
           )}

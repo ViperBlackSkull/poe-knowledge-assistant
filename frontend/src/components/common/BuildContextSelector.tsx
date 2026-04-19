@@ -237,11 +237,11 @@ export function BuildContextSelector({
             transition-all duration-200 border
             ${
               disabled
-                ? 'opacity-50 cursor-not-allowed bg-poe-bg-tertiary border-poe-border text-[#6B6B75]'
+                ? 'opacity-50 cursor-not-allowed bg-poe-bg-tertiary border-poe-border text-poe-text-muted'
                 : hasSelection
-                  ? 'bg-[#1A1510] border-poe-gold/60 text-poe-gold-light shadow-poe-glow'
+                  ? 'bg-poe-bg-elevated border-poe-gold/60 text-poe-gold-light shadow-poe-glow'
                   : isOpen
-                    ? 'bg-[#1A1510] border-poe-gold text-poe-gold-light shadow-poe-glow'
+                    ? 'bg-poe-bg-elevated border-poe-gold text-poe-gold-light shadow-poe-glow'
                     : 'bg-poe-bg-secondary border-poe-border text-poe-text-secondary hover:text-poe-text-primary hover:border-poe-border-light hover:bg-poe-hover'
             }
             ${hasSelection && !isOpen ? 'rounded-r-none border-r-0' : ''}
@@ -283,8 +283,8 @@ export function BuildContextSelector({
             onClick={handleClear}
             className="
               flex items-center justify-center px-1.5 py-1 rounded-r-[3px] text-xs
-              bg-[#1A1510] border border-l-0 border-poe-gold/60
-              text-[#6B6B75] hover:text-poe-text-primary hover:bg-poe-hover
+              bg-poe-bg-elevated border border-l-0 border-poe-gold/60
+              text-poe-text-muted hover:text-poe-text-primary hover:bg-poe-hover
               transition-colors duration-200
             "
             aria-label="Clear build context"
@@ -360,7 +360,7 @@ export function BuildContextSelector({
                             shrink-0 px-1 py-0 rounded-[2px] text-[9px] font-semibold uppercase tracking-wide
                             ${isSelected
                               ? 'bg-poe-gold/15 text-poe-gold-light border border-poe-gold/25'
-                              : 'bg-poe-bg-primary text-[#6B6B75] border border-poe-border'
+                              : 'bg-poe-bg-primary text-poe-text-muted border border-poe-border'
                             }
                           `}
                         >
@@ -369,7 +369,7 @@ export function BuildContextSelector({
                       )}
                     </div>
                     {option.description && (
-                      <div className="text-[10px] text-[#6B6B75] mt-0.5 truncate">
+                      <div className="text-[10px] text-poe-text-muted mt-0.5 truncate">
                         {option.description}
                       </div>
                     )}

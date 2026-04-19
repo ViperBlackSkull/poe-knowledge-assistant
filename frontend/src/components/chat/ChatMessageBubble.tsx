@@ -55,16 +55,16 @@ export function ChatMessageBubble({
   if (isSystem) {
     return (
       <div className="flex justify-center my-3" data-message-role="system">
-        <div className="bg-[#18181C] border border-[#1BA29B]/20 rounded px-4 py-2 max-w-[85%]">
-          <p className="text-[#1BA29B] text-xs text-center italic">
+        <div className="bg-poe-bg-tertiary border border-poe-teal/20 rounded px-4 py-2 max-w-[85%]">
+          <p className="text-poe-teal text-xs text-center italic">
             {message.content}
           </p>
           <div className="flex justify-center gap-3 mt-1">
-            <span className="text-[#6B6B75] text-[11px]">
+            <span className="text-poe-text-muted text-[11px]">
               {formatTimestamp(message.timestamp)}
             </span>
             {conversationId && (
-              <span className="text-[#6B6B75] text-[11px]">
+              <span className="text-poe-text-muted text-[11px]">
                 ID: {conversationId.slice(0, 8)}
               </span>
             )}
@@ -76,7 +76,7 @@ export function ChatMessageBubble({
 
   return (
     <div
-      className="py-4 border-b border-[#2A2A30]/50 animate-poe-message"
+      className="py-4 border-b border-poe-border/50 animate-poe-message"
       data-message-role={message.role}
     >
       {/* Message header: avatar + name + timestamp */}
@@ -84,8 +84,8 @@ export function ChatMessageBubble({
         <div
           className={`w-7 h-7 border rounded-[3px] flex items-center justify-center text-xs shrink-0 ${
             isUser
-              ? 'border-[#4A3A28] text-[#D4A85A] bg-[#AF6025]/[0.06]'
-              : 'border-[#1BA29B]/25 text-[#1BA29B] bg-[#1BA29B]/[0.06]'
+              ? 'border-poe-gold-muted text-poe-gold-light bg-poe-gold/6'
+              : 'border-poe-teal/25 text-poe-teal bg-poe-teal/6'
           }`}
           aria-label={`${message.role} avatar`}
         >
@@ -93,18 +93,18 @@ export function ChatMessageBubble({
         </div>
         <span
           className={`text-xs font-semibold tracking-[0.5px] uppercase ${
-            isUser ? 'text-[#D4A85A]' : 'text-[#1BA29B]'
+            isUser ? 'text-poe-gold-light' : 'text-poe-teal'
           }`}
         >
           {isUser ? 'Exile' : 'Knowledge Assistant'}
         </span>
-        <span className="text-[#6B6B75] text-[11px] ml-auto">
+        <span className="text-poe-text-muted text-[11px] ml-auto">
           {formatTimestamp(message.timestamp)}
         </span>
       </div>
 
       {/* Message body — indented past avatar */}
-      <div className="pl-[38px] text-sm leading-[1.7] text-[#E0E0E0] font-light">
+      <div className="pl-[38px] text-sm leading-[1.7] text-poe-text-primary font-normal">
         {isUser ? (
           <p>{message.content}</p>
         ) : (
@@ -124,7 +124,7 @@ export function ChatMessageBubble({
       {/* Metadata footer */}
       {conversationId && (
         <div className="pl-[38px] mt-2">
-          <span className="text-[#6B6B75] text-[11px]">
+          <span className="text-poe-text-muted text-[11px]">
             Conversation: {conversationId.slice(0, 8)}...
           </span>
         </div>

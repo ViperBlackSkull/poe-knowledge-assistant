@@ -90,14 +90,14 @@ function getStatusColor(status: string): string {
     case 'healthy':
     case 'ready':
     case 'ok':
-      return '#1BA29B';
+      return '#1BA29B'; // poe-teal
     case 'degraded':
     case 'disabled':
-      return '#D4A85A';
+      return '#D4A85A'; // poe-gold-light
     case 'error':
-      return '#ef4444';
+      return '#FF4500'; // poe-fire
     default:
-      return '#6B6B75';
+      return '#6B6B75'; // poe-text-muted
   }
 }
 
@@ -182,9 +182,9 @@ export function PerformanceDashboard({
 
   // Color helpers for response times
   const getResponseColor = (ms: number, thresholds: [number, number]): string => {
-    if (ms < thresholds[0]) return '#1BA29B';
-    if (ms < thresholds[1]) return '#D4A85A';
-    return '#ef4444';
+    if (ms < thresholds[0]) return '#1BA29B'; // poe-teal
+    if (ms < thresholds[1]) return '#D4A85A'; // poe-gold-light
+    return '#FF4500'; // poe-fire
   };
 
   return (
@@ -400,19 +400,19 @@ export function PerformanceDashboard({
               <div
                 className="w-1.5 h-1.5 rounded-full"
                 style={{
-                  background: Number(code) < 300 ? '#1BA29B' : Number(code) < 400 ? '#D4A85A' : '#ef4444',
+                  background: Number(code) < 300 ? '#1BA29B' : Number(code) < 400 ? '#D4A85A' : '#FF4500',
                   boxShadow: Number(code) < 300
                     ? '0 0 4px rgba(27, 162, 155, 0.4)'
                     : Number(code) < 400
                       ? '0 0 4px rgba(212, 168, 90, 0.4)'
-                      : '0 0 4px rgba(239, 68, 68, 0.3)',
+                      : '0 0 4px rgba(255, 69, 0, 0.3)',
                 }}
               />
               <span className="text-[11px] text-poe-text-primary">{code}: {formatNumber(count)}</span>
             </div>
           ))}
           {summary.error_count > 0 && (
-            <div className="text-[11px] text-red-400">
+            <div className="text-[11px] text-poe-fire">
               Errors: {summary.error_count}
             </div>
           )}

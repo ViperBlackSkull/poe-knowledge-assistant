@@ -24,33 +24,33 @@ const STATUS_CONFIG: Record<
 > = {
   fresh: {
     label: 'Fresh',
-    dotColor: 'bg-[#1BA29B]',
+    dotColor: 'bg-poe-teal',
     dotPulse: true,
-    textColor: 'text-[#1BA29B]',
+    textColor: 'text-poe-teal',
     dotGlow: '0 0 6px rgba(27, 162, 155, 0.4)',
     description: 'Knowledge base is up to date',
   },
   needs_update: {
     label: 'Stale',
-    dotColor: 'bg-[#D4A85A]',
+    dotColor: 'bg-poe-gold-light',
     dotPulse: true,
-    textColor: 'text-[#D4A85A]',
+    textColor: 'text-poe-gold-light',
     dotGlow: '0 0 6px rgba(212, 168, 90, 0.4)',
     description: 'Knowledge base may need refreshing',
   },
   outdated: {
     label: 'Outdated',
-    dotColor: 'bg-red-500',
+    dotColor: 'bg-poe-fire',
     dotPulse: false,
-    textColor: 'text-red-400',
-    dotGlow: '0 0 6px rgba(239, 68, 68, 0.3)',
+    textColor: 'text-poe-fire',
+    dotGlow: '0 0 6px rgba(255, 69, 0, 0.3)',
     description: 'Knowledge base data is stale',
   },
   no_data: {
     label: 'No Data',
-    dotColor: 'bg-[#6B6B75]',
+    dotColor: 'bg-poe-text-muted',
     dotPulse: false,
-    textColor: 'text-[#6B6B75]',
+    textColor: 'text-poe-text-muted',
     dotGlow: 'none',
     description: 'No knowledge base data available',
   },
@@ -191,21 +191,21 @@ export function DataFreshnessIndicator({
       <div
         className={`inline-flex items-center gap-1.5 ${
           compact ? 'px-1.5 py-0.5' : 'px-2 py-1'
-        } rounded-[3px] bg-poe-bg-tertiary border border-red-500/20 ${className}`}
+        } rounded-[3px] bg-poe-bg-tertiary border border-poe-fire/20 ${className}`}
         data-testid="data-freshness-error"
         role="alert"
       >
         <span
-          className="w-1.5 h-1.5 rounded-full bg-red-500 shrink-0"
-          style={{ boxShadow: '0 0 6px rgba(239, 68, 68, 0.3)' }}
+          className="w-1.5 h-1.5 rounded-full bg-poe-fire shrink-0"
+          style={{ boxShadow: '0 0 6px rgba(255, 69, 0, 0.3)' }}
         />
-        <span className={`${compact ? 'text-[10px]' : 'text-xs'} text-red-400`}>
+        <span className={`${compact ? 'text-[10px]' : 'text-xs'} text-poe-fire`}>
           {errorLabel}
         </span>
         <button
           type="button"
           onClick={refresh}
-          className="text-[10px] text-[#6B6B75] hover:text-poe-text-primary transition-colors underline"
+          className="text-[10px] text-poe-text-muted hover:text-poe-text-primary transition-colors underline"
           aria-label="Retry fetching freshness data"
           data-testid="data-freshness-error-retry"
         >
@@ -253,9 +253,9 @@ export function DataFreshnessIndicator({
         {/* Last scrape timestamp */}
         {latestEntry?.has_data && latestEntry.relative_time && (
           <>
-            <span className="text-[#4A3A28]">|</span>
+            <span className="text-poe-gold-muted">|</span>
             <span
-              className={`text-[#6B6B75] whitespace-nowrap ${
+              className={`text-poe-text-muted whitespace-nowrap ${
                 compact ? 'text-[9px]' : 'text-[10px]'
               }`}
             >
@@ -267,7 +267,7 @@ export function DataFreshnessIndicator({
         {/* Loading spinner for background refresh */}
         {isLoading && data && (
           <svg
-            className="w-2.5 h-2.5 animate-spin text-[#6B6B75] shrink-0"
+            className="w-2.5 h-2.5 animate-spin text-poe-text-muted shrink-0"
             fill="none"
             viewBox="0 0 24 24"
             aria-hidden="true"
@@ -300,7 +300,7 @@ export function DataFreshnessIndicator({
           {(data.freshness.poe1.staleness_warning ||
             data.freshness.poe2.staleness_warning) && (
             <div className="mt-1.5 pt-1.5 border-t border-poe-border">
-              <p className="text-[10px] text-[#D4A85A] leading-relaxed">
+              <p className="text-[10px] text-poe-gold-light leading-relaxed">
                 {data.freshness.poe1.staleness_warning ||
                   data.freshness.poe2.staleness_warning}
               </p>
@@ -309,7 +309,7 @@ export function DataFreshnessIndicator({
 
           {/* Threshold info */}
           <div className="mt-1.5 pt-1.5 border-t border-poe-border">
-            <p className="text-[10px] text-[#6B6B75]">
+            <p className="text-[10px] text-poe-text-muted">
               Staleness threshold: {data.summary.staleness_threshold_days} days
             </p>
           </div>
@@ -318,7 +318,7 @@ export function DataFreshnessIndicator({
 
       {/* Error notice (data may still be available from previous fetch) */}
       {error && data && (
-        <p className="mt-1 text-[10px] text-[#6B6B75]">
+        <p className="mt-1 text-[10px] text-poe-text-muted">
           Could not refresh (showing cached data)
         </p>
       )}
@@ -328,7 +328,7 @@ export function DataFreshnessIndicator({
         <button
           type="button"
           onClick={refresh}
-          className="ml-1 p-0.5 rounded text-[#6B6B75] hover:text-poe-text-primary transition-colors"
+          className="ml-1 p-0.5 rounded text-poe-text-muted hover:text-poe-text-primary transition-colors"
           aria-label="Refresh freshness data"
           data-testid="data-freshness-refresh"
         >

@@ -75,8 +75,8 @@ export function ClearConversationButton({
         disabled={isButtonDisabled}
         className={`group relative flex items-center gap-1.5 px-3 py-1.5 rounded text-sm font-medium transition-all duration-200 ${
           isButtonDisabled
-            ? 'text-[#4A4A52] cursor-not-allowed opacity-50'
-            : 'text-[#9E9EA8] hover:text-[#C8C8C8] hover:bg-[#2A2A32] border border-transparent hover:border-[#3D3D44] hover:scale-[1.02] active:scale-[0.98]'
+            ? 'text-poe-text-muted cursor-not-allowed opacity-50'
+            : 'text-poe-text-secondary hover:text-poe-text-primary hover:bg-poe-hover border border-transparent hover:border-poe-border-light hover:scale-[1.02] active:scale-[0.98]'
         } ${className}`}
         aria-label={`Clear conversation${messageCount > 0 ? ` (${messageCount} messages)` : ''}`}
         title={isButtonDisabled ? 'No messages to clear' : 'Clear conversation'}
@@ -102,7 +102,7 @@ export function ClearConversationButton({
 
         {/* Message count badge */}
         {messageCount > 0 && (
-          <span className="inline-flex items-center justify-center min-w-[1.25rem] h-5 px-1 rounded-full text-[0.625rem] font-semibold bg-[#AF6025]/20 text-[#AF6025] border border-[#AF6025]/30 transition-transform duration-200 group-hover:scale-110">
+          <span className="inline-flex items-center justify-center min-w-[1.25rem] h-5 px-1 rounded-full text-[0.625rem] font-semibold bg-poe-gold/20 text-poe-gold border border-poe-gold/30 transition-transform duration-200 group-hover:scale-110">
             {messageCount}
           </span>
         )}
@@ -115,7 +115,7 @@ export function ClearConversationButton({
         message={
           <span>
             This will permanently clear all{' '}
-            <span className="text-[#AF6025] font-semibold">{messageCount}</span>{' '}
+            <span className="text-poe-gold font-semibold">{messageCount}</span>{' '}
             message{messageCount !== 1 ? 's' : ''} from the current conversation.
             This action cannot be undone.
           </span>
