@@ -87,33 +87,38 @@ export function LoadingSpinner({
       viewBox="0 0 24 24"
       aria-hidden="true"
     >
+      {/* Outer ring track */}
       <circle
-        className="opacity-25"
+        className="opacity-20"
         cx="12"
         cy="12"
         r="10"
         stroke="currentColor"
-        strokeWidth="4"
+        strokeWidth="3"
       />
+      {/* Spinning arc */}
       <path
-        className="opacity-75"
-        fill="currentColor"
-        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+        className="opacity-90"
+        stroke="currentColor"
+        strokeWidth="3"
+        strokeLinecap="round"
+        fill="none"
+        d="M12 2a10 10 0 0 1 10 10"
       />
-      {/* PoE-themed inner glow dot */}
+      {/* Center glow dot */}
       <circle
         className="animate-poe-ambient-pulse"
         cx="12"
         cy="12"
-        r="2"
+        r="1.5"
         fill="currentColor"
-        opacity="0.5"
+        opacity="0.6"
       />
     </svg>
   );
 
   const labelElement = label && (
-    <span className={`${sizeConfig.label} text-poe-text-secondary mt-0`}>
+    <span className={`${sizeConfig.label} text-poe-text-muted mt-0 tracking-wide`}>
       {label}
     </span>
   );
