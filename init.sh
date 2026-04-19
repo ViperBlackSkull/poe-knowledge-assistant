@@ -75,16 +75,16 @@ fi
 # Start backend server
 echo ""
 print_status "Starting backend development server..."
-if [ -f "backend/main.py" ]; then
+if [ -f "backend/src/main.py" ]; then
     cd backend
     # Check if uvicorn is installed
     if command -v uvicorn &> /dev/null; then
-        uvicorn main:app --reload --host 0.0.0.0 --port 8000
+        uvicorn src.main:app --reload --host 0.0.0.0 --port 8460
     else
         print_warning "uvicorn not found. Install with: pip install -r requirements.txt"
     fi
 else
-    print_warning "backend/main.py not found. Skipping backend start."
+    print_warning "backend/src/main.py not found. Skipping backend start."
 fi
 
 echo ""
@@ -93,6 +93,6 @@ echo ""
 echo "To start the frontend (in another terminal):"
 echo "  cd frontend && npm run dev"
 echo ""
-echo "Backend will be available at: http://localhost:8000"
-echo "API docs at: http://localhost:8000/docs"
-echo "Frontend will be available at: http://localhost:5173"
+echo "Backend will be available at: http://localhost:8460"
+echo "API docs at: http://localhost:8460/docs"
+echo "Frontend will be available at: http://localhost:9460"
