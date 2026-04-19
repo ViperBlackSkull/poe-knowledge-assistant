@@ -199,52 +199,29 @@ function ProviderIcon({ icon, className = '' }: { icon: LLMProviderOption['icon'
   }
 }
 
-/** Renders a model tag badge. */
-function ModelTag({ tag }: { tag: string }) {
-  const colorMap: Record<string, string> = {
-    'Recommended': 'bg-poe-gold/20 text-poe-gold border-poe-gold/30',
-    'Fast': 'bg-blue-900/30 text-blue-400 border-blue-700/30',
-    'Economy': 'bg-green-900/30 text-green-400 border-green-700/30',
-    'Popular': 'bg-purple-900/30 text-purple-400 border-purple-700/30',
-    'Compact': 'bg-cyan-900/30 text-cyan-400 border-cyan-700/30',
-  };
-  const colors = colorMap[tag] ?? 'bg-poe-bg-tertiary text-poe-text-muted border-poe-border';
-
-  return (
-    <span className={`text-[10px] px-1.5 py-0.5 rounded border ${colors} leading-none`}>
-      {tag}
-    </span>
-  );
-}
-
 // ---------------------------------------------------------------------------
-// Custom PoE-styled dropdown for provider selection
+// PoE-styled select dropdown
 // ---------------------------------------------------------------------------
 
-interface PoEDropdownProps<T extends string> {
+interface PoESelectProps<T extends string> {
   id: string;
   value: T;
-  options: { value: T; label: string; description?: string; icon?: LLMProviderOption['icon'] }[];
+  options: { value: T; label: string; description?: string; icon?: LLMProviderOption['icon']; tag?: string }[];
   onChange: (value: T) => void;
   headerLabel: string;
-  footerText?: string;
   disabled?: boolean;
-  renderOption?: (
-    option: { value: T; label: string; description?: string; icon?: LLMProviderOption['icon'] },
-    isSelected: boolean,
-  ) => React.ReactNode;
+  showIcon?: boolean;
 }
 
-function PoEDropdown<T extends string>({
+function PoESelect<T extends string>({
   id,
   value,
   options,
   onChange,
   headerLabel,
-  footerText,
   disabled = false,
-  renderOption,
-}: PoEDropdownProps<T>) {
+  showIcon = false,
+}: PoESelectProps<T>) {
   const [isOpen, setIsOpen] = useState(false);
   const [highlightedIndex, setHighlightedIndex] = useState<number>(
     options.findIndex((o) => o.value === value),
@@ -349,34 +326,36 @@ function PoEDropdown<T extends string>({
         onKeyDown={handleKeyDown}
         disabled={disabled}
         className={`
-          flex items-center gap-2 w-full px-3 py-2 rounded text-sm font-medium
+          flex items-center gap-2 w-full px-3 py-2 rounded text-sm
           transition-all duration-200 border
-          ${
-            disabled
-              ? 'opacity-50 cursor-not-allowed bg-poe-bg-primary border-poe-border text-poe-text-muted'
-              : isOpen
-                ? 'bg-poe-bg-primary border-poe-gold text-poe-text-highlight shadow-poe-glow'
-                : 'bg-poe-bg-primary border-poe-border text-poe-text-secondary hover:text-poe-text-highlight hover:border-poe-border-light'
-          }
+          ${disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}
         `}
+        style={{
+          backgroundColor: '#0C0C0E',
+          fontFamily: "'Inter', system-ui, sans-serif",
+          color: isOpen ? '#E0E0E0' : '#9F9FA8',
+          borderColor: isOpen ? '#D4A85A' : '#3D3D44',
+          boxShadow: isOpen ? '0 0 8px rgba(212, 168, 90, 0.3)' : 'none',
+        }}
         aria-haspopup="listbox"
         aria-expanded={isOpen}
         aria-label={`Select ${headerLabel}, currently ${selectedOption?.label ?? value}`}
         data-testid={`${id}-trigger`}
       >
         {/* Provider icon */}
-        {selectedOption?.icon && (
-          <ProviderIcon icon={selectedOption.icon} className="w-4 h-4 text-poe-gold shrink-0" />
+        {showIcon && selectedOption?.icon && (
+          <ProviderIcon icon={selectedOption.icon} className="w-4 h-4 text-[#D4A85A] shrink-0" />
         )}
 
         {/* Selected label */}
-        <span className="flex-1 text-left whitespace-nowrap truncate">{selectedOption?.label ?? value}</span>
+        <span className="flex-1 text-left whitespace-nowrap truncate">
+          {selectedOption?.label ?? value}
+        </span>
 
         {/* Chevron icon */}
         <svg
-          className={`w-3.5 h-3.5 shrink-0 transition-transform duration-200 text-poe-text-muted ${
-            isOpen ? 'rotate-180' : ''
-          }`}
+          className={`w-3.5 h-3.5 shrink-0 transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`}
+          style={{ color: '#6B6B75' }}
           fill="none"
           viewBox="0 0 24 24"
           strokeWidth={2}
@@ -389,19 +368,22 @@ function PoEDropdown<T extends string>({
       {/* Dropdown menu */}
       {isOpen && (
         <div
-          className="
-            absolute left-0 right-0 mt-1 rounded-lg
-            bg-poe-bg-secondary border border-poe-border
-            shadow-lg shadow-black/40 z-50
-            overflow-hidden
-          "
+          className="absolute left-0 right-0 mt-1 rounded-lg overflow-hidden z-50"
+          style={{
+            backgroundColor: '#141418',
+            border: '1px solid #3D3D44',
+            boxShadow: '0 8px 24px rgba(0, 0, 0, 0.5)',
+          }}
           role="listbox"
           aria-label={`${headerLabel} options`}
           data-testid={`${id}-dropdown`}
         >
           {/* Dropdown header */}
-          <div className="px-3 py-2 border-b border-poe-border bg-poe-bg-tertiary">
-            <span className="text-xs text-poe-gold font-semibold uppercase tracking-wider font-poe">
+          <div className="px-3 py-2" style={{ borderBottom: '1px solid #2A2A30', backgroundColor: '#0C0C0E' }}>
+            <span
+              className="text-[10px] text-[#6B5530] font-semibold uppercase tracking-[0.1em]"
+              style={{ fontFamily: "'Inter', system-ui, sans-serif" }}
+            >
               {headerLabel}
             </span>
           </div>
@@ -423,59 +405,63 @@ function PoEDropdown<T extends string>({
                   onMouseEnter={() => setHighlightedIndex(index)}
                   className={`
                     w-full text-left px-3 py-2.5 flex items-center gap-3
-                    transition-colors duration-150
-                    ${isHighlighted ? 'bg-poe-hover' : ''}
-                    ${isSelected ? 'text-poe-gold' : 'text-poe-text-secondary hover:text-poe-text-highlight'}
+                    transition-colors duration-100
                   `}
+                  style={{
+                    backgroundColor: isHighlighted ? '#1C1C22' : 'transparent',
+                    color: isSelected ? '#D4A85A' : '#9F9FA8',
+                  }}
                   role="option"
                   aria-selected={isSelected}
                   data-testid={`${id}-option-${String(option.value)}`}
                 >
-                  {/* Selection indicator */}
-                  <div className="w-4 h-4 shrink-0 flex items-center justify-center">
-                    {isSelected ? (
-                      <svg
-                        className="w-4 h-4 text-poe-gold"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        strokeWidth={2}
-                        stroke="currentColor"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                        />
-                      </svg>
-                    ) : (
-                      <div className="w-3.5 h-3.5 rounded-full border border-poe-border" />
-                    )}
-                  </div>
+                  {/* Selection dot */}
+                  <div className="w-1.5 h-1.5 rounded-full shrink-0" style={{
+                    backgroundColor: isSelected ? '#D4A85A' : 'transparent',
+                    boxShadow: isSelected ? '0 0 4px rgba(212, 168, 90, 0.5)' : 'none',
+                  }} />
+
+                  {/* Icon */}
+                  {showIcon && option.icon && (
+                    <ProviderIcon
+                      icon={option.icon}
+                      className={`w-4 h-4 shrink-0 ${isSelected ? 'text-[#D4A85A]' : 'text-[#6B6B75]'}`}
+                    />
+                  )}
 
                   {/* Option content */}
-                  {renderOption ? (
-                    renderOption(option, isSelected)
-                  ) : (
-                    <div className="flex-1 min-w-0">
-                      <div className="text-sm font-medium truncate">{option.label}</div>
-                      {option.description && (
-                        <div className="text-xs text-poe-text-muted mt-0.5 truncate">
-                          {option.description}
-                        </div>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-2">
+                      <span className="text-sm truncate" style={{ fontFamily: "'Inter', system-ui, sans-serif" }}>
+                        {option.label}
+                      </span>
+                      {option.tag && (
+                        <span
+                          className="text-[9px] px-1.5 py-0.5 rounded leading-none shrink-0"
+                          style={{
+                            color: '#D4A85A',
+                            backgroundColor: 'rgba(212, 168, 90, 0.1)',
+                            border: '1px solid rgba(212, 168, 90, 0.2)',
+                            fontFamily: "'Inter', system-ui, sans-serif",
+                          }}
+                        >
+                          {option.tag}
+                        </span>
                       )}
                     </div>
-                  )}
+                    {option.description && (
+                      <div
+                        className="text-[11px] mt-0.5 truncate"
+                        style={{ color: '#6B6B75', fontFamily: "'Inter', system-ui, sans-serif" }}
+                      >
+                        {option.description}
+                      </div>
+                    )}
+                  </div>
                 </button>
               );
             })}
           </div>
-
-          {/* Dropdown footer */}
-          {footerText && (
-            <div className="px-3 py-2 border-t border-poe-border bg-poe-bg-primary">
-              <p className="text-xs text-poe-text-muted">{footerText}</p>
-            </div>
-          )}
         </div>
       )}
     </div>
@@ -503,14 +489,21 @@ export function ProviderConfigSection({ provider, config, onConfigChange }: Prov
 
   return (
     <div className="space-y-2 mt-2" data-testid="provider-config-section">
-      <div className="text-xs text-poe-text-secondary font-medium mb-1.5">
+      <div
+        className="text-xs text-[#9F9FA8] font-medium mb-1.5"
+        style={{ fontFamily: "'Inter', system-ui, sans-serif" }}
+      >
         Provider Settings
       </div>
       {fields.map((field) => (
         <div key={field.key}>
-          <label htmlFor={`provider-config-${field.key}`} className="block text-[11px] text-poe-text-muted mb-1">
+          <label
+            htmlFor={`provider-config-${field.key}`}
+            className="block text-[11px] text-[#6B6B75] mb-1"
+            style={{ fontFamily: "'Inter', system-ui, sans-serif" }}
+          >
             {field.label}
-            {field.optional && <span className="text-poe-text-muted/60 ml-1">(optional)</span>}
+            {field.optional && <span className="text-[#4A3A28] ml-1">(optional)</span>}
           </label>
           <input
             id={`provider-config-${field.key}`}
@@ -534,14 +527,6 @@ export function ProviderConfigSection({ provider, config, onConfigChange }: Prov
 /**
  * LLMProviderSelector provides a PoE-themed dropdown for selecting
  * the LLM provider and model in the settings panel.
- *
- * Features:
- *  - Custom PoE-styled dropdown matching the application theme
- *  - Dynamic model list that updates when provider changes
- *  - Provider-specific configuration options (base URL, etc.)
- *  - Keyboard accessible (Enter/Space to open, Arrow keys to navigate)
- *  - Click-outside to close
- *  - Provider icons and model tags for visual distinction
  */
 export function LLMProviderSelector({
   provider,
@@ -552,8 +537,6 @@ export function LLMProviderSelector({
   disabled = false,
 }: LLMProviderSelectorProps) {
   const currentModels = LLM_MODELS_BY_PROVIDER[provider] ?? [];
-  const currentProviderOption = LLM_PROVIDER_OPTIONS.find((o) => o.value === provider);
-  const selectedModelOption = currentModels.find((m) => m.value === model);
 
   const handleProviderChange = useCallback(
     (newProvider: LLMProvider) => {
@@ -568,107 +551,37 @@ export function LLMProviderSelector({
   );
 
   return (
-    <div className={`space-y-3 ${className}`} data-testid="llm-provider-selector">
+    <div className={`space-y-2 ${className}`} data-testid="llm-provider-selector">
       {/* Provider dropdown */}
-      <div>
-        <label className="block text-xs text-poe-text-secondary font-medium mb-1.5">
-          LLM Provider
-        </label>
-        <PoEDropdown<LLMProvider>
-          id="llm-provider"
-          value={provider}
-          options={LLM_PROVIDER_OPTIONS}
-          onChange={handleProviderChange}
-          headerLabel="LLM Provider"
-          footerText="Select which LLM provider to use for generating responses"
-          disabled={disabled}
-          renderOption={(option, isSelected) => {
-            const providerOpt = option as unknown as LLMProviderOption;
-            return (
-              <div className="flex-1 min-w-0">
-                <div className="flex items-center gap-2">
-                  <ProviderIcon icon={providerOpt.icon} className={`w-4 h-4 shrink-0 ${isSelected ? 'text-poe-gold' : 'text-poe-text-muted'}`} />
-                  <span className="text-sm font-medium truncate">{option.label}</span>
-                  {!providerOpt.requiresApiKey && (
-                    <span className="text-[10px] px-1.5 py-0.5 rounded border bg-green-900/30 text-green-400 border-green-700/30 leading-none shrink-0">
-                      Local
-                    </span>
-                  )}
-                </div>
-                {option.description && (
-                  <div className="text-xs text-poe-text-muted mt-0.5 truncate pl-6">
-                    {option.description}
-                  </div>
-                )}
-              </div>
-            );
-          }}
-        />
-      </div>
-
-      {/* Provider info badge */}
-      {currentProviderOption && (
-        <div className="flex items-center gap-2 px-2 py-1.5 rounded bg-poe-bg-primary/50 border border-poe-border/50">
-          <ProviderIcon
-            icon={currentProviderOption.icon}
-            className={`w-3.5 h-3.5 ${
-              currentProviderOption.requiresApiKey ? 'text-poe-gold' : 'text-green-400'
-            }`}
-          />
-          <span className="text-[11px] text-poe-text-muted">
-            {currentProviderOption.requiresApiKey
-              ? 'Cloud provider - requires API key'
-              : 'Local provider - runs on your machine'}
-          </span>
-        </div>
-      )}
+      <PoESelect<LLMProvider>
+        id="llm-provider"
+        value={provider}
+        options={LLM_PROVIDER_OPTIONS.map((o) => ({
+          value: o.value,
+          label: o.label,
+          description: o.description,
+          icon: o.icon,
+          tag: !o.requiresApiKey ? 'Local' : undefined,
+        }))}
+        onChange={handleProviderChange}
+        headerLabel="LLM Provider"
+        disabled={disabled}
+        showIcon
+      />
 
       {/* Model dropdown */}
-      <div>
-        <label className="block text-xs text-poe-text-secondary font-medium mb-1.5">
-          Model
-        </label>
-        <PoEDropdown<string>
-          id="llm-model"
-          value={model}
-          options={currentModels.map((m) => ({
-            value: m.value,
-            label: m.label,
-          }))}
-          onChange={onModelChange}
-          headerLabel={`${currentProviderOption?.label ?? 'Provider'} Models`}
-          footerText={`${currentModels.length} model${currentModels.length !== 1 ? 's' : ''} available`}
-          disabled={disabled}
-          renderOption={(option, isSelected) => {
-            const modelOpt = currentModels.find((m) => m.value === option.value);
-            return (
-              <div className="flex-1 min-w-0">
-                <div className="flex items-center gap-2">
-                  <span className={`text-sm font-medium truncate ${isSelected ? 'text-poe-gold' : ''}`}>
-                    {option.label}
-                  </span>
-                  {modelOpt?.tag && <ModelTag tag={modelOpt.tag} />}
-                </div>
-                <div className="text-xs text-poe-text-muted mt-0.5 truncate font-mono">
-                  {option.value}
-                </div>
-              </div>
-            );
-          }}
-        />
-
-        {/* Current model detail */}
-        {selectedModelOption && (
-          <div className="mt-1.5 flex items-center gap-2 px-2 py-1 rounded bg-poe-bg-primary/30">
-            <span className="text-[10px] text-poe-text-muted font-mono truncate">
-              {selectedModelOption.value}
-            </span>
-            {selectedModelOption.tag && (
-              <ModelTag tag={selectedModelOption.tag} />
-            )}
-          </div>
-        )}
-      </div>
+      <PoESelect<string>
+        id="llm-model"
+        value={model}
+        options={currentModels.map((m) => ({
+          value: m.value,
+          label: m.label,
+          tag: m.tag,
+        }))}
+        onChange={onModelChange}
+        headerLabel={`${LLM_PROVIDER_OPTIONS.find((o) => o.value === provider)?.label ?? 'Provider'} Models`}
+        disabled={disabled}
+      />
     </div>
   );
 }
