@@ -36,7 +36,7 @@ class Environment(str, Enum):
 class DatabaseSettings(BaseSettings):
     """Database configuration settings."""
 
-    model_config = SettingsConfigDict(env_prefix="")
+    model_config = SettingsConfigDict(env_prefix="", env_file=".env", env_file_encoding="utf-8", extra="ignore")
 
     # PostgreSQL/SQLite database
     database_url: str = Field(
@@ -56,7 +56,7 @@ class DatabaseSettings(BaseSettings):
 class ChromaDBSettings(BaseSettings):
     """ChromaDB vector database settings."""
 
-    model_config = SettingsConfigDict(env_prefix="chroma_")
+    model_config = SettingsConfigDict(env_prefix="chroma_", env_file=".env", env_file_encoding="utf-8", extra="ignore")
 
     persist_directory: str = Field(
         default="./data/chroma",
@@ -71,7 +71,7 @@ class ChromaDBSettings(BaseSettings):
 class LLMSettings(BaseSettings):
     """LLM provider configuration."""
 
-    model_config = SettingsConfigDict(env_prefix="")
+    model_config = SettingsConfigDict(env_prefix="", env_file=".env", env_file_encoding="utf-8", extra="ignore")
 
     # Provider selection
     provider: LLMProvider = Field(
@@ -101,6 +101,10 @@ class LLMSettings(BaseSettings):
     anthropic_api_key: Optional[str] = Field(
         default=None,
         description="Anthropic API key"
+    )
+    anthropic_base_url: Optional[str] = Field(
+        default=None,
+        description="Anthropic API base URL (for compatible proxies)"
     )
     anthropic_model: str = Field(
         default="claude-3-sonnet-20240229",
@@ -169,7 +173,7 @@ class LLMSettings(BaseSettings):
 class EmbeddingSettings(BaseSettings):
     """Embedding provider configuration."""
 
-    model_config = SettingsConfigDict(env_prefix="embedding_")
+    model_config = SettingsConfigDict(env_prefix="embedding_", env_file=".env", env_file_encoding="utf-8", extra="ignore")
 
     # Provider selection
     provider: EmbeddingProvider = Field(
@@ -236,7 +240,7 @@ class EmbeddingSettings(BaseSettings):
 class ServerSettings(BaseSettings):
     """Server configuration."""
 
-    model_config = SettingsConfigDict(env_prefix="api_")
+    model_config = SettingsConfigDict(env_prefix="api_", env_file=".env", env_file_encoding="utf-8", extra="ignore")
 
     host: str = Field(
         default="0.0.0.0",
@@ -263,7 +267,7 @@ class ServerSettings(BaseSettings):
 class CORSSettings(BaseSettings):
     """CORS configuration."""
 
-    model_config = SettingsConfigDict(env_prefix="cors_")
+    model_config = SettingsConfigDict(env_prefix="cors_", env_file=".env", env_file_encoding="utf-8", extra="ignore")
 
     origins: str = Field(
         default="http://localhost:3000,http://localhost:5173",
@@ -290,7 +294,7 @@ class CORSSettings(BaseSettings):
 class LoggingSettings(BaseSettings):
     """Logging configuration."""
 
-    model_config = SettingsConfigDict(env_prefix="log_")
+    model_config = SettingsConfigDict(env_prefix="log_", env_file=".env", env_file_encoding="utf-8", extra="ignore")
 
     level: str = Field(
         default="INFO",
@@ -326,7 +330,7 @@ class LoggingSettings(BaseSettings):
 class SecuritySettings(BaseSettings):
     """Security configuration."""
 
-    model_config = SettingsConfigDict(env_prefix="")
+    model_config = SettingsConfigDict(env_prefix="", env_file=".env", env_file_encoding="utf-8", extra="ignore")
 
     secret_key: str = Field(
         default="your-secret-key-change-in-production-please",
@@ -358,7 +362,7 @@ class SecuritySettings(BaseSettings):
 class RAGSettings(BaseSettings):
     """RAG pipeline configuration."""
 
-    model_config = SettingsConfigDict(env_prefix="rag_")
+    model_config = SettingsConfigDict(env_prefix="rag_", env_file=".env", env_file_encoding="utf-8", extra="ignore")
 
     top_k_results: int = Field(
         default=3,
@@ -381,7 +385,7 @@ class RAGSettings(BaseSettings):
 class ScraperSettings(BaseSettings):
     """Scraper configuration."""
 
-    model_config = SettingsConfigDict(env_prefix="scraper_")
+    model_config = SettingsConfigDict(env_prefix="scraper_", env_file=".env", env_file_encoding="utf-8", extra="ignore")
 
     rate_limit_delay: float = Field(
         default=2.0,
