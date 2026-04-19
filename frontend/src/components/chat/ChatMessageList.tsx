@@ -27,22 +27,25 @@ export interface ChatMessageListProps {
  */
 function WelcomeBanner() {
   return (
-    <div className="text-center py-8 animate-poe-fade-in-up" data-testid="welcome-banner">
-      <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-poe-bg-tertiary border border-poe-gold/30 mb-4 animate-poe-float animate-poe-ambient-pulse shadow-[0_0_16px_rgba(175,96,37,0.15)]">
-        <span className="text-2xl text-poe-gold">?</span>
+    <div className="text-center py-12 px-6 animate-poe-fade-in-up" data-testid="welcome-banner">
+      <div className="inline-flex items-center justify-center w-14 h-14 rounded-full border-[1.5px] border-[#4A3A28] mb-5 bg-[#AF6025]/[0.04] animate-poe-float">
+        <span className="text-[22px] font-[Cinzel,Georgia,serif] text-[#D4A85A]">?</span>
       </div>
-      <h2 className="poe-header text-xl mb-2 animate-poe-fade-in-up poe-stagger-1">
+      <h2 className="font-[Cinzel,Georgia,serif] text-[22px] font-semibold text-[#D4A85A] tracking-[2px] mb-2 animate-poe-fade-in-up poe-stagger-1">
         Welcome, Exile
       </h2>
-      <p className="text-poe-text-secondary text-sm animate-poe-fade-in-up poe-stagger-2">
-        Ask me anything about Path of Exile - items, builds, mechanics, and more.
+      <p className="text-[#9F9FA8] text-sm font-light animate-poe-fade-in-up poe-stagger-2">
+        Ask me anything about Path of Exile
       </p>
-      <div className="mt-6 flex justify-center gap-4 animate-poe-fade-in-up poe-stagger-3">
-        <span className="px-3 py-1.5 rounded text-xs text-poe-text-muted bg-poe-bg-tertiary border border-poe-border/50 transition-colors duration-200 hover:border-poe-gold/30 hover:text-poe-text-secondary">
+      <div className="mt-7 flex justify-center gap-2.5 flex-wrap animate-poe-fade-in-up poe-stagger-3">
+        <span className="px-4 py-[7px] rounded-[3px] text-xs text-[#8888FF] border border-[#8888FF]/15 transition-colors duration-200 hover:border-[#8888FF]/35 hover:bg-[#8888FF]/[0.04] cursor-pointer">
           "What are the best starter builds?"
         </span>
-        <span className="px-3 py-1.5 rounded text-xs text-poe-text-muted bg-poe-bg-tertiary border border-poe-border/50 transition-colors duration-200 hover:border-poe-gold/30 hover:text-poe-text-secondary">
+        <span className="px-4 py-[7px] rounded-[3px] text-xs text-[#8888FF] border border-[#8888FF]/15 transition-colors duration-200 hover:border-[#8888FF]/35 hover:bg-[#8888FF]/[0.04] cursor-pointer">
           "How does crafting work?"
+        </span>
+        <span className="px-4 py-[7px] rounded-[3px] text-xs text-[#8888FF] border border-[#8888FF]/15 transition-colors duration-200 hover:border-[#8888FF]/35 hover:bg-[#8888FF]/[0.04] cursor-pointer">
+          "Explain the passive tree"
         </span>
       </div>
     </div>
@@ -98,7 +101,7 @@ export function ChatMessageList({
   return (
     <div
       ref={scrollContainerRef}
-      className={`flex-1 overflow-y-auto px-3 py-4 sm:px-6 sm:py-6 lg:px-8 ${className}`}
+      className={`flex-1 overflow-y-auto px-6 py-8 sm:px-12 ${className}`}
       data-testid="chat-message-list"
       role="log"
       aria-label="Chat messages"

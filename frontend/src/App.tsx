@@ -214,10 +214,10 @@ function App() {
 
   // -- Header actions -------------------------------------------------------
   const headerActions = (
-    <div className="flex items-center gap-2 sm:gap-3">
+    <div className="flex items-center gap-3">
       {/* Current version badge - hidden on small screens */}
-      <span className="hidden lg:inline-flex items-center gap-1.5 px-2 py-1 rounded text-xs bg-poe-bg-tertiary border border-poe-border text-poe-text-muted">
-        <span className="w-1.5 h-1.5 rounded-full bg-poe-gold" />
+      <span className="hidden lg:inline-flex items-center gap-1.5 text-[11px] text-[#6B6B75]">
+        <span className="w-1.5 h-1.5 rounded-full bg-[#1BA29B] shadow-[0_0_6px_rgba(27,162,155,0.4)]" />
         {getGameVersionLabel(chat.gameVersion)}
       </span>
 
@@ -244,7 +244,7 @@ function App() {
       <button
         type="button"
         onClick={() => setShowPerformance(!showPerformance)}
-        className={`p-2 rounded transition-colors touch-manipulation ${showPerformance ? 'text-poe-gold bg-poe-hover' : 'text-poe-text-secondary hover:text-poe-text-highlight hover:bg-poe-hover'}`}
+        className={`w-8 h-8 flex items-center justify-center border rounded-[3px] transition-colors touch-manipulation ${showPerformance ? 'border-[#4A3A28] text-[#D4A85A] bg-[#AF6025]/[0.06]' : 'border-[#2A2A30] text-[#6B6B75] hover:border-[#3A3A42] hover:text-[#9F9FA8]'}`}
         aria-label="Toggle performance dashboard"
         data-testid="performance-toggle"
       >
@@ -257,7 +257,7 @@ function App() {
       <button
         type="button"
         onClick={() => setIsSettingsOpen(true)}
-        className="p-2 rounded text-poe-text-secondary hover:text-poe-text-highlight hover:bg-poe-hover transition-colors touch-manipulation"
+        className="w-8 h-8 flex items-center justify-center border border-[#2A2A30] rounded-[3px] text-[#6B6B75] hover:border-[#3A3A42] hover:text-[#D4A85A] transition-colors touch-manipulation"
         aria-label="Open settings"
         data-testid="settings-open-button"
       >
@@ -350,7 +350,7 @@ function App() {
         <div className="flex flex-col h-full">
           {/* Chat toolbar (clear button, shown when messages exist) */}
           {chat.messageCount > 0 && (
-            <div className="flex items-center justify-end px-3 py-1.5 sm:px-6 sm:py-2 lg:px-8 border-b border-[#2A2A32] bg-[#141418]/50">
+            <div className="flex items-center justify-end px-6 py-1.5 sm:px-12 border-b border-[#2A2A30]/50 bg-[#121215]/50">
               <div className="max-w-3xl w-full flex items-center justify-end">
                 <ClearConversationButton
                   onClear={chat.clearConversation}
@@ -390,7 +390,7 @@ function App() {
 
         {/* Performance Dashboard - collapsible panel */}
         {showPerformance && (
-          <div className="border-t border-[#2A2A32] bg-[#0a0a0f]">
+          <div className="border-t border-[#2A2A30] bg-[#0C0C0E]">
             <div className="max-w-5xl mx-auto px-4 py-3">
               <ErrorBoundary name="PerformanceDashboard">
                 <PerformanceDashboard apiUrl="/api" refreshInterval={5000} />

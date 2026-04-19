@@ -121,74 +121,82 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
           aria-label="An error occurred in the application"
           data-testid="error-boundary-fallback"
         >
-          {/* Error icon */}
-          <div className="w-16 h-16 rounded-full bg-red-900/20 border border-red-500/30 flex items-center justify-center mb-4">
-            <svg
-              className="w-8 h-8 text-red-400"
-              fill="none"
-              viewBox="0 0 24 24"
-              strokeWidth={1.5}
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z"
-              />
-            </svg>
-          </div>
+          {/* Dark card with red accent */}
+          <div className="bg-poe-bg-card border border-poe-border rounded-lg shadow-[0_4px_24px_rgba(0,0,0,0.5)] max-w-md w-full overflow-hidden">
+            {/* Top accent stripe */}
+            <div className="h-[2px] bg-[#cc4444]" />
 
-          {/* Error title */}
-          <h3 className="poe-header text-lg font-semibold text-red-400 mb-2">
-            Something went wrong
-          </h3>
+            <div className="p-6 flex flex-col items-center text-center">
+              {/* Error icon */}
+              <div className="w-14 h-14 rounded-full bg-[#cc4444]/10 border border-[#cc4444]/25 flex items-center justify-center mb-4">
+                <svg
+                  className="w-7 h-7 text-[#cc4444]"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth={1.5}
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z"
+                  />
+                </svg>
+              </div>
 
-          {/* Error description */}
-          <p className="text-sm text-poe-text-secondary text-center max-w-md mb-4">
-            An unexpected error occurred in {componentName}.
-            {errorCount > 2
-              ? ' This error keeps repeating. Try reloading the page.'
-              : ' You can try again or reload the page.'}
-          </p>
+              {/* Error title */}
+              <h3 className="poe-header text-lg font-semibold text-[#cc4444] mb-2">
+                Something went wrong
+              </h3>
 
-          {/* Error details in development mode */}
-          {isDev && this.state.error && (
-            <details className="w-full max-w-lg mb-4">
-              <summary className="text-xs text-poe-text-muted cursor-pointer hover:text-poe-text-highlight transition-colors">
-                Error details (development only)
-              </summary>
-              <pre className="mt-2 p-3 bg-poe-bg-primary border border-poe-border rounded text-xs text-red-300 overflow-auto max-h-40 whitespace-pre-wrap">
-                {this.state.error.toString()}
-                {this.state.errorInfo?.componentStack && (
-                  <>
-                    {'\n\nComponent stack:'}
-                    {this.state.errorInfo.componentStack}
-                  </>
+              {/* Error description */}
+              <p className="text-sm text-poe-text-secondary text-center max-w-md mb-4 leading-relaxed">
+                An unexpected error occurred in {componentName}.
+                {errorCount > 2
+                  ? ' This error keeps repeating. Try reloading the page.'
+                  : ' You can try again or reload the page.'}
+              </p>
+
+              {/* Error details in development mode */}
+              {isDev && this.state.error && (
+                <details className="w-full mb-4">
+                  <summary className="text-xs text-poe-text-muted cursor-pointer hover:text-poe-text-highlight transition-colors">
+                    Error details (development only)
+                  </summary>
+                  <pre className="mt-2 p-3 bg-[#0a0a0c] border border-poe-border/50 rounded text-xs text-[#cc4444]/80 overflow-auto max-h-40 whitespace-pre-wrap">
+                    {this.state.error.toString()}
+                    {this.state.errorInfo?.componentStack && (
+                      <>
+                        {'\n\nComponent stack:'}
+                        {this.state.errorInfo.componentStack}
+                      </>
+                    )}
+                  </pre>
+                </details>
+              )}
+
+              {/* Action buttons */}
+              <div className="flex items-center gap-3">
+                <button
+                  type="button"
+                  onClick={this.handleRetry}
+                  className="poe-button px-5 py-2 text-sm rounded transition-all"
+                  data-testid="error-boundary-retry"
+                >
+                  Try Again
+                </button>
+                {errorCount > 2 && (
+                  <button
+                    type="button"
+                    onClick={this.handleReload}
+                    className="poe-button-secondary px-4 py-2 text-sm rounded transition-all"
+                    data-testid="error-boundary-reload"
+                  >
+                    Reload Page
+                  </button>
                 )}
-              </pre>
-            </details>
-          )}
-
-          {/* Action buttons */}
-          <div className="flex items-center gap-3">
-            <button
-              type="button"
-              onClick={this.handleRetry}
-              className="poe-button px-4 py-2 text-sm rounded bg-poe-gold hover:bg-poe-gold-light border-poe-gold-dark text-white hover:shadow-poe-glow transition-all"
-              data-testid="error-boundary-retry"
-            >
-              Try Again
-            </button>
-            {errorCount > 2 && (
-              <button
-                type="button"
-                onClick={this.handleReload}
-                className="poe-button-secondary px-4 py-2 text-sm rounded transition-all"
-                data-testid="error-boundary-reload"
-              >
-                Reload Page
-              </button>
-            )}
+              </div>
+            </div>
           </div>
         </div>
       );

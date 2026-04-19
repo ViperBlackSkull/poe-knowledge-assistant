@@ -45,7 +45,7 @@ export const GAME_VERSION_OPTIONS: GameVersionOption[] = [
   {
     value: 'poe1',
     label: 'Path of Exile 1',
-    description: '3.24 Necropolis',
+    description: 'Standard Leagues',
   },
 ];
 

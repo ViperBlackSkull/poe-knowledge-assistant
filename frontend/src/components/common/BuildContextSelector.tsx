@@ -1,6 +1,5 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
 import type { BuildContextValue } from '@/hooks/useBuildContext';
-import { getBuildContextLabel } from '@/hooks/useBuildContext';
 
 // ---------------------------------------------------------------------------
 // Types
@@ -226,7 +225,7 @@ export function BuildContextSelector({
       className={`relative ${className}`}
       data-testid="build-context-selector"
     >
-      {/* Trigger area: button + optional clear */}
+      {/* Pill trigger area: button + optional clear */}
       <div className="flex items-center">
         <button
           type="button"
@@ -234,39 +233,24 @@ export function BuildContextSelector({
           onKeyDown={handleKeyDown}
           disabled={disabled}
           className={`
-            flex items-center gap-2 px-3 py-1.5 rounded-l text-sm font-medium
+            flex items-center gap-1.5 px-2.5 py-1 rounded-[3px] text-xs font-medium
             transition-all duration-200 border
             ${
               disabled
-                ? 'opacity-50 cursor-not-allowed bg-poe-bg-tertiary border-poe-border text-poe-text-muted'
+                ? 'opacity-50 cursor-not-allowed bg-poe-bg-tertiary border-poe-border text-[#6B6B75]'
                 : hasSelection
-                  ? 'bg-poe-bg-tertiary border-poe-gold/60 text-poe-gold shadow-poe-glow'
+                  ? 'bg-[#1A1510] border-poe-gold/60 text-poe-gold-light shadow-poe-glow'
                   : isOpen
-                    ? 'bg-poe-bg-tertiary border-poe-gold text-poe-text-highlight shadow-poe-glow'
-                    : 'bg-poe-bg-secondary border-poe-border text-poe-text-secondary hover:text-poe-text-highlight hover:border-poe-border-light hover:bg-poe-hover'
+                    ? 'bg-[#1A1510] border-poe-gold text-poe-gold-light shadow-poe-glow'
+                    : 'bg-poe-bg-secondary border-poe-border text-poe-text-secondary hover:text-poe-text-primary hover:border-poe-border-light hover:bg-poe-hover'
             }
-            ${hasSelection && !isOpen ? 'rounded-r-none border-r-0' : 'rounded-r'}
+            ${hasSelection && !isOpen ? 'rounded-r-none border-r-0' : ''}
           `}
           aria-haspopup="listbox"
           aria-expanded={isOpen}
           aria-label={`Select build context${hasSelection ? `, currently ${selectedOption?.label ?? value}` : ''}`}
           data-testid="build-context-trigger"
         >
-          {/* Build icon (sword/shield style) */}
-          <svg
-            className={`w-4 h-4 shrink-0 ${hasSelection ? 'text-poe-gold' : ''}`}
-            fill="none"
-            viewBox="0 0 24 24"
-            strokeWidth={1.5}
-            stroke="currentColor"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09zM18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.455 2.456L21.75 6l-1.036.259a3.375 3.375 0 00-2.455 2.456z"
-            />
-          </svg>
-
           {/* Selected label or default */}
           <span className="whitespace-nowrap">
             {hasSelection ? selectedOption?.label ?? value : 'Build Context'}
@@ -275,7 +259,7 @@ export function BuildContextSelector({
           {/* Chevron icon (only when not showing clear button) */}
           {!hasSelection && (
             <svg
-              className={`w-3.5 h-3.5 shrink-0 transition-transform duration-200 ${
+              className={`w-3 h-3 shrink-0 transition-transform duration-200 ${
                 isOpen ? 'rotate-180' : ''
               }`}
               fill="none"
@@ -298,16 +282,16 @@ export function BuildContextSelector({
             type="button"
             onClick={handleClear}
             className="
-              flex items-center justify-center px-2 py-1.5 rounded-r text-sm
-              bg-poe-bg-tertiary border border-l-0 border-poe-gold/60
-              text-poe-text-muted hover:text-poe-text-highlight hover:bg-poe-hover
+              flex items-center justify-center px-1.5 py-1 rounded-r-[3px] text-xs
+              bg-[#1A1510] border border-l-0 border-poe-gold/60
+              text-[#6B6B75] hover:text-poe-text-primary hover:bg-poe-hover
               transition-colors duration-200
             "
             aria-label="Clear build context"
             data-testid="build-context-clear"
           >
             <svg
-              className="w-3 h-3"
+              className="w-2.5 h-2.5"
               fill="none"
               viewBox="0 0 24 24"
               strokeWidth={2}
@@ -323,27 +307,17 @@ export function BuildContextSelector({
       {isOpen && (
         <div
           className="
-            absolute right-0 mt-1 w-72 rounded-lg
+            absolute right-0 mt-1 w-60 rounded-[3px]
             bg-poe-bg-secondary border border-poe-border
-            shadow-lg shadow-black/40 z-50
-            overflow-hidden
+            shadow-lg shadow-black/50 z-50
+            overflow-hidden animate-poe-fade-in
           "
           role="listbox"
           aria-label="Build context options"
           data-testid="build-context-dropdown"
         >
-          {/* Dropdown header */}
-          <div className="px-3 py-2 border-b border-poe-border bg-poe-bg-tertiary">
-            <span className="text-xs text-poe-gold font-semibold uppercase tracking-wider font-poe">
-              Build Context
-            </span>
-            <p className="text-[10px] text-poe-text-muted mt-0.5">
-              Select a build archetype for tailored responses
-            </p>
-          </div>
-
           {/* Options list */}
-          <div className="py-1 max-h-64 overflow-y-auto">
+          <div className="py-1 max-h-56 overflow-y-auto">
             {BUILD_CONTEXT_OPTIONS.map((option, index) => {
               const isSelected = option.value === value;
               const isHighlighted = index === highlightedIndex;
@@ -358,47 +332,35 @@ export function BuildContextSelector({
                   onClick={() => handleSelect(option)}
                   onMouseEnter={() => setHighlightedIndex(index)}
                   className={`
-                    w-full text-left px-3 py-2.5 flex items-center gap-3
+                    w-full text-left px-3 py-2 flex items-center gap-2.5
                     transition-colors duration-150
                     ${isHighlighted ? 'bg-poe-hover' : ''}
-                    ${isSelected ? 'text-poe-gold' : 'text-poe-text-secondary hover:text-poe-text-highlight'}
+                    ${isSelected ? 'text-poe-gold-light' : 'text-poe-text-secondary hover:text-poe-text-primary'}
                   `}
                   role="option"
                   aria-selected={isSelected}
                   data-testid={`build-context-option-${option.value}`}
                 >
                   {/* Selection indicator */}
-                  <div className="w-4 h-4 shrink-0 flex items-center justify-center">
+                  <div className="w-3.5 h-3.5 shrink-0 flex items-center justify-center">
                     {isSelected ? (
-                      <svg
-                        className="w-4 h-4 text-poe-gold"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        strokeWidth={2}
-                        stroke="currentColor"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                        />
-                      </svg>
+                      <div className="w-2 h-2 rounded-full bg-poe-gold" />
                     ) : (
-                      <div className="w-3.5 h-3.5 rounded-full border border-poe-border" />
+                      <div className="w-2 h-2 rounded-full border border-poe-border" />
                     )}
                   </div>
 
                   {/* Option content */}
                   <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-2">
-                      <span className="text-sm font-medium truncate">{option.label}</span>
+                    <div className="flex items-center gap-1.5">
+                      <span className="text-xs font-medium truncate">{option.label}</span>
                       {option.tag && (
                         <span
                           className={`
-                            shrink-0 px-1.5 py-0 rounded text-[10px] font-semibold uppercase tracking-wide
+                            shrink-0 px-1 py-0 rounded-[2px] text-[9px] font-semibold uppercase tracking-wide
                             ${isSelected
-                              ? 'bg-poe-gold/20 text-poe-gold border border-poe-gold/30'
-                              : 'bg-poe-bg-primary text-poe-text-muted border border-poe-border'
+                              ? 'bg-poe-gold/15 text-poe-gold-light border border-poe-gold/25'
+                              : 'bg-poe-bg-primary text-[#6B6B75] border border-poe-border'
                             }
                           `}
                         >
@@ -407,7 +369,7 @@ export function BuildContextSelector({
                       )}
                     </div>
                     {option.description && (
-                      <div className="text-xs text-poe-text-muted mt-0.5 truncate">
+                      <div className="text-[10px] text-[#6B6B75] mt-0.5 truncate">
                         {option.description}
                       </div>
                     )}
@@ -415,15 +377,6 @@ export function BuildContextSelector({
                 </button>
               );
             })}
-          </div>
-
-          {/* Dropdown footer */}
-          <div className="px-3 py-2 border-t border-poe-border bg-poe-bg-primary">
-            <p className="text-xs text-poe-text-muted">
-              {hasSelection
-                ? `Active: ${getBuildContextLabel(value)}`
-                : 'No build context selected'}
-            </p>
           </div>
         </div>
       )}

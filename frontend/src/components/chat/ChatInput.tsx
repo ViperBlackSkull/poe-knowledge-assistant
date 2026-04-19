@@ -345,7 +345,7 @@ export function ChatInput({
 
   return (
     <div
-      className={`border-t border-poe-border bg-poe-bg-secondary px-3 py-3 sm:px-6 sm:py-4 lg:px-8 relative transition-all duration-300 ${isLoading ? 'border-poe-gold/30' : ''} ${className}`}
+      className={`border-t border-[#2A2A30] bg-[#121215] px-6 py-4 sm:px-12 relative transition-all duration-300 ${isLoading ? 'border-[#6B5530]/30' : ''} ${className}`}
       data-testid="chat-input-container"
     >
       {/* Loading overlay bar at top with enhanced animation */}

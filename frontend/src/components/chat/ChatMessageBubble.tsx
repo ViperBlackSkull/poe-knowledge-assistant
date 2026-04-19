@@ -14,50 +14,14 @@ export interface ChatMessageBubbleProps {
 }
 
 /**
- * Get display initials for the avatar based on message role.
+ * Get avatar symbol based on message role.
  */
-function getAvatarInitial(role: MessageRole): string {
+function getAvatarSymbol(role: MessageRole): string {
   switch (role) {
-    case 'user':
-      return 'U';
-    case 'assistant':
-      return 'A';
-    case 'system':
-      return 'S';
-    default:
-      return '?';
-  }
-}
-
-/**
- * Get avatar background classes based on message role.
- */
-function getAvatarClasses(role: MessageRole): string {
-  switch (role) {
-    case 'user':
-      return 'bg-poe-bg-tertiary border-poe-border';
-    case 'assistant':
-      return 'bg-poe-gold/20 border-poe-gold/30';
-    case 'system':
-      return 'bg-poe-rarity-gem/20 border-poe-rarity-gem/30';
-    default:
-      return 'bg-poe-bg-tertiary border-poe-border';
-  }
-}
-
-/**
- * Get avatar text color based on message role.
- */
-function getAvatarTextClass(role: MessageRole): string {
-  switch (role) {
-    case 'user':
-      return 'text-poe-text-secondary';
-    case 'assistant':
-      return 'text-poe-gold';
-    case 'system':
-      return 'text-poe-rarity-gem';
-    default:
-      return 'text-poe-text-secondary';
+    case 'user': return '◆';
+    case 'assistant': return '♦';
+    case 'system': return '●';
+    default: return '?';
   }
 }
 
@@ -74,11 +38,10 @@ function formatTimestamp(timestamp: string): string {
 }
 
 /**
- * ChatMessageBubble renders a single chat message with appropriate styling
- * based on the sender role.
+ * ChatMessageBubble renders a single chat message with PoE website styling.
  *
- * - User messages: aligned to the right, tertiary background
- * - Assistant messages: aligned to the left, card background, markdown rendered
+ * - User messages: gold avatar, gold name, message body with light font-weight
+ * - Assistant messages: teal avatar, teal name, markdown rendered body
  * - System messages: centered, gem-colored accent
  */
 export function ChatMessageBubble({
@@ -88,20 +51,20 @@ export function ChatMessageBubble({
   const isUser = message.role === 'user';
   const isSystem = message.role === 'system';
 
-  // System messages are displayed centered
+  // System messages — centered
   if (isSystem) {
     return (
       <div className="flex justify-center my-3" data-message-role="system">
-        <div className="bg-poe-bg-tertiary border border-poe-rarity-gem/20 rounded-lg px-4 py-2 max-w-[85%]">
-          <p className="text-poe-rarity-gem text-xs text-center italic">
+        <div className="bg-[#18181C] border border-[#1BA29B]/20 rounded px-4 py-2 max-w-[85%]">
+          <p className="text-[#1BA29B] text-xs text-center italic">
             {message.content}
           </p>
           <div className="flex justify-center gap-3 mt-1">
-            <span className="text-poe-text-muted text-xs">
+            <span className="text-[#6B6B75] text-[11px]">
               {formatTimestamp(message.timestamp)}
             </span>
             {conversationId && (
-              <span className="text-poe-text-muted text-xs">
+              <span className="text-[#6B6B75] text-[11px]">
                 ID: {conversationId.slice(0, 8)}
               </span>
             )}
@@ -113,48 +76,37 @@ export function ChatMessageBubble({
 
   return (
     <div
-      className={`flex gap-2 sm:gap-3 mb-3 sm:mb-4 group ${isUser ? 'justify-end' : 'justify-start'}`}
+      className="py-4 border-b border-[#2A2A30]/50 animate-poe-message"
       data-message-role={message.role}
     >
-      {/* Avatar - left side for assistant */}
-      {!isUser && (
+      {/* Message header: avatar + name + timestamp */}
+      <div className="flex items-center gap-2.5 mb-2">
         <div
-          className={`shrink-0 w-7 h-7 sm:w-8 sm:h-8 rounded border flex items-center justify-center transition-all duration-200 ${getAvatarClasses(message.role)} group-hover:shadow-[0_0_8px_rgba(175,96,37,0.2)]`}
+          className={`w-7 h-7 border rounded-[3px] flex items-center justify-center text-xs shrink-0 ${
+            isUser
+              ? 'border-[#4A3A28] text-[#D4A85A] bg-[#AF6025]/[0.06]'
+              : 'border-[#1BA29B]/25 text-[#1BA29B] bg-[#1BA29B]/[0.06]'
+          }`}
           aria-label={`${message.role} avatar`}
         >
-          <span className={`text-[10px] sm:text-xs font-bold ${getAvatarTextClass(message.role)}`}>
-            {getAvatarInitial(message.role)}
-          </span>
+          {getAvatarSymbol(message.role)}
         </div>
-      )}
+        <span
+          className={`text-xs font-semibold tracking-[0.5px] uppercase ${
+            isUser ? 'text-[#D4A85A]' : 'text-[#1BA29B]'
+          }`}
+        >
+          {isUser ? 'Exile' : 'Knowledge Assistant'}
+        </span>
+        <span className="text-[#6B6B75] text-[11px] ml-auto">
+          {formatTimestamp(message.timestamp)}
+        </span>
+      </div>
 
-      {/* Message content */}
-      <div
-        className={`flex-1 max-w-[85%] sm:max-w-[80%] transition-all duration-200 ${
-          isUser
-            ? 'poe-card bg-poe-bg-tertiary border-poe-gold/30'
-            : 'poe-card hover:border-poe-gold/20'
-        }`}
-      >
-        {/* Role label */}
-        <div className="flex items-center justify-between mb-1">
-          <span
-            className={`text-xs font-medium ${
-              isUser ? 'text-poe-text-highlight' : 'text-poe-gold'
-            }`}
-          >
-            {isUser ? 'You' : 'Assistant'}
-          </span>
-          <span className="text-poe-text-muted text-xs">
-            {formatTimestamp(message.timestamp)}
-          </span>
-        </div>
-
-        {/* Message body */}
+      {/* Message body — indented past avatar */}
+      <div className="pl-[38px] text-sm leading-[1.7] text-[#E0E0E0] font-light">
         {isUser ? (
-          <p className="text-poe-text-highlight text-sm leading-relaxed">
-            {message.content}
-          </p>
+          <p>{message.content}</p>
         ) : (
           <MarkdownRenderer content={message.content} variant="chat" showCodeCopyButton />
         )}
@@ -164,28 +116,16 @@ export function ChatMessageBubble({
           <CitationList
             citations={extractCitationsFromMetadata(message.metadata)}
             format="compact"
-            className="mt-3 pt-2 border-t border-poe-border"
+            className="mt-3"
           />
-        )}
-
-        {/* Metadata footer */}
-        {conversationId && (
-          <div className="mt-2 pt-2 border-t border-poe-border">
-            <span className="text-poe-text-muted text-xs">
-              Conversation: {conversationId.slice(0, 8)}...
-            </span>
-          </div>
         )}
       </div>
 
-      {/* Avatar - right side for user */}
-      {isUser && (
-        <div
-          className={`shrink-0 w-7 h-7 sm:w-8 sm:h-8 rounded border flex items-center justify-center ${getAvatarClasses(message.role)}`}
-          aria-label={`${message.role} avatar`}
-        >
-          <span className={`text-[10px] sm:text-xs font-bold ${getAvatarTextClass(message.role)}`}>
-            {getAvatarInitial(message.role)}
+      {/* Metadata footer */}
+      {conversationId && (
+        <div className="pl-[38px] mt-2">
+          <span className="text-[#6B6B75] text-[11px]">
+            Conversation: {conversationId.slice(0, 8)}...
           </span>
         </div>
       )}

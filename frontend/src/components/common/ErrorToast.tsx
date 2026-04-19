@@ -277,48 +277,48 @@ export function ToastProvider({ children, maxToasts = MAX_TOASTS }: ToastProvide
 // ---------------------------------------------------------------------------
 
 const SEVERITY_CONFIG: Record<ToastSeverity, {
-  bgColor: string;
+  cardBg: string;
   borderColor: string;
+  accentColor: string;
   iconColor: string;
   textColor: string;
   titleColor: string;
-  progressColor: string;
   iconPath: string;
 }> = {
   error: {
-    bgColor: 'bg-red-900/30',
-    borderColor: 'border-red-500/40',
-    iconColor: 'text-red-400',
-    textColor: 'text-red-200',
-    titleColor: 'text-red-300',
-    progressColor: 'bg-red-400',
+    cardBg: 'bg-poe-bg-card',
+    borderColor: 'border-poe-border/60',
+    accentColor: 'bg-[#cc4444]',
+    iconColor: 'text-[#cc4444]',
+    textColor: 'text-poe-text-primary',
+    titleColor: 'text-[#cc4444]',
     iconPath: 'M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z',
   },
   warning: {
-    bgColor: 'bg-amber-900/30',
-    borderColor: 'border-amber-500/40',
-    iconColor: 'text-amber-400',
-    textColor: 'text-amber-200',
-    titleColor: 'text-amber-300',
-    progressColor: 'bg-amber-400',
+    cardBg: 'bg-poe-bg-card',
+    borderColor: 'border-poe-border/60',
+    accentColor: 'bg-[#AF6025]',
+    iconColor: 'text-poe-gold',
+    textColor: 'text-poe-text-primary',
+    titleColor: 'text-poe-gold-light',
     iconPath: 'M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z',
   },
   info: {
-    bgColor: 'bg-blue-900/30',
-    borderColor: 'border-blue-500/40',
-    iconColor: 'text-blue-400',
-    textColor: 'text-blue-200',
-    titleColor: 'text-blue-300',
-    progressColor: 'bg-blue-400',
+    cardBg: 'bg-poe-bg-card',
+    borderColor: 'border-poe-border/60',
+    accentColor: 'bg-poe-text-secondary',
+    iconColor: 'text-poe-text-secondary',
+    textColor: 'text-poe-text-primary',
+    titleColor: 'text-poe-text-highlight',
     iconPath: 'M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z',
   },
   success: {
-    bgColor: 'bg-green-900/30',
-    borderColor: 'border-green-500/40',
-    iconColor: 'text-green-400',
-    textColor: 'text-green-200',
-    titleColor: 'text-green-300',
-    progressColor: 'bg-green-400',
+    cardBg: 'bg-poe-bg-card',
+    borderColor: 'border-poe-border/60',
+    accentColor: 'bg-[#1BA29B]',
+    iconColor: 'text-[#1BA29B]',
+    textColor: 'text-poe-text-primary',
+    titleColor: 'text-[#1BA29B]',
     iconPath: 'M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z',
   },
 };
@@ -359,10 +359,9 @@ export function ErrorToast({ className = '' }: ErrorToastProps) {
             key={toast.id}
             className={`
               pointer-events-auto
-              ${config.bgColor}
+              ${config.cardBg}
               border ${config.borderColor}
-              backdrop-blur-sm
-              rounded-lg shadow-xl
+              rounded shadow-[0_4px_24px_rgba(0,0,0,0.5)]
               transition-all duration-300 ease-in-out
               ${toast.isDismissing
                 ? 'animate-poe-toast-out'
@@ -374,64 +373,66 @@ export function ErrorToast({ className = '' }: ErrorToastProps) {
             data-testid={`toast-${toast.id}`}
             data-severity={toast.severity}
           >
-            {/* Top accent line */}
-            <div className={`h-0.5 w-full rounded-t-lg ${config.progressColor} opacity-60`} />
+            <div className="flex">
+              {/* Left accent stripe */}
+              <div className={`w-1 shrink-0 rounded-l ${config.accentColor}`} />
 
-            <div className="p-3">
-              <div className="flex items-start gap-2.5">
-                {/* Icon */}
-                <svg
-                  className={`w-5 h-5 ${config.iconColor} shrink-0 mt-0.5`}
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  strokeWidth={1.5}
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d={config.iconPath}
-                  />
-                </svg>
-
-                {/* Content */}
-                <div className="flex-1 min-w-0">
-                  {toast.title && (
-                    <p className={`text-xs font-semibold ${config.titleColor} mb-0.5`}>
-                      {toast.title}
-                    </p>
-                  )}
-                  <p className={`text-sm ${config.textColor} leading-snug`}>
-                    {toast.message}
-                  </p>
-                </div>
-
-                {/* Dismiss button */}
-                <button
-                  type="button"
-                  onClick={() => removeToast(toast.id)}
-                  className="shrink-0 p-0.5 rounded text-poe-text-muted hover:text-poe-text-highlight transition-colors"
-                  aria-label="Dismiss notification"
-                >
-                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+              <div className="flex-1 p-3">
+                <div className="flex items-start gap-2.5">
+                  {/* Icon */}
+                  <svg
+                    className={`w-5 h-5 ${config.iconColor} shrink-0 mt-0.5`}
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    strokeWidth={1.5}
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d={config.iconPath}
+                    />
                   </svg>
-                </button>
-              </div>
 
-              {/* Retry button for retryable toasts */}
-              {toast.retryable && toast.onRetry && (
-                <div className="mt-2 ml-7.5 flex items-center gap-2">
+                  {/* Content */}
+                  <div className="flex-1 min-w-0">
+                    {toast.title && (
+                      <p className={`text-xs font-semibold ${config.titleColor} mb-0.5 tracking-wide`}>
+                        {toast.title}
+                      </p>
+                    )}
+                    <p className={`text-sm ${config.textColor} leading-snug`}>
+                      {toast.message}
+                    </p>
+                  </div>
+
+                  {/* Dismiss button */}
                   <button
                     type="button"
-                    onClick={toast.onRetry}
-                    className={`text-xs font-medium ${config.iconColor} hover:underline transition-colors`}
-                    data-testid={`toast-retry-${toast.id}`}
+                    onClick={() => removeToast(toast.id)}
+                    className="shrink-0 p-0.5 rounded text-poe-text-muted hover:text-poe-text-highlight transition-colors"
+                    aria-label="Dismiss notification"
                   >
-                    Retry
+                    <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
                   </button>
                 </div>
-              )}
+
+                {/* Retry button for retryable toasts */}
+                {toast.retryable && toast.onRetry && (
+                  <div className="mt-2 ml-7.5 flex items-center gap-2">
+                    <button
+                      type="button"
+                      onClick={toast.onRetry}
+                      className={`text-xs font-medium ${config.iconColor} hover:underline transition-colors`}
+                      data-testid={`toast-retry-${toast.id}`}
+                    >
+                      Retry
+                    </button>
+                  </div>
+                )}
+              </div>
             </div>
           </div>
         );

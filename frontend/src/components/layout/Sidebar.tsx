@@ -1,11 +1,10 @@
 import type { SidebarProps } from '@/types/layout';
 
 /**
- * Sidebar / configuration panel component.
+ * Sidebar / configuration panel — slides in from the right.
  *
- * Slides in from the right on mobile, is always visible on desktop
- * (when isOpen is true). Provides a panel for configuration options,
- * settings, or auxiliary information alongside the chat interface.
+ * Dark panel with subtle border matching the settings panel aesthetic.
+ * Overlay on mobile, inline on desktop (when open).
  */
 export function Sidebar({
   children,
@@ -14,10 +13,9 @@ export function Sidebar({
 }: SidebarProps) {
   return (
     <>
-      {/* Overlay for mobile when sidebar is open */}
       {isOpen && (
         <div
-          className="fixed inset-0 bg-black/50 z-30 lg:hidden animate-poe-fade-in transition-opacity duration-300"
+          className="fixed inset-0 bg-black/60 z-30 lg:hidden animate-poe-fade-in"
           onClick={onToggle}
           aria-hidden="true"
         />
@@ -25,7 +23,7 @@ export function Sidebar({
 
       <aside
         className={`
-          fixed top-14 sm:top-16 right-0 bottom-0 z-40
+          fixed top-[52px] right-0 bottom-0 z-40
           w-[85vw] sm:w-80 bg-poe-bg-secondary border-l border-poe-border
           transform transition-transform duration-300 ease-in-out
           lg:relative lg:top-0 lg:z-0 lg:shrink-0
@@ -34,38 +32,25 @@ export function Sidebar({
         `}
         aria-label="Configuration panel"
       >
-        {/* Sidebar header */}
         <div className="flex items-center justify-between px-4 py-3 border-b border-poe-border">
-          <h2 className="poe-header text-sm font-semibold tracking-wide">
+          <h2 className="font-[Cinzel,Georgia,serif] text-sm font-semibold text-poe-gold-light tracking-[1.5px] uppercase">
             Configuration
           </h2>
           <button
             type="button"
             onClick={onToggle}
-            className="p-1 rounded text-poe-text-muted hover:text-poe-text-highlight hover:bg-poe-hover transition-colors lg:hidden"
+            className="w-7 h-7 flex items-center justify-center border border-poe-border rounded-[3px] text-poe-text-muted hover:text-poe-text-highlight hover:border-poe-border-light transition-colors lg:hidden"
             aria-label="Close configuration panel"
           >
-            <svg
-              className="w-5 h-5"
-              fill="none"
-              viewBox="0 0 24 24"
-              strokeWidth={1.5}
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M6 18L18 6M6 6l12 12"
-              />
+            <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
             </svg>
           </button>
         </div>
 
-        {/* Sidebar content */}
         <div className="p-4">
           {children || (
             <div className="space-y-4">
-              {/* Placeholder configuration items */}
               <div className="poe-card">
                 <h3 className="text-poe-text-highlight text-sm font-medium mb-2">
                   Game Version
