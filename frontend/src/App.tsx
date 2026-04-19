@@ -87,6 +87,7 @@ function App() {
     (version: Parameters<typeof chat.setGameVersion>[0]) => {
       chat.setGameVersion(version);
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [chat.setGameVersion],
   );
 
@@ -96,6 +97,7 @@ function App() {
       setBuildContext(context);
       chat.setBuildContext(context || undefined);
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [setBuildContext, chat.setBuildContext],
   );
 
@@ -104,6 +106,7 @@ function App() {
     (message: ChatMessage) => {
       chat.addUserMessage(message.content);
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [chat.addUserMessage],
   );
 
@@ -111,6 +114,7 @@ function App() {
     (token: string) => {
       chat.appendStreamingToken(token);
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [chat.appendStreamingToken],
   );
 
@@ -118,6 +122,7 @@ function App() {
     (convId: string) => {
       chat.completeStreaming(convId);
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [chat.completeStreaming],
   );
 
@@ -125,6 +130,7 @@ function App() {
     (sources: SSESource[]) => {
       chat.attachSources(sources);
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [chat.attachSources],
   );
 
@@ -148,6 +154,7 @@ function App() {
         duration: classified.category === 'network' ? 8000 : 5000,
       });
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [chat.handleError, errorHandling.classifyError, toast],
   );
 

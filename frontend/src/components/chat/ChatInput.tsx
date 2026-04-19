@@ -181,7 +181,7 @@ export function ChatInput({
         abortControllerRef.current.signal,
       );
     },
-    [gameVersion, buildContext, conversationId, onStreamingToken, onStreamingDone, onError],
+    [gameVersion, buildContext, conversationId, onStreamingToken, onStreamingDone, onError, onSources],
   );
 
   // ---------------------------------------------------------------------------
