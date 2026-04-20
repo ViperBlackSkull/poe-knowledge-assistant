@@ -15,7 +15,7 @@ export function Sidebar({
     <>
       {isOpen && (
         <div
-          className="fixed inset-0 bg-black/60 z-30 lg:hidden animate-poe-fade-in"
+          className="fixed inset-0 bg-black/60 backdrop-blur-[2px] z-30 lg:hidden animate-poe-fade-in transition-opacity duration-300"
           onClick={onToggle}
           aria-hidden="true"
         />
@@ -39,7 +39,7 @@ export function Sidebar({
           <button
             type="button"
             onClick={onToggle}
-            className="w-8 h-8 flex items-center justify-center border border-poe-border rounded-[3px] text-poe-text-muted hover:text-poe-text-highlight hover:border-poe-gold hover:bg-poe-gold-muted/20 transition-all lg:hidden"
+            className="w-9 h-9 flex items-center justify-center border border-poe-border rounded-[3px] text-poe-text-muted hover:text-poe-text-highlight hover:border-poe-gold hover:bg-poe-gold-muted/20 transition-all touch-manipulation lg:hidden"
             aria-label="Close configuration panel"
           >
             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
@@ -56,7 +56,7 @@ export function Sidebar({
                   Game Version
                 </h3>
                 <select
-                  className="w-full bg-poe-bg-primary border border-poe-border rounded-[2px] px-3 py-2 text-sm text-poe-text-primary focus:border-poe-gold focus:outline-none focus:ring-1 focus:ring-poe-gold/50 transition-colors"
+                  className="w-full bg-poe-bg-primary border border-poe-border rounded-[3px] px-3 py-2 text-sm text-poe-text-primary focus:border-poe-gold focus:outline-none focus:ring-1 focus:ring-poe-gold/50 transition-colors"
                   aria-label="Game version selector"
                 >
                   <option value="poe1">Path of Exile 1</option>
@@ -70,7 +70,7 @@ export function Sidebar({
                 </h3>
                 <input
                   type="text"
-                  className="w-full bg-poe-bg-primary border border-poe-border rounded-[2px] px-3 py-2 text-sm text-poe-text-primary placeholder:text-poe-text-muted focus:border-poe-gold focus:outline-none focus:ring-1 focus:ring-poe-gold/50 transition-colors"
+                  className="w-full bg-poe-bg-primary border border-poe-border rounded-[3px] px-3 py-2 text-sm text-poe-text-primary placeholder:text-poe-text-muted focus:border-poe-gold focus:outline-none focus:ring-1 focus:ring-poe-gold/50 transition-colors"
                   placeholder="e.g. Lightning Arrow Deadeye"
                   aria-label="Build context input"
                 />

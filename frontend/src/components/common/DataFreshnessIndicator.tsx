@@ -181,35 +181,72 @@ export function DataFreshnessIndicator({
   if (error && !data) {
     // Classify the error for better messaging
     const classified = classifyError(new Error(error));
-    const errorLabel = classified.category === 'network'
-      ? 'Connection failed'
+    const isNetwork = classified.category === 'network';
+    const errorLabel = isNetwork
+      ? 'Offline'
       : classified.category === 'authentication'
         ? 'Auth error'
-        : 'Freshness unavailable';
+        : 'Unavailable';
+
+    // Use muted styling for network errors, red for auth/other errors
+    const dotClass = isNetwork ? 'bg-poe-text-muted' : 'bg-poe-fire';
+    const dotGlow = isNetwork ? 'none' : '0 0 6px rgba(255, 69, 0, 0.3)';
+    const textClass = isNetwork ? 'text-poe-text-muted' : 'text-poe-fire';
+    const borderClass = isNetwork ? 'border-poe-border' : 'border-poe-fire/20';
+
+    if (compact && isNetwork) {
+      // Compact network error: just a small muted dot with tooltip
+      return (
+        <span
+          className={`inline-flex items-center ${className}`}
+          title="Backend unavailable"
+          data-testid="data-freshness-error"
+          role="status"
+        >
+          <span
+            className="w-1.5 h-1.5 rounded-full bg-poe-text-muted shrink-0"
+          />
+        </span>
+      );
+    }
 
     return (
       <div
         className={`inline-flex items-center gap-1.5 ${
           compact ? 'px-1.5 py-0.5' : 'px-2 py-1'
-        } rounded-[3px] bg-poe-bg-tertiary border border-poe-fire/20 ${className}`}
+        } rounded-[3px] bg-poe-bg-tertiary border ${borderClass} ${className}`}
         data-testid="data-freshness-error"
-        role="alert"
+        role={isNetwork ? 'status' : 'alert'}
       >
         <span
-          className="w-1.5 h-1.5 rounded-full bg-poe-fire shrink-0"
-          style={{ boxShadow: '0 0 6px rgba(255, 69, 0, 0.3)' }}
-        />
-        <span className={`${compact ? 'text-[10px]' : 'text-xs'} text-poe-fire`}>
+          className="w-1.5 h-1.5 rounded-full shrink-0"
+          style={{ boxShadow: dotGlow }}
+        >
+          <span className={`block w-full h-full rounded-full ${dotClass}`} />
+        </span>
+        <span className={`${compact ? 'text-[10px]' : 'text-xs'} ${textClass}`}>
           {errorLabel}
         </span>
         <button
           type="button"
           onClick={refresh}
-          className="text-[10px] text-poe-text-muted hover:text-poe-text-primary transition-colors underline"
+          className="p-0.5 rounded text-poe-text-muted hover:text-poe-text-primary transition-colors"
           aria-label="Retry fetching freshness data"
           data-testid="data-freshness-error-retry"
         >
-          Retry
+          <svg
+            className="w-3 h-3"
+            fill="none"
+            viewBox="0 0 24 24"
+            strokeWidth={2}
+            stroke="currentColor"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182"
+            />
+          </svg>
         </button>
       </div>
     );

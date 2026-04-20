@@ -14,6 +14,7 @@ export function Header({
   contextDisplay,
   isMobileMenuOpen = false,
   onMobileMenuToggle,
+  onNavigate,
 }: HeaderProps) {
   return (
     <header className="bg-poe-bg-secondary border-b border-poe-border sticky top-0 z-50">
@@ -38,9 +39,10 @@ export function Header({
         {/* Nav tabs — desktop only */}
         <nav className="hidden md:flex items-stretch ml-8" aria-label="Main navigation">
           {navItems.map((item) => (
-            <a
+            <button
               key={item.href}
-              href={item.href}
+              type="button"
+              onClick={() => onNavigate?.(item.href)}
               className={`flex items-center px-6 text-xs font-medium tracking-[0.8px] uppercase transition-all duration-200 ${
                 item.active
                   ? 'text-poe-gold-light border-b-2 border-poe-gold shadow-poe-glow'
@@ -49,7 +51,7 @@ export function Header({
               aria-current={item.active ? 'page' : undefined}
             >
               {item.label}
-            </a>
+            </button>
           ))}
         </nav>
 
@@ -100,10 +102,11 @@ export function Header({
           {navItems.length > 0 && (
             <nav className="px-2 py-3 space-y-1" aria-label="Mobile navigation">
               {navItems.map((item, index) => (
-                <a
+                <button
                   key={item.href}
-                  href={item.href}
-                  className={`block px-4 py-3 text-sm font-medium rounded-[3px] transition-all touch-manipulation animate-poe-fade-in-up ${
+                  type="button"
+                  onClick={() => onNavigate?.(item.href)}
+                  className={`block w-full text-left px-4 py-3 text-sm font-medium rounded-[3px] transition-all touch-manipulation animate-poe-fade-in-up ${
                     item.active
                       ? 'text-poe-gold-light bg-poe-gold-muted/20 border border-poe-gold-muted/30'
                       : 'text-poe-text-secondary hover:text-poe-text-highlight hover:bg-poe-hover'
@@ -112,7 +115,7 @@ export function Header({
                   aria-current={item.active ? 'page' : undefined}
                 >
                   {item.label}
-                </a>
+                </button>
               ))}
             </nav>
           )}

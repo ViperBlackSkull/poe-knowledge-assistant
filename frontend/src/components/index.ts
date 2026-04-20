@@ -70,3 +70,9 @@ export type {
   ErrorToastProps,
 } from './common/ErrorToast';
 export { PerformanceDashboard } from './common/PerformanceDashboard';
+
+// Knowledge Base page
+export { KnowledgeBasePage } from './knowledge';
+
+// Admin page
+export { AdminPage } from './admin';

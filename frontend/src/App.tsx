@@ -15,6 +15,8 @@ import {
   ErrorBoundary,
   useToast,
   PerformanceDashboard,
+  KnowledgeBasePage,
+  AdminPage,
 } from '@/components';
 import type { ChatMessage } from '@/types/chat';
 import type { SSESource } from '@/types/streaming';
@@ -71,16 +73,22 @@ function App() {
     buildContext: buildContext || undefined,
   });
 
-  // -- Hash-based routing for demo pages ------------------------------------
-  const [currentHash, setCurrentHash] = useState(window.location.hash);
+  // -- Hash-based SPA routing ------------------------------------------------
+  const [currentRoute, setCurrentRoute] = useState(() => {
+    const hash = window.location.hash.slice(1) || '/';
+    return hash;
+  });
   useEffect(() => {
-    const handleHashChange = () => setCurrentHash(window.location.hash);
+    const handleHashChange = () => {
+      const hash = window.location.hash.slice(1) || '/';
+      setCurrentRoute(hash);
+    };
     window.addEventListener('hashchange', handleHashChange);
     return () => window.removeEventListener('hashchange', handleHashChange);
   }, []);
-
-  const showItemDemo = currentHash === '#/items';
-  const showCitationDemo = currentHash === '#/citations';
+  const navigate = useCallback((route: string) => {
+    window.location.hash = route;
+  }, []);
 
   // -- Game version handler -------------------------------------------------
   const handleGameVersionChange = useCallback(
@@ -323,10 +331,10 @@ function App() {
   );
 
   // -- Route: Item card demo page -------------------------------------------
-  if (showItemDemo) {
+  if (currentRoute === '/items') {
     return (
       <>
-        <MainLayout actions={headerActions} contextDisplay={contextDisplay}>
+        <MainLayout currentRoute={currentRoute} onNavigate={navigate} actions={headerActions} contextDisplay={contextDisplay}>
           <ErrorBoundary name="ItemCardDemo">
             <ItemCardDemo />
           </ErrorBoundary>
@@ -337,10 +345,10 @@ function App() {
   }
 
   // -- Route: Citation component demo page ----------------------------------
-  if (showCitationDemo) {
+  if (currentRoute === '/citations') {
     return (
       <>
-        <MainLayout actions={headerActions} contextDisplay={contextDisplay}>
+        <MainLayout currentRoute={currentRoute} onNavigate={navigate} actions={headerActions} contextDisplay={contextDisplay}>
           <ErrorBoundary name="CitationDemo">
             <CitationDemo />
           </ErrorBoundary>
@@ -350,10 +358,38 @@ function App() {
     );
   }
 
-  // -- Route: Main chat interface -------------------------------------------
+  // -- Route: Knowledge Base page -------------------------------------------
+  if (currentRoute === '/knowledge') {
+    return (
+      <>
+        <MainLayout currentRoute={currentRoute} onNavigate={navigate} actions={headerActions} contextDisplay={contextDisplay}>
+          <ErrorBoundary name="KnowledgeBasePage">
+            <KnowledgeBasePage />
+          </ErrorBoundary>
+        </MainLayout>
+        {settingsPanel}
+      </>
+    );
+  }
+
+  // -- Route: Admin Dashboard page ------------------------------------------
+  if (currentRoute === '/admin') {
+    return (
+      <>
+        <MainLayout currentRoute={currentRoute} onNavigate={navigate} actions={headerActions} contextDisplay={contextDisplay}>
+          <ErrorBoundary name="AdminPage">
+            <AdminPage />
+          </ErrorBoundary>
+        </MainLayout>
+        {settingsPanel}
+      </>
+    );
+  }
+
+  // -- Route: Main chat interface (default) ---------------------------------
   return (
     <>
-      <MainLayout showSidebar actions={headerActions} contextDisplay={contextDisplay}>
+      <MainLayout showSidebar currentRoute={currentRoute} onNavigate={navigate} actions={headerActions} contextDisplay={contextDisplay}>
         <div className="flex flex-col h-full">
           {/* Chat toolbar (clear button, shown when messages exist) */}
           {chat.messageCount > 0 && (
@@ -375,6 +411,7 @@ function App() {
               conversationId={chat.conversationId}
               isStreaming={chat.isStreaming}
               isLoading={chat.isLoading}
+              onSuggestionClick={(text) => chat.addUserMessage(text)}
             />
           </ErrorBoundary>
 

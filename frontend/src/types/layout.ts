@@ -41,6 +41,8 @@ export interface HeaderProps {
   isMobileMenuOpen?: boolean;
   /** Callback when mobile menu toggle is clicked */
   onMobileMenuToggle?: () => void;
+  /** Callback for SPA navigation (prevents full page reload) */
+  onNavigate?: (route: string) => void;
 }
 
 /** Props for the MainLayout component. */
@@ -57,6 +59,10 @@ export interface MainLayoutProps {
   actions?: ReactNode;
   /** Optional context display element (e.g. build context badge) shown in header */
   contextDisplay?: ReactNode;
+  /** Current SPA route for computing active nav state */
+  currentRoute?: string;
+  /** Callback for SPA navigation (prevents full page reload) */
+  onNavigate?: (route: string) => void;
 }
 
 /** Props for the content area wrapper. */

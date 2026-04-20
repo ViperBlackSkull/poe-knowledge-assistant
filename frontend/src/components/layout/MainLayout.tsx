@@ -19,14 +19,16 @@ export function MainLayout({
   className = '',
   actions,
   contextDisplay,
+  currentRoute = '/',
+  onNavigate,
 }: MainLayoutProps) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   const navItems: NavItem[] = [
-    { label: 'Chat', href: '/', active: true },
-    { label: 'Knowledge Base', href: '/knowledge' },
-    { label: 'Admin', href: '/admin' },
+    { label: 'Chat', href: '/', active: currentRoute === '/' },
+    { label: 'Knowledge Base', href: '/knowledge', active: currentRoute === '/knowledge' },
+    { label: 'Admin', href: '/admin', active: currentRoute === '/admin' },
   ];
 
   const headerActions: ReactNode = (
@@ -36,7 +38,7 @@ export function MainLayout({
         <button
           type="button"
           onClick={() => setIsSidebarOpen((prev) => !prev)}
-          className="w-8 h-8 flex items-center justify-center border border-poe-border rounded-[3px] text-poe-text-muted hover:border-poe-border-light hover:text-poe-text-highlight transition-colors"
+          className="w-8 h-8 min-h-[36px] min-w-[36px] flex items-center justify-center border border-poe-border rounded-[3px] text-poe-text-muted hover:border-poe-border-light hover:text-poe-text-highlight transition-colors touch-manipulation"
           aria-label="Toggle configuration panel"
         >
           <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
@@ -58,6 +60,10 @@ export function MainLayout({
         contextDisplay={contextDisplay}
         isMobileMenuOpen={isMobileMenuOpen}
         onMobileMenuToggle={() => setIsMobileMenuOpen((prev) => !prev)}
+        onNavigate={(route) => {
+          onNavigate?.(route);
+          setIsMobileMenuOpen(false);
+        }}
       />
 
       <div

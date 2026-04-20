@@ -19,17 +19,27 @@ export interface ChatMessageListProps {
   isStreaming?: boolean;
   /** Whether a request is currently in progress (sending or receiving) */
   isLoading?: boolean;
+  /** Callback when a welcome screen suggestion is clicked */
+  onSuggestionClick?: (text: string) => void;
 }
 
 /**
  * Welcome banner shown when there are no messages yet.
  * Features PoE-themed floating animation and staggered reveal.
  */
-function WelcomeBanner() {
+function WelcomeBanner({ onSuggestionClick }: { onSuggestionClick?: (text: string) => void }) {
+  const suggestions = [
+    'What are the best starter builds?',
+    'How does crafting work?',
+    'Explain the passive tree',
+  ];
+
   return (
     <div className="text-center py-12 px-6 animate-poe-fade-in-up" data-testid="welcome-banner">
       <div className="inline-flex items-center justify-center w-14 h-14 rounded-full border-[1.5px] border-[#4A3A28] mb-5 bg-[#AF6025]/[0.04] animate-poe-float">
-        <span className="text-[22px] font-[Cinzel,Georgia,serif] text-[#D4A85A]">?</span>
+        <svg className="w-7 h-7" viewBox="0 0 24 24" fill="none" strokeWidth={1.5} stroke="#D4A85A">
+          <path strokeLinecap="round" strokeLinejoin="round" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25" />
+        </svg>
       </div>
       <h2 className="font-[Cinzel,Georgia,serif] text-[22px] font-semibold text-[#D4A85A] tracking-[2px] mb-2 animate-poe-fade-in-up poe-stagger-1">
         Welcome, Exile
@@ -38,15 +48,16 @@ function WelcomeBanner() {
         Ask me anything about Path of Exile
       </p>
       <div className="mt-7 flex justify-center gap-2.5 flex-wrap animate-poe-fade-in-up poe-stagger-3">
-        <span className="px-4 py-[7px] rounded-[3px] text-xs text-[#8888FF] border border-[#8888FF]/15 transition-colors duration-200 hover:border-[#8888FF]/35 hover:bg-[#8888FF]/[0.04] cursor-pointer">
-          "What are the best starter builds?"
-        </span>
-        <span className="px-4 py-[7px] rounded-[3px] text-xs text-[#8888FF] border border-[#8888FF]/15 transition-colors duration-200 hover:border-[#8888FF]/35 hover:bg-[#8888FF]/[0.04] cursor-pointer">
-          "How does crafting work?"
-        </span>
-        <span className="px-4 py-[7px] rounded-[3px] text-xs text-[#8888FF] border border-[#8888FF]/15 transition-colors duration-200 hover:border-[#8888FF]/35 hover:bg-[#8888FF]/[0.04] cursor-pointer">
-          "Explain the passive tree"
-        </span>
+        {suggestions.map((text) => (
+          <button
+            key={text}
+            type="button"
+            onClick={() => onSuggestionClick?.(text)}
+            className="px-4 py-[7px] rounded-[3px] text-xs text-[#8888FF] border border-[#4A3A28]/20 select-none transition-all duration-200 hover:border-[#8888FF]/35 hover:bg-[#8888FF]/[0.04] active:scale-[0.98] cursor-pointer"
+          >
+            &ldquo;{text}&rdquo;
+          </button>
+        ))}
       </div>
     </div>
   );
@@ -69,6 +80,7 @@ export function ChatMessageList({
   autoScroll = true,
   isStreaming = false,
   isLoading = false,
+  onSuggestionClick,
 }: ChatMessageListProps) {
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const previousMessageCountRef = useRef(messages.length);
@@ -109,7 +121,7 @@ export function ChatMessageList({
     >
       <div className="max-w-3xl mx-auto">
         {messages.length === 0 && !isLoading ? (
-          <WelcomeBanner />
+          <WelcomeBanner onSuggestionClick={onSuggestionClick} />
         ) : (
           <>
             {messages.map((message, index) => (
