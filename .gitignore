@@ -41,6 +41,7 @@ env/
 
 # ChromaDB
 chroma_data/
+backend/data/
 *.db
 *.db-journal
 
@@ -83,11 +84,17 @@ conversations.db
 validation-screenshots/
 test-results/
 .playwright-mcp/
+test-*.png
+e2e-*.png
+current-*.png
 validation-*.png
 task-*-*.png
 screenshot-*.png
 verify-*.png
 validator-*.png
+chat-initial-state.png
+knowledge-base-full-page.png
+spa-test-*.png
 snapshot-*.md
 resize-viewport.js
 
