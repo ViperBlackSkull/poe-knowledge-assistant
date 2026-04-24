@@ -279,13 +279,16 @@ app = FastAPI(
 )
 
 # Configure CORS middleware for frontend origin
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=settings.cors.get_origins_list(),
-    allow_credentials=settings.cors.allow_credentials,
-    allow_methods=[settings.cors.allow_methods],
-    allow_headers=[settings.cors.allow_headers],
-)
+cors_kwargs = {
+    "allow_origins": settings.cors.get_origins_list(),
+    "allow_credentials": settings.cors.allow_credentials,
+    "allow_methods": [settings.cors.allow_methods],
+    "allow_headers": [settings.cors.allow_headers],
+}
+if settings.cors.dynamic_internal:
+    cors_kwargs["allow_origin_regex"] = settings.cors.internal_origin_regex
+
+app.add_middleware(CORSMiddleware, **cors_kwargs)
 
 # Performance monitoring middleware (tracks request durations and system metrics)
 _perf_collector = get_metrics_collector()

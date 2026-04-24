@@ -285,10 +285,19 @@ class CORSSettings(BaseSettings):
         default="*",
         description="Allowed HTTP headers"
     )
+    dynamic_internal: bool = Field(
+        default=False,
+        description="Allow CORS from any private/LAN IP (RFC 1918)"
+    )
 
     def get_origins_list(self) -> List[str]:
         """Parse CORS origins into a list."""
         return [origin.strip() for origin in self.origins.split(",")]
+
+    @property
+    def internal_origin_regex(self) -> str:
+        """Regex matching RFC 1918 private IPs for LAN access."""
+        return r"http://(10\.\d+\.\d+\.\d+|172\.(1[6-9]|2\d|3[01])\.\d+\.\d+|192\.168\.\d+\.\d+)(:\d+)?"
 
 
 class LoggingSettings(BaseSettings):

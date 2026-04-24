@@ -8,7 +8,11 @@ An AI-powered knowledge assistant for Path of Exile that uses RAG (Retrieval-Aug
 
 <table>
 <tr>
-<td width="50%"><img src="docs/screenshots/chat-response.png" alt="Chat with RAG response"/><br/><b>Chat with RAG-powered responses</b></td>
+<td width="50%"><img src="docs/screenshots/homepage.png" alt="Welcome screen"/><br/><b>Dark-themed welcome screen</b></td>
+<td width="50%"><img src="docs/screenshots/chat-typed.png" alt="Chat input"/><br/><b>Chat with suggestion chips</b></td>
+</tr>
+<tr>
+<td width="50%"><img src="docs/screenshots/chat-response.png" alt="Chat with RAG response"/><br/><b>RAG-powered streaming responses</b></td>
 <td width="50%"><img src="docs/screenshots/settings.png" alt="Settings panel"/><br/><b>Configure LLM & embedding providers</b></td>
 </tr>
 <tr>
