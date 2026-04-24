@@ -1,0 +1,23 @@
+services:
+  backend:
+    build: ./backend
+    ports:
+      - "8460:8460"
+    env_file: ./backend/.env
+    volumes:
+      - ./backend/data:/app/data
+    networks:
+      - poe-network
+
+  frontend:
+    build: ./frontend
+    ports:
+      - "9460:80"
+    depends_on:
+      - backend
+    networks:
+      - poe-network
+
+networks:
+  poe-network:
+    driver: bridge
