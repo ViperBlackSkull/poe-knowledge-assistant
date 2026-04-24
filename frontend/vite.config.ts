@@ -18,8 +18,9 @@ export default defineConfig({
   },
   test: {
     globals: true,
-    environment: 'node',
+    environment: 'jsdom',
     include: ['src/**/*.{test,spec}.{ts,tsx}'],
+    setupFiles: './src/test/setup.ts',
   },
   server: {
     port: 9460,
