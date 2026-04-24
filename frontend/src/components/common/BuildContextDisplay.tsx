@@ -67,42 +67,28 @@ export function BuildContextDisplay({
     <div
       className={`
         inline-flex items-center gap-1.5
-        ${compact ? 'px-2 py-0.5' : 'px-2.5 py-1'}
-        rounded
+        ${compact ? 'px-1.5 py-0.5' : 'px-2 py-0.5'}
+        rounded-[3px]
         bg-poe-bg-tertiary
-        border border-poe-gold/30
-        text-poe-gold
+        border border-poe-border
         transition-all duration-300 ease-in-out
+        animate-poe-fade-in
         ${className}
       `}
       aria-label={`Build context: ${label}`}
       data-testid="build-context-display"
       data-context={context}
     >
-      {/* Sparkle/star icon indicating active context */}
-      {!compact && (
-        <svg
-          className="w-3.5 h-3.5 shrink-0 text-poe-gold"
-          fill="none"
-          viewBox="0 0 24 24"
-          strokeWidth={1.5}
-          stroke="currentColor"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09zM18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.455 2.456L21.75 6l-1.036.259a3.375 3.375 0 00-2.455 2.456z"
-          />
-        </svg>
-      )}
-
-      {/* Indicator dot (always shown) */}
-      <span className="w-1.5 h-1.5 rounded-full bg-poe-gold shrink-0" />
-
-      {/* Context label */}
+      {/* Indicator dot with gold accent */}
       <span
-        className={`font-medium whitespace-nowrap ${
-          compact ? 'text-xs' : 'text-sm'
+        className={`w-1.5 h-1.5 rounded-full shrink-0 ${compact ? 'bg-poe-gold' : 'bg-poe-gold-light'}`}
+        style={{ boxShadow: '0 0 4px rgba(175, 96, 37, 0.5)' }}
+      />
+
+      {/* Context label with gold accent */}
+      <span
+        className={`font-medium whitespace-nowrap text-poe-gold-light ${
+          compact ? 'text-[10px]' : 'text-xs'
         }`}
       >
         {label}
@@ -110,7 +96,7 @@ export function BuildContextDisplay({
 
       {/* Optional tag badge */}
       {showTag && (
-        <span className="shrink-0 px-1 py-0 rounded text-[10px] font-semibold uppercase tracking-wide bg-poe-gold/15 text-poe-gold border border-poe-gold/20">
+        <span className="shrink-0 px-1 py-0 rounded-[2px] text-[8px] font-semibold uppercase tracking-wide bg-poe-bg-secondary text-poe-text-muted border border-poe-border">
           {tag}
         </span>
       )}

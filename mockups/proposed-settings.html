@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap');
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --gold: #AF6025;
+  --gold-light: #D4A85A;
+  --gold-dim: #6B5530;
+  --gold-muted: #4A3A28;
+  --bg-primary: #0C0C0E;
+  --bg-secondary: #121215;
+  --bg-tertiary: #18181C;
+  --bg-elevated: #1E1E24;
+  --border: #2A2A30;
+  --border-light: #3A3A42;
+  --text-primary: #E0E0E0;
+  --text-secondary: #9F9FA8;
+  --text-muted: #6B6B75;
+  --accent-teal: #1BA29B;
+  --font-display: 'Cinzel', Georgia, serif;
+  --font-body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+body {
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  font-size: 14px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Backdrop overlay */
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.6);
+  display: flex;
+  justify-content: flex-end;
+}
+
+/* Settings panel */
+.panel {
+  width: 440px;
+  background: var(--bg-secondary);
+  border-left: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+.panel-header {
+  padding: 20px 24px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.panel-title {
+  font-family: var(--font-display);
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--gold-light);
+  letter-spacing: 2px;
+}
+
+.panel-close {
+  margin-left: auto;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  color: var(--text-muted);
+  cursor: pointer;
+  font-size: 13px;
+  transition: all 0.15s;
+}
+
+.panel-close:hover {
+  border-color: var(--border-light);
+  color: var(--text-primary);
+}
+
+.panel-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 0;
+}
+
+.section {
+  padding: 24px;
+  border-bottom: 1px solid var(--border);
+}
+
+.section-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+
+.section-icon {
+  color: var(--gold);
+  font-size: 13px;
+}
+
+.section-title {
+  font-family: var(--font-display);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--gold-light);
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+}
+
+.section-desc {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-bottom: 20px;
+  padding-left: 21px;
+}
+
+.field {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.field:last-child { margin-bottom: 0; }
+
+.field-label {
+  width: 100px;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  letter-spacing: 0.3px;
+  text-align: right;
+  flex-shrink: 0;
+}
+
+.field-control { flex: 1; }
+
+.poe-select {
+  width: 100%;
+  background: var(--bg-primary);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  color: var(--text-primary);
+  padding: 8px 12px;
+  font-size: 13px;
+  font-family: var(--font-body);
+  outline: none;
+  cursor: pointer;
+  transition: border-color 0.2s;
+}
+
+.poe-select:focus {
+  border-color: var(--gold-dim);
+}
+
+.poe-input {
+  width: 100%;
+  background: var(--bg-primary);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  color: var(--text-primary);
+  padding: 8px 12px;
+  font-size: 13px;
+  font-family: var(--font-body);
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.poe-input:focus {
+  border-color: var(--gold-dim);
+  box-shadow: 0 0 0 1px rgba(175, 96, 37, 0.12);
+}
+
+.poe-input::placeholder { color: var(--text-muted); }
+.poe-input.password { letter-spacing: 3px; }
+
+.hint {
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-top: 6px;
+  letter-spacing: 0.2px;
+}
+
+.slider-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.slider {
+  flex: 1;
+  -webkit-appearance: none;
+  height: 3px;
+  background: var(--border);
+  border-radius: 2px;
+  outline: none;
+}
+
+.slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 14px;
+  height: 14px;
+  background: var(--gold-light);
+  border: 2px solid var(--gold-dim);
+  border-radius: 50%;
+  cursor: pointer;
+  box-shadow: 0 0 4px rgba(175, 96, 37, 0.3);
+}
+
+.slider-value {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--gold-light);
+  width: 40px;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+
+.key-row {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.key-indicator {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11px;
+  color: var(--text-muted);
+  flex-shrink: 0;
+}
+
+.key-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+}
+
+.key-dot.set { background: #44cc66; box-shadow: 0 0 4px rgba(68, 204, 102, 0.4); }
+.key-dot.unset { background: #cc4444; }
+
+.toggle-vis {
+  width: 28px;
+  height: 28px;
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  background: transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  flex-shrink: 0;
+}
+
+.toggle-vis:hover {
+  border-color: var(--border-light);
+  color: var(--text-secondary);
+}
+
+.expand-link {
+  font-size: 11px;
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: 8px 0 0;
+  display: block;
+  letter-spacing: 0.3px;
+}
+
+.expand-link:hover { color: var(--gold-light); }
+
+/* Panel footer */
+.panel-footer {
+  padding: 16px 24px;
+  border-top: 1px solid var(--border);
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.btn {
+  padding: 8px 24px;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: var(--font-body);
+}
+
+.btn-ghost {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text-secondary);
+}
+
+.btn-ghost:hover {
+  border-color: var(--border-light);
+  color: var(--text-primary);
+}
+
+.btn-primary {
+  background: linear-gradient(180deg, var(--gold-muted) 0%, rgba(74, 58, 40, 0.8) 100%);
+  border: 1px solid var(--gold-dim);
+  color: var(--gold-light);
+  font-family: var(--font-display);
+  font-weight: 600;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+}
+
+.btn-primary:hover {
+  background: linear-gradient(180deg, rgba(107, 85, 48, 0.9) 0%, var(--gold-muted) 100%);
+  box-shadow: 0 0 10px rgba(175, 96, 37, 0.12);
+}
+</style>
+</head>
+<body>
+
+<div class="overlay">
+<div class="panel">
+  <div class="panel-header">
+    <span style="color: var(--gold); font-size: 15px;">&#9881;</span>
+    <span class="panel-title">SETTINGS</span>
+    <div class="panel-close">&#10005;</div>
+  </div>
+
+  <div class="panel-body">
+    <!-- LLM Provider -->
+    <div class="section">
+      <div class="section-label">
+        <span class="section-icon">&#9733;</span>
+        <span class="section-title">LLM Provider</span>
+      </div>
+      <div class="section-desc">Configure the language model for generating responses</div>
+
+      <div class="field">
+        <span class="field-label">Provider</span>
+        <div class="field-control">
+          <select class="poe-select">
+            <option>OpenAI</option>
+            <option selected>Anthropic</option>
+            <option>Ollama</option>
+            <option>LM Studio</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="field">
+        <span class="field-label">Model</span>
+        <div class="field-control">
+          <select class="poe-select">
+            <option selected>glm-5</option>
+            <option>claude-3-sonnet-20240229</option>
+            <option>claude-3-haiku-20240307</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="field">
+        <span class="field-label">Base URL</span>
+        <div class="field-control">
+          <input class="poe-input" value="https://api.z.ai/api/anthropic" placeholder="Optional" />
+        </div>
+      </div>
+
+      <div class="field">
+        <span class="field-label">Temperature</span>
+        <div class="field-control">
+          <div class="slider-row">
+            <input class="slider" type="range" min="0" max="2" step="0.1" value="0.7" />
+            <span class="slider-value">0.7</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="field">
+        <span class="field-label">Max Tokens</span>
+        <div class="field-control">
+          <div class="slider-row">
+            <input class="slider" type="range" min="256" max="32000" value="2000" />
+            <span class="slider-value">2048</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- API Keys -->
+    <div class="section">
+      <div class="section-label">
+        <span class="section-icon">&#128273;</span>
+        <span class="section-title">API Keys</span>
+      </div>
+      <div class="section-desc">Configure your API key for the selected provider</div>
+
+      <div class="field">
+        <span class="field-label">Anthropic Key</span>
+        <div class="field-control">
+          <div class="key-row">
+            <input class="poe-input password" value="sk-ant-xxxxxxx" style="flex:1;" />
+            <button class="toggle-vis">&#128065;</button>
+          </div>
+          <div style="display:flex; align-items:center; gap:8px; margin-top:6px;">
+            <div class="key-indicator"><div class="key-dot set"></div> Set</div>
+          </div>
+          <div class="hint">Key is stored locally. Only a fingerprint is saved to remember your configuration.</div>
+        </div>
+      </div>
+
+      <span class="expand-link">Show other provider keys &#9662;</span>
+    </div>
+
+    <!-- Embedding Provider -->
+    <div class="section">
+      <div class="section-label">
+        <span class="section-icon">&#9775;</span>
+        <span class="section-title">Embedding Provider</span>
+      </div>
+      <div class="section-desc">Configure how text embeddings are generated</div>
+
+      <div class="field">
+        <span class="field-label">Provider</span>
+        <div class="field-control">
+          <select class="poe-select">
+            <option selected>Local (sentence-transformers)</option>
+            <option>OpenAI</option>
+            <option>Ollama</option>
+            <option>LM Studio</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="field">
+        <span class="field-label">Model</span>
+        <div class="field-control">
+          <select class="poe-select">
+            <option selected>all-MiniLM-L6-v2 (384d)</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <!-- RAG Config -->
+    <div class="section">
+      <div class="section-label">
+        <span class="section-icon">&#9881;</span>
+        <span class="section-title">RAG Configuration</span>
+      </div>
+      <div class="section-desc">Fine-tune retrieval-augmented generation parameters</div>
+
+      <div class="field">
+        <span class="field-label">Top K Results</span>
+        <div class="field-control">
+          <div class="slider-row">
+            <input class="slider" type="range" min="1" max="20" value="5" />
+            <span class="slider-value">5</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="field">
+        <span class="field-label">Score Threshold</span>
+        <div class="field-control">
+          <div class="slider-row">
+            <input class="slider" type="range" min="0" max="1" step="0.1" value="0.7" />
+            <span class="slider-value">0.7</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="panel-footer">
+    <button class="btn btn-ghost">Cancel</button>
+    <button class="btn btn-primary">Save Settings</button>
+  </div>
+</div>
+</div>
+
+</body>
+</html>

@@ -2,6 +2,8 @@
  * Performance Dashboard component for POE Knowledge Assistant.
  * Displays real-time performance metrics, cache stats, rate limiting info,
  * and system resource monitoring from the backend performance API.
+ *
+ * Redesigned with dark card grid layout matching pathofexile.com aesthetic.
  */
 import { useState, useEffect, useCallback } from 'react';
 
@@ -88,24 +90,15 @@ function getStatusColor(status: string): string {
     case 'healthy':
     case 'ready':
     case 'ok':
-      return '#22c55e';
+      return '#1BA29B'; // poe-teal
     case 'degraded':
     case 'disabled':
-      return '#f59e0b';
+      return '#D4A85A'; // poe-gold-light
     case 'error':
-      return '#ef4444';
+      return '#FF4500'; // poe-fire
     default:
-      return '#6b7280';
+      return '#6B6B75'; // poe-text-muted
   }
-}
-
-function ProgressBar({ value, max, color = '#3b82f6' }: { value: number; max: number; color?: string }) {
-  const pct = Math.min((value / max) * 100, 100);
-  return (
-    <div style={{ background: '#1e293b', borderRadius: 4, height: 8, overflow: 'hidden', width: '100%' }}>
-      <div style={{ background: color, width: `${pct}%`, height: '100%', borderRadius: 4, transition: 'width 0.3s' }} />
-    </div>
-  );
 }
 
 // ---------------------------------------------------------------------------
@@ -161,7 +154,7 @@ export function PerformanceDashboard({
 
   if (loading) {
     return (
-      <div style={{ padding: 16, color: '#94a3b8', fontFamily: 'monospace', fontSize: 13 }}>
+      <div className="p-4 text-[#6B6B75] text-xs font-mono">
         Loading performance data...
       </div>
     );
@@ -169,7 +162,7 @@ export function PerformanceDashboard({
 
   if (error) {
     return (
-      <div style={{ padding: 16, color: '#ef4444', fontFamily: 'monospace', fontSize: 13 }}>
+      <div className="p-4 text-red-400 text-xs font-mono">
         Error: {error}
       </div>
     );
@@ -187,150 +180,176 @@ export function PerformanceDashboard({
     ? (totalCacheHits / (totalCacheHits + totalCacheMisses) * 100)
     : 0;
 
-  const sectionStyle: React.CSSProperties = {
-    background: '#0f172a',
-    borderRadius: 8,
-    padding: 16,
-    border: '1px solid #1e293b',
-  };
-
-  const labelStyle: React.CSSProperties = {
-    color: '#94a3b8',
-    fontSize: 11,
-    textTransform: 'uppercase' as const,
-    letterSpacing: 0.5,
-    marginBottom: 4,
-  };
-
-  const valueStyle: React.CSSProperties = {
-    color: '#f1f5f9',
-    fontSize: 18,
-    fontWeight: 600,
-    fontFamily: 'monospace',
+  // Color helpers for response times
+  const getResponseColor = (ms: number, thresholds: [number, number]): string => {
+    if (ms < thresholds[0]) return '#1BA29B'; // poe-teal
+    if (ms < thresholds[1]) return '#D4A85A'; // poe-gold-light
+    return '#FF4500'; // poe-fire
   };
 
   return (
-    <div style={{ fontFamily: 'monospace', fontSize: 13, color: '#e2e8f0', padding: 8 }}>
+    <div className="font-mono text-xs text-[#C8C8C8] p-2">
       {/* Header */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-          <div style={{
-            width: 8, height: 8, borderRadius: '50%',
-            background: getStatusColor(data.status),
-          }} />
-          <span style={{ fontWeight: 600, fontSize: 15 }}>Performance Dashboard</span>
+      <div className="flex justify-between items-center mb-3">
+        <div className="flex items-center gap-2">
+          <div
+            className="w-2 h-2 rounded-full"
+            style={{
+              background: getStatusColor(data.status),
+              boxShadow: `0 0 6px ${getStatusColor(data.status)}40`,
+            }}
+          />
+          <span className="font-semibold text-sm text-poe-text-primary">Performance Dashboard</span>
         </div>
-        <div style={{ display: 'flex', gap: 8 }}>
+        <div className="flex items-center gap-2">
           <button
             onClick={clearCaches}
-            style={{
-              background: '#1e293b', border: '1px solid #334155', borderRadius: 4,
-              color: '#94a3b8', padding: '4px 10px', fontSize: 11, cursor: 'pointer',
-            }}
+            className="
+              px-2 py-0.5 rounded-[3px] text-[10px]
+              bg-poe-bg-tertiary border border-poe-border
+              text-[#6B6B75] hover:text-poe-text-primary hover:border-poe-border-light
+              transition-colors duration-200 cursor-pointer
+            "
           >
             Clear Caches
           </button>
           <button
             onClick={resetMetrics}
-            style={{
-              background: '#1e293b', border: '1px solid #334155', borderRadius: 4,
-              color: '#94a3b8', padding: '4px 10px', fontSize: 11, cursor: 'pointer',
-            }}
+            className="
+              px-2 py-0.5 rounded-[3px] text-[10px]
+              bg-poe-bg-tertiary border border-poe-border
+              text-[#6B6B75] hover:text-poe-text-primary hover:border-poe-border-light
+              transition-colors duration-200 cursor-pointer
+            "
           >
             Reset Metrics
           </button>
-          <span style={{ color: '#64748b', fontSize: 11 }}>
-            Updated: {lastRefresh.toLocaleTimeString()}
+          <span className="text-[10px] text-[#6B6B75]">
+            {lastRefresh.toLocaleTimeString()}
           </span>
         </div>
       </div>
 
-      {/* Top-level metrics row */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: 12, marginBottom: 16 }}>
-        <div style={sectionStyle}>
-          <div style={labelStyle}>Uptime</div>
-          <div style={valueStyle}>{summary.uptime_human}</div>
+      {/* Top-level metrics row — card grid */}
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2 mb-3">
+        {/* Uptime */}
+        <div className="rounded-[3px] bg-poe-bg-secondary border border-poe-border p-3">
+          <div className="text-[10px] text-[#6B6B75] uppercase tracking-wider mb-1">Uptime</div>
+          <div className="text-sm font-semibold text-[#D4A85A]">{summary.uptime_human}</div>
         </div>
-        <div style={sectionStyle}>
-          <div style={labelStyle}>Total Requests</div>
-          <div style={valueStyle}>{formatNumber(summary.total_requests)}</div>
+        {/* Total Requests */}
+        <div className="rounded-[3px] bg-poe-bg-secondary border border-poe-border p-3">
+          <div className="text-[10px] text-[#6B6B75] uppercase tracking-wider mb-1">Total Requests</div>
+          <div className="text-sm font-semibold text-[#D4A85A]">{formatNumber(summary.total_requests)}</div>
         </div>
-        <div style={sectionStyle}>
-          <div style={labelStyle}>Active</div>
-          <div style={valueStyle}>{summary.active_requests}</div>
-          <div style={{ color: '#64748b', fontSize: 10 }}>Peak: {summary.peak_active_requests}</div>
+        {/* Active */}
+        <div className="rounded-[3px] bg-poe-bg-secondary border border-poe-border p-3">
+          <div className="text-[10px] text-[#6B6B75] uppercase tracking-wider mb-1">Active</div>
+          <div className="text-sm font-semibold text-poe-text-primary">{summary.active_requests}</div>
+          <div className="text-[10px] text-[#6B6B75] mt-0.5">Peak: {summary.peak_active_requests}</div>
         </div>
-        <div style={sectionStyle}>
-          <div style={labelStyle}>Throughput</div>
-          <div style={valueStyle}>{summary.requests_per_second.toFixed(1)}</div>
-          <div style={{ color: '#64748b', fontSize: 10 }}>req/s</div>
+        {/* Throughput */}
+        <div className="rounded-[3px] bg-poe-bg-secondary border border-poe-border p-3">
+          <div className="text-[10px] text-[#6B6B75] uppercase tracking-wider mb-1">Throughput</div>
+          <div className="text-sm font-semibold text-[#1BA29B]">{summary.requests_per_second.toFixed(1)}</div>
+          <div className="text-[10px] text-[#6B6B75] mt-0.5">req/s</div>
         </div>
-        <div style={sectionStyle}>
-          <div style={labelStyle}>Avg Response</div>
-          <div style={{ ...valueStyle, color: summary.avg_response_ms < 100 ? '#22c55e' : summary.avg_response_ms < 500 ? '#f59e0b' : '#ef4444' }}>
+        {/* Avg Response */}
+        <div className="rounded-[3px] bg-poe-bg-secondary border border-poe-border p-3">
+          <div className="text-[10px] text-[#6B6B75] uppercase tracking-wider mb-1">Avg Response</div>
+          <div
+            className="text-sm font-semibold"
+            style={{ color: getResponseColor(summary.avg_response_ms, [100, 500]) }}
+          >
             {summary.avg_response_ms.toFixed(1)}ms
           </div>
         </div>
-        <div style={sectionStyle}>
-          <div style={labelStyle}>P95 Response</div>
-          <div style={{ ...valueStyle, color: summary.p95_response_ms < 200 ? '#22c55e' : summary.p95_response_ms < 1000 ? '#f59e0b' : '#ef4444' }}>
+        {/* P95 Response */}
+        <div className="rounded-[3px] bg-poe-bg-secondary border border-poe-border p-3">
+          <div className="text-[10px] text-[#6B6B75] uppercase tracking-wider mb-1">P95 Response</div>
+          <div
+            className="text-sm font-semibold"
+            style={{ color: getResponseColor(summary.p95_response_ms, [200, 1000]) }}
+          >
             {summary.p95_response_ms.toFixed(1)}ms
           </div>
         </div>
       </div>
 
       {/* Second row: System + Cache + Rate Limiting */}
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 12 }}>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
         {/* System Resources */}
-        <div style={sectionStyle}>
-          <div style={{ fontWeight: 600, marginBottom: 12, fontSize: 13 }}>System Resources</div>
-          <div style={{ marginBottom: 10 }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 4 }}>
-              <span style={{ color: '#94a3b8', fontSize: 11 }}>Memory</span>
-              <span style={{ color: '#f1f5f9', fontSize: 11 }}>{system.current.memory_mb.toFixed(0)} MB</span>
+        <div className="rounded-[3px] bg-poe-bg-secondary border border-poe-border p-3">
+          <div className="text-xs font-semibold text-poe-text-primary mb-3">System Resources</div>
+          {/* Memory */}
+          <div className="mb-3">
+            <div className="flex justify-between mb-1">
+              <span className="text-[10px] text-[#6B6B75]">Memory</span>
+              <span className="text-[10px] text-poe-text-primary">{system.current.memory_mb.toFixed(0)} MB</span>
             </div>
-            <ProgressBar value={system.current.memory_mb} max={2048} color="#3b82f6" />
-          </div>
-          <div style={{ marginBottom: 10 }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 4 }}>
-              <span style={{ color: '#94a3b8', fontSize: 11 }}>CPU</span>
-              <span style={{ color: '#f1f5f9', fontSize: 11 }}>{system.current.cpu_percent.toFixed(1)}%</span>
+            <div className="h-1.5 rounded-full bg-poe-bg-primary overflow-hidden">
+              <div
+                className="h-full rounded-full transition-all duration-300"
+                style={{
+                  width: `${Math.min((system.current.memory_mb / 2048) * 100, 100)}%`,
+                  background: '#1BA29B',
+                }}
+              />
             </div>
-            <ProgressBar value={system.current.cpu_percent} max={100} color="#8b5cf6" />
           </div>
-          <div style={{ display: 'flex', justifyContent: 'space-between', color: '#94a3b8', fontSize: 11 }}>
+          {/* CPU */}
+          <div className="mb-3">
+            <div className="flex justify-between mb-1">
+              <span className="text-[10px] text-[#6B6B75]">CPU</span>
+              <span className="text-[10px] text-poe-text-primary">{system.current.cpu_percent.toFixed(1)}%</span>
+            </div>
+            <div className="h-1.5 rounded-full bg-poe-bg-primary overflow-hidden">
+              <div
+                className="h-full rounded-full transition-all duration-300"
+                style={{
+                  width: `${Math.min(system.current.cpu_percent, 100)}%`,
+                  background: '#D4A85A',
+                }}
+              />
+            </div>
+          </div>
+          {/* Threads / Disk */}
+          <div className="flex justify-between text-[10px] text-[#6B6B75]">
             <span>Threads: {system.current.thread_count}</span>
             <span>Disk: {system.current.disk_percent.toFixed(0)}%</span>
           </div>
         </div>
 
-        {/* Cache Stats */}
-        <div style={sectionStyle}>
-          <div style={{ fontWeight: 600, marginBottom: 12, fontSize: 13 }}>Cache Performance</div>
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
+        {/* Cache Performance */}
+        <div className="rounded-[3px] bg-poe-bg-secondary border border-poe-border p-3">
+          <div className="text-xs font-semibold text-poe-text-primary mb-3">Cache Performance</div>
+          <div className="grid grid-cols-2 gap-2">
             <div>
-              <div style={labelStyle}>Entries</div>
-              <div style={{ ...valueStyle, fontSize: 14 }}>{totalCacheEntries}</div>
+              <div className="text-[10px] text-[#6B6B75] uppercase tracking-wider mb-0.5">Entries</div>
+              <div className="text-sm font-semibold text-[#D4A85A]">{totalCacheEntries}</div>
             </div>
             <div>
-              <div style={labelStyle}>Hit Rate</div>
-              <div style={{ ...valueStyle, fontSize: 14, color: overallHitRate > 50 ? '#22c55e' : overallHitRate > 20 ? '#f59e0b' : '#64748b' }}>
+              <div className="text-[10px] text-[#6B6B75] uppercase tracking-wider mb-0.5">Hit Rate</div>
+              <div
+                className="text-sm font-semibold"
+                style={{ color: overallHitRate > 50 ? '#1BA29B' : overallHitRate > 20 ? '#D4A85A' : '#6B6B75' }}
+              >
                 {overallHitRate.toFixed(1)}%
               </div>
             </div>
             <div>
-              <div style={labelStyle}>Hits</div>
-              <div style={{ color: '#22c55e', fontSize: 14, fontFamily: 'monospace' }}>{formatNumber(totalCacheHits)}</div>
+              <div className="text-[10px] text-[#6B6B75] uppercase tracking-wider mb-0.5">Hits</div>
+              <div className="text-sm font-semibold text-[#1BA29B]">{formatNumber(totalCacheHits)}</div>
             </div>
             <div>
-              <div style={labelStyle}>Misses</div>
-              <div style={{ color: '#64748b', fontSize: 14, fontFamily: 'monospace' }}>{formatNumber(totalCacheMisses)}</div>
+              <div className="text-[10px] text-[#6B6B75] uppercase tracking-wider mb-0.5">Misses</div>
+              <div className="text-sm font-semibold text-[#6B6B75]">{formatNumber(totalCacheMisses)}</div>
             </div>
           </div>
           {Object.keys(cache).length > 0 && (
-            <div style={{ marginTop: 8, borderTop: '1px solid #1e293b', paddingTop: 8 }}>
+            <div className="mt-2 pt-2 border-t border-poe-border">
               {Object.entries(cache).map(([name, stats]) => (
-                <div key={name} style={{ display: 'flex', justifyContent: 'space-between', fontSize: 10, color: '#64748b', marginBottom: 2 }}>
+                <div key={name} className="flex justify-between text-[10px] text-[#6B6B75] mb-0.5">
                   <span>{name}</span>
                   <span>{stats.size}/{stats.max_size} ({stats.hit_rate_percent}%)</span>
                 </div>
@@ -340,25 +359,30 @@ export function PerformanceDashboard({
         </div>
 
         {/* Rate Limiting */}
-        <div style={sectionStyle}>
-          <div style={{ fontWeight: 600, marginBottom: 12, fontSize: 13 }}>Rate Limiting</div>
-          <div style={{ marginBottom: 8 }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 2 }}>
-              <span style={{ color: '#94a3b8', fontSize: 11 }}>Status</span>
-              <span style={{ color: getStatusColor(rate_limiting.status), fontSize: 11 }}>{rate_limiting.status}</span>
+        <div className="rounded-[3px] bg-poe-bg-secondary border border-poe-border p-3">
+          <div className="text-xs font-semibold text-poe-text-primary mb-3">Rate Limiting</div>
+          <div className="mb-2">
+            <div className="flex justify-between mb-1">
+              <span className="text-[10px] text-[#6B6B75]">Status</span>
+              <span
+                className="text-[10px]"
+                style={{ color: getStatusColor(rate_limiting.status) }}
+              >
+                {rate_limiting.status}
+              </span>
             </div>
-            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 2 }}>
-              <span style={{ color: '#94a3b8', fontSize: 11 }}>Rules</span>
-              <span style={{ color: '#f1f5f9', fontSize: 11 }}>{rate_limiting.rules}</span>
+            <div className="flex justify-between">
+              <span className="text-[10px] text-[#6B6B75]">Rules</span>
+              <span className="text-[10px] text-poe-text-primary">{rate_limiting.rules}</span>
             </div>
           </div>
           {rate_limiting.stats && Object.entries(rate_limiting.stats).map(([name, stats]) => (
-            <div key={name} style={{ marginBottom: 6, padding: '4px 0', borderTop: '1px solid #1e293b' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 11 }}>
-                <span style={{ color: '#94a3b8' }}>{stats.rule_name}</span>
-                <span style={{ color: '#f1f5f9' }}>{stats.max_requests}/{stats.window_seconds}s</span>
+            <div key={name} className="pt-2 border-t border-poe-border mb-1">
+              <div className="flex justify-between text-[10px]">
+                <span className="text-[#6B6B75]">{stats.rule_name}</span>
+                <span className="text-poe-text-primary">{stats.max_requests}/{stats.window_seconds}s</span>
               </div>
-              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 10, color: '#64748b' }}>
+              <div className="flex justify-between text-[10px] text-[#6B6B75]">
                 <span>Blocked: {stats.global_blocked}</span>
                 <span>Clients: {stats.active_clients}</span>
               </div>
@@ -368,20 +392,27 @@ export function PerformanceDashboard({
       </div>
 
       {/* Status Code Distribution */}
-      <div style={{ ...sectionStyle, marginTop: 12 }}>
-        <div style={{ fontWeight: 600, marginBottom: 8, fontSize: 13 }}>Status Code Distribution</div>
-        <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap' as const }}>
+      <div className="rounded-[3px] bg-poe-bg-secondary border border-poe-border p-3 mt-2">
+        <div className="text-xs font-semibold text-poe-text-primary mb-2">Status Code Distribution</div>
+        <div className="flex gap-4 flex-wrap">
           {Object.entries(summary.status_code_distribution).map(([code, count]) => (
-            <div key={code} style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-              <div style={{
-                width: 6, height: 6, borderRadius: '50%',
-                background: Number(code) < 300 ? '#22c55e' : Number(code) < 400 ? '#f59e0b' : '#ef4444',
-              }} />
-              <span style={{ color: '#f1f5f9', fontSize: 12 }}>{code}: {formatNumber(count)}</span>
+            <div key={code} className="flex items-center gap-1.5">
+              <div
+                className="w-1.5 h-1.5 rounded-full"
+                style={{
+                  background: Number(code) < 300 ? '#1BA29B' : Number(code) < 400 ? '#D4A85A' : '#FF4500',
+                  boxShadow: Number(code) < 300
+                    ? '0 0 4px rgba(27, 162, 155, 0.4)'
+                    : Number(code) < 400
+                      ? '0 0 4px rgba(212, 168, 90, 0.4)'
+                      : '0 0 4px rgba(255, 69, 0, 0.3)',
+                }}
+              />
+              <span className="text-[11px] text-poe-text-primary">{code}: {formatNumber(count)}</span>
             </div>
           ))}
           {summary.error_count > 0 && (
-            <div style={{ color: '#ef4444', fontSize: 12 }}>
+            <div className="text-[11px] text-poe-fire">
               Errors: {summary.error_count}
             </div>
           )}

@@ -181,7 +181,7 @@ export function ChatInput({
         abortControllerRef.current.signal,
       );
     },
-    [gameVersion, buildContext, conversationId, onStreamingToken, onStreamingDone, onError],
+    [gameVersion, buildContext, conversationId, onStreamingToken, onStreamingDone, onError, onSources],
   );
 
   // ---------------------------------------------------------------------------
@@ -345,7 +345,7 @@ export function ChatInput({
 
   return (
     <div
-      className={`border-t border-poe-border bg-poe-bg-secondary px-3 py-3 sm:px-6 sm:py-4 lg:px-8 relative transition-all duration-300 ${isLoading ? 'border-poe-gold/30' : ''} ${className}`}
+      className={`border-t border-[#2A2A30] bg-[#121215] px-6 py-4 sm:px-12 relative transition-all duration-300 ${isLoading ? 'border-[#6B5530]/30' : ''} ${className}`}
       data-testid="chat-input-container"
     >
       {/* Loading overlay bar at top with enhanced animation */}
@@ -422,7 +422,7 @@ export function ChatInput({
               placeholder={placeholder}
               rows={MIN_ROWS}
               disabled={disabled || isLoading}
-              className={`poe-input w-full resize-none text-sm sm:text-sm pr-10 py-2.5 sm:py-2 ${
+              className={`poe-input w-full resize-none text-sm sm:text-sm pr-10 py-2 sm:py-2.5 ${
                 disabled || isLoading ? 'opacity-50 cursor-not-allowed' : ''
               }`}
               aria-label="Chat message input"
@@ -431,7 +431,7 @@ export function ChatInput({
             {/* Character count */}
             {charCount > 0 && (
               <span
-                className={`absolute bottom-1.5 right-2 text-xs ${charCountColor}`}
+                className={`absolute bottom-1.5 right-2.5 text-xs ${charCountColor}`}
                 data-testid="char-count"
               >
                 {charCount.toLocaleString()}/{maxCharLimit.toLocaleString()}
@@ -444,7 +444,7 @@ export function ChatInput({
             <button
               type="button"
               onClick={handleCancel}
-              className="poe-button shrink-0 flex items-center gap-2 bg-red-700 hover:bg-red-600 border-red-500 min-h-[40px] min-w-[40px] sm:min-w-0 touch-manipulation"
+              className="poe-button shrink-0 flex items-center gap-2 bg-poe-bg-card border-poe-border hover:border-poe-text-muted text-poe-text-secondary min-h-[40px] min-w-[40px] sm:min-w-0 touch-manipulation"
               aria-label="Cancel request"
               data-testid="chat-cancel-button"
             >

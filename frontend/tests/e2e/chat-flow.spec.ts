@@ -103,6 +103,7 @@ async function collectSSEEvents(response: Response): Promise<SSEEventCollection>
   let buffer = '';
   let currentEvent = '';
 
+  // eslint-disable-next-line no-constant-condition
   while (true) {
     const { done: streamDone, value } = await reader.read();
     if (streamDone) break;

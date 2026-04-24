@@ -197,33 +197,27 @@ export function TypingIndicator({
   if (display === 'bubble') {
     return (
       <div
-        className={`flex gap-3 mb-4 justify-start ${className}`}
+        className={`py-4 border-b border-poe-border/50 ${className}`}
         data-testid="typing-indicator"
         role="status"
         aria-label={ariaLabel}
         style={style}
       >
-        {/* Assistant avatar */}
-        <div
-          className="shrink-0 w-8 h-8 rounded border flex items-center justify-center bg-poe-gold/20 border-poe-gold/30"
-          aria-hidden="true"
-        >
-          <span className="text-xs font-bold text-poe-gold">A</span>
+        <div className="flex items-center gap-2.5 mb-2">
+          <div className="w-7 h-7 border border-poe-teal/25 rounded-[3px] flex items-center justify-center text-xs shrink-0 text-poe-teal bg-poe-teal/6">
+            ♦
+          </div>
+          <span className="text-xs font-semibold tracking-[0.5px] uppercase text-poe-teal">
+            Knowledge Assistant
+          </span>
         </div>
-
-        {/* Typing bubble */}
-        <div className="poe-card max-w-[80%]">
-          <div className="flex items-center justify-between mb-1">
-            <span className="text-xs font-medium text-poe-gold">Assistant</span>
-          </div>
-          <div className="flex items-center gap-2 py-1">
-            {animationElement}
-            {showLabel && (
-              <span className={`text-poe-text-secondary ${sizeConfig.text}`}>
-                {label}
-              </span>
-            )}
-          </div>
+        <div className="pl-[38px] flex items-center gap-2 py-1">
+          {animationElement}
+          {showLabel && (
+            <span className={`text-poe-text-muted ${sizeConfig.text}`}>
+              {label}
+            </span>
+          )}
         </div>
       </div>
     );

@@ -275,6 +275,7 @@ class AnthropicLLM:
         self.model_name = model_name or settings.llm.anthropic_model
         self.temperature = temperature if temperature is not None else settings.llm.anthropic_temperature
         self.max_tokens = max_tokens or settings.llm.anthropic_max_tokens
+        self.base_url = settings.llm.anthropic_base_url
 
         self._client: Optional[BaseChatModel] = None
         self._init_error: Optional[str] = None
@@ -289,12 +290,16 @@ class AnthropicLLM:
 
             from langchain_anthropic import ChatAnthropic
 
-            self._client = ChatAnthropic(
-                anthropic_api_key=self.api_key,
-                model=self.model_name,
-                temperature=self.temperature,
-                max_tokens=self.max_tokens,
-            )
+            kwargs = {
+                "anthropic_api_key": self.api_key,
+                "model": self.model_name,
+                "temperature": self.temperature,
+                "max_tokens": self.max_tokens,
+            }
+            if self.base_url:
+                kwargs["anthropic_api_url"] = self.base_url
+
+            self._client = ChatAnthropic(**kwargs)
 
             logger.info(
                 f"Anthropic LLM client initialized. "

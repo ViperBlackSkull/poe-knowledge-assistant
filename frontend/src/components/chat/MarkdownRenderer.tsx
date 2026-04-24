@@ -60,7 +60,7 @@ function parseInline(text: string): React.ReactNode[] {
       nodes.push(
         <code
           key={`c-${keyIndex}`}
-          className="bg-poe-bg-primary text-poe-gold px-1.5 py-0.5 rounded text-xs font-mono"
+          className="bg-poe-bg-primary text-poe-gold-light px-1.5 py-0.5 rounded text-xs font-mono border border-poe-border/50"
         >
           {match[6]}
         </code>

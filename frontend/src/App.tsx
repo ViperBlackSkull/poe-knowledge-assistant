@@ -15,6 +15,8 @@ import {
   ErrorBoundary,
   useToast,
   PerformanceDashboard,
+  KnowledgeBasePage,
+  AdminPage,
 } from '@/components';
 import type { ChatMessage } from '@/types/chat';
 import type { SSESource } from '@/types/streaming';
@@ -71,22 +73,29 @@ function App() {
     buildContext: buildContext || undefined,
   });
 
-  // -- Hash-based routing for demo pages ------------------------------------
-  const [currentHash, setCurrentHash] = useState(window.location.hash);
+  // -- Hash-based SPA routing ------------------------------------------------
+  const [currentRoute, setCurrentRoute] = useState(() => {
+    const hash = window.location.hash.slice(1) || '/';
+    return hash;
+  });
   useEffect(() => {
-    const handleHashChange = () => setCurrentHash(window.location.hash);
+    const handleHashChange = () => {
+      const hash = window.location.hash.slice(1) || '/';
+      setCurrentRoute(hash);
+    };
     window.addEventListener('hashchange', handleHashChange);
     return () => window.removeEventListener('hashchange', handleHashChange);
   }, []);
-
-  const showItemDemo = currentHash === '#/items';
-  const showCitationDemo = currentHash === '#/citations';
+  const navigate = useCallback((route: string) => {
+    window.location.hash = route;
+  }, []);
 
   // -- Game version handler -------------------------------------------------
   const handleGameVersionChange = useCallback(
     (version: Parameters<typeof chat.setGameVersion>[0]) => {
       chat.setGameVersion(version);
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [chat.setGameVersion],
   );
 
@@ -96,6 +105,7 @@ function App() {
       setBuildContext(context);
       chat.setBuildContext(context || undefined);
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [setBuildContext, chat.setBuildContext],
   );
 
@@ -104,6 +114,7 @@ function App() {
     (message: ChatMessage) => {
       chat.addUserMessage(message.content);
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [chat.addUserMessage],
   );
 
@@ -111,6 +122,7 @@ function App() {
     (token: string) => {
       chat.appendStreamingToken(token);
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [chat.appendStreamingToken],
   );
 
@@ -118,6 +130,7 @@ function App() {
     (convId: string) => {
       chat.completeStreaming(convId);
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [chat.completeStreaming],
   );
 
@@ -125,6 +138,7 @@ function App() {
     (sources: SSESource[]) => {
       chat.attachSources(sources);
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [chat.attachSources],
   );
 
@@ -148,6 +162,7 @@ function App() {
         duration: classified.category === 'network' ? 8000 : 5000,
       });
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [chat.handleError, errorHandling.classifyError, toast],
   );
 
@@ -214,10 +229,10 @@ function App() {
 
   // -- Header actions -------------------------------------------------------
   const headerActions = (
-    <div className="flex items-center gap-2 sm:gap-3">
+    <div className="flex items-center gap-3">
       {/* Current version badge - hidden on small screens */}
-      <span className="hidden lg:inline-flex items-center gap-1.5 px-2 py-1 rounded text-xs bg-poe-bg-tertiary border border-poe-border text-poe-text-muted">
-        <span className="w-1.5 h-1.5 rounded-full bg-poe-gold" />
+      <span className="hidden lg:inline-flex items-center gap-1.5 text-[11px] text-[#6B6B75]">
+        <span className="w-1.5 h-1.5 rounded-full bg-[#1BA29B] shadow-[0_0_6px_rgba(27,162,155,0.4)]" />
         {getGameVersionLabel(chat.gameVersion)}
       </span>
 
@@ -244,7 +259,7 @@ function App() {
       <button
         type="button"
         onClick={() => setShowPerformance(!showPerformance)}
-        className={`p-2 rounded transition-colors touch-manipulation ${showPerformance ? 'text-poe-gold bg-poe-hover' : 'text-poe-text-secondary hover:text-poe-text-highlight hover:bg-poe-hover'}`}
+        className={`w-8 h-8 flex items-center justify-center border rounded-[3px] transition-colors touch-manipulation ${showPerformance ? 'border-[#4A3A28] text-[#D4A85A] bg-[#AF6025]/[0.06]' : 'border-[#2A2A30] text-[#6B6B75] hover:border-[#3A3A42] hover:text-[#9F9FA8]'}`}
         aria-label="Toggle performance dashboard"
         data-testid="performance-toggle"
       >
@@ -257,7 +272,7 @@ function App() {
       <button
         type="button"
         onClick={() => setIsSettingsOpen(true)}
-        className="p-2 rounded text-poe-text-secondary hover:text-poe-text-highlight hover:bg-poe-hover transition-colors touch-manipulation"
+        className="w-8 h-8 flex items-center justify-center border border-[#2A2A30] rounded-[3px] text-[#6B6B75] hover:border-[#3A3A42] hover:text-[#D4A85A] transition-colors touch-manipulation"
         aria-label="Open settings"
         data-testid="settings-open-button"
       >
@@ -316,10 +331,10 @@ function App() {
   );
 
   // -- Route: Item card demo page -------------------------------------------
-  if (showItemDemo) {
+  if (currentRoute === '/items') {
     return (
       <>
-        <MainLayout actions={headerActions} contextDisplay={contextDisplay}>
+        <MainLayout currentRoute={currentRoute} onNavigate={navigate} actions={headerActions} contextDisplay={contextDisplay}>
           <ErrorBoundary name="ItemCardDemo">
             <ItemCardDemo />
           </ErrorBoundary>
@@ -330,10 +345,10 @@ function App() {
   }
 
   // -- Route: Citation component demo page ----------------------------------
-  if (showCitationDemo) {
+  if (currentRoute === '/citations') {
     return (
       <>
-        <MainLayout actions={headerActions} contextDisplay={contextDisplay}>
+        <MainLayout currentRoute={currentRoute} onNavigate={navigate} actions={headerActions} contextDisplay={contextDisplay}>
           <ErrorBoundary name="CitationDemo">
             <CitationDemo />
           </ErrorBoundary>
@@ -343,14 +358,42 @@ function App() {
     );
   }
 
-  // -- Route: Main chat interface -------------------------------------------
+  // -- Route: Knowledge Base page -------------------------------------------
+  if (currentRoute === '/knowledge') {
+    return (
+      <>
+        <MainLayout currentRoute={currentRoute} onNavigate={navigate} actions={headerActions} contextDisplay={contextDisplay}>
+          <ErrorBoundary name="KnowledgeBasePage">
+            <KnowledgeBasePage />
+          </ErrorBoundary>
+        </MainLayout>
+        {settingsPanel}
+      </>
+    );
+  }
+
+  // -- Route: Admin Dashboard page ------------------------------------------
+  if (currentRoute === '/admin') {
+    return (
+      <>
+        <MainLayout currentRoute={currentRoute} onNavigate={navigate} actions={headerActions} contextDisplay={contextDisplay}>
+          <ErrorBoundary name="AdminPage">
+            <AdminPage />
+          </ErrorBoundary>
+        </MainLayout>
+        {settingsPanel}
+      </>
+    );
+  }
+
+  // -- Route: Main chat interface (default) ---------------------------------
   return (
     <>
-      <MainLayout showSidebar actions={headerActions} contextDisplay={contextDisplay}>
+      <MainLayout showSidebar currentRoute={currentRoute} onNavigate={navigate} actions={headerActions} contextDisplay={contextDisplay}>
         <div className="flex flex-col h-full">
           {/* Chat toolbar (clear button, shown when messages exist) */}
           {chat.messageCount > 0 && (
-            <div className="flex items-center justify-end px-3 py-1.5 sm:px-6 sm:py-2 lg:px-8 border-b border-[#2A2A32] bg-[#141418]/50">
+            <div className="flex items-center justify-end px-6 py-1.5 sm:px-12 border-b border-[#2A2A30]/50 bg-[#121215]/50">
               <div className="max-w-3xl w-full flex items-center justify-end">
                 <ClearConversationButton
                   onClear={chat.clearConversation}
@@ -368,6 +411,7 @@ function App() {
               conversationId={chat.conversationId}
               isStreaming={chat.isStreaming}
               isLoading={chat.isLoading}
+              onSuggestionClick={(text) => chat.addUserMessage(text)}
             />
           </ErrorBoundary>
 
@@ -390,7 +434,7 @@ function App() {
 
         {/* Performance Dashboard - collapsible panel */}
         {showPerformance && (
-          <div className="border-t border-[#2A2A32] bg-[#0a0a0f]">
+          <div className="border-t border-[#2A2A30] bg-[#0C0C0E]">
             <div className="max-w-5xl mx-auto px-4 py-3">
               <ErrorBoundary name="PerformanceDashboard">
                 <PerformanceDashboard apiUrl="/api" refreshInterval={5000} />

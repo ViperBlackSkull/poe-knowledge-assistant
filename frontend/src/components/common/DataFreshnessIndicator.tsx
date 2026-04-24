@@ -18,36 +18,32 @@ const STATUS_CONFIG: Record<
     dotColor: string;
     dotPulse: boolean;
     textColor: string;
-    bgColor: string;
-    borderColor: string;
+    dotGlow: string;
     description: string;
   }
 > = {
   fresh: {
     label: 'Fresh',
-    dotColor: 'bg-emerald-400',
+    dotColor: 'bg-poe-teal',
     dotPulse: true,
-    textColor: 'text-emerald-400',
-    bgColor: 'bg-emerald-400/10',
-    borderColor: 'border-emerald-400/30',
+    textColor: 'text-poe-teal',
+    dotGlow: '0 0 6px rgba(27, 162, 155, 0.4)',
     description: 'Knowledge base is up to date',
   },
   needs_update: {
-    label: 'Needs Update',
-    dotColor: 'bg-amber-400',
+    label: 'Stale',
+    dotColor: 'bg-poe-gold-light',
     dotPulse: true,
-    textColor: 'text-amber-400',
-    bgColor: 'bg-amber-400/10',
-    borderColor: 'border-amber-400/30',
+    textColor: 'text-poe-gold-light',
+    dotGlow: '0 0 6px rgba(212, 168, 90, 0.4)',
     description: 'Knowledge base may need refreshing',
   },
   outdated: {
     label: 'Outdated',
-    dotColor: 'bg-red-400',
+    dotColor: 'bg-poe-fire',
     dotPulse: false,
-    textColor: 'text-red-400',
-    bgColor: 'bg-red-400/10',
-    borderColor: 'border-red-400/30',
+    textColor: 'text-poe-fire',
+    dotGlow: '0 0 6px rgba(255, 69, 0, 0.3)',
     description: 'Knowledge base data is stale',
   },
   no_data: {
@@ -55,8 +51,7 @@ const STATUS_CONFIG: Record<
     dotColor: 'bg-poe-text-muted',
     dotPulse: false,
     textColor: 'text-poe-text-muted',
-    bgColor: 'bg-poe-bg-tertiary',
-    borderColor: 'border-poe-border',
+    dotGlow: 'none',
     description: 'No knowledge base data available',
   },
 };
@@ -66,23 +61,28 @@ const STATUS_CONFIG: Record<
 // ---------------------------------------------------------------------------
 
 /**
- * Animated status dot with optional pulse animation.
+ * Animated status dot with optional pulse animation and glow.
  */
 function StatusDot({
   color,
   pulse,
+  glow,
 }: {
   color: string;
   pulse: boolean;
+  glow: string;
 }) {
   return (
-    <span className="relative flex h-2.5 w-2.5 shrink-0">
+    <span className="relative flex h-2 w-2 shrink-0">
       {pulse && (
         <span
           className={`absolute inline-flex h-full w-full rounded-full ${color} opacity-75 animate-ping`}
         />
       )}
-      <span className={`relative inline-flex rounded-full h-2.5 w-2.5 ${color}`} />
+      <span
+        className={`relative inline-flex rounded-full h-2 w-2 ${color}`}
+        style={{ boxShadow: glow }}
+      />
     </span>
   );
 }
@@ -98,7 +98,7 @@ function GameEntryRow({ entry }: { entry: FreshnessEntry }) {
   return (
     <div className="flex items-center justify-between gap-3 py-1">
       <div className="flex items-center gap-2 min-w-0">
-        <StatusDot color={config.dotColor} pulse={config.dotPulse} />
+        <StatusDot color={config.dotColor} pulse={config.dotPulse} glow={config.dotGlow} />
         <span className="text-xs text-poe-text-secondary font-medium whitespace-nowrap">
           {gameLabel}
         </span>
@@ -129,14 +129,14 @@ function GameEntryRow({ entry }: { entry: FreshnessEntry }) {
 function LoadingSkeleton({ compact }: { compact: boolean }) {
   return (
     <div
-      className={`inline-flex items-center gap-2 ${
-        compact ? 'px-2 py-0.5' : 'px-3 py-1.5'
-      } rounded bg-poe-bg-tertiary border border-poe-border animate-pulse`}
+      className={`inline-flex items-center gap-1.5 ${
+        compact ? 'px-1.5 py-0.5' : 'px-2 py-1'
+      } rounded-[3px] bg-poe-bg-tertiary border border-poe-border animate-pulse`}
       data-testid="data-freshness-loading"
     >
-      <span className="w-2 h-2 rounded-full bg-poe-text-muted/50" />
-      <span className={`${compact ? 'text-xs' : 'text-sm'} text-poe-text-muted`}>
-        Loading freshness...
+      <span className="w-1.5 h-1.5 rounded-full bg-[#6B6B75]/50" />
+      <span className={`${compact ? 'text-[10px]' : 'text-xs'} text-[#6B6B75]`}>
+        Loading...
       </span>
     </div>
   );
@@ -181,32 +181,72 @@ export function DataFreshnessIndicator({
   if (error && !data) {
     // Classify the error for better messaging
     const classified = classifyError(new Error(error));
-    const errorLabel = classified.category === 'network'
-      ? 'Connection failed'
+    const isNetwork = classified.category === 'network';
+    const errorLabel = isNetwork
+      ? 'Offline'
       : classified.category === 'authentication'
         ? 'Auth error'
-        : 'Freshness unavailable';
+        : 'Unavailable';
+
+    // Use muted styling for network errors, red for auth/other errors
+    const dotClass = isNetwork ? 'bg-poe-text-muted' : 'bg-poe-fire';
+    const dotGlow = isNetwork ? 'none' : '0 0 6px rgba(255, 69, 0, 0.3)';
+    const textClass = isNetwork ? 'text-poe-text-muted' : 'text-poe-fire';
+    const borderClass = isNetwork ? 'border-poe-border' : 'border-poe-fire/20';
+
+    if (compact && isNetwork) {
+      // Compact network error: just a small muted dot with tooltip
+      return (
+        <span
+          className={`inline-flex items-center ${className}`}
+          title="Backend unavailable"
+          data-testid="data-freshness-error"
+          role="status"
+        >
+          <span
+            className="w-1.5 h-1.5 rounded-full bg-poe-text-muted shrink-0"
+          />
+        </span>
+      );
+    }
 
     return (
       <div
-        className={`inline-flex items-center gap-2 ${
-          compact ? 'px-2 py-0.5' : 'px-3 py-1.5'
-        } rounded bg-poe-bg-tertiary border border-red-400/30 ${className}`}
+        className={`inline-flex items-center gap-1.5 ${
+          compact ? 'px-1.5 py-0.5' : 'px-2 py-1'
+        } rounded-[3px] bg-poe-bg-tertiary border ${borderClass} ${className}`}
         data-testid="data-freshness-error"
-        role="alert"
+        role={isNetwork ? 'status' : 'alert'}
       >
-        <span className="w-2 h-2 rounded-full bg-red-400 shrink-0" />
-        <span className={`${compact ? 'text-xs' : 'text-sm'} text-red-400`}>
+        <span
+          className="w-1.5 h-1.5 rounded-full shrink-0"
+          style={{ boxShadow: dotGlow }}
+        >
+          <span className={`block w-full h-full rounded-full ${dotClass}`} />
+        </span>
+        <span className={`${compact ? 'text-[10px]' : 'text-xs'} ${textClass}`}>
           {errorLabel}
         </span>
         <button
           type="button"
           onClick={refresh}
-          className="text-xs text-poe-text-muted hover:text-poe-text-highlight transition-colors underline"
+          className="p-0.5 rounded text-poe-text-muted hover:text-poe-text-primary transition-colors"
           aria-label="Retry fetching freshness data"
           data-testid="data-freshness-error-retry"
         >
-          Retry
+          <svg
+            className="w-3 h-3"
+            fill="none"
+            viewBox="0 0 24 24"
+            strokeWidth={2}
+            stroke="currentColor"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182"
+            />
+          </svg>
         </button>
       </div>
     );
@@ -227,21 +267,21 @@ export function DataFreshnessIndicator({
       {/* Main status badge */}
       <div
         className={`
-          inline-flex items-center gap-2
-          ${compact ? 'px-2 py-0.5' : 'px-3 py-1.5'}
-          rounded
-          ${config.bgColor}
-          border ${config.borderColor}
+          inline-flex items-center gap-1.5
+          ${compact ? 'px-1.5 py-0.5' : 'px-2 py-1'}
+          rounded-[3px]
+          bg-poe-bg-tertiary
+          border border-poe-border
           transition-all duration-300
         `}
       >
         {/* Status dot */}
-        <StatusDot color={config.dotColor} pulse={config.dotPulse} />
+        <StatusDot color={config.dotColor} pulse={config.dotPulse} glow={config.dotGlow} />
 
         {/* Status label */}
         <span
           className={`font-medium whitespace-nowrap ${config.textColor} ${
-            compact ? 'text-xs' : 'text-sm'
+            compact ? 'text-[10px]' : 'text-xs'
           }`}
         >
           {config.label}
@@ -250,10 +290,10 @@ export function DataFreshnessIndicator({
         {/* Last scrape timestamp */}
         {latestEntry?.has_data && latestEntry.relative_time && (
           <>
-            <span className="text-poe-text-muted/50">|</span>
+            <span className="text-poe-gold-muted">|</span>
             <span
               className={`text-poe-text-muted whitespace-nowrap ${
-                compact ? 'text-[10px]' : 'text-xs'
+                compact ? 'text-[9px]' : 'text-[10px]'
               }`}
             >
               {latestEntry.relative_time}
@@ -264,7 +304,7 @@ export function DataFreshnessIndicator({
         {/* Loading spinner for background refresh */}
         {isLoading && data && (
           <svg
-            className="w-3 h-3 animate-spin text-poe-text-muted shrink-0"
+            className="w-2.5 h-2.5 animate-spin text-poe-text-muted shrink-0"
             fill="none"
             viewBox="0 0 24 24"
             aria-hidden="true"
@@ -288,7 +328,7 @@ export function DataFreshnessIndicator({
 
       {/* Expanded details (shown when showDetails is true) */}
       {showDetails && (
-        <div className="mt-1.5 rounded bg-poe-bg-secondary border border-poe-border p-2 min-w-[220px]">
+        <div className="mt-1.5 rounded-[3px] bg-poe-bg-secondary border border-poe-border p-2 min-w-[220px]">
           {/* Per-game breakdown */}
           <GameEntryRow entry={data.freshness.poe1} />
           <GameEntryRow entry={data.freshness.poe2} />
@@ -297,7 +337,7 @@ export function DataFreshnessIndicator({
           {(data.freshness.poe1.staleness_warning ||
             data.freshness.poe2.staleness_warning) && (
             <div className="mt-1.5 pt-1.5 border-t border-poe-border">
-              <p className="text-[10px] text-amber-400 leading-relaxed">
+              <p className="text-[10px] text-poe-gold-light leading-relaxed">
                 {data.freshness.poe1.staleness_warning ||
                   data.freshness.poe2.staleness_warning}
               </p>
@@ -325,12 +365,12 @@ export function DataFreshnessIndicator({
         <button
           type="button"
           onClick={refresh}
-          className="ml-1 p-0.5 rounded text-poe-text-muted hover:text-poe-text-highlight transition-colors"
+          className="ml-1 p-0.5 rounded text-poe-text-muted hover:text-poe-text-primary transition-colors"
           aria-label="Refresh freshness data"
           data-testid="data-freshness-refresh"
         >
           <svg
-            className="w-3 h-3"
+            className="w-2.5 h-2.5"
             fill="none"
             viewBox="0 0 24 24"
             strokeWidth={2}

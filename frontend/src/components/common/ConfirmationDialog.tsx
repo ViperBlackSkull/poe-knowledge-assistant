@@ -101,11 +101,11 @@ export function ConfirmationDialog({
 
   const confirmButtonStyles: Record<string, string> = {
     danger:
-      'bg-red-800 hover:bg-red-700 border-red-600 text-red-100 hover:shadow-[0_0_10px_rgba(239,68,68,0.4)]',
+      'bg-gradient-to-b from-poe-fire to-[#991111] hover:from-[#FF6B35] hover:to-[#bb2222] border-poe-fire/60 text-white hover:shadow-[0_0_12px_rgba(255,69,0,0.4)]',
     warning:
-      'bg-yellow-800 hover:bg-yellow-700 border-yellow-600 text-yellow-100 hover:shadow-[0_0_10px_rgba(234,179,8,0.4)]',
+      'bg-gradient-to-b from-poe-gold to-poe-gold-dark hover:from-poe-gold-light hover:to-poe-gold border-poe-gold-dark text-white hover:shadow-poe-glow',
     default:
-      'bg-[#AF6025] hover:bg-[#D4A85A] border-[#7D4A1C] text-white hover:shadow-[0_0_10px_rgba(175,96,37,0.5)]',
+      'bg-gradient-to-b from-poe-gold to-poe-gold-dark hover:from-poe-gold-light hover:to-poe-gold border-poe-gold-dark text-white hover:shadow-poe-glow',
   };
 
   // ---------------------------------------------------------------------------
@@ -130,7 +130,7 @@ export function ConfirmationDialog({
     >
       {/* Backdrop overlay */}
       <div
-        className="absolute inset-0 bg-black/70 backdrop-blur-sm"
+        className="absolute inset-0 bg-black/80 backdrop-blur-sm"
         onClick={onCancel}
         aria-hidden="true"
       />
@@ -138,32 +138,32 @@ export function ConfirmationDialog({
       {/* Dialog card */}
       <div
         ref={dialogRef}
-        className={`relative w-full max-w-md bg-[#1A1A1F] border border-[#3D3D44] rounded-lg shadow-2xl animate-poe-scale-in ${className}`}
+        className={`relative w-full max-w-md bg-poe-bg-card border border-poe-border rounded-lg shadow-[0_8px_40px_rgba(0,0,0,0.7)] animate-poe-scale-in ${className}`}
         data-testid="confirmation-dialog-card"
       >
         {/* Decorative top border accent with shimmer */}
-        <div className="h-0.5 w-full rounded-t-lg animate-poe-accent-shimmer" />
+        <div className="h-[2px] w-full rounded-t-lg animate-poe-accent-shimmer" />
 
-        <div className="p-4 sm:p-6">
+        <div className="p-5 sm:p-6">
           {/* Icon and title */}
           <div className="flex items-start gap-3 sm:gap-4 mb-4">
             {/* Warning icon */}
             <div
               className={`shrink-0 w-10 h-10 rounded-full flex items-center justify-center ${
                 variant === 'danger'
-                  ? 'bg-red-900/30 border border-red-700/40'
+                  ? 'bg-poe-fire/10 border border-poe-fire/25'
                   : variant === 'warning'
-                    ? 'bg-yellow-900/30 border border-yellow-700/40'
-                    : 'bg-[#AF6025]/20 border border-[#AF6025]/30'
+                    ? 'bg-poe-gold/10 border border-poe-gold/25'
+                    : 'bg-poe-gold/10 border border-poe-gold/25'
               }`}
             >
               <svg
                 className={`w-5 h-5 ${
                   variant === 'danger'
-                    ? 'text-red-400'
+                    ? 'text-poe-fire'
                     : variant === 'warning'
-                      ? 'text-yellow-400'
-                      : 'text-[#AF6025]'
+                      ? 'text-poe-gold'
+                      : 'text-poe-gold'
                 }`}
                 fill="none"
                 viewBox="0 0 24 24"
@@ -182,13 +182,13 @@ export function ConfirmationDialog({
             <div className="flex-1 min-w-0">
               <h3
                 id="confirmation-dialog-title"
-                className="poe-header text-lg font-semibold mb-1"
+                className="font-poe text-lg font-semibold text-poe-gold-light mb-1 tracking-wide"
               >
                 {title}
               </h3>
               <div
                 id="confirmation-dialog-message"
-                className="text-sm text-[#9E9EA8] leading-relaxed"
+                className="text-sm text-poe-text-secondary leading-relaxed"
               >
                 {message}
               </div>
@@ -196,11 +196,11 @@ export function ConfirmationDialog({
           </div>
 
           {/* Action buttons */}
-          <div className="flex items-center justify-end gap-2 sm:gap-3 mt-4 sm:mt-6">
+          <div className="flex items-center justify-end gap-2 sm:gap-3 mt-5 sm:mt-6">
             <button
               type="button"
               onClick={onCancel}
-              className="poe-button-secondary px-3 sm:px-4 py-2 text-sm rounded transition-all touch-manipulation min-h-[40px]"
+              className="px-3 sm:px-4 py-2 text-sm rounded border border-poe-border bg-transparent text-poe-text-secondary hover:bg-poe-bg-tertiary hover:border-poe-border-light hover:text-poe-text-primary transition-all touch-manipulation min-h-[40px]"
               aria-label={cancelLabel}
               data-testid="confirmation-dialog-cancel"
             >
@@ -210,7 +210,7 @@ export function ConfirmationDialog({
               ref={confirmButtonRef}
               type="button"
               onClick={onConfirm}
-              className={`poe-button px-3 sm:px-4 py-2 text-sm rounded border transition-all touch-manipulation min-h-[40px] ${confirmButtonStyles[variant]}`}
+              className={`px-3 sm:px-4 py-2 text-sm rounded border transition-all touch-manipulation min-h-[40px] ${confirmButtonStyles[variant]}`}
               aria-label={confirmLabel}
               data-testid="confirmation-dialog-confirm"
             >

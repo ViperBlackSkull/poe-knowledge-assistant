@@ -197,53 +197,29 @@ function EmbeddingProviderIcon({ icon, className = '' }: { icon: EmbeddingProvid
   }
 }
 
-/** Renders a model tag badge. */
-function EmbeddingModelTag({ tag }: { tag: string }) {
-  const colorMap: Record<string, string> = {
-    'Recommended': 'bg-poe-gold/20 text-poe-gold border-poe-gold/30',
-    'High Quality': 'bg-purple-900/30 text-purple-400 border-purple-700/30',
-    'Fast': 'bg-blue-900/30 text-blue-400 border-blue-700/30',
-    'Legacy': 'bg-gray-900/30 text-gray-400 border-gray-700/30',
-    'Popular': 'bg-cyan-900/30 text-cyan-400 border-cyan-700/30',
-    'Default': 'bg-poe-bg-tertiary text-poe-text-muted border-poe-border',
-  };
-  const colors = colorMap[tag] ?? 'bg-poe-bg-tertiary text-poe-text-muted border-poe-border';
-
-  return (
-    <span className={`text-[10px] px-1.5 py-0.5 rounded border ${colors} leading-none`}>
-      {tag}
-    </span>
-  );
-}
-
 // ---------------------------------------------------------------------------
-// Custom PoE-styled dropdown for embedding provider selection
+// PoE-styled select dropdown for embedding providers
 // ---------------------------------------------------------------------------
 
-interface PoEEmbeddingDropdownProps<T extends string> {
+interface PoEEmbeddingSelectProps<T extends string> {
   id: string;
   value: T;
-  options: { value: T; label: string; description?: string; icon?: EmbeddingProviderOption['icon'] }[];
+  options: { value: T; label: string; description?: string; icon?: EmbeddingProviderOption['icon']; tag?: string; dimension?: number }[];
   onChange: (value: T) => void;
   headerLabel: string;
-  footerText?: string;
   disabled?: boolean;
-  renderOption?: (
-    option: { value: T; label: string; description?: string; icon?: EmbeddingProviderOption['icon'] },
-    isSelected: boolean,
-  ) => React.ReactNode;
+  showIcon?: boolean;
 }
 
-function PoEEmbeddingDropdown<T extends string>({
+function PoEEmbeddingSelect<T extends string>({
   id,
   value,
   options,
   onChange,
   headerLabel,
-  footerText,
   disabled = false,
-  renderOption,
-}: PoEEmbeddingDropdownProps<T>) {
+  showIcon = false,
+}: PoEEmbeddingSelectProps<T>) {
   const [isOpen, setIsOpen] = useState(false);
   const [highlightedIndex, setHighlightedIndex] = useState<number>(
     options.findIndex((o) => o.value === value),
@@ -348,34 +324,36 @@ function PoEEmbeddingDropdown<T extends string>({
         onKeyDown={handleKeyDown}
         disabled={disabled}
         className={`
-          flex items-center gap-2 w-full px-3 py-2 rounded text-sm font-medium
+          flex items-center gap-2 w-full px-3 py-2 rounded text-sm
           transition-all duration-200 border
-          ${
-            disabled
-              ? 'opacity-50 cursor-not-allowed bg-poe-bg-primary border-poe-border text-poe-text-muted'
-              : isOpen
-                ? 'bg-poe-bg-primary border-poe-gold text-poe-text-highlight shadow-poe-glow'
-                : 'bg-poe-bg-primary border-poe-border text-poe-text-secondary hover:text-poe-text-highlight hover:border-poe-border-light'
-          }
+          ${disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}
         `}
+        style={{
+          backgroundColor: '#0C0C0E',
+          fontFamily: "'Inter', system-ui, sans-serif",
+          color: isOpen ? '#E0E0E0' : '#9F9FA8',
+          borderColor: isOpen ? '#D4A85A' : '#2A2A30',
+          boxShadow: isOpen ? '0 0 8px rgba(212, 168, 90, 0.3)' : 'none',
+        }}
         aria-haspopup="listbox"
         aria-expanded={isOpen}
         aria-label={`Select ${headerLabel}, currently ${selectedOption?.label ?? value}`}
         data-testid={`${id}-trigger`}
       >
         {/* Provider icon */}
-        {selectedOption?.icon && (
-          <EmbeddingProviderIcon icon={selectedOption.icon} className="w-4 h-4 text-poe-gold shrink-0" />
+        {showIcon && selectedOption?.icon && (
+          <EmbeddingProviderIcon icon={selectedOption.icon} className="w-4 h-4 text-[#D4A85A] shrink-0" />
         )}
 
         {/* Selected label */}
-        <span className="flex-1 text-left whitespace-nowrap truncate">{selectedOption?.label ?? value}</span>
+        <span className="flex-1 text-left whitespace-nowrap truncate">
+          {selectedOption?.label ?? value}
+        </span>
 
         {/* Chevron icon */}
         <svg
-          className={`w-3.5 h-3.5 shrink-0 transition-transform duration-200 text-poe-text-muted ${
-            isOpen ? 'rotate-180' : ''
-          }`}
+          className={`w-3.5 h-3.5 shrink-0 transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`}
+          style={{ color: '#6B6B75' }}
           fill="none"
           viewBox="0 0 24 24"
           strokeWidth={2}
@@ -388,19 +366,22 @@ function PoEEmbeddingDropdown<T extends string>({
       {/* Dropdown menu */}
       {isOpen && (
         <div
-          className="
-            absolute left-0 right-0 mt-1 rounded-lg
-            bg-poe-bg-secondary border border-poe-border
-            shadow-lg shadow-black/40 z-50
-            overflow-hidden
-          "
+          className="absolute left-0 right-0 mt-1 rounded-lg overflow-hidden z-50"
+          style={{
+            backgroundColor: '#141418',
+            border: '1px solid #2A2A30',
+            boxShadow: '0 8px 24px rgba(0, 0, 0, 0.5)',
+          }}
           role="listbox"
           aria-label={`${headerLabel} options`}
           data-testid={`${id}-dropdown`}
         >
           {/* Dropdown header */}
-          <div className="px-3 py-2 border-b border-poe-border bg-poe-bg-tertiary">
-            <span className="text-xs text-poe-gold font-semibold uppercase tracking-wider font-poe">
+          <div className="px-3 py-2" style={{ borderBottom: '1px solid #2A2A30', backgroundColor: '#0C0C0E' }}>
+            <span
+              className="text-[10px] text-[#6B5530] font-semibold uppercase tracking-[0.1em]"
+              style={{ fontFamily: "'Inter', system-ui, sans-serif" }}
+            >
               {headerLabel}
             </span>
           </div>
@@ -422,59 +403,63 @@ function PoEEmbeddingDropdown<T extends string>({
                   onMouseEnter={() => setHighlightedIndex(index)}
                   className={`
                     w-full text-left px-3 py-2.5 flex items-center gap-3
-                    transition-colors duration-150
-                    ${isHighlighted ? 'bg-poe-hover' : ''}
-                    ${isSelected ? 'text-poe-gold' : 'text-poe-text-secondary hover:text-poe-text-highlight'}
+                    transition-colors duration-100
                   `}
+                  style={{
+                    backgroundColor: isHighlighted ? '#1C1C22' : 'transparent',
+                    color: isSelected ? '#D4A85A' : '#9F9FA8',
+                  }}
                   role="option"
                   aria-selected={isSelected}
                   data-testid={`${id}-option-${String(option.value)}`}
                 >
-                  {/* Selection indicator */}
-                  <div className="w-4 h-4 shrink-0 flex items-center justify-center">
-                    {isSelected ? (
-                      <svg
-                        className="w-4 h-4 text-poe-gold"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        strokeWidth={2}
-                        stroke="currentColor"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                        />
-                      </svg>
-                    ) : (
-                      <div className="w-3.5 h-3.5 rounded-full border border-poe-border" />
-                    )}
-                  </div>
+                  {/* Selection dot */}
+                  <div className="w-1.5 h-1.5 rounded-full shrink-0" style={{
+                    backgroundColor: isSelected ? '#D4A85A' : 'transparent',
+                    boxShadow: isSelected ? '0 0 4px rgba(212, 168, 90, 0.5)' : 'none',
+                  }} />
+
+                  {/* Icon */}
+                  {showIcon && option.icon && (
+                    <EmbeddingProviderIcon
+                      icon={option.icon}
+                      className={`w-4 h-4 shrink-0 ${isSelected ? 'text-[#D4A85A]' : 'text-[#6B6B75]'}`}
+                    />
+                  )}
 
                   {/* Option content */}
-                  {renderOption ? (
-                    renderOption(option, isSelected)
-                  ) : (
-                    <div className="flex-1 min-w-0">
-                      <div className="text-sm font-medium truncate">{option.label}</div>
-                      {option.description && (
-                        <div className="text-xs text-poe-text-muted mt-0.5 truncate">
-                          {option.description}
-                        </div>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-2">
+                      <span className="text-sm truncate" style={{ fontFamily: "'Inter', system-ui, sans-serif" }}>
+                        {option.label}
+                      </span>
+                      {option.tag && (
+                        <span
+                          className="text-[9px] px-1.5 py-0.5 rounded leading-none shrink-0"
+                          style={{
+                            color: '#D4A85A',
+                            backgroundColor: 'rgba(212, 168, 90, 0.1)',
+                            border: '1px solid rgba(212, 168, 90, 0.2)',
+                            fontFamily: "'Inter', system-ui, sans-serif",
+                          }}
+                        >
+                          {option.tag}
+                        </span>
                       )}
                     </div>
-                  )}
+                    {option.description && (
+                      <div
+                        className="text-[11px] mt-0.5 truncate"
+                        style={{ color: '#6B6B75', fontFamily: "'Inter', system-ui, sans-serif" }}
+                      >
+                        {option.description}
+                      </div>
+                    )}
+                  </div>
                 </button>
               );
             })}
           </div>
-
-          {/* Dropdown footer */}
-          {footerText && (
-            <div className="px-3 py-2 border-t border-poe-border bg-poe-bg-primary">
-              <p className="text-xs text-poe-text-muted">{footerText}</p>
-            </div>
-          )}
         </div>
       )}
     </div>
@@ -502,24 +487,32 @@ export function EmbeddingProviderConfigSection({ provider, config, onConfigChang
 
   return (
     <div className="space-y-2 mt-2" data-testid="embedding-provider-config-section">
-      <div className="text-xs text-poe-text-secondary font-medium mb-1.5">
-        Embedding Provider Settings
-      </div>
       {fields.map((field) => (
-        <div key={field.key}>
-          <label htmlFor={`embedding-config-${field.key}`} className="block text-[11px] text-poe-text-muted mb-1">
+        <div key={field.key} className="flex items-center gap-0">
+          <label
+            htmlFor={`embedding-config-${field.key}`}
+            className="w-[100px] shrink-0 text-right text-xs text-[#9F9FA8] self-center leading-tight pr-3"
+            style={{ fontFamily: "'Inter', system-ui, sans-serif" }}
+          >
             {field.label}
-            {field.optional && <span className="text-poe-text-muted/60 ml-1">(optional)</span>}
+            {field.optional && <span className="text-[#4A3A28] ml-1 text-[10px]">(opt)</span>}
           </label>
-          <input
-            id={`embedding-config-${field.key}`}
-            type={field.type}
-            value={config[field.key] ?? ''}
-            onChange={(e) => onConfigChange(field.key, e.target.value)}
-            placeholder={field.placeholder}
-            className="poe-input w-full text-xs"
-            data-testid={`embedding-config-${field.key}`}
-          />
+          <div className="flex-1">
+            <input
+              id={`embedding-config-${field.key}`}
+              type={field.type}
+              value={config[field.key] ?? ''}
+              onChange={(e) => onConfigChange(field.key, e.target.value)}
+              placeholder={field.placeholder}
+              className="w-full text-sm px-3 py-2 rounded transition-all duration-200 border border-[#2A2A30] focus:border-[#D4A85A] focus:shadow-[0_0_8px_rgba(212,168,90,0.3)] focus:outline-none"
+              style={{
+                backgroundColor: '#0C0C0E',
+                color: '#C8C8C8',
+                fontFamily: "'Inter', system-ui, sans-serif",
+              }}
+              data-testid={`embedding-config-${field.key}`}
+            />
+          </div>
         </div>
       ))}
     </div>
@@ -533,15 +526,6 @@ export function EmbeddingProviderConfigSection({ provider, config, onConfigChang
 /**
  * EmbeddingProviderSelector provides a PoE-themed dropdown for selecting
  * the embedding provider and model in the settings panel.
- *
- * Features:
- *  - Custom PoE-styled dropdown matching the application theme
- *  - Dynamic model list that updates when provider changes
- *  - Provider-specific configuration options (base URL, dimensions, etc.)
- *  - Keyboard accessible (Enter/Space to open, Arrow keys to navigate)
- *  - Click-outside to close
- *  - Provider icons and model tags for visual distinction
- *  - Dimension information display for each model
  */
 export function EmbeddingProviderSelector({
   provider,
@@ -552,8 +536,6 @@ export function EmbeddingProviderSelector({
   disabled = false,
 }: EmbeddingProviderSelectorProps) {
   const currentModels = EMBEDDING_MODELS_BY_PROVIDER[provider] ?? [];
-  const currentProviderOption = EMBEDDING_PROVIDER_OPTIONS.find((o) => o.value === provider);
-  const selectedModelOption = currentModels.find((m) => m.value === model);
 
   const handleProviderChange = useCallback(
     (newProvider: EmbeddingProvider) => {
@@ -568,117 +550,37 @@ export function EmbeddingProviderSelector({
   );
 
   return (
-    <div className={`space-y-3 ${className}`} data-testid="embedding-provider-selector">
+    <div className={`space-y-2 ${className}`} data-testid="embedding-provider-selector">
       {/* Provider dropdown */}
-      <div>
-        <label className="block text-xs text-poe-text-secondary font-medium mb-1.5">
-          Embedding Provider
-        </label>
-        <PoEEmbeddingDropdown<EmbeddingProvider>
-          id="embedding-provider"
-          value={provider}
-          options={EMBEDDING_PROVIDER_OPTIONS}
-          onChange={handleProviderChange}
-          headerLabel="Embedding Provider"
-          footerText="Select which provider to use for text embeddings"
-          disabled={disabled}
-          renderOption={(option, isSelected) => {
-            const providerOpt = option as unknown as EmbeddingProviderOption;
-            return (
-              <div className="flex-1 min-w-0">
-                <div className="flex items-center gap-2">
-                  <EmbeddingProviderIcon icon={providerOpt.icon} className={`w-4 h-4 shrink-0 ${isSelected ? 'text-poe-gold' : 'text-poe-text-muted'}`} />
-                  <span className="text-sm font-medium truncate">{option.label}</span>
-                  {!providerOpt.requiresApiKey && (
-                    <span className="text-[10px] px-1.5 py-0.5 rounded border bg-green-900/30 text-green-400 border-green-700/30 leading-none shrink-0">
-                      Local
-                    </span>
-                  )}
-                </div>
-                {option.description && (
-                  <div className="text-xs text-poe-text-muted mt-0.5 truncate pl-6">
-                    {option.description}
-                  </div>
-                )}
-              </div>
-            );
-          }}
-        />
-      </div>
-
-      {/* Provider info badge */}
-      {currentProviderOption && (
-        <div className="flex items-center gap-2 px-2 py-1.5 rounded bg-poe-bg-primary/50 border border-poe-border/50">
-          <EmbeddingProviderIcon
-            icon={currentProviderOption.icon}
-            className={`w-3.5 h-3.5 ${
-              currentProviderOption.requiresApiKey ? 'text-poe-gold' : 'text-green-400'
-            }`}
-          />
-          <span className="text-[11px] text-poe-text-muted">
-            {currentProviderOption.requiresApiKey
-              ? 'Cloud provider - requires API key'
-              : 'Local provider - runs on your machine'}
-          </span>
-        </div>
-      )}
+      <PoEEmbeddingSelect<EmbeddingProvider>
+        id="embedding-provider"
+        value={provider}
+        options={EMBEDDING_PROVIDER_OPTIONS.map((o) => ({
+          value: o.value,
+          label: o.label,
+          description: o.description,
+          icon: o.icon,
+          tag: !o.requiresApiKey ? 'Local' : undefined,
+        }))}
+        onChange={handleProviderChange}
+        headerLabel="Embedding Provider"
+        disabled={disabled}
+        showIcon
+      />
 
       {/* Model dropdown */}
-      <div>
-        <label className="block text-xs text-poe-text-secondary font-medium mb-1.5">
-          Embedding Model
-        </label>
-        <PoEEmbeddingDropdown<string>
-          id="embedding-model"
-          value={model}
-          options={currentModels.map((m) => ({
-            value: m.value,
-            label: m.label,
-          }))}
-          onChange={onModelChange}
-          headerLabel={`${currentProviderOption?.label ?? 'Provider'} Embedding Models`}
-          footerText={`${currentModels.length} model${currentModels.length !== 1 ? 's' : ''} available`}
-          disabled={disabled}
-          renderOption={(option, isSelected) => {
-            const modelOpt = currentModels.find((m) => m.value === option.value);
-            return (
-              <div className="flex-1 min-w-0">
-                <div className="flex items-center gap-2">
-                  <span className={`text-sm font-medium truncate ${isSelected ? 'text-poe-gold' : ''}`}>
-                    {option.label}
-                  </span>
-                  {modelOpt?.tag && <EmbeddingModelTag tag={modelOpt.tag} />}
-                </div>
-                <div className="text-xs text-poe-text-muted mt-0.5 truncate font-mono">
-                  {option.value}
-                  {modelOpt?.dimension && (
-                    <span className="text-poe-text-muted/70 ml-2">
-                      {modelOpt.dimension}d
-                    </span>
-                  )}
-                </div>
-              </div>
-            );
-          }}
-        />
-
-        {/* Current model detail */}
-        {selectedModelOption && (
-          <div className="mt-1.5 flex items-center gap-2 px-2 py-1 rounded bg-poe-bg-primary/30">
-            <span className="text-[10px] text-poe-text-muted font-mono truncate">
-              {selectedModelOption.value}
-            </span>
-            {selectedModelOption.dimension && (
-              <span className="text-[10px] text-poe-gold/70">
-                {selectedModelOption.dimension} dimensions
-              </span>
-            )}
-            {selectedModelOption.tag && (
-              <EmbeddingModelTag tag={selectedModelOption.tag} />
-            )}
-          </div>
-        )}
-      </div>
+      <PoEEmbeddingSelect<string>
+        id="embedding-model"
+        value={model}
+        options={currentModels.map((m) => ({
+          value: m.value,
+          label: m.label,
+          tag: m.tag,
+        }))}
+        onChange={onModelChange}
+        headerLabel={`${EMBEDDING_PROVIDER_OPTIONS.find((o) => o.value === provider)?.label ?? 'Provider'} Embedding Models`}
+        disabled={disabled}
+      />
     </div>
   );
 }

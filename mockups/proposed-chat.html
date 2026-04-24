@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap');
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --gold: #AF6025;
+  --gold-light: #D4A85A;
+  --gold-dim: #6B5530;
+  --gold-muted: #4A3A28;
+  --bg-primary: #0C0C0E;
+  --bg-secondary: #121215;
+  --bg-tertiary: #18181C;
+  --bg-elevated: #1E1E24;
+  --border: #2A2A30;
+  --border-light: #3A3A42;
+  --text-primary: #E0E0E0;
+  --text-secondary: #9F9FA8;
+  --text-muted: #6B6B75;
+  --accent-teal: #1BA29B;
+  --accent-blue: #8888FF;
+  --accent-yellow: #FFFF77;
+  --font-display: 'Cinzel', Georgia, serif;
+  --font-body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+body {
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  height: 600px;
+  overflow: hidden;
+  font-size: 14px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ─── Top Bar ─── */
+.top-bar {
+  background: var(--bg-secondary);
+  border-bottom: 1px solid var(--border);
+  padding: 0 24px;
+  display: flex;
+  align-items: stretch;
+  height: 52px;
+}
+
+.logo-area {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding-right: 32px;
+  border-right: 1px solid var(--border);
+}
+
+.logo-mark {
+  width: 28px;
+  height: 28px;
+  border: 1.5px solid var(--gold);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display);
+  font-size: 14px;
+  color: var(--gold-light);
+  letter-spacing: 0;
+}
+
+.logo-text {
+  font-family: var(--font-display);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--gold-light);
+  letter-spacing: 1.5px;
+  white-space: nowrap;
+}
+
+.nav-tabs {
+  display: flex;
+  align-items: stretch;
+  margin-left: 24px;
+}
+
+.nav-tab {
+  display: flex;
+  align-items: center;
+  padding: 0 20px;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  border-bottom: 2px solid transparent;
+  cursor: pointer;
+  transition: color 0.2s, border-color 0.2s;
+}
+
+.nav-tab:hover {
+  color: var(--text-secondary);
+}
+
+.nav-tab.active {
+  color: var(--gold-light);
+  border-bottom-color: var(--gold);
+}
+
+.top-bar-right {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.control-pill {
+  font-size: 11px;
+  font-weight: 500;
+  padding: 5px 12px;
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all 0.15s;
+  letter-spacing: 0.3px;
+}
+
+.control-pill:hover {
+  border-color: var(--border-light);
+  color: var(--text-primary);
+}
+
+.control-pill.active {
+  border-color: var(--gold-muted);
+  color: var(--gold-light);
+  background: rgba(175, 96, 37, 0.06);
+}
+
+.status-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent-teal);
+  box-shadow: 0 0 6px rgba(27, 162, 155, 0.4);
+}
+
+.status-label {
+  font-size: 11px;
+  color: var(--text-muted);
+  letter-spacing: 0.3px;
+}
+
+.icon-btn {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  color: var(--text-muted);
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.15s;
+}
+
+.icon-btn:hover {
+  border-color: var(--gold-muted);
+  color: var(--gold-light);
+}
+
+/* ─── Chat Area ─── */
+.chat-container {
+  height: calc(100% - 52px);
+  display: flex;
+  flex-direction: column;
+}
+
+.messages {
+  flex: 1;
+  overflow-y: auto;
+  padding: 32px 48px;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+/* Welcome */
+.welcome {
+  text-align: center;
+  padding: 48px 24px 64px;
+}
+
+.welcome-emblem {
+  width: 56px;
+  height: 56px;
+  margin: 0 auto 20px;
+  border: 1.5px solid var(--gold-muted);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--gold-light);
+  font-family: var(--font-display);
+  font-size: 22px;
+  background: rgba(175, 96, 37, 0.04);
+}
+
+.welcome h2 {
+  font-family: var(--font-display);
+  font-size: 22px;
+  font-weight: 600;
+  color: var(--gold-light);
+  letter-spacing: 2px;
+  margin-bottom: 8px;
+}
+
+.welcome p {
+  color: var(--text-secondary);
+  font-size: 14px;
+  font-weight: 300;
+  margin-bottom: 28px;
+}
+
+.welcome-suggestions {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.suggestion-chip {
+  font-size: 12px;
+  font-weight: 400;
+  padding: 7px 16px;
+  border: 1px solid rgba(136, 136, 255, 0.15);
+  border-radius: 3px;
+  color: var(--accent-blue);
+  cursor: pointer;
+  transition: all 0.2s;
+  letter-spacing: 0.2px;
+}
+
+.suggestion-chip:hover {
+  border-color: rgba(136, 136, 255, 0.35);
+  background: rgba(136, 136, 255, 0.04);
+}
+
+/* Messages */
+.msg {
+  padding: 16px 0;
+  border-bottom: 1px solid rgba(42, 42, 48, 0.5);
+}
+
+.msg:last-child {
+  border-bottom: none;
+}
+
+.msg-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+.msg-avatar {
+  width: 28px;
+  height: 28px;
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  flex-shrink: 0;
+}
+
+.msg-avatar.user {
+  border-color: var(--gold-muted);
+  color: var(--gold-light);
+  background: rgba(175, 96, 37, 0.06);
+}
+
+.msg-avatar.assistant {
+  border-color: rgba(27, 162, 155, 0.25);
+  color: var(--accent-teal);
+  background: rgba(27, 162, 155, 0.06);
+}
+
+.msg-name {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+.msg-name.user { color: var(--gold-light); }
+.msg-name.assistant { color: var(--accent-teal); }
+
+.msg-time {
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-left: auto;
+}
+
+.msg-body {
+  padding-left: 38px;
+  font-size: 14px;
+  line-height: 1.7;
+  color: var(--text-primary);
+  font-weight: 300;
+}
+
+.msg-body strong {
+  font-weight: 600;
+  color: var(--accent-yellow);
+}
+
+.msg-body .build-name {
+  display: block;
+  margin-top: 10px;
+}
+
+.citations {
+  display: flex;
+  gap: 6px;
+  margin-top: 12px;
+  flex-wrap: wrap;
+}
+
+.citation-tag {
+  font-size: 11px;
+  font-weight: 400;
+  padding: 3px 10px;
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  color: var(--text-muted);
+  letter-spacing: 0.2px;
+}
+
+/* ─── Input Area ─── */
+.input-area {
+  border-top: 1px solid var(--border);
+  padding: 16px 48px 20px;
+  background: var(--bg-secondary);
+}
+
+.input-row {
+  display: flex;
+  gap: 12px;
+  align-items: flex-end;
+}
+
+.input-wrapper {
+  flex: 1;
+  position: relative;
+}
+
+.input-wrapper textarea {
+  width: 100%;
+  background: var(--bg-primary);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  color: var(--text-primary);
+  padding: 12px 16px;
+  font-size: 14px;
+  font-family: var(--font-body);
+  font-weight: 300;
+  resize: none;
+  outline: none;
+  min-height: 44px;
+  max-height: 120px;
+  line-height: 1.5;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.input-wrapper textarea:focus {
+  border-color: var(--gold-dim);
+  box-shadow: 0 0 0 1px rgba(175, 96, 37, 0.15);
+}
+
+.input-wrapper textarea::placeholder {
+  color: var(--text-muted);
+  font-weight: 300;
+}
+
+.char-count {
+  position: absolute;
+  right: 12px;
+  bottom: 10px;
+  font-size: 10px;
+  color: var(--text-muted);
+  letter-spacing: 0.5px;
+}
+
+.send-btn {
+  height: 44px;
+  padding: 0 24px;
+  background: linear-gradient(180deg, var(--gold-muted) 0%, rgba(74, 58, 40, 0.8) 100%);
+  border: 1px solid var(--gold-dim);
+  border-radius: 4px;
+  color: var(--gold-light);
+  font-family: var(--font-display);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+
+.send-btn:hover {
+  background: linear-gradient(180deg, rgba(107, 85, 48, 0.9) 0%, var(--gold-muted) 100%);
+  box-shadow: 0 0 12px rgba(175, 96, 37, 0.15);
+}
+
+.input-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 8px;
+  font-size: 11px;
+  color: var(--text-muted);
+  letter-spacing: 0.2px;
+}
+</style>
+</head>
+<body>
+
+<!-- Top Bar -->
+<div class="top-bar">
+  <div class="logo-area">
+    <div class="logo-mark">P</div>
+    <div class="logo-text">PoE KNOWLEDGE ASSISTANT</div>
+  </div>
+  <div class="nav-tabs">
+    <div class="nav-tab active">Chat</div>
+    <div class="nav-tab">Items</div>
+    <div class="nav-tab">Knowledge Base</div>
+    <div class="nav-tab">Admin</div>
+  </div>
+  <div class="top-bar-right">
+    <div class="control-pill active">Path of Exile 2 &#9662;</div>
+    <div class="control-pill">Build Context</div>
+    <div style="display:flex; align-items:center; gap:6px;">
+      <div class="status-dot"></div>
+      <span class="status-label">Fresh</span>
+    </div>
+    <div class="icon-btn">&#9881;</div>
+  </div>
+</div>
+
+<!-- Chat -->
+<div class="chat-container">
+  <div class="messages">
+    <div class="welcome">
+      <div class="welcome-emblem">?</div>
+      <h2>Welcome, Exile</h2>
+      <p>Ask me anything about Path of Exile</p>
+      <div class="welcome-suggestions">
+        <div class="suggestion-chip">"What are the best starter builds?"</div>
+        <div class="suggestion-chip">"How does crafting work?"</div>
+        <div class="suggestion-chip">"Explain the passive tree"</div>
+      </div>
+    </div>
+
+    <div class="msg">
+      <div class="msg-header">
+        <div class="msg-avatar user">&#9826;</div>
+        <span class="msg-name user">Exile</span>
+        <span class="msg-time">Just now</span>
+      </div>
+      <div class="msg-body">What are the best starter builds for PoE2?</div>
+    </div>
+
+    <div class="msg">
+      <div class="msg-header">
+        <div class="msg-avatar assistant">&#9830;</div>
+        <span class="msg-name assistant">Knowledge Assistant</span>
+        <span class="msg-time">Just now</span>
+      </div>
+      <div class="msg-body">
+        Here are some strong starter builds for Path of Exile 2 Early Access:
+        <strong class="build-name">1. Lightning Arrow Ranger</strong>
+        Excellent clear speed, scales well with minimal gear investment. Great for learning the game.
+        <strong class="build-name">2. Boneshatter Marauder</strong>
+        Tanky melee with high damage output. Forgiving for new players and strong in all content.
+        <strong class="build-name">3. Spark Sorceress</strong>
+        Strong mapper with good boss damage potential. Requires some positioning awareness.
+        <div class="citations">
+          <span class="citation-tag">poedb.tw</span>
+          <span class="citation-tag">PoE2 Build Guide</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="input-area">
+    <div class="input-row">
+      <div class="input-wrapper">
+        <textarea rows="1" placeholder="Ask about items, builds, mechanics..."></textarea>
+        <span class="char-count">0 / 10,000</span>
+      </div>
+      <button class="send-btn">Send</button>
+    </div>
+    <div class="input-footer">
+      <span>Anthropic (glm-5) &middot; Local Embeddings</span>
+      <span>Enter to send &middot; Shift+Enter for new line</span>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

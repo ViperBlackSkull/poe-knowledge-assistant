@@ -10,60 +10,69 @@ import type {
 // Rarity color mapping
 // ---------------------------------------------------------------------------
 
-const RARITY_COLORS: Record<ItemRarity, { text: string; border: string; bg: string; glow: string }> = {
+const RARITY_COLORS: Record<ItemRarity, { text: string; border: string; bg: string; glow: string; inset: string }> = {
   normal: {
     text: 'text-poe-rarity-normal',
-    border: 'border-poe-rarity-normal/30',
+    border: 'border-[#C8C8C8]/60',
     bg: 'bg-poe-bg-card',
-    glow: '',
+    glow: 'shadow-[0_0_4px_rgba(200,200,200,0.2)]',
+    inset: 'inset-[0_0_12px_rgba(200,200,200,0.08)]',
   },
   magic: {
     text: 'text-poe-rarity-magic',
-    border: 'border-poe-rarity-magic/40',
+    border: 'border-[#8888FF]/70',
     bg: 'bg-poe-bg-card',
-    glow: 'shadow-[0_0_8px_rgba(136,136,255,0.15)]',
+    glow: 'shadow-[0_0_10px_rgba(136,136,255,0.25)]',
+    inset: 'inset-[0_0_16px_rgba(136,136,255,0.12)]',
   },
   rare: {
     text: 'text-poe-rarity-rare',
-    border: 'border-poe-rarity-rare/40',
+    border: 'border-[#FFFF77]/70',
     bg: 'bg-poe-bg-card',
-    glow: 'shadow-[0_0_8px_rgba(255,255,119,0.15)]',
+    glow: 'shadow-[0_0_12px_rgba(255,255,119,0.3)]',
+    inset: 'inset-[0_0_20px_rgba(255,255,119,0.15)]',
   },
   unique: {
     text: 'text-poe-rarity-unique',
-    border: 'border-poe-rarity-unique/50',
+    border: 'border-[#AF6025]/80',
     bg: 'bg-poe-bg-card',
-    glow: 'shadow-[0_0_12px_rgba(175,96,37,0.2)]',
+    glow: 'shadow-[0_0_16px_rgba(175,96,37,0.35)]',
+    inset: 'inset-[0_0_24px_rgba(175,96,37,0.18)]',
   },
   gem: {
     text: 'text-poe-rarity-gem',
-    border: 'border-poe-rarity-gem/40',
+    border: 'border-[#1BA29B]/70',
     bg: 'bg-poe-bg-card',
-    glow: 'shadow-[0_0_8px_rgba(27,162,155,0.15)]',
+    glow: 'shadow-[0_0_10px_rgba(27,162,155,0.25)]',
+    inset: 'inset-[0_0_16px_rgba(27,162,155,0.12)]',
   },
   currency: {
     text: 'text-poe-rarity-currency',
-    border: 'border-poe-rarity-currency/40',
+    border: 'border-[#AA9E82]/70',
     bg: 'bg-poe-bg-card',
-    glow: 'shadow-[0_0_8px_rgba(170,158,130,0.15)]',
+    glow: 'shadow-[0_0_10px_rgba(170,158,130,0.25)]',
+    inset: 'inset-[0_0_16px_rgba(170,158,130,0.12)]',
   },
   divination_card: {
     text: 'text-poe-rarity-currency',
-    border: 'border-poe-rarity-currency/40',
+    border: 'border-[#AA9E82]/70',
     bg: 'bg-poe-bg-card',
-    glow: 'shadow-[0_0_8px_rgba(170,158,130,0.15)]',
+    glow: 'shadow-[0_0_10px_rgba(170,158,130,0.25)]',
+    inset: 'inset-[0_0_16px_rgba(170,158,130,0.12)]',
   },
   prophecy: {
     text: 'text-[#588650]',
-    border: 'border-[#588650]/40',
+    border: 'border-[#588650]/70',
     bg: 'bg-poe-bg-card',
-    glow: 'shadow-[0_0_8px_rgba(88,134,80,0.15)]',
+    glow: 'shadow-[0_0_10px_rgba(88,134,80,0.25)]',
+    inset: 'inset-[0_0_16px_rgba(88,134,80,0.12)]',
   },
   relic: {
     text: 'text-[#FF6E2A]',
-    border: 'border-[#FF6E2A]/40',
+    border: 'border-[#FF6E2A]/80',
     bg: 'bg-poe-bg-card',
-    glow: 'shadow-[0_0_12px_rgba(255,110,42,0.2)]',
+    glow: 'shadow-[0_0_16px_rgba(255,110,42,0.35)]',
+    inset: 'inset-[0_0_24px_rgba(255,110,42,0.18)]',
   },
 };
 
@@ -304,10 +313,12 @@ export function ItemCard({
     return (
       <div
         className={`
-          poe-card flex items-center gap-3 p-3 cursor-default
-          border ${colors.border} ${colors.glow}
-          ${selected ? 'ring-2 ring-poe-gold/50' : ''}
-          ${isClickable ? 'cursor-pointer hover:bg-poe-hover poe-hover-lift' : ''}
+          relative overflow-hidden rounded
+          bg-gradient-to-b from-poe-bg-elevated to-poe-bg-card
+          border-2 ${colors.border} ${colors.glow} ${colors.inset}
+          ${selected ? 'ring-2 ring-poe-gold/50 ring-offset-2 ring-offset-poe-bg-primary' : ''}
+          ${isClickable ? 'cursor-pointer hover:scale-[1.02] hover:brightness-110' : ''}
+          transition-all duration-200 ease-out
           ${className}
         `}
         onClick={handleClick}
@@ -318,37 +329,39 @@ export function ItemCard({
         data-testid={`item-card-${item.id}`}
         data-rarity={item.rarity}
       >
-        {/* Icon */}
-        {showIcon && (
-          <div className="shrink-0 w-10 h-10 rounded border border-poe-border flex items-center justify-center bg-poe-bg-primary overflow-hidden">
-            {item.iconUrl ? (
-              <img
-                src={item.iconUrl}
-                alt={item.name}
-                className="w-full h-full object-contain"
-                loading="lazy"
-              />
-            ) : (
-              <span className="text-poe-text-muted text-xs">?</span>
-            )}
+        <div className="flex items-center gap-3 p-3">
+          {/* Icon */}
+          {showIcon && (
+            <div className="shrink-0 w-10 h-10 rounded border border-poe-border-light flex items-center justify-center bg-poe-bg-primary overflow-hidden shadow-inner">
+              {item.iconUrl ? (
+                <img
+                  src={item.iconUrl}
+                  alt={item.name}
+                  className="w-full h-full object-contain"
+                  loading="lazy"
+                />
+              ) : (
+                <span className="text-poe-text-muted text-xs">?</span>
+              )}
+            </div>
+          )}
+
+          {/* Name + base type */}
+          <div className="flex-1 min-w-0">
+            <p className={`text-sm font-poe font-semibold truncate tracking-wide ${colors.text} drop-shadow-sm`}>
+              {item.name}
+            </p>
+            <p className="text-[11px] text-poe-text-muted truncate">
+              {item.baseType ?? getRarityLabel(item.rarity)}
+            </p>
           </div>
-        )}
 
-        {/* Name + base type */}
-        <div className="flex-1 min-w-0">
-          <p className={`text-sm font-poe truncate ${colors.text}`}>
-            {item.name}
-          </p>
-          <p className="text-[11px] text-poe-text-muted truncate">
-            {item.baseType ?? getRarityLabel(item.rarity)}
-          </p>
-        </div>
-
-        {/* Item level or stack size */}
-        <div className="shrink-0 text-[11px] text-poe-text-muted text-right">
-          {item.itemLevel && <div>ilvl {item.itemLevel}</div>}
-          {item.gemLevel != null && <div>Lv. {item.gemLevel}</div>}
-          {item.mapTier != null && <div>T{item.mapTier}</div>}
+          {/* Item level or stack size */}
+          <div className="shrink-0 text-[11px] text-poe-text-muted text-right">
+            {item.itemLevel && <div>ilvl {item.itemLevel}</div>}
+            {item.gemLevel != null && <div>Lv. {item.gemLevel}</div>}
+            {item.mapTier != null && <div>T{item.mapTier}</div>}
+          </div>
         </div>
       </div>
     );
@@ -363,10 +376,12 @@ export function ItemCard({
   return (
     <div
       className={`
-        poe-card relative overflow-hidden
-        border ${colors.border} ${colors.glow}
-        ${selected ? 'ring-2 ring-poe-gold/50' : ''}
-        ${isClickable ? 'cursor-pointer hover:bg-poe-hover poe-hover-lift' : ''}
+        relative overflow-hidden rounded
+        bg-gradient-to-b from-poe-bg-elevated to-poe-bg-card
+        border-2 ${colors.border} ${colors.glow} ${colors.inset}
+        ${selected ? 'ring-2 ring-poe-gold/50 ring-offset-2 ring-offset-poe-bg-primary' : ''}
+        ${isClickable ? 'cursor-pointer hover:scale-[1.01] hover:brightness-110' : ''}
+        transition-all duration-200 ease-out
         ${className}
       `}
       onClick={handleClick}
@@ -380,7 +395,7 @@ export function ItemCard({
       {/* Influence gradient overlay */}
       {influenceGradient && (
         <div
-          className="absolute inset-0 pointer-events-none opacity-50"
+          className="absolute inset-0 pointer-events-none opacity-60"
           style={{ background: influenceGradient }}
         />
       )}
@@ -390,7 +405,7 @@ export function ItemCard({
         <div className="flex items-start gap-3 p-4 pb-2">
           {/* Item icon */}
           {showIcon && (
-            <div className="shrink-0 w-12 h-12 rounded border border-poe-border flex items-center justify-center bg-poe-bg-primary overflow-hidden">
+            <div className="shrink-0 w-12 h-12 rounded border border-poe-border-light flex items-center justify-center bg-poe-bg-primary overflow-hidden shadow-inner">
               {item.iconUrl ? (
                 <img
                   src={item.iconUrl}
@@ -418,7 +433,7 @@ export function ItemCard({
 
           {/* Name, type, and top-level badges */}
           <div className="flex-1 min-w-0">
-            <h3 className={`text-base font-poe leading-tight ${colors.text}`}>
+            <h3 className={`text-base font-poe font-semibold leading-tight tracking-wide ${colors.text} drop-shadow-sm`}>
               {item.name}
             </h3>
             {item.baseType && (
@@ -428,7 +443,7 @@ export function ItemCard({
             )}
             <div className="flex flex-wrap items-center gap-1.5 mt-1.5">
               <span
-                className={`inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-medium ${colors.text} border ${colors.border} bg-poe-bg-primary`}
+                className={`inline-flex items-center px-2 py-0.5 rounded-sm text-[10px] font-semibold uppercase tracking-wider ${colors.text} border-2 ${colors.border} bg-poe-bg-primary shadow-sm`}
               >
                 {getRarityLabel(item.rarity)}
               </span>
@@ -481,7 +496,7 @@ export function ItemCard({
         )}
 
         {/* Separator */}
-        <div className="mx-4 border-t border-poe-border" />
+        <div className="mx-4 border-t border-poe-border-light opacity-60" />
 
         {/* Description */}
         {item.description && (
@@ -502,7 +517,7 @@ export function ItemCard({
             {item.weaponDamage.elementalMin != null && (
               <div className="flex justify-between text-[11px]">
                 <span className="text-poe-text-secondary">Elemental Damage</span>
-                <span className="text-[#FF4500] font-mono">
+                <span className="text-fire font-mono drop-shadow-sm">
                   {item.weaponDamage.elementalMin}-{item.weaponDamage.elementalMax}
                 </span>
               </div>
@@ -510,7 +525,7 @@ export function ItemCard({
             {item.weaponDamage.chaosMin != null && (
               <div className="flex justify-between text-[11px]">
                 <span className="text-poe-text-secondary">Chaos Damage</span>
-                <span className="text-[#D02090] font-mono">
+                <span className="text-chaos font-mono drop-shadow-sm">
                   {item.weaponDamage.chaosMin}-{item.weaponDamage.chaosMax}
                 </span>
               </div>
@@ -560,7 +575,7 @@ export function ItemCard({
             {item.defenses.energyShield != null && (
               <div className="flex justify-between text-[11px]">
                 <span className="text-poe-text-secondary">Energy Shield</span>
-                <span className="text-[#8888FF] font-mono">{item.defenses.energyShield}</span>
+                <span className="text-[#7B7BFF] font-mono">{item.defenses.energyShield}</span>
               </div>
             )}
             {item.defenses.ward != null && (
@@ -580,7 +595,7 @@ export function ItemCard({
 
         {/* Separator before stats (if stats exist) */}
         {showSeparator && (
-          <div className="mx-4 border-t border-poe-border" />
+          <div className="mx-4 border-t border-poe-border-light opacity-60" />
         )}
 
         {/* Implicit stats */}
@@ -600,7 +615,7 @@ export function ItemCard({
           item.implicitStats.length > 0 &&
           item.explicitStats &&
           item.explicitStats.length > 0 && (
-            <div className="mx-4 border-t border-poe-border" />
+            <div className="mx-4 border-t border-poe-border-light opacity-60" />
           )}
 
         {/* Explicit stats */}
@@ -635,7 +650,7 @@ export function ItemCard({
         {/* Requirements */}
         {showRequirements && item.requirements && (
           <>
-            <div className="mx-4 border-t border-poe-border" />
+            <div className="mx-4 border-t border-poe-border-light opacity-60" />
             <div className="px-4 py-2">
               <RequirementsDisplay requirements={item.requirements} />
             </div>
@@ -645,7 +660,7 @@ export function ItemCard({
         {/* Flavour text */}
         {variant === 'detailed' && item.flavourText && (
           <>
-            <div className="mx-4 border-t border-poe-border" />
+            <div className="mx-4 border-t border-poe-border-light opacity-60" />
             <p className="px-4 py-2 text-xs text-[#AF6025] italic leading-relaxed">
               &ldquo;{item.flavourText}&rdquo;
             </p>
