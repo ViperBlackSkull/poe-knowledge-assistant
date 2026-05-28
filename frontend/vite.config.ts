@@ -18,15 +18,16 @@ export default defineConfig({
   },
   test: {
     globals: true,
-    environment: 'node',
+    environment: 'jsdom',
+    setupFiles: ['./src/test/setup.ts'],
     include: ['src/**/*.{test,spec}.{ts,tsx}'],
   },
   server: {
-    port: 9460,
+    port: 7575,
     host: '0.0.0.0',
     proxy: {
       '/api': {
-        target: 'http://localhost:8460',
+        target: 'http://localhost:8000',
         changeOrigin: true,
       },
     },
