@@ -365,8 +365,8 @@ class RAGSettings(BaseSettings):
     model_config = SettingsConfigDict(env_prefix="rag_", env_file=".env", env_file_encoding="utf-8", extra="ignore")
 
     top_k_results: int = Field(
-        default=3,
-        description="Number of documents to retrieve"
+        default=5,
+        description="Number of documents to retrieve before reranking"
     )
     chunk_size: int = Field(
         default=1000,
@@ -377,8 +377,24 @@ class RAGSettings(BaseSettings):
         description="Overlap between chunks in characters"
     )
     score_threshold: float = Field(
-        default=0.7,
+        default=0.5,
         description="Minimum similarity score threshold"
+    )
+    enable_reranking: bool = Field(
+        default=True,
+        description="Enable cross-encoder reranking of retrieved results"
+    )
+    bm25_search_weight: float = Field(
+        default=0.7,
+        description="Weight for BM25 keyword search in hybrid retrieval (0.0-1.0)",
+        ge=0.0,
+        le=1.0,
+    )
+    vector_search_weight: float = Field(
+        default=0.3,
+        description="Weight for vector similarity search in hybrid retrieval (0.0-1.0)",
+        ge=0.0,
+        le=1.0,
     )
 
 
